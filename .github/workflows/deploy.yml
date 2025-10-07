@@ -1,0 +1,79 @@
+name: Deploy Frontend to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        
+    - name: Add EC2 to known hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H 3.110.193.10 >> ~/.ssh/known_hosts
+        
+    - name: Deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no ubuntu@3.110.193.10 << 'ENDSSH'
+        set -e
+        
+        echo "🚀 Starting deployment..."
+        
+        # Navigate to project directory
+        cd /home/ubuntu/preproute-frontend
+        
+        # Pull latest changes
+        echo "📥 Pulling latest code from GitHub..."
+        git pull origin main
+        
+        # Install dependencies
+        echo "📦 Installing dependencies..."
+        npm install
+        
+        # Check if PM2 process exists
+        if pm2 describe preproute-frontend > /dev/null 2>&1; then
+          echo "♻️  Restarting existing PM2 process..."
+          pm2 restart preproute-frontend
+        else
+          echo "🆕 Starting new PM2 process..."
+          pm2 start npm --name preproute-frontend -- run dev
+        fi
+        
+        # Save PM2 configuration
+        pm2 save
+        
+        # Show PM2 status
+        echo "✅ Deployment completed successfully!"
+        pm2 status
+        
+        ENDSSH
+        
+    - name: Verify Deployment
+      run: |
+        echo "🔍 Verifying deployment..."
+        sleep 5
+        curl -f http://3.110.193.10:3000 || exit 1
+        echo "✅ Application is running successfully!"
+        
+    - name: Notify on Success
+      if: success()
+      run: |
+        echo "✅ Deployment to 3.110.193.10 completed successfully!"
+        
+    - name: Notify on Failure
+      if: failure()
+      run: |
+        echo "❌ Deployment failed! Check logs for details."
