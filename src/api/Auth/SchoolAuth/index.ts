@@ -1,0 +1,131 @@
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { setAuth,setYear,setSubject,setExam} from '../../../store/Auth/index';
+import APIName from '../../endPoints';
+import { AuthRepo } from './AuthRepo';
+import Swal from 'sweetalert2';
+
+interface Payload {
+  // Define your payload structure here, for example:
+  someField: string; // replace this with actual fields
+}
+const GetMessage = (type: any, messga: string) => {
+  Swal.fire({
+    icon: type,
+    title: messga,
+    showConfirmButton: false,
+    timer: 2000,
+  });
+};
+export const handleLogin = createAsyncThunk<boolean, Payload>(
+  APIName.userLogin,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await AuthRepo.userLogin(payload);
+      if (data.status === 200) {
+        // thunkAPI.dispatch(setAuth(data.data.user));
+        GetMessage("success", "success");
+        // localStorage.setItem("token",data.data.user.token);
+        window.location.href = '/home';
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        GetMessage("error", err.response.data.message);
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
+
+
+export const handleRegister = createAsyncThunk<boolean, Payload>(
+  APIName.register,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await AuthRepo.userRegister(payload);
+      if (data.status === 200) {
+        thunkAPI.dispatch(setAuth(data.data.user));
+        GetMessage("success", "success");
+        // localStorage.setItem("token",data.data.user.token);
+        // window.location.href = '/home';
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        GetMessage("error", err.response.data.message);
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
+
+export const SubjectData = createAsyncThunk<boolean, Payload>(
+  APIName.userLogin,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await AuthRepo.subjectData(payload);
+      if (data.status === 200) {
+        thunkAPI.dispatch(setSubject(data.data));
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        GetMessage("error", err.response.data.message);
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
+
+export const YearMaster = createAsyncThunk<boolean, Payload>(
+  APIName.userLogin,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await AuthRepo.yearMaster(payload);
+      if (data.status === 200) {
+        console.log(data.data,"year")
+        thunkAPI.dispatch(setYear(data.data));
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        GetMessage("error", err.response.data.message);
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
+export const getExamMaster = createAsyncThunk<boolean, Payload>(
+  APIName.userLogin,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await AuthRepo.ExamMaster(payload);
+      if (data.status === 200) {
+        thunkAPI.dispatch(setExam(data.data));
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        GetMessage("error", err.response.data.message);
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
+
+
