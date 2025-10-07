@@ -10,6 +10,9 @@ interface Payload {
 interface examTypeRepo {
   createExamType: (payload: Payload) => Promise<AxiosResponse>;
   getExamType: (payload: Payload) => Promise<AxiosResponse>;
+  selectedExamType: (payload: Payload) => Promise<AxiosResponse>;
+  getExamBeExamTypeId: (payload: any) => Promise<AxiosResponse>;
+
 }
 
 export const examTypeRepo: examTypeRepo = {
@@ -19,5 +22,11 @@ export const examTypeRepo: examTypeRepo = {
   },
     getExamType(payload) {
     return Repository.get(examType.get, payload);
+  },
+    selectedExamType(payload) {
+    return Repository.get(examType.get, payload);
+  },
+  getExamBeExamTypeId(payload) {
+ return Repository.get(`${examType.getExamBeExamTypeId}?examtypeid=${payload.id}`);
   },
 };

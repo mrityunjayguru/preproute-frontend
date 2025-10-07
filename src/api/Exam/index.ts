@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setexam,setUpdateexam,setSingleexam,setSelectedExam } from '../../store/seatUpexam/exam';
+import { setexam,setUpdateexam,setSingleexam,setSelectedExam ,setSelectedExamDetail} from '../../store/seatUpexam/exam';
 import APIName, { exam } from '../endPoints';
 import { examRepo } from './ExamRepo';
 import Swal from 'sweetalert2';
@@ -47,7 +47,6 @@ export const getexam = createAsyncThunk<boolean, Payload>(
   async (payload, thunkAPI) => {
     try {
       const data = await examRepo.getexam(payload);
-      console.log(data,"datadata")
       if (data.status === 200) {
         thunkAPI.dispatch(setexam(data.data));
         return true;
@@ -70,7 +69,7 @@ export const getexam = createAsyncThunk<boolean, Payload>(
 export const handlesetSelectedExam = createAsyncThunk<boolean, Payload>(
   exam.get,
   async (payload, thunkAPI) => {
-    console.log(payload,"PayloadPayload")
+  
     try {
         thunkAPI.dispatch(setSelectedExam(payload));
         return true;
@@ -87,3 +86,26 @@ export const handlesetSelectedExam = createAsyncThunk<boolean, Payload>(
   },
 );
 
+
+
+export const handleSelectedExamDetail = createAsyncThunk<boolean, Payload>(
+  exam.get,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await examRepo.handleSelectedExamDetail(payload);
+      if (data.status === 200) {
+        thunkAPI.dispatch(setSelectedExamDetail(data.data));
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);

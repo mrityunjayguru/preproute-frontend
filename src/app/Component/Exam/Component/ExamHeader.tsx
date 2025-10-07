@@ -2,12 +2,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDownIcon } from "lucide-react";
+import { useSelector } from "react-redux";
 
 export const ExamHeader = () => {
+  const examDetail=useSelector((state:any)=>state?.examType?.examDetail)
+
   const [open, setOpen] = useState(false);
 const [exam,setExam]=useState<string>("")
   const handleSelect = (exam: string) => {
-    console.log("Selected Exam:", exam);
     setExam(exam)
     setOpen(false);
   };
@@ -31,7 +33,7 @@ const [exam,setExam]=useState<string>("")
         {/* Dropdown Menu */}
         {open && (
           <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg z-10">
-            {["IPMAT Indore", "IPMAT Rohtak", "CUET", "JIPMAT"].map((exam) => (
+            {examDetail && examDetail.length>0 && examDetail?.map((exam:any) => (
               <div
                 key={exam}
                 onClick={() => handleSelect(exam)}

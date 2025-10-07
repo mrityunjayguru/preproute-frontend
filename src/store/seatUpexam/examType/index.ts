@@ -4,14 +4,18 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface UserDataState {
 examType:any;
 updateexamType:any;
-singleexamType:any
+singleexamType:any;
+selectedExamType:any;
+examDetail:any
 }
 
 // Initial state for the slice
 const initialState: UserDataState = {
   examType: null,
   updateexamType:null,
-  singleexamType:null
+  singleexamType:null,
+  selectedExamType:null,
+  examDetail:null
 };
 
 // Create the user data slice
@@ -28,11 +32,17 @@ export const examTypeSlicc = createSlice({
     setSingleexamType: (state, action: PayloadAction<any>) => {
       state.singleexamType = action.payload; // Set login user data
     },
+    setSelectedexamType: (state, action: PayloadAction<any>) => {
+      state.selectedExamType = action.payload; // Set login user data
+    },
+    setExamBeExamTypeId: (state, action: PayloadAction<any>) => {
+      state.examDetail = action.payload; // Set login user data
+    },
   },
 });
 
 // Export actions
-export const {setexamType,setUpdateexamType,setSingleexamType} = examTypeSlicc.actions;
+export const {setexamType,setSelectedexamType,setUpdateexamType,setSingleexamType,setExamBeExamTypeId} = examTypeSlicc.actions;
 
 // Export reducer
 export default examTypeSlicc.reducer;

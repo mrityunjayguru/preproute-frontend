@@ -13,6 +13,7 @@ const UserAuth={
 export const examType={
   create:"examstype/create",
   get:"examstype",
+  getExamBeExamTypeId:"createexam/findexamnamebyexamid"
 }
 export const section={
   create:"sections/create",
@@ -33,6 +34,7 @@ export const subTopic={
 export const exam={
   create:"createexam/create",
   get:"createexam",
+  getdatabyexamtypeidandname:"createexam/getdatabyexamtypeidandname"
 }
 export const Question={
     create:"question/create",

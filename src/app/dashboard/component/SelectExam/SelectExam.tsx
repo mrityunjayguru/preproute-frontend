@@ -1,150 +1,65 @@
 "use client";
-import { getexam, handlesetSelectedExam } from "@/api/Exam";
-import { AppDispatch } from "@/store/store";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { getexam, handleSelectedExamDetail, handlesetSelectedExam } from "@/api/Exam";
+import { getExamBeExamTypeId, getExamType } from "@/api/ExamType";
 
 const SelectExamForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+
   const [examName, setExamName] = useState("");
   const [examType, setExamType] = useState("");
   const [year, setYear] = useState("");
-  const [availableExamTypes, setAvailableExamTypes] = useState<any[]>([]);
-  const [selectedSections, setSelectedSections] = useState<any[]>([]);
-  const [selectedTopics, setSelectedTopics] = useState<any[]>([]);
-  const [selectedSubTopics, setSelectedSubTopics] = useState<any[]>([]);
 
-  const dispatch = useDispatch<AppDispatch>();
-  const exam = useSelector((state: any) => state?.exam?.exam) || [];
+  const examTypeData = useSelector((state: any) => state.examType.examType) || [];
+  const examDetail = useSelector((state: any) => state?.examType?.examDetail) || [];
 
-  // ✅ Group exams by name, then examType
-  const groupByExamNameAndType = (data: any[]) => {
-    const grouped: any = {};
-    data.forEach((item) => {
-      const name = item.examname;
-      const type = item.examType?.name || "Unknown";
-
-      if (!grouped[name]) {
-        grouped[name] = {};
-      }
-
-      if (!grouped[name][type]) {
-        grouped[name][type] = {
-          examname: name,
-          examType: type,
-          examduration: item.examduration,
-          switchable: item.switchable,
-          noofquestion: item.noofquestion,
-          records: [],
-        };
-      }
-
-      grouped[name][type].records.push({
-        section: item.sections,
-        topic: item.topic,
-        subtopic: item.subtopic,
-      });
-    });
-
-    // Convert to array
-    const result = Object.entries(grouped).map(([examname, types]) => ({
-      examname,
-      types: Object.values(types as Record<string, unknown>),
-    }));
-    return result;
-  };
-
-  const groupedExams = groupByExamNameAndType(exam);
-
-  const getData = async () => {
-    const payload: any = {};
-    await dispatch(getexam(payload));
-  };
-
+  // Fetch exam types
   useEffect(() => {
-    getData();
-  }, []);
+    const payload:any={}
+    dispatch(getExamType(payload));
+  }, [dispatch]);
+
+  // Fetch exam details by examType ID
+  useEffect(() => {
+    if (examType) {
+      const payload:any={
+        id: examType 
+      }
+      dispatch(getExamBeExamTypeId(payload));
+    }
+  }, [dispatch, examType]);
 
   // Generate last 10 years dynamically
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 11 }, (_, i) => currentYear - i);
 
-  // Handle exam selection
-  const handleExamChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedName = e.target.value;
-    setExamName(selectedName);
-    setExamType(""); // reset exam type
-
-    const selectedExam: any = groupedExams.find(
-      (ex: any) => ex.examname === selectedName
-    );
-
-    if (selectedExam) {
-      const examTypes = selectedExam.types.map((t: any) => t.examType);
-      setAvailableExamTypes(examTypes);
-    } else {
-      setAvailableExamTypes([]);
-    }
-
-    setSelectedSections([]);
-    setSelectedTopics([]);
-    setSelectedSubTopics([]);
-  };
-
-  // Handle exam type selection
   const handleExamTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedType = e.target.value;
-    setExamType(selectedType);
-
-    const selectedExam: any = groupedExams.find(
-      (ex: any) => ex.examname === examName
-    );
-
-    if (selectedExam) {
-      const selectedTypeObj: any = selectedExam.types.find(
-        (t: any) => t.examType === selectedType
-      );
-      if (selectedTypeObj) {
-        // Collect all records
-        const allSections = selectedTypeObj.records.flatMap(
-          (rec: any) => rec.section
-        );
-        const allTopics = selectedTypeObj.records.flatMap(
-          (rec: any) => rec.topic
-        );
-        const allSubTopics = selectedTypeObj.records.flatMap(
-          (rec: any) => rec.subtopic
-        );
-
-        setSelectedSections(allSections);
-        setSelectedTopics(allTopics);
-        setSelectedSubTopics(allSubTopics);
-
-        // Dispatch immediately if you want Redux to hold them too
-        const payload:any={
-          sections: allSections,
-            topics: allTopics,
-            subtopics: allSubTopics,
-        }
-        dispatch(
-          handlesetSelectedExam(payload))
-      }
-    }
+    console.log(e.target,"vvvvvvvvvvv")
+    setExamType(e.target.value);
+    setExamName("");
   };
-  const router = useRouter()
- 
-  const handleSubmit =async (e: React.FormEvent) => {
+
+  const handleExamChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setExamName(e.target.value);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const payload: any = {
+
+    if (!examType || !examName || !year) return alert("Please select all fields.");
+
+    const payload:any = {
       examName,
       examType,
       year,
-      sections: selectedSections,
-      topics: selectedTopics,
-      subtopics: selectedSubTopics,
     };
-   await dispatch(handlesetSelectedExam(payload));
-    router.push("manageExam")
+    await dispatch(handlesetSelectedExam(payload));
+    await dispatch(handleSelectedExamDetail(payload))
+    router.push("manageExam");
   };
 
   return (
@@ -157,6 +72,20 @@ const SelectExamForm = () => {
           Choose an Exam
         </h2>
 
+        {/* Exam Type Dropdown */}
+        <select
+          value={examType}
+          onChange={handleExamTypeChange}
+          className="w-full mb-4 px-4 py-3 border rounded-md bg-gray-100 focus:outline-none"
+        >
+          <option value="">Choose Exam Type</option>
+          {examTypeData.map((type: any) => (
+            <option key={type.id} value={type.id}>
+              {type.name}
+            </option>
+          ))}
+        </select>
+
         {/* Exam Dropdown */}
         <select
           value={examName}
@@ -164,28 +93,13 @@ const SelectExamForm = () => {
           className="w-full mb-4 px-4 py-3 border rounded-md bg-gray-100 focus:outline-none"
         >
           <option value="">Choose Exam</option>
-          {groupedExams.map((ex: any) => (
-            <option key={ex.examname} value={ex.examname}>
-              {ex.examname}
-            </option>
-          ))}
-        </select>
-
-        {/* Exam Type Dropdown */}
-        {availableExamTypes.length > 0 && (
-          <select
-            value={examType}
-            onChange={handleExamTypeChange}
-            className="w-full mb-4 px-4 py-3 border rounded-md bg-gray-100 focus:outline-none"
-          >
-            <option value="">Choose Exam Type</option>
-            {availableExamTypes.map((type: any) => (
-              <option key={type} value={type}>
-                {type}
+          {examDetail.length > 0 &&
+            examDetail.map((ex: any, index: number) => (
+              <option key={index} value={ex}>
+                {ex}
               </option>
             ))}
-          </select>
-        )}
+        </select>
 
         {/* Year Dropdown */}
         <select

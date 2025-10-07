@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setexamType,setUpdateexamType,setSingleexamType } from '../../store/seatUpexam/examType';
+import { setexamType,setSelectedexamType,setUpdateexamType,setSingleexamType,setExamBeExamTypeId } from '../../store/seatUpexam/examType';
 import APIName, { examType } from '../endPoints';
 import { examTypeRepo } from './ExamTypeRepo';
 import Swal from 'sweetalert2';
@@ -64,4 +64,49 @@ export const getExamType = createAsyncThunk<boolean, Payload>(
     return false;
   },
 );
+
+
+
+export const handleSelectedExamType = createAsyncThunk<boolean, Payload>(
+  examType.get,
+  async (payload, thunkAPI) => {
+    try {
+        thunkAPI.dispatch(setSelectedexamType(payload));
+        return true;
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
+export const getExamBeExamTypeId = createAsyncThunk<boolean, Payload>(
+  examType.get,
+  async (payload, thunkAPI) => {
+    try {
+       const data = await examTypeRepo.getExamBeExamTypeId(payload);
+      if (data.status === 200) {
+        thunkAPI.dispatch(setExamBeExamTypeId(data.data));
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
+
 

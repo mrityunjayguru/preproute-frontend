@@ -5,7 +5,8 @@ interface UserDataState {
 exam:any;
 updateexam:any;
 singleexam:any;
-selectedexam:any
+selectedexam:any;
+selectedExamDetail:any
 }
 
 // Initial state for the slice
@@ -13,7 +14,8 @@ const initialState: UserDataState = {
   exam: null,
   updateexam:null,
   singleexam:null,
-  selectedexam:null
+  selectedexam:null,
+  selectedExamDetail:null
 };
 
 // Create the user data slice
@@ -33,11 +35,14 @@ export const examSlicc = createSlice({
     setSelectedExam: (state, action: PayloadAction<any>) => {
       state.selectedexam = action.payload; // Set login user data
     },
+    setSelectedExamDetail: (state, action: PayloadAction<any>) => {
+      state.selectedExamDetail = action.payload; // Set login user data
+    },
   },
 });
 
 // Export actions
-export const {setexam,setUpdateexam,setSingleexam,setSelectedExam} = examSlicc.actions;
+export const {setexam,setUpdateexam,setSingleexam,setSelectedExam,setSelectedExamDetail} = examSlicc.actions;
 
 // Export reducer
 export default examSlicc.reducer;

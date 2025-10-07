@@ -78,7 +78,10 @@ const AnswerOption: React.FC<AnswerOptionProps> = ({
 const Exam: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const selectedexam = useSelector((state: any) => state?.exam?.selectedexam);
-  console.log("SELECTEDEXAM:", selectedexam);
+  const selectedExamDetail = useSelector((state: any) => state?.exam?.selectedExamDetail);
+
+  
+  console.log("selectedExamDetailselectedExamDetail:", selectedExamDetail);
   const [questionData, setQuestionData] = useState({})
 
   const sectionsData = selectedexam?.sections || [];
@@ -108,11 +111,12 @@ const Exam: React.FC = () => {
 
   const [options, setOptions] = useState<Option[]>(initialOptions);
 
-  const handleOptionTextChange = (id: number, newText: string) => {
-    setOptions((opts) =>
-      opts.map((opt) => (opt.id === id ? { ...opt, text: newText } : opt))
-    );
-  };
+const handleOptionTextChange = (id: number, newText: string) => {
+  setOptions((opts) =>
+    opts.map((opt) => (opt.id === id ? { ...opt, text: newText } : opt))
+  );
+};
+
 
   const handleCorrectToggle = (id: number) => {
     setOptions((opts) =>
@@ -176,11 +180,17 @@ const Exam: React.FC = () => {
       topicname: selectedTopicData?.topictype || "",
       updated_at: null,
     };
-
+    console.log(payload,"payload")
+return 
     await dispatch(createQuestion(payload));
     console.log("SUBMIT PAYLOAD:", payload);
   };
-
+  const [selectedData,setSelectedData]=useState<any>(null)
+const handlesectionclick=(val:any)=>{
+  setActiveSection(val.id)
+  console.log(val,"valval")
+  setSelectedData(val)
+}
   return (
    
     <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
@@ -188,22 +198,17 @@ const Exam: React.FC = () => {
         {/* Header */}
         <div className="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-md">
           <div className="flex space-x-2">
-            {sectionNames.map((section: string | number | bigint | boolean | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<string | number | bigint | boolean | React.ReactPortal | React.ReactElement<unknown, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined> | ((prevState: string) => string) | null | undefined) => (
+            {selectedExamDetail.map((section:any) => (
               <button
-                key={section}
-                onClick={() => {
-                  setActiveSection(section);
-                  setActiveQuestion(1);
-                  setSelectedTopic("");
-                  setSelectedSubtopic("");
-                }}
+                key={section.id}
+                onClick={() => {handlesectionclick(section)}}
                 className={`w-24 h-12 text-lg font-semibold rounded-lg transition-colors ${
-                  section === activeSection
+                  section.id === activeSection
                     ? "bg-red-500 text-white shadow-md"
                     : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-100"
                 }`}
               >
-                {section}
+                {section?.sections?.sectiontype}
               </button>
             ))}
           </div>
@@ -212,7 +217,7 @@ const Exam: React.FC = () => {
             <div className="text-sm">
               <span className="text-gray-500 mr-2">Exam:</span>
               <span className="font-bold text-lg text-red-500">
-                {selectedexam?.examName} - {selectedexam?.examType}
+                {selectedexam?.examName} - { selectedExamDetail && selectedExamDetail.length>0 && selectedExamDetail[0]?.examType.name}
               </span>
             </div>
             <button
@@ -331,14 +336,15 @@ const Exam: React.FC = () => {
               {answerType === "MCQ" && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6 pt-4">
                 {options.map((opt) => (
-  <OptionWithLatex
-    key={opt.id}
-    choice={opt.label}
-    value={opt.text}
-    isCorrect={opt.isCorrect}
-    onChange={(e) => handleOptionTextChange(opt.id, e.target.value)}
-    onCheckToggle={() => handleCorrectToggle(opt.id)}
-  />
+ <OptionWithLatex
+  key={opt.id}
+  choice={opt.label}
+  value={opt.text}
+  isCorrect={opt.isCorrect}
+  onChange={(html) => handleOptionTextChange(opt.id, html)} // ✅
+  onCheckToggle={() => handleCorrectToggle(opt.id)}
+/>
+
 ))}
 
                 </div>

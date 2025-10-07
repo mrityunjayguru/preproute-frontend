@@ -47,7 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <ReduxProvider>
           {/* HEADER */}
-          {role === "admin" && isDashboard ? <DashboardHeader /> : <UserHeader />}
+          {role === "adminkkkk" && isDashboard ? <DashboardHeader /> : <UserHeader />}
 
           {/* MAIN CONTENT */}
           <main className="flex-1 bg-[#fff]">{children}</main>
