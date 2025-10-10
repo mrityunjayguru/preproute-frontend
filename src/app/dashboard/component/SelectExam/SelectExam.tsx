@@ -59,10 +59,13 @@ const mockSets = Array.from({ length: 50 }, (_, i) => `Mock ${i + 1}`);
       examTypeId:examType,
       questionPapername: yearOrSet, // can be year or set name
     };
-    await dispatch(createQuestionPaper(payload))
+   let responce:any= await dispatch(createQuestionPaper(payload))
     // await dispatch(handlesetSelectedExam(payload));
-    await dispatch(handleSelectedExamDetail(payload))
+    if(responce.payload==true){
+  await dispatch(handleSelectedExamDetail(payload))
     router.push("manageExam");
+    }
+  
   };
 
   // Get selected exam type name (to decide dropdown)

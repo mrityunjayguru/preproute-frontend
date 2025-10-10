@@ -16,7 +16,7 @@ interface TableToolbarPos {
   left: number;
 }
 
-export default function QuestionEditor({ onChange, value }: QuestionEditorProps) {
+export default function LatexForSoluction({ onChange, value }: QuestionEditorProps) {
   const dispatch = useDispatch<AppDispatch>();
   const editorRef = useRef<HTMLDivElement | null>(null);
   const savedRangeRef = useRef<Range | null>(null);
@@ -131,7 +131,7 @@ const createImageWrapper = (imageUrl: string) => {
 
   const img = document.createElement("img");
   img.src = imageUrl;
-  img.style.maxWidth = "50%";
+  img.style.maxWidth = "100%";
   img.style.maxHeight = "50%";
   img.style.borderRadius = "6px";
   img.style.display = "block";

@@ -115,8 +115,12 @@ export const handleUpdateData= createAsyncThunk<boolean, Payload>(
   topic.get,
   async (payload, thunkAPI) => {
     try {
-        thunkAPI.dispatch(setUpdatetopic(payload));
+    const data = await topicRepo.handleUpdateData(payload);
+      if (data.status === 200) {
+        GetMessage("success", "success");
+        // thunkAPI.dispatch(setvtopic(data.data.data));
         return true;
+      }
     } catch (err:any) {
       if(err.status==401){
         localStorage.removeItem("token")

@@ -5,18 +5,27 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { createTopic, getTopic, handleUpdateData } from "@/api/Topic"; // 👈 added update import
+import {
+  createTopic,
+  getTopic,
+  handlesetUpdateTopc,
+  handleUpdateData,
+   // 👈 make sure this action exists
+} from "@/api/Topic";
 
 const TopicForm = () => {
   const [topicName, setTopicName] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const dispatch = useDispatch<AppDispatch>();
-  const topicList = useSelector((state: any) => state?.topic?.topicList || []); // 👈 your topic array from redux
 
-  // Fetch all topics initially
+  // The topic selected for editing
+  const updateTopic = useSelector((state: any) => state.topic.updatetopic);
+  const topicList = useSelector((state: any) => state.topic.topicList || []);
+
+  // Fetch topics initially
   const fetchData = async () => {
-    const payload:any={}
+    const payload: any = {};
     await dispatch(getTopic(payload));
   };
 
@@ -24,38 +33,35 @@ const TopicForm = () => {
     fetchData();
   }, []);
 
-  // Check for existing topic as user types
-  const handleTopicChange = (value: string) => {
-    setTopicName(value);
-
-    const existing = topicList.find(
-      (t: any) => t.topic.trim().toLowerCase() === value.trim().toLowerCase()
-    );
-
-    if (existing) {
-      setEditingId(existing._id);
-      setTopicName(existing.topic);
-    } else {
-      setEditingId(null);
+  // Populate form when editing
+  useEffect(() => {
+    if (updateTopic && updateTopic._id) {
+      setTopicName(updateTopic.topic);
+      setEditingId(updateTopic._id);
     }
-  };
+  }, [updateTopic?._id]);
 
-  // Handle Add or Update
+  // Handle submit (Add or Update)
   const handleAddOrUpdate = async () => {
     if (!topicName.trim()) {
       alert("Please enter a topic name.");
       return;
     }
 
-    const payload:any = { topic: topicName };
+    const payload: any = { topic: topicName };
 
     if (editingId) {
+      // Update existing topic
       await dispatch(handleUpdateData({ id: editingId, ...payload }));
     } else {
+      // Create new topic
       await dispatch(createTopic(payload));
     }
-
+const data:any=null
+    // Reset Redux edit state and refetch
+    dispatch(handlesetUpdateTopc(data));
     await fetchData();
+
     setTopicName("");
     setEditingId(null);
   };
@@ -74,7 +80,7 @@ const TopicForm = () => {
             type="text"
             placeholder="Enter Topic"
             value={topicName}
-            onChange={(e) => handleTopicChange(e.target.value)}
+            onChange={(e) => setTopicName(e.target.value)}
             className="w-full"
           />
         </div>

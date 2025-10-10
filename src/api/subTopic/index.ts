@@ -66,9 +66,6 @@ export const getsubTopic= createAsyncThunk<boolean, Payload>(
 
 
 
-
-
-
 export const getSubTopicByTopicId= createAsyncThunk<boolean, Payload>(
   subTopic.get,
   async (payload, thunkAPI) => {
@@ -91,3 +88,47 @@ export const getSubTopicByTopicId= createAsyncThunk<boolean, Payload>(
   },
 );
 
+
+export const setUpdateSubTopic= createAsyncThunk<boolean, Payload>(
+  subTopic.get,
+  async (payload, thunkAPI) => {
+    try {
+        thunkAPI.dispatch(setUpdatesubTopic(payload));
+        return true;
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
+
+
+export const handlesetUpdatesubTopic= createAsyncThunk<boolean, Payload>(
+  subTopic.get,
+  async (payload, thunkAPI) => {
+    try {
+     const data = await subtopicRepo.handlesetUpdatesubTopic(payload);
+      if (data.status === 200) {
+          GetMessage("success", "success");
+
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);

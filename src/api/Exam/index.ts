@@ -112,3 +112,48 @@ export const handleSelectedExamDetail = createAsyncThunk<boolean, Payload>(
     return false;
   }
 );
+
+
+
+export const handlesetUpdateExam = createAsyncThunk<boolean, Payload>(
+  exam.get,
+  async (payload, thunkAPI) => {
+    try {
+        thunkAPI.dispatch(setUpdateexam(payload));
+        return true;
+    } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
+
+
+export const handleUpdateExam = createAsyncThunk<boolean, Payload>(
+  exam.get,
+  async (payload, thunkAPI) => {
+    try {
+   const data = await examRepo.handleUpdateExam(payload);
+      if (data.status === 200) {
+        GetMessage("success", "success");
+        return true;
+      }
+    } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
+

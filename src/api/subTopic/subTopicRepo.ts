@@ -11,6 +11,7 @@ interface subtopicRepo {
   createsubtopic: (payload: Payload) => Promise<AxiosResponse>;
   getsubtopic: (payload: Payload) => Promise<AxiosResponse>;
   getSubTopicByTopicId: (payload: any) => Promise<AxiosResponse>;
+  handlesetUpdatesubTopic: (payload: any) => Promise<AxiosResponse>;
 }
 
 export const subtopicRepo: subtopicRepo = {
@@ -23,5 +24,8 @@ export const subtopicRepo: subtopicRepo = {
   },
   getSubTopicByTopicId(payload) {
     return Repository.post(subTopic.getSubTopicByTopicId, payload);
+  },
+  handlesetUpdatesubTopic(payload) {
+    return Repository.post(subTopic.update, payload);
   },
 };

@@ -13,27 +13,49 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { getTopic } from "@/api/Topic";
-import { createsubTopic, getsubTopic } from "@/api/subTopic";
+import {
+  createsubTopic,
+  getsubTopic,
+  setUpdateSubTopic, // 👈 update API call
+  handlesetUpdatesubTopic, // 👈 to clear redux after update
+} from "@/api/subTopic";
 
 const SubTopicForm = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const topics = useSelector((state: any) => state?.topic?.topic) || [];
+  const updatesubTopic =
+    useSelector((state: any) => state?.subTopic?.updatesubTopic) || null;
 
   const [subtopicInput, setSubtopicInput] = useState<string>("");
   const [selectedTopic, setSelectedTopic] = useState<string>("");
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  // ✅ Fetch topics
-  const getData = async () => {
+  // ✅ Fetch all topics
+  const fetchTopics = async () => {
     const payload: any = {};
     await dispatch(getTopic(payload));
   };
 
+  const fetchSubTopics = async () => {
+    const payload: any = {};
+    await dispatch(getsubTopic(payload));
+  };
+
   useEffect(() => {
-    getData();
+    fetchTopics();
   }, []);
 
-  // ✅ Handle form submit
+  // ✅ Prefill form when editing a subtopic
+  useEffect(() => {
+    if (updatesubTopic && updatesubTopic._id) {
+      setSubtopicInput(updatesubTopic.subtopic);
+      setSelectedTopic(updatesubTopic.topic?._id || "");
+      setEditingId(updatesubTopic._id);
+    }
+  }, [updatesubTopic?._id]);
+
+  // ✅ Handle submit (create or update)
   const handleSubmit = async () => {
     if (!subtopicInput.trim() || !selectedTopic) {
       alert("Please fill all fields before submitting.");
@@ -41,22 +63,34 @@ const SubTopicForm = () => {
     }
 
     const payload: any = {
-      topic:selectedTopic,
+      topic: selectedTopic,
       subtopic: subtopicInput,
     };
 
-    await dispatch(createsubTopic(payload));
-    await dispatch(getsubTopic(payload));
-    
+    if (editingId) {
+      // 🔁 Update existing subtopic
+      await dispatch(handlesetUpdatesubTopic({ id: editingId, ...payload }));
+    } else {
+      // 🆕 Create new subtopic
+      await dispatch(createsubTopic(payload));
+    }
 
-    // Reset form
+    // ✅ Reset
     setSubtopicInput("");
     setSelectedTopic("");
+    setEditingId(null);
+    const data:any=null
+    dispatch(handlesetUpdatesubTopic(data));
+
+    // Refresh list
+    await fetchSubTopics();
   };
 
   return (
     <div className="bg-[#F7F7F5] p-6 rounded-lg shadow-md mb-6">
-      <h2 className="text-xl font-semibold mb-4">Create Sub-Topic</h2>
+      <h2 className="text-xl font-semibold mb-4">
+        {editingId ? "Update Sub-Topic" : "Create Sub-Topic"}
+      </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
         {/* Select Topic */}
@@ -93,7 +127,7 @@ const SubTopicForm = () => {
         {/* Submit Button */}
         <div className="col-span-2 flex justify-end mt-4">
           <Button onClick={handleSubmit} variant="orange">
-            Submit
+            {editingId ? "Update" : "Submit"}
           </Button>
         </div>
       </div>

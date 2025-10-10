@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { AppDispatch } from '@/store/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { getexam } from '@/api/Exam';
+import { getexam, handlesetUpdateExam } from '@/api/Exam';
 import CommonTable from '@/Common/CommonTable';
+import { formatDateTime } from '@/Common/ComonDate';
 
 const ExamTable: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -28,14 +29,19 @@ const ExamTable: React.FC = () => {
       // ✅ Custom render: true → Yes, false → No
       cell: (value: any) => (value ? "Yes" : "No") 
     },
-    { header: "Created At", accessor: "createdAt" },
+     {
+          header: "Created At",
+          accessor: (row: any) =>
+          row.createdAt ? formatDateTime(row.createdAt) : "-",
+     },
   ];
-
   // Optional: Apply search filter
   const filteredData = exam.filter((item: any) =>
     item.examname?.toLowerCase().includes(search.toLowerCase())
   );
-
+  const handleEdit=(val:any)=>{
+    dispatch(handlesetUpdateExam(val))
+  }
   return (
     <div className="bg-[#F7F7F5] p-6 rounded-lg">
       {/* Search box */}
@@ -51,6 +57,7 @@ const ExamTable: React.FC = () => {
       <CommonTable
         data={filteredData}
         columns={columns}
+        onEdit={handleEdit}
       />
     </div>
   );

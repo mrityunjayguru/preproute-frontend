@@ -9,6 +9,8 @@ import { getTopic } from "@/api/Topic";
 import { getSubTopicByTopicId } from "@/api/subTopic";
 import OptionWithLatex from "./OptionWithLatex";
 import QuestionWithOptionsEditor from "./Component/LatexCode";
+import LatexForSoluction from "./Component/LatexForSoluction";
+import { Input } from "@/components/ui/input";
 
 type AnswerType = "Numeric" | "MCQ";
 
@@ -38,20 +40,26 @@ const Exam: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>("");
   const [activeQuestion, setActiveQuestion] = useState<number>(1);
   const [selectedSectionData, setSelectedSectionData] = useState<any>(null);
+  const [numericAnswer,setNumericAnswer]=useState<Number>(0)
 
   const sectionsData = selectedExamDetail[0]?.examDetail?.sections || [];
   const sectionNames = sectionsData.map((sec: any) => sec.sectiontype);
 
   useEffect(()=>{
+    console.log(singleQuestion,"singleQuestionsingleQuestion")
 if(singleQuestion && singleQuestion.length>0){
-  console.log(singleQuestion,"singleQuestionsingleQuestion")
   setAnswerType(singleQuestion[0]?.answerType)
   setQuestionType(singleQuestion[0]?.questionType)
   setActiveSection(singleQuestion[0]?.section)
   setQuestionData(singleQuestion[0]?.questionText)
   setHintText(singleQuestion[0]?.hint)
+  setSelectedTopic(singleQuestion[0]?.topicId)
+  setSelectedSubtopic(singleQuestion[0]?.subtopicId)
+  setNumericAnswer(singleQuestion[0]?.numericAnswer)
 }else{
 setQuestionData("")
+  setSelectedTopic("")
+  setSelectedSubtopic("")
 }
   },[singleQuestion])
 
@@ -117,6 +125,7 @@ const handleSubmit = async () => {
       questionText: questionData,                  // HTML + LaTeX
       questionType: questionType,                  // Easy / Medium / Hard
       answerType: answerType,                      // MCQ / Numeric
+      numericAnswer:numericAnswer,    
       options:
         answerType === "MCQ"
           ? options.map((opt) => ({
@@ -137,7 +146,8 @@ const handleSubmit = async () => {
     await dispatch(handleUpdateQuestion(payload))
     }else{
     await dispatch(createQuestion(payload));
-
+  setSelectedTopic("")
+  setSelectedSubtopic("")
     }
   } catch (err) {
     console.error("Error creating question:", err);
@@ -201,6 +211,17 @@ const getOrdinalSuffix = (n: number) => {
 };
 
 
+const handleActiveSection=(val:any)=>{
+  setActiveQuestion(1)
+    setActiveSection(val.sectionId);
+    setSelectedSectionData(val);
+     const payload:any={
+    questionNo:1,
+    questionPaperId: selectedExamDetail[0]?._id, // The question paper ID
+    section: val.sectionId, 
+  }
+  dispatch(getQuestionById(payload))
+}
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-8 mt-20">
       <div className="max-w-7xl mx-auto">
@@ -210,10 +231,7 @@ const getOrdinalSuffix = (n: number) => {
             {sectionsData.map((section: any) => (
               <button
                 key={section.sectionId}
-                onClick={() => {
-                  setActiveSection(section.sectionId);
-                  setSelectedSectionData(section);
-                }}
+                onClick={() => handleActiveSection(section)}
                 className={`w-24 h-12 text-lg font-semibold rounded-lg transition-colors ${
                   section.sectionId === activeSection
                     ? "bg-red-500 text-white shadow-md"
@@ -346,6 +364,11 @@ const getOrdinalSuffix = (n: number) => {
                   ))}
                 </div>
               )}
+                {answerType === "Numeric" && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6 pt-4">
+                 <Input value={numericAnswer} onChange={(e)=>setNumericAnswer(e.target.value)} type="number" placeholder="Enter Value" />
+                </div>
+              )}
             </div>
           </div>
 
@@ -373,14 +396,16 @@ const getOrdinalSuffix = (n: number) => {
 
             {/* Hint */}
             <div className="rounded-xl bg-white shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Hint*</h3>
-              <textarea
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Soluction</h3>
+              {/* <textarea
                 placeholder="Enter Hint"
                 rows={6}
                 value={hintText}
                 onChange={(e) => setHintText(e.target.value)}
                 className="w-full rounded-lg border border-gray-200 px-3 py-2 resize-none"
-              />
+              /> */}
+              <LatexForSoluction value={hintText} onChange={setHintText} />
+
             </div>
           </div>
         </div>

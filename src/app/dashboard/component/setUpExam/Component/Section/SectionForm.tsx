@@ -50,9 +50,9 @@ const SectionForm = () => {
     } else {
       await dispatch(createsection(payload));
     }
-
+const data:any=null
     // ✅ Reset Redux and local form after save
-    dispatch(handlesetUpdatesection(null));
+    dispatch(handlesetUpdatesection(data));
     await getData();
 
     setSectionName("");

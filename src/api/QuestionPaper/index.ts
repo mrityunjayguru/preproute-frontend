@@ -17,29 +17,32 @@ const GetMessage = (type: any, messga: string) => {
   });
 };
 export const createQuestionPaper = createAsyncThunk<boolean, Payload>(
-  examType.create,
+  "examType/createQuestionPaper", // action type
   async (payload, thunkAPI) => {
     try {
       const data = await examTypeRepo.createQuestionPaper(payload);
+
       if (data.status === 200) {
-        GetMessage("success", "success");
-        // thunkAPI.dispatch(setvexamType(data.data.data));
+        GetMessage("success", "Question paper created successfully");
         return true;
       }
-    } catch (err:any) {
-      if(err.status==409){
-        GetMessage("warning", err.response.data.message);
-      }
-     else if(err.status==401){
-        localStorage.removeItem("token")
+
+      return false; // fallback
+    } catch (err: any) {
+      const status = err.response?.status;
+
+      if (status === 409) {
+        GetMessage("warning", err.response?.data?.message || "Already exists");
+      } else if (status === 401) {
+        localStorage.removeItem("token");
         GetMessage("warning", "Unauthorized");
-        window.location.href = "/signin"; 
-      }else{
-        GetMessage("warning", "something went wrong");
+        window.location.href = "/signin";
+      } else {
+        GetMessage("warning", "Something went wrong");
       }
+      return false;
     }
-    return false;
-  },
+  }
 );
 
 export const getExamType = createAsyncThunk<boolean, Payload>(
@@ -107,6 +110,30 @@ export const getExamBeExamTypeId = createAsyncThunk<boolean, Payload>(
     return false;
   },
 );
+
+
+
+export const handleUploadImage = createAsyncThunk<boolean, Payload>(
+  examType.get,
+  async (payload, thunkAPI) => {
+    try {
+       const data = await examTypeRepo.handleUploadImage(payload);
+      if (data.status === 200) {
+        return data.data.data;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
 
 
 

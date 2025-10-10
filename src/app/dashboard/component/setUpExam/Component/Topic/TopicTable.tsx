@@ -8,6 +8,7 @@ import { getsection } from "@/api/Section";
 import CommonTable from "@/Common/CommonTable";
 import { useSelector } from "react-redux";
 import { getTopic, handlesetUpdateTopc } from "@/api/Topic";
+import { formatDateTime } from "@/Common/ComonDate";
 
 const TopicTable = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,9 +25,11 @@ const TopicTable = () => {
   }, []);
   const columns = [
     { header: "Topic Name", accessor: "topic" },
-
-
-    { header: "Created At", accessor: "createdAt" },
+    {
+      header: "Created At",
+      accessor: (row: any) =>
+        row.createdAt ? formatDateTime(row.createdAt) : "-",
+    },
   ];
   const handleEdit=(val:any)=>{
     dispatch(handlesetUpdateTopc(val))

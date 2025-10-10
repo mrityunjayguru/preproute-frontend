@@ -1,5 +1,7 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,40 +10,53 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import React from "react";
 
 export function DashboardHeader() {
-  const router = useRouter()
-  const handleChangeRoute=(page:any)=>{
-  router.push(`${page}`)
-}
-return (
-    <nav className="bg-[#fff] fixed top-0 left-0 w-full z-50  h-16 flex items-center justify-between px-6 shadow-md">
+  const router = useRouter();
+  const pathname = usePathname(); // ✅ get current route
+
+  const handleChangeRoute = (page: string) => {
+    router.push(`${page}`);
+  };
+
+  // ✅ Helper to check if the current path is active
+  const isActive = (path: string) => pathname === `${path}`;
+  return (
+    <nav className="bg-white fixed top-0 left-0 w-full z-50 h-16 flex items-center justify-between px-6 shadow-md">
       {/* Logo */}
-      <span className="text-xl font-bold">
-        the<span className="textorange">prep</span>route
+      <span className="text-xl font-bold cursor-pointer">
+        the<span className="text-orange-500">prep</span>route
       </span>
 
       {/* Navigation Links */}
-      <div className="flex gap-x-8 text-sm text-[#000000]">
-        <a  onClick={()=>handleChangeRoute('home')} className="cursor-pointer">
-          Dashboard
-        </a>
-          <a  onClick={()=>handleChangeRoute('setupexam')} className="hover:textorange cursor-pointer">
-          Setup Exam
-        </a>
-        <a  onClick={()=>handleChangeRoute('exam')} className="hover:textorange cursor-pointer">
-          Create Exam
-        </a>
-        <a  className="hover:textorange cursor-pointer" >
-          Create Account
-        </a>
-        <a  className="hover:textorange cursor-pointer">
-          Analytics
-        </a>
+      <div className="flex gap-x-8 text-sm text-black">
+        {[
+          { label: "Dashboard", path: "home" },
+          { label: "Setup Exam", path: "setupexam" },
+          { label: "Create Question", path: "exam" },
+          { label: "Create Account", path: "createaccount" },
+          { label: "Analytics", path: "analytics" },
+        ].map((item) => (
+          <a
+            key={item.path}
+            onClick={() => handleChangeRoute(item.path)}
+            className={`cursor-pointer relative transition-colors duration-200 ${
+              isActive(item.path)
+                ? "text-orange-500 font-semibold"
+                : "hover:text-orange-400"
+            }`}
+          >
+            {item.label}
+            {isActive(item.path) && (
+              <span className="absolute bottom-[-4px] left-0 w-full h-[2px] bg-orange-500 rounded-full"></span>
+            )}
+          </a>
+        ))}
       </div>
 
       {/* User Profile */}
-      <div className="flex items-center gap-x-2 text-[#000000]">
+      <div className="flex items-center gap-x-2 text-black">
         <span className="text-sm">Operator One</span>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

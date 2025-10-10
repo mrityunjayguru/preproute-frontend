@@ -11,6 +11,7 @@ interface topicRepo {
   createtopic: (payload: Payload) => Promise<AxiosResponse>;
   gettopic: (payload: Payload) => Promise<AxiosResponse>;
   getalltopicsbysectionid: (payload: any) => Promise<AxiosResponse>;
+  handleUpdateData: (payload: any) => Promise<AxiosResponse>;
 }
 
 export const topicRepo: topicRepo = {
@@ -20,6 +21,9 @@ export const topicRepo: topicRepo = {
   },
     gettopic(payload) {
     return Repository.post(topic.get, payload);
+  },
+  handleUpdateData(payload) {
+    return Repository.post(topic.update, payload);
   },
   getalltopicsbysectionid(payload) {
   return Repository.get(`${topic.getalltopicsbysectionid}?sectionid=${payload.id}`);

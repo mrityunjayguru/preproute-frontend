@@ -4,19 +4,19 @@ import { Input } from "@/components/ui/input";
 
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { getsubTopic } from "@/api/subTopic";
+import { getsubTopic, setUpdateSubTopic } from "@/api/subTopic";
 import CommonTable from "@/Common/CommonTable";
+import { formatDateTime } from "@/Common/ComonDate";
 
 const SubTopicTable = () => {
   const dispatch = useDispatch<AppDispatch>();
   const subTopics = useSelector((state: any) => state?.subTopic?.subTopic || []);
   const [search, setSearch] = useState("");
-console.log(subTopics,"subTopicssubTopics")
   const getData = async () => {
     const payload:any={}
     await dispatch(getsubTopic(payload));
   };
-
+  
   useEffect(() => {
     getData();
   }, []);
@@ -33,8 +33,16 @@ console.log(subTopics,"subTopicssubTopics")
   const columns = [
     { header: "subtopic Name", accessor: "subtopic" },
     { header: "Section Name", accessor: "topic.topic" },
-    { header: "Created At", accessor: "createdAt" },
+   {
+       header: "Created At",
+       accessor: (row: any) =>
+         row.createdAt ? formatDateTime(row.createdAt) : "-",
+     },
   ];
+
+  const handleEdit=(val:any)=>{
+    dispatch(setUpdateSubTopic(val))
+  }
 
   return (
     <div className="bg-[#F7F7F5] p-6 rounded-lg">
@@ -48,7 +56,9 @@ console.log(subTopics,"subTopicssubTopics")
       />
 
       {/* CommonTable */}
-      <CommonTable data={filteredSubTopics} columns={columns} />
+      <CommonTable data={filteredSubTopics} columns={columns}  onEdit={handleEdit}
+      
+      />
     </div>
   );
 };
