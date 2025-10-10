@@ -108,3 +108,25 @@ export const handlesetUpdateTopc= createAsyncThunk<boolean, Payload>(
   },
 );
 
+
+
+
+export const handleUpdateData= createAsyncThunk<boolean, Payload>(
+  topic.get,
+  async (payload, thunkAPI) => {
+    try {
+        thunkAPI.dispatch(setUpdatetopic(payload));
+        return true;
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
