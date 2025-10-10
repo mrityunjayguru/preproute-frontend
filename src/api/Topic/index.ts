@@ -48,7 +48,7 @@ export const getTopic= createAsyncThunk<boolean, Payload>(
     try {
       const data = await topicRepo.gettopic(payload);
       if (data.status === 200) {
-        thunkAPI.dispatch(settopic(data.data));
+        thunkAPI.dispatch(settopic(data.data.data));
         return true;
       }
     } catch (err:any) {
@@ -88,4 +88,23 @@ export const getalltopicsbysectionid= createAsyncThunk<boolean, Payload>(
 );
 
 
+
+export const handlesetUpdateTopc= createAsyncThunk<boolean, Payload>(
+  topic.get,
+  async (payload, thunkAPI) => {
+    try {
+        thunkAPI.dispatch(setUpdatetopic(payload));
+        return true;
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
 

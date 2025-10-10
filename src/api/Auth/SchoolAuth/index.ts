@@ -47,9 +47,10 @@ export const handleRegister = createAsyncThunk<boolean, Payload>(
     try {
       const data = await AuthRepo.userRegister(payload);
       if (data.status === 200) {
+        console.log(data.data.user)
         thunkAPI.dispatch(setAuth(data.data.user));
         GetMessage("success", "success");
-        // localStorage.setItem("token",data.data.user.token);
+        localStorage.setItem("token",data.data.user.token);
         // window.location.href = '/home';
         return true;
       }

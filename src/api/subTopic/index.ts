@@ -48,7 +48,7 @@ export const getsubTopic= createAsyncThunk<boolean, Payload>(
     try {
       const data = await subtopicRepo.getsubtopic(payload);
       if (data.status === 200) {
-        thunkAPI.dispatch(setsubTopic(data.data));
+        thunkAPI.dispatch(setsubTopic(data.data.data));
         return true;
       }
     } catch (err:any) {
@@ -66,13 +66,16 @@ export const getsubTopic= createAsyncThunk<boolean, Payload>(
 
 
 
-export const getallsubtopicsbytopicid= createAsyncThunk<boolean, Payload>(
+
+
+
+export const getSubTopicByTopicId= createAsyncThunk<boolean, Payload>(
   subTopic.get,
   async (payload, thunkAPI) => {
     try {
-      const data = await subtopicRepo.getallsubtopicsbytopicid(payload);
+      const data = await subtopicRepo.getSubTopicByTopicId(payload);
       if (data.status === 200) {
-        thunkAPI.dispatch(setsubTopic(data.data));
+        thunkAPI.dispatch(setsubTopic(data.data.data));
         return true;
       }
     } catch (err:any) {
@@ -87,3 +90,4 @@ export const getallsubtopicsbytopicid= createAsyncThunk<boolean, Payload>(
     return false;
   },
 );
+

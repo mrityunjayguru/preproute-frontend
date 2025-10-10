@@ -12,7 +12,7 @@ interface examTypeRepo {
   getExamType: (payload: Payload) => Promise<AxiosResponse>;
   selectedExamType: (payload: Payload) => Promise<AxiosResponse>;
   getExamBeExamTypeId: (payload: any) => Promise<AxiosResponse>;
-
+updateExamType: (payload: any) => Promise<AxiosResponse>;
 }
 
 export const examTypeRepo: examTypeRepo = {
@@ -21,12 +21,15 @@ export const examTypeRepo: examTypeRepo = {
     });
   },
     getExamType(payload) {
-    return Repository.get(examType.get, payload);
+    return Repository.post(examType.get, payload);
   },
     selectedExamType(payload) {
     return Repository.get(examType.get, payload);
   },
   getExamBeExamTypeId(payload) {
  return Repository.get(`${examType.getExamBeExamTypeId}?examtypeid=${payload.id}`);
+  },
+    updateExamType(payload) {
+ return Repository.post(examType.update, payload);
   },
 };

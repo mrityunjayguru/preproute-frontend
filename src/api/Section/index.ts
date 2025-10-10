@@ -48,7 +48,7 @@ export const getsection= createAsyncThunk<boolean, Payload>(
     try {
       const data = await sectionRepo.getsection(payload);
       if (data.status === 200) {
-        thunkAPI.dispatch(setsection(data.data));
+        thunkAPI.dispatch(setsection(data.data.data));
         return true;
       }
     } catch (err:any) {
@@ -87,3 +87,47 @@ export const getSectionByExamId= createAsyncThunk<boolean, Payload>(
     return false;
   },
 );
+
+
+export const handlesetUpdatesection= createAsyncThunk<boolean, Payload>(
+  section.get,
+  async (payload, thunkAPI) => {
+    try {
+        thunkAPI.dispatch(setUpdatesection(payload));
+        return true;
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
+
+export const handleUpdateData= createAsyncThunk<boolean, Payload>(
+  section.get,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await sectionRepo.updateSection(payload);
+      if (data.status === 200) {
+         GetMessage("success", "success");
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+

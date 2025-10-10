@@ -1,17 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  setexam,
-  setUpdateexam,
-  setSingleexam,
-  setSelectedExam,
-  setSelectedExamDetail,
-} from "../../store/seatUpexam/exam";
-import APIName, { exam } from "../endPoints";
-import { examRepo } from "./ExamRepo";
+  setDashboard,
+  setUpdateDashboard,
+  setSingleDashboard,
+} from "../../store/dashboard";
+import APIName, { Dashboard } from "../endPoints";
+import { DashboardRepo } from "./DashboardRepo";
 import Swal from "sweetalert2";
 
 interface Payload {
-  // Define your payload structure here, for example:
+  // Define your payload structure here, for Dashboardple:
   someField: string; // replace this with actual fields
 }
 const GetMessage = (type: any, messga: string) => {
@@ -22,14 +20,14 @@ const GetMessage = (type: any, messga: string) => {
     timer: 2000,
   });
 };
-export const createexam = createAsyncThunk<boolean, Payload>(
-  exam.create,
+export const createDashboard = createAsyncThunk<boolean, Payload>(
+  Dashboard.create,
   async (payload, thunkAPI) => {
     try {
-      const data = await examRepo.createexam(payload);
+      const data = await DashboardRepo.createDashboard(payload);
       if (data.status === 200) {
         GetMessage("success", "success");
-        // thunkAPI.dispatch(setvexam(data.data.data));
+        // thunkAPI.dispatch(setvDashboard(data.data.data));
         return true;
       }
     } catch (err: any) {
@@ -47,13 +45,13 @@ export const createexam = createAsyncThunk<boolean, Payload>(
   }
 );
 
-export const getexam = createAsyncThunk<boolean, Payload>(
-  exam.get,
+export const getDashboardData = createAsyncThunk<boolean, Payload>(
+  Dashboard.get,
   async (payload, thunkAPI) => {
     try {
-      const data = await examRepo.getexam(payload);
+      const data = await DashboardRepo.getDashboard(payload);
       if (data.status === 200) {
-        thunkAPI.dispatch(setexam(data.data.data));
+        thunkAPI.dispatch(setDashboard(data.data.data));
         return true;
       }
     } catch (err: any) {
@@ -69,13 +67,13 @@ export const getexam = createAsyncThunk<boolean, Payload>(
   }
 );
 
-export const handlesetSelectedExam = createAsyncThunk<boolean, Payload>(
-  exam.get,
+export const handlesetSelectedDashboard = createAsyncThunk<boolean, Payload>(
+  Dashboard.get,
   async (payload, thunkAPI) => {
     try {
-      const data = await examRepo.getexam(payload);
+      const data = await DashboardRepo.getDashboard(payload);
       if (data.status === 200) {
-        thunkAPI.dispatch(setSelectedExam(payload));
+        thunkAPI.dispatch(setDashboard(payload));
         return true;
       }
     } catch (err: any) {
@@ -91,13 +89,13 @@ export const handlesetSelectedExam = createAsyncThunk<boolean, Payload>(
   }
 );
 
-export const handleSelectedExamDetail = createAsyncThunk<boolean, Payload>(
-  exam.get,
+export const handleSelectedDashboardDetail = createAsyncThunk<boolean, Payload>(
+  Dashboard.get,
   async (payload, thunkAPI) => {
     try {
-      const data = await examRepo.handleSelectedExamDetail(payload);
+      const data = await DashboardRepo.handleSelectedDashboardDetail(payload);
       if (data.status === 200) {
-        thunkAPI.dispatch(setSelectedExamDetail(data.data.data));
+        thunkAPI.dispatch(setDashboard(data.data.data));
         return true;
       }
     } catch (err: any) {

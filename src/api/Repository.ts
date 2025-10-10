@@ -1,7 +1,10 @@
 import { AxiosInstance } from "axios";
 import axios from "axios";
+const baseUrl="http://13.232.97.77:3200/api/"
+// const baseUrl="http://localhost:3200/api/"
+
 const Repository: AxiosInstance = axios.create({
-  baseURL: "http://13.204.25.170:8085/api/",
+  baseURL:baseUrl,
 });
 
 // Add a request interceptor to set the Authorization header

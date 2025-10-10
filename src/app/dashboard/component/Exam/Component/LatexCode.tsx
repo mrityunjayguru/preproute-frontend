@@ -4,6 +4,7 @@ import { BlockMath } from "react-katex";
 import "katex/dist/katex.min.css";
 
 interface QuestionEditorProps {
+  value?: string; // optional initial value
   onChange: (content: string) => void;
 }
 
@@ -12,10 +13,9 @@ interface TableToolbarPos {
   left: number;
 }
 
-export default function QuestionEditor({ onChange }: QuestionEditorProps) {
+export default function QuestionEditor({ onChange,value }: QuestionEditorProps) {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const savedRangeRef = useRef<Range | null>(null);
-
   const [content, setContent] = useState<string>("");
   const [showLatexModal, setShowLatexModal] = useState<boolean>(false);
   const [latexInput, setLatexInput] = useState<string>("");
@@ -23,6 +23,26 @@ export default function QuestionEditor({ onChange }: QuestionEditorProps) {
   const [selectedTable, setSelectedTable] = useState<HTMLTableElement | null>(null);
   const [tableToolbarPos, setTableToolbarPos] = useState<TableToolbarPos>({ top: 0, left: 0 });
   const [selectedOption, setSelectedOption] = useState<HTMLOptionElement | null>(null);
+useEffect(() => {
+  if (editorRef.current) {
+    if (value && value.trim() !== "") {
+      if (editorRef.current.innerHTML !== value) {
+        editorRef.current.innerHTML = value;
+        setContent(value);
+      }
+    } else {
+      editorRef.current.innerHTML = ""; // ✅ show blank if no data
+      setContent("");
+    }
+  }
+}, [value]);
+
+const updateContent = () => {
+  if (editorRef.current) {
+    setContent(editorRef.current.innerHTML);
+  }
+};
+
 
   useEffect(() => {
     onChange(content);
@@ -156,9 +176,7 @@ const insertTable = (rows = 3, cols = 3) => {
     range.collapse(true);
   };
 
-  const updateContent = () => {
-    if (editorRef.current) setContent(editorRef.current.innerHTML);
-  };
+  
 
   const handleEditorClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const table = (e.target as HTMLElement).closest("table") as HTMLTableElement | null;
@@ -237,13 +255,14 @@ const insertTable = (rows = 3, cols = 3) => {
       </div>
 
       {/* Editor */}
-      <div
-        ref={editorRef}
-        className="editor"
-        contentEditable
-        onInput={updateContent}
-        onClick={handleEditorClick}
-      />
+     <div
+  ref={editorRef}
+  className="editor"
+  contentEditable
+  suppressContentEditableWarning={true}
+  onInput={updateContent}
+  onClick={handleEditorClick}
+/>
 
       {/* Table Toolbar */}
       {showTableToolbar && (

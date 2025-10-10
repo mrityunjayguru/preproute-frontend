@@ -10,7 +10,7 @@ interface Payload {
 interface subtopicRepo {
   createsubtopic: (payload: Payload) => Promise<AxiosResponse>;
   getsubtopic: (payload: Payload) => Promise<AxiosResponse>;
-  getallsubtopicsbytopicid: (payload: any) => Promise<AxiosResponse>;
+  getSubTopicByTopicId: (payload: any) => Promise<AxiosResponse>;
 }
 
 export const subtopicRepo: subtopicRepo = {
@@ -19,10 +19,9 @@ export const subtopicRepo: subtopicRepo = {
     });
   },
     getsubtopic(payload) {
-    return Repository.get(subTopic.get, payload);
+    return Repository.post(subTopic.get, payload);
   },
-  getallsubtopicsbytopicid(payload) {
-  return Repository.get(`${subTopic.getallsubtopicsbytopicid}?topicid=${payload.id}`);
-
+  getSubTopicByTopicId(payload) {
+    return Repository.post(subTopic.getSubTopicByTopicId, payload);
   },
 };

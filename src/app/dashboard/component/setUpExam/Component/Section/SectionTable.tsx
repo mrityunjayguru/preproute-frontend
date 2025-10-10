@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { getsection } from "@/api/Section";
+import { getsection, handlesetUpdatesection } from "@/api/Section";
 import CommonTable from "@/Common/CommonTable";
+import { formatDateTime } from "@/Common/ComonDate";
 
 const SectionTable = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,21 +22,18 @@ const SectionTable = () => {
     getData();
   }, []);
 
-  // ✅ Apply filtering logic
-  const filteredSections = sections.filter((section: any) => {
-    const searchLower = search.toLowerCase();
-    return (
-      section?.sectiontype?.toLowerCase().includes(searchLower) ||
-      section?.examType?.name?.toLowerCase().includes(searchLower)
-    );
-  });
 
   const columns = [
-    { header: "Section Name", accessor: "sectiontype" },
-    { header: "Exam Type Name", accessor: "examType.name" },
-    { header: "Created At", accessor: "createdAt" },
+    { header: "Section Name", accessor: "section" },
+   {
+        header: "Created At",
+        accessor: (row: any) =>
+          row.createdAt ? formatDateTime(row.createdAt) : "-",
+      },
   ];
-
+const handleEdit=(data:any)=>{
+  dispatch(handlesetUpdatesection(data))
+}
   return (
     <div className="bg-[#F7F7F5] p-6 rounded-lg">
       {/* Search box */}
@@ -48,7 +46,8 @@ const SectionTable = () => {
       />
 
       {/* CommonTable */}
-      <CommonTable data={filteredSections} columns={columns} />
+        
+      <CommonTable data={sections} columns={columns} onEdit={handleEdit}/>
     </div>
   );
 };

@@ -1,10 +1,9 @@
 import React from 'react'
-import Exam from '../component/Exam/Exam'
 
 function page() {
   return (
-    <div className=''>
-      <Exam/>
+    <div>
+      registerrrrrr
     </div>
   )
 }

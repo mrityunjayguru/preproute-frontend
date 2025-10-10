@@ -4,15 +4,12 @@ import { Input } from "@/components/ui/input";
 import CommonTable from "@/Common/CommonTable";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { getExamType } from "@/api/ExamType";
+import { getExamType, handleUpdateExamType } from "@/api/ExamType";
+import { formatDateTime } from "@/Common/ComonDate";
 
 interface ExamType {
   id: number;
-  name: string;
-  code?: string;
-  description?: string | null;
-  examduration?: number | null;
-  switchable?: boolean | null;
+  examType: string;
   createdAt?: string | null;
   updatedAt?: string | null;
   [key: string]: any;
@@ -20,21 +17,35 @@ interface ExamType {
 
 const ExamTypeTable: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const examTypeData = useSelector((state: any) => state.examType.examType) || [];
+  const examTypeData = useSelector(
+    (state: any) => state.examType.examType
+  ) || [];
+
   const [search, setSearch] = useState("");
+
   // Fetch exam types
   const fetchData = async () => {
-    const payload:any={}
-    await dispatch(getExamType(payload));
+    const pauload:any={}
+    await dispatch(getExamType(pauload));
   };
+
   useEffect(() => {
     fetchData();
   }, []);
+
   // Define columns dynamically
   const columns = [
-    { header: "Exam Name", accessor: "name" },
-    { header: "Created At", accessor: "createdAt" },
+    { header: "Exam Name", accessor: "examType" },
+    {
+      header: "Created At",
+      accessor: (row: any) =>
+        row.createdAt ? formatDateTime(row.createdAt) : "-",
+    },
   ];
+
+  const handleEdit = async (data: any) => {
+    await dispatch(handleUpdateExamType(data));
+  };
 
   return (
     <div className="bg-[#F7F7F5] p-6 rounded-lg">
@@ -51,6 +62,7 @@ const ExamTypeTable: React.FC = () => {
       <CommonTable
         data={examTypeData}
         columns={columns}
+        onEdit={handleEdit}
       />
     </div>
   );

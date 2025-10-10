@@ -22,11 +22,6 @@ const ExamTable: React.FC = () => {
   // Define columns same as your exam JSON structure
   const columns = [
     { header: "Exam Name", accessor: "examname" },
-    { header: "Exam Type", accessor: "examType.name" },
-    { header: "Duration (min)", accessor: "examduration" },
-    { header: "Section ", accessor: "sections.sectiontype" },
-    { header: "Topic ", accessor: "topic.topictype" },
-    { header: "Subtopic ", accessor: "subtopic.subtopictype" },
    { 
       header: "Switchable", 
       accessor: "switchable",

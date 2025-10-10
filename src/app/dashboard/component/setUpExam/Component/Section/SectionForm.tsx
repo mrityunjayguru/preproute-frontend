@@ -5,104 +5,84 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { AppDispatch } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { createsection, getsection } from "@/api/Section";
-import { getExamType } from "@/api/ExamType";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { createsection, getsection, handlesetUpdatesection, handleUpdateData } from "@/api/Section"; // 👈 import update
 
 const SectionForm = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  // Redux exam types
-  const examTypeData = useSelector((state: any) => state.examType.examType) || [];
-console.log(examTypeData,"examTypeDataexamTypeData")
+  const sectionData = useSelector(
+    (state: any) => state.section.updatesection || []
+  );
   const [sectionName, setSectionName] = useState("");
-  const [selectedExamType, setSelectedExamType] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  // Fetch exam types
-  const fetchData = async () => {
-    const payload:any={}
-    await dispatch(getExamType(payload));
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+  // Load sections initially
   const getData = async () => {
     const payload:any={}
     await dispatch(getsection(payload));
   };
 
-  const handleAddSection = async () => {
-    if (!selectedExamType || !sectionName) {
-      alert("Please select exam type and enter section name.");
-      return;
+  useEffect(() => {
+    getData();
+  }, []);
+
+  // Handle submit
+  const handleAddOrUpdateSection = async () => {
+    const payload: any = { section: sectionName };
+
+    if (editingId) {
+      // 👇 Update existing section
+      await dispatch(handleUpdateData({ id: editingId, ...payload }));
+    } else {
+      // 👇 Create new section
+      await dispatch(createsection(payload));
     }
+    let data:any=null
+  dispatch(handlesetUpdatesection(data))
 
-    const payload: any = {
-      sectiontype: sectionName,
-      examType:{
-        id:selectedExamType
-      }
-    };
-
-    await dispatch(createsection(payload));
     await getData();
     setSectionName("");
-    setSelectedExamType("");
+    setEditingId(null);
   };
+
+  // Check if section exists when user types
+  const handleSectionChange = (value: string) => {
+    setSectionName(value);
+  };
+
+  useEffect(()=>{
+      setSectionName(sectionData.section);
+      setEditingId(sectionData._id);
+
+
+  },[sectionData])
 
   return (
     <div className="bg-[#F7F7F5] p-6 rounded-lg mb-6">
-      <h2 className="text-xl font-semibold mb-4">Create Sections</h2>
+      <h2 className="text-xl font-semibold mb-4">
+        {editingId ? "Update Section" : "Create Section"}
+      </h2>
 
       <div className="flex flex-col md:flex-row gap-4 md:w-3/4">
-        {/* Exam Type Select */}
-        <div className="flex-1 ">
-          <Label className="mb-2 block">Select Exam Type</Label>
-          <Select
-            value={selectedExamType}
-            onValueChange={setSelectedExamType}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Choose Exam Type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {examTypeData.map((exam: any) => (
-                  <SelectItem key={exam.id} value={exam.id}>
-                    {exam.name}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-
         {/* Section Name */}
-
         <div className="flex-1">
           <Label className="mb-2 block">Enter Section Name</Label>
           <Input
             type="text"
             placeholder="Enter Section Name"
             value={sectionName}
-            onChange={(e) => setSectionName(e.target.value)}
+            onChange={(e) => handleSectionChange(e.target.value)}
           />
         </div>
 
-      
         {/* Submit Button */}
         <div className="flex items-end">
-          <Button onClick={handleAddSection} variant="orange" className="h-10">
-            Submit
+          <Button
+            onClick={handleAddOrUpdateSection}
+            variant="orange"
+            className="h-10"
+          >
+            {editingId ? "Update" : "Submit"}
           </Button>
         </div>
       </div>

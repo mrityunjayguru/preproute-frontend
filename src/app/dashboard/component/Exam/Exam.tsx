@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { Check, Minus } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { createQuestion } from "@/api/Question";
-import MathEditor from "./Quil";
-import OptionWithLatex from "./OptionWithLatex"
-import RichTextEditor from "./Component/RichTextEditor";
+import { createQuestion, getQuestionById, handleUpdateQuestion } from "@/api/Question";
+import { getTopic } from "@/api/Topic";
+import { getSubTopicByTopicId } from "@/api/subTopic";
+import OptionWithLatex from "./OptionWithLatex";
 import QuestionWithOptionsEditor from "./Component/LatexCode";
 
 type AnswerType = "Numeric" | "MCQ";
@@ -19,196 +19,208 @@ interface Option {
   label: string;
 }
 
-interface Topic {
-  id: string;
-  topictype: string;
-  sectionId: string;
-}
-
-interface Subtopic {
-  id: string;
-  subtopictype: string;
-  topic?: Topic;
-}
-
-interface AnswerOptionProps {
-  choice: string;
-  value: string;
-  isCorrect: boolean;
-  onCheckToggle: () => void;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-}
-
-const AnswerOption: React.FC<AnswerOptionProps> = ({
-  choice,
-  value,
-  isCorrect,
-  onCheckToggle,
-  onChange,
-}) => (
-  <div className="flex flex-col space-y-2">
-    <div className="flex items-center space-x-2">
-      <input
-        className="flex h-10 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-        placeholder={`${choice} Choice`}
-        value={value}
-        onChange={onChange}
-      />
-      <div
-        className={`flex items-center space-x-1 cursor-pointer p-2 rounded-lg ${
-          isCorrect
-            ? "bg-green-100 text-green-700"
-            : "bg-gray-100 text-gray-500 hover:bg-gray-200"
-        }`}
-        onClick={onCheckToggle}
-      >
-        {isCorrect ? (
-          <Check className="w-4 h-4" />
-        ) : (
-          <Minus className="w-4 h-4 opacity-0" />
-        )}
-        <span className="text-sm font-semibold">
-          {isCorrect ? "Marked Correct" : "Mark Correct"}
-        </span>
-      </div>
-    </div>
-  </div>
-);
-
 const Exam: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
+
+  // Redux data
   const selectedexam = useSelector((state: any) => state?.exam?.selectedexam);
   const selectedExamDetail = useSelector((state: any) => state?.exam?.selectedExamDetail);
-
-  
-  console.log("selectedExamDetailselectedExamDetail:", selectedExamDetail);
-  const [questionData, setQuestionData] = useState({})
-
-  const sectionsData = selectedexam?.sections || [];
-  const topicsData: Topic[] = selectedexam?.topics || [];
-  const subtopicsData: Subtopic[] = selectedexam?.subtopics || [];
- const [question, setQuestion] = useState<string>("");
-  const sectionNames = sectionsData.map((sec: any) => sec.sectiontype);
-  const [activeSection, setActiveSection] = useState<string>(
-    sectionNames[0] || ""
-  );
-  const [activeQuestion, setActiveQuestion] = useState<number>(1);
-  const [answerType, setAnswerType] = useState<AnswerType>("MCQ");
-
+  const topic = useSelector((state: any) => state?.topic?.topic);
+  const subtopicData = useSelector((state: any) => state?.subTopic?.subTopic);
+  const singleQuestion=useSelector((state:any)=>state.question.singleQuestion)
+  // Local state
+  const [questionData, setQuestionData] = useState<string>("");
   const [selectedTopic, setSelectedTopic] = useState<string>("");
   const [selectedSubtopic, setSelectedSubtopic] = useState<string>("");
-  const [questionType, setQuestionType] = useState<string>("Easy"); // ✅ radio buttons
-
-  const [questionText, setQuestionText] = useState<string>("");
+  const [questionType, setQuestionType] = useState<string>("Easy");
+  const [answerType, setAnswerType] = useState<AnswerType>("MCQ");
   const [hintText, setHintText] = useState<string>("");
+  const [activeSection, setActiveSection] = useState<string>("");
+  const [activeQuestion, setActiveQuestion] = useState<number>(1);
+  const [selectedSectionData, setSelectedSectionData] = useState<any>(null);
 
-  const initialOptions: Option[] = [
+  const sectionsData = selectedExamDetail[0]?.examDetail?.sections || [];
+  const sectionNames = sectionsData.map((sec: any) => sec.sectiontype);
+
+  useEffect(()=>{
+if(singleQuestion && singleQuestion.length>0){
+  console.log(singleQuestion,"singleQuestionsingleQuestion")
+  setAnswerType(singleQuestion[0]?.answerType)
+  setQuestionType(singleQuestion[0]?.questionType)
+  setActiveSection(singleQuestion[0]?.section)
+  setQuestionData(singleQuestion[0]?.questionText)
+  setHintText(singleQuestion[0]?.hint)
+}else{
+setQuestionData("")
+}
+  },[singleQuestion])
+
+  useEffect(() => {
+    if (sectionNames.length > 0) {
+      setActiveSection(sectionNames[0]);
+    }
+    getTopicData();
+  }, []);
+
+  // Fetch Topics
+  const getTopicData = async () => {
+    try {
+      const payload:any={}
+      await dispatch(getTopic(payload));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Fetch Subtopics when Topic changes
+  useEffect(() => {
+    if (selectedTopic) {
+      const payload:any={
+         topicId: selectedTopic 
+      }
+      dispatch(getSubTopicByTopicId(payload));
+    }
+  }, [selectedTopic, dispatch]);
+
+  // Default options
+  const [options, setOptions] = useState<Option[]>([
     { id: 1, text: "", isCorrect: true, label: "1st" },
     { id: 2, text: "", isCorrect: false, label: "2nd" },
     { id: 3, text: "", isCorrect: false, label: "3rd" },
     { id: 4, text: "", isCorrect: false, label: "4th" },
-  ];
+  ]);
 
-  const [options, setOptions] = useState<Option[]>(initialOptions);
+  const handleOptionTextChange = (id: number, newText: string) => {
+    setOptions((opts) => opts.map((opt) => (opt.id === id ? { ...opt, text: newText } : opt)));
+  };
 
-const handleOptionTextChange = (id: number, newText: string) => {
-  setOptions((opts) =>
-    opts.map((opt) => (opt.id === id ? { ...opt, text: newText } : opt))
-  );
+  const handleCorrectToggle = (id: number) => {
+    setOptions((opts) => opts.map((opt) => ({ ...opt, isCorrect: opt.id === id })));
+  };
+
+  const totalQuestions = selectedSectionData?.noOfQuestions || 10;
+  const questionNumbers = Array.from({ length: totalQuestions }, (_, i) => i + 1);
+
+  // Submit
+const handleSubmit = async () => {
+  try {
+    // ✅ Extract correct answer
+    const correctAnswer = options.find((opt) => opt.isCorrect)?.text || "";
+
+    // ✅ Build clean payload for backend schema
+    const payload:any = {
+      questionPaperId: selectedExamDetail[0]?._id, // The question paper ID
+      section: activeSection,                      // Section ObjectId
+      topicId: selectedTopic || null,              // Optional
+      subtopicId: selectedSubtopic || null ,        // Optional
+      questionNo: activeQuestion,
+      questionText: questionData,                  // HTML + LaTeX
+      questionType: questionType,                  // Easy / Medium / Hard
+      answerType: answerType,                      // MCQ / Numeric
+      options:
+        answerType === "MCQ"
+          ? options.map((opt) => ({
+              text: opt.text,
+              isCorrect: opt.isCorrect,
+            }))
+          : [],
+      correctAnswer:
+        answerType === "Numeric"
+          ? correctAnswer
+          : options.find((opt) => opt.isCorrect)?.text || "",
+      hint: hintText,
+      createdBy: "6710fbc3f2b9b9e...", // replace with logged-in user ID
+    };
+
+    if(singleQuestion && singleQuestion.length>0){
+    payload._id=singleQuestion[0]._id
+    await dispatch(handleUpdateQuestion(payload))
+    }else{
+    await dispatch(createQuestion(payload));
+
+    }
+  } catch (err) {
+    console.error("Error creating question:", err);
+  }
+};
+const handleActiveQuestion=(val:any)=>{
+  const payload:any={
+    questionNo:val,
+    questionPaperId: selectedExamDetail[0]?._id, // The question paper ID
+    section: activeSection, 
+  }
+  dispatch(getQuestionById(payload))
+  setActiveQuestion(val)
+}
+useEffect(() => {
+  if (singleQuestion && singleQuestion.length > 0) {
+    const q = singleQuestion[0];
+
+    setAnswerType(q.answerType || "MCQ");
+    setQuestionType(q.questionType || "Easy");
+    setActiveSection(q.section || "");
+    setQuestionData(q.questionText || "");
+    setHintText(q.hint || "");
+
+    // ✅ Set options (for MCQ)
+    if (q.answerType === "MCQ" && Array.isArray(q.options)) {
+      setOptions(
+        q.options.map((opt: any, index: number) => ({
+          id: index + 1,
+          text: opt.text || "",
+          isCorrect: opt.isCorrect || false,
+          label: `${index + 1}${getOrdinalSuffix(index + 1)}`, // “1st”, “2nd”, etc.
+        }))
+      );
+    } else {
+      // For non-MCQ questions, clear options
+      setOptions([
+        { id: 1, text: "", isCorrect: true, label: "1st" },
+        { id: 2, text: "", isCorrect: false, label: "2nd" },
+        { id: 3, text: "", isCorrect: false, label: "3rd" },
+        { id: 4, text: "", isCorrect: false, label: "4th" },
+      ]);
+    }
+  } else {
+    // ✅ Reset all states when no question found
+    setQuestionData("");
+    setHintText("");
+    setOptions([
+      { id: 1, text: "", isCorrect: true, label: "1st" },
+      { id: 2, text: "", isCorrect: false, label: "2nd" },
+      { id: 3, text: "", isCorrect: false, label: "3rd" },
+      { id: 4, text: "", isCorrect: false, label: "4th" },
+    ]);
+  }
+}, [singleQuestion]);
+const getOrdinalSuffix = (n: number) => {
+  if (n === 1) return "st";
+  if (n === 2) return "nd";
+  if (n === 3) return "rd";
+  return "th";
 };
 
 
-  const handleCorrectToggle = (id: number) => {
-    setOptions((opts) =>
-      opts.map((opt) => ({ ...opt, isCorrect: opt.id === id }))
-    );
-  };
-
-  const filteredTopics = topicsData.filter(
-    (topic: any) => topic.sections?.sectiontype === activeSection
-  );
-
-  const filteredSubtopics = subtopicsData.filter(
-    (sub) => sub.topic?.id?.toString() === selectedTopic
-  );
-
-  const activeSectionData = sectionsData.find(
-    (sec: any) => sec.sectiontype === activeSection
-  );
-  const totalQuestions = activeSectionData?.sectionnumberofquestion || 10;
-  const questionNumbers = Array.from(
-    { length: totalQuestions },
-    (_, i) => i + 1
-  );
-
-  const handleSubmit = async () => {
-    const activeSectionData = sectionsData.find(
-      (sec: any) => sec.sectiontype === activeSection
-    );
-    const selectedTopicData = topicsData.find((t) => t.id === selectedTopic);
-    const selectedSubtopicData = subtopicsData.find(
-      (s) => s.id === selectedSubtopic
-    );
-    console.log(questionData,"questionDataquestionData")
-
-    const payload: any = {
-      content: questionData,
-      correct_answer:
-        answerType === "Numeric"
-          ? options.find((opt) => opt.isCorrect)?.text || ""
-          : options.find((opt) => opt.isCorrect)?.text || "",
-      optionA: options[0]?.text || "",
-      optionB: options[1]?.text || "",
-      optionC: options[2]?.text || "",
-      optionD: options[3]?.text || "",
-      answertype: answerType,
-      created_at: null,
-      examformat: selectedexam?.examformat || "Online",
-      examtype:questionType,
-      numberofquestion: activeSectionData?.sectionnumberofquestion || 10,
-      others: "others",
-      
-      examName: selectedexam?.examName ,
-      previewwindow: null,
-      questionsolution: `${questionText} = ${
-        options.find((opt) => opt.isCorrect)?.text || ""
-      }`,
-      activeQuestion: activeQuestion,
-      questiontype: questionType, // ✅ dynamic
-      sectiontype: activeSection,
-      subtopicname: selectedSubtopicData?.subtopictype || "",
-      topicname: selectedTopicData?.topictype || "",
-      updated_at: null,
-    };
-    console.log(payload,"payload")
-return 
-    await dispatch(createQuestion(payload));
-    console.log("SUBMIT PAYLOAD:", payload);
-  };
-  const [selectedData,setSelectedData]=useState<any>(null)
-const handlesectionclick=(val:any)=>{
-  setActiveSection(val.id)
-  console.log(val,"valval")
-  setSelectedData(val)
-}
   return (
-   
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-8">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-8 mt-20">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-md">
           <div className="flex space-x-2">
-            {selectedExamDetail.map((section:any) => (
+            {sectionsData.map((section: any) => (
               <button
-                key={section.id}
-                onClick={() => {handlesectionclick(section)}}
+                key={section.sectionId}
+                onClick={() => {
+                  setActiveSection(section.sectionId);
+                  setSelectedSectionData(section);
+                }}
                 className={`w-24 h-12 text-lg font-semibold rounded-lg transition-colors ${
-                  section.id === activeSection
+                  section.sectionId === activeSection
                     ? "bg-red-500 text-white shadow-md"
                     : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-100"
                 }`}
               >
-                {section?.sections?.sectiontype}
+                {section?.sectionDetail?.section}
               </button>
             ))}
           </div>
@@ -217,7 +229,8 @@ const handlesectionclick=(val:any)=>{
             <div className="text-sm">
               <span className="text-gray-500 mr-2">Exam:</span>
               <span className="font-bold text-lg text-red-500">
-                {selectedexam?.examName} - { selectedExamDetail && selectedExamDetail.length>0 && selectedExamDetail[0]?.examType.name}
+                {selectedExamDetail[0]?.examDetail?.examname} -{" "}
+                {selectedExamDetail[0]?.questionPapername}
               </span>
             </div>
             <button
@@ -229,20 +242,18 @@ const handlesectionclick=(val:any)=>{
           </div>
         </div>
 
-        {/* Question Editor */}
+        {/* Main Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Section */}
           <div className="lg:col-span-2 space-y-6">
             <div className="rounded-xl bg-white shadow-lg p-6 space-y-6">
-              <h2 className="text-xl font-bold text-gray-800">
-                Question No.{activeQuestion} ({activeSection})
-              </h2>
+              <h2 className="text-xl font-bold text-gray-800">Question No. {activeQuestion}</h2>
 
-              {/* Topic / Subtopic */}
+              {/* Topic/Subtopic */}
               <div className="flex flex-wrap gap-4">
+                {/* Topic */}
                 <div className="flex-1 min-w-[200px]">
-                  <label className="block text-sm font-semibold text-gray-700">
-                    Topic
-                  </label>
+                  <label className="block text-sm font-semibold text-gray-700">Topic</label>
                   <select
                     value={selectedTopic}
                     onChange={(e) => {
@@ -252,38 +263,35 @@ const handlesectionclick=(val:any)=>{
                     className="w-full mt-1 border border-gray-200 rounded-lg p-2"
                   >
                     <option value="">-- Select Topic --</option>
-                    {filteredTopics.map((topic) => (
-                      <option key={topic.id} value={topic.id}>
-                        {topic.topictype}
+                    {topic.map((t: any) => (
+                      <option key={t._id} value={t._id}>
+                        {t.topic}
                       </option>
                     ))}
                   </select>
                 </div>
 
+                {/* Subtopic */}
                 <div className="flex-1 min-w-[200px]">
-                  <label className="block text-sm font-semibold text-gray-700">
-                    Subtopic
-                  </label>
+                  <label className="block text-sm font-semibold text-gray-700">Subtopic</label>
                   <select
                     value={selectedSubtopic}
                     onChange={(e) => setSelectedSubtopic(e.target.value)}
                     className="w-full mt-1 border border-gray-200 rounded-lg p-2"
                   >
                     <option value="">-- Select Subtopic --</option>
-                    {filteredSubtopics.map((sub) => (
-                      <option key={sub.id} value={sub.id}>
-                        {sub.subtopictype}
+                    {subtopicData.map((sub: any) => (
+                      <option key={sub._id} value={sub._id}>
+                        {sub.subtopic}
                       </option>
                     ))}
                   </select>
                 </div>
               </div>
 
-              {/* ✅ Question Type Radio Buttons */}
+              {/* Question Type */}
               <div className="flex flex-col pt-4">
-                <span className="text-sm font-semibold text-gray-700 mb-2">
-                  Question Type
-                </span>
+                <span className="text-sm font-semibold text-gray-700 mb-2">Question Type</span>
                 <div className="flex items-center space-x-6">
                   {["Easy", "Medium", "Hard"].map((type) => (
                     <label key={type} className="flex items-center space-x-1">
@@ -301,52 +309,41 @@ const handlesectionclick=(val:any)=>{
                 </div>
               </div>
 
-              {/* Question Text */}
-<QuestionWithOptionsEditor onChange={setQuestionData}/>
+              {/* Question Editor */}
+              <QuestionWithOptionsEditor value={questionData} onChange={setQuestionData} />
+
               {/* Answer Type */}
               <div className="flex items-center space-x-6 pt-4">
-                <span className="text-base font-semibold text-gray-700">
-                  Answer:
-                </span>
+                <span className="text-base font-semibold text-gray-700">Answer:</span>
                 <div className="flex items-center space-x-4">
-                  <label className="flex items-center space-x-1">
-                    <input
-                      type="radio"
-                      name="answerType"
-                      value="Numeric"
-                      checked={answerType === "Numeric"}
-                      onChange={() => setAnswerType("Numeric")}
-                    />
-                    <span className="text-sm">Numeric</span>
-                  </label>
-                  <label className="flex items-center space-x-1">
-                    <input
-                      type="radio"
-                      name="answerType"
-                      value="MCQ"
-                      checked={answerType === "MCQ"}
-                      onChange={() => setAnswerType("MCQ")}
-                    />
-                    <span className="text-sm">MCQ</span>
-                  </label>
+                  {["Numeric", "MCQ"].map((type) => (
+                    <label key={type} className="flex items-center space-x-1">
+                      <input
+                        type="radio"
+                        name="answerType"
+                        value={type}
+                        checked={answerType === type}
+                        onChange={() => setAnswerType(type as AnswerType)}
+                      />
+                      <span className="text-sm">{type}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
 
               {/* Options */}
               {answerType === "MCQ" && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6 pt-4">
-                {options.map((opt) => (
- <OptionWithLatex
-  key={opt.id}
-  choice={opt.label}
-  value={opt.text}
-  isCorrect={opt.isCorrect}
-  onChange={(html) => handleOptionTextChange(opt.id, html)} // ✅
-  onCheckToggle={() => handleCorrectToggle(opt.id)}
-/>
-
-))}
-
+                  {options.map((opt) => (
+                    <OptionWithLatex
+                      key={opt.id}
+                      choice={opt.label}
+                      value={opt.text}
+                      isCorrect={opt.isCorrect}
+                      onChange={(html) => handleOptionTextChange(opt.id, html)}
+                      onCheckToggle={() => handleCorrectToggle(opt.id)}
+                    />
+                  ))}
                 </div>
               )}
             </div>
@@ -354,16 +351,15 @@ const handlesectionclick=(val:any)=>{
 
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
+            {/* Question Navigation */}
             <div className="rounded-xl bg-white shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                Go to Question No.
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Go to Question No.</h3>
               <div className="grid grid-cols-5 gap-3">
                 {questionNumbers.map((num) => (
                   <button
                     key={num}
-                    onClick={() => setActiveQuestion(num)}
-                    className={`h-10 w-10 p-0 rounded-full font-bold transition-colors ${
+                    onClick={() => handleActiveQuestion(num)}
+                    className={`h-10 w-10 rounded-full font-bold transition-colors ${
                       num === activeQuestion
                         ? "bg-red-500 text-white shadow-md"
                         : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -375,10 +371,9 @@ const handlesectionclick=(val:any)=>{
               </div>
             </div>
 
+            {/* Hint */}
             <div className="rounded-xl bg-white shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                Hint*
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Hint*</h3>
               <textarea
                 placeholder="Enter Hint"
                 rows={6}

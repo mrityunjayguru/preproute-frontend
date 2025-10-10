@@ -1,9 +1,5 @@
-
-
-// components/ui/navbar.tsx
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from 'next/navigation';
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +14,7 @@ export function DashboardHeader() {
   const handleChangeRoute=(page:any)=>{
   router.push(`${page}`)
 }
-  return (
+return (
     <nav className="bg-[#fff] fixed top-0 left-0 w-full z-50  h-16 flex items-center justify-between px-6 shadow-md">
       {/* Logo */}
       <span className="text-xl font-bold">
@@ -27,7 +23,7 @@ export function DashboardHeader() {
 
       {/* Navigation Links */}
       <div className="flex gap-x-8 text-sm text-[#000000]">
-        <a  onClick={()=>handleChangeRoute('home')} className="">
+        <a  onClick={()=>handleChangeRoute('home')} className="cursor-pointer">
           Dashboard
         </a>
           <a  onClick={()=>handleChangeRoute('setupexam')} className="hover:textorange cursor-pointer">

@@ -7,11 +7,13 @@ import { AppDispatch } from "@/store/store";
 import { getsection } from "@/api/Section";
 import CommonTable from "@/Common/CommonTable";
 import { useSelector } from "react-redux";
-import { getTopic } from "@/api/Topic";
+import { getTopic, handlesetUpdateTopc } from "@/api/Topic";
 
 const TopicTable = () => {
   const dispatch = useDispatch<AppDispatch>();
   const sections = useSelector((state: any) => state?.topic?.topic);
+
+  
   const [search, setSearch] = useState("");
   const getData = async () => {
     const payload: any = {};
@@ -21,13 +23,14 @@ const TopicTable = () => {
     getData();
   }, []);
   const columns = [
-    { header: "Topic Name", accessor: "topictype" },
-    { header: "section name", accessor: "sections.sectiontype" },
-    { header: "examtype name", accessor: "examType.name" },
+    { header: "Topic Name", accessor: "topic" },
 
 
     { header: "Created At", accessor: "createdAt" },
   ];
+  const handleEdit=(val:any)=>{
+    dispatch(handlesetUpdateTopc(val))
+  }
   return (
     <div className="bg-[#F7F7F5] p-6 rounded-lg">
       {/* Search box */}
@@ -40,7 +43,8 @@ const TopicTable = () => {
       />
 
       {/* CommonTable */}
-      <CommonTable data={sections} columns={columns} />
+        
+      <CommonTable data={sections} columns={columns} onEdit={handleEdit}/>
     </div>
   );
 };

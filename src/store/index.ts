@@ -13,6 +13,8 @@ import vehicledetail from "./seatUpexam/vehicleDetail/index"
 import examType from "./seatUpexam/examType/index"
 import Auth from "./Auth/index"
 import staffToclass from "./seatUpexam/AssingStaffToclass/index"
+import dashboard from "./dashboard/index"
+import question from "./seatUpexam/question/index"
 const appReducer = combineReducers({
  school:school,
  exam:exam,
@@ -27,7 +29,9 @@ const appReducer = combineReducers({
  route:route,
  vehicledetail:vehicledetail,
  Auth:Auth,
- staffToclass:staffToclass
+ staffToclass:staffToclass,
+ dashboard:dashboard,
+ question:question
 });
 
 // Create a root reducer with reset functionality

@@ -10,6 +10,8 @@ interface Payload {
 interface QuestionRepo {
   createQuestion: (payload: Payload) => Promise<AxiosResponse>;
   getQuestion: (payload: Payload) => Promise<AxiosResponse>;
+  getQuestionById: (payload: Payload) => Promise<AxiosResponse>;
+  handleUpdateQuestion: (payload: Payload) => Promise<AxiosResponse>;
 }
 
 export const QuestionRepo: QuestionRepo = {
@@ -20,5 +22,11 @@ export const QuestionRepo: QuestionRepo = {
     getQuestion(payload) {
     return Repository.get(Question.get, payload);
   },
-
+  getQuestionById
+  (payload) {
+    return Repository.post(Question.getQuestionById, payload);
+  },
+handleUpdateQuestion(payload) {
+    return Repository.post(Question.update, payload);
+  },
 };

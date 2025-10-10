@@ -1,17 +1,35 @@
+"use client"
+import { useEffect } from "react";
 import { ExamList } from "./leftHome";
 import { TopExamsChart } from "./RightHome";
 import { StatsCard } from "./StatusCard";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { getDashboardData } from "@/api/dashboard";
+import { useSelector } from "react-redux";
+import { useRouter } from 'next/navigation';
 
 const DashboardHome = () => {
-  // Mock Data
-  const exams = [
-    { type: "Expert", name: "IPMAT Indore", date: "26 Sep 2025", person: "Arnav Pickett", status: "Draft", progress: 50, publishedDate: null },
-    { type: "Expert", name: "IIM Bangalore DB...", date: "26 Sep 2025", person: "Ayanna Sharp", status: "Complete", progress: 100, publishedDate: null },
-    { type: "Expert", name: "Symbiosis Entranc...", date: "01 Sep 2025", person: "Parker Powell", status: "Published", progress: 100, publishedDate: "08 Sep 2025" },
-    { type: "Mock", name: "IPMAT Indore", date: "25 Aug 2025", person: "Dean Conrad", status: "Published", progress: 100, publishedDate: "25 Aug 2025" },
-    { type: "Mock", name: "IPMAT Indore", date: "25 Aug 2025", person: "Dean Conrad", status: "Complete", progress: 100, publishedDate: null },
-  ];
+  const data=useSelector((state:any)=>state?.dashboard?.Dashboard)
+  const userLogin=useSelector((state:any)=>state?.Auth?.loginUser)
+  // role
+  const router = useRouter()
+const dispatch=useDispatch<AppDispatch>()
+  const getDashboard=async()=>{
+    const payload:any={}
+await dispatch(getDashboardData(payload))
+  }
 
+  useEffect(()=>{
+getDashboard()
+  },[])
+  useEffect(()=>{
+if(userLogin.role!=="Admin"){
+  // router.push(`/home`)
+}
+  },[])
+  // Mock Data
+ 
   const stats = [
     { label: "Total Exams", subtitle: "Published", value: 120, color: 'text-red-600' },
     { label: "Experts", subtitle: "Published", value: 120, color: 'text-red-600' },
@@ -37,7 +55,7 @@ const DashboardHome = () => {
         
         {/* Left Column (Exams List) */}
         <div className="col-span-12 lg:col-span-7">
-          <ExamList exams={exams} />
+          <ExamList exams={data} />
         </div>
 
         {/* Right Column (Stats and Chart) */}

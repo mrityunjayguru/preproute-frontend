@@ -11,6 +11,7 @@ interface sectionRepo {
   createsection: (payload: Payload) => Promise<AxiosResponse>;
   getsection: (payload: Payload) => Promise<AxiosResponse>;
   getSectionByExamId: (payload: any) => Promise<AxiosResponse>;
+  updateSection: (payload: any) => Promise<AxiosResponse>;
 }
 
 export const sectionRepo: sectionRepo = {
@@ -19,9 +20,12 @@ export const sectionRepo: sectionRepo = {
     });
   },
     getsection(payload) {
-    return Repository.get(section.get, payload);
+    return Repository.post(section.get, payload);
+  },
+  updateSection(payload) {
+    return Repository.post(section.update, payload);
   },
   getSectionByExamId(payload) {
-  return Repository.get(`${section.getSectionByExamId}?examid=${payload.id}`);
+  return Repository.post(`${section.getSectionByExamId}?examid=${payload.id}`);
   },
 };

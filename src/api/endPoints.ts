@@ -7,38 +7,53 @@ const UserAuth={
   userLogin:"users/login",
   subject:"codemaster",
   yearMaster:"yearsmaster",
-  register:"users/register",
+  register:"Auth/adminLogin",
   exam:"statusmaster",
 }
 export const examType={
-  create:"examstype/create",
-  get:"examstype",
+  create:"setUpexam/examType/create",
+  get:"setUpexam/examType/get",
+  update:"setUpexam/examType/update",
   getExamBeExamTypeId:"createexam/findexamnamebyexamid"
 }
 export const section={
-  create:"sections/create",
-  get:"sections",
-  getSectionByExamId:"sections/getallsectionsbyexamid"
+  create:"setUpexam/section/create",
+  get:"setUpexam/section/get",
+  getSectionByExamId:"sections/getallsectionsbyexamid",
+  update:"setUpexam/section/update",
 
 }
 export const topic={
-  create:"topic/create",
-  get:"topic",
+  create:"setUpexam/topic/create",
+  get:"setUpexam/topic/get",
   getalltopicsbysectionid:"topic/getalltopicsbysectionid"
 }
 export const subTopic={
-  create:"subtopic/create",
-  get:"subtopic",
-  getallsubtopicsbytopicid:"subtopic/getallsubtopicsbytopicid"
+  create:"setUpexam/subTopic/create",
+  get:"setUpexam/subTopic/get",
+  getallsubtopicsbytopicid:"subtopic/getallsubtopicsbytopicid",
+  getSubTopicByTopicId:"setUpexam/subtopic/getSubTopicByTopicId"
 }
 export const exam={
-  create:"createexam/create",
-  get:"createexam",
+  create:"setUpexam/exam/create",
+  get:"setUpexam/exam/get",
   getdatabyexamtypeidandname:"createexam/getdatabyexamtypeidandname"
 }
 export const Question={
-    create:"question/create",
+    create:"setUpexam/question/create",
     get:"question",
+    getQuestionById:"setUpexam/question/getQuestionById",
+    update:"setUpexam/question/updateQuestion",
+}
+export const questionPaper={
+  create:"setUpexam/questionpaper/create",
+  get:"setUpexam/questionpaper/get"
+
+}
+export const Dashboard={
+  get:"dashboard/get",
+  create:"dashboard/get"
+
 }
 const APIName = {
 ...UserAuth,

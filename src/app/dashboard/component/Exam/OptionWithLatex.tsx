@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 interface OptionProps {
   choice: string;
@@ -18,6 +18,20 @@ export default function OptionWithLatex({
 }: OptionProps) {
   const editorRef = useRef<HTMLDivElement | null>(null);
 
+  // ✅ Keep editor content in sync when `value` changes externally
+  useEffect(() => {
+    if (editorRef.current && editorRef.current.innerText !== value) {
+      editorRef.current.innerText = value || "";
+    }
+  }, [value]);
+
+  const handleInput = () => {
+    if (editorRef.current) {
+      const text = editorRef.current.innerText;
+      onChange(text);
+    }
+  };
+
   return (
     <div className="flex items-center space-x-2">
       {/* Editable Option Box */}
@@ -25,13 +39,14 @@ export default function OptionWithLatex({
         className="flex-1 border rounded p-2 min-h-[40px] bg-white focus:outline-none focus:ring-2 focus:ring-orange-400"
         contentEditable
         ref={editorRef}
-        suppressContentEditableWarning
-        onInput={() => onChange(editorRef.current?.innerText || "")}
-        dangerouslySetInnerHTML={{ __html: value }}
+        onInput={handleInput}
+        onBlur={handleInput}
+        spellCheck={false}
       />
 
       {/* Mark Correct Button */}
       <button
+        type="button"
         className={`px-3 py-1 rounded font-medium transition ${
           isCorrect
             ? "bg-green-500 text-white hover:bg-green-600"

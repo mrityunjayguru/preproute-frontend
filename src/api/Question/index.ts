@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-// import { setQuestion,setUpdateQuestion,setSingleQuestion} from '../../store/seatUpexam/Question';
+import { setQuestion,setUpdateQuestion,setSingleQuestion} from '../../store/seatUpexam/question';
 import APIName, { Question} from '../endPoints';
 import { QuestionRepo } from './QuestionRepo';
 import Swal from 'sweetalert2';
@@ -42,27 +42,49 @@ export const createQuestion= createAsyncThunk<boolean, Payload>(
   },
 );
 
-// export const getQuestion= createAsyncThunk<boolean, Payload>(
-//   Question.get,
-//   async (payload, thunkAPI) => {
-//     try {
-//       const data = await QuestionRepo.getQuestion(payload);
-//       if (data.status === 200) {
-//         thunkAPI.dispatch(setQuestion(data.data));
-//         return true;
-//       }
-//     } catch (err:any) {
-//       if(err.status==401){
-//         localStorage.removeItem("token")
-//         GetMessage("warning", "Unauthorized");
-//         // window.location.href = "/signin"; 
-//       }else{
-//         GetMessage("warning", "something went wrong");
-//       }
-//     }
-//     return false;
-//   },
-// );
+export const getQuestionById= createAsyncThunk<boolean, Payload>(
+  Question.get,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await QuestionRepo.getQuestionById(payload);
+      if (data.status === 200) {
+        thunkAPI.dispatch(setSingleQuestion(data.data.data));
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
 
 
+export const handleUpdateQuestion= createAsyncThunk<boolean, Payload>(
+  Question.get,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await QuestionRepo.handleUpdateQuestion(payload);
+      if (data.status === 200) {
+        // thunkAPI.dispatch(setSingleQuestion(data.data.data));
+        GetMessage("success", "success");
 
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);

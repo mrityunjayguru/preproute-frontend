@@ -19,7 +19,7 @@ export const topicRepo: topicRepo = {
     });
   },
     gettopic(payload) {
-    return Repository.get(topic.get, payload);
+    return Repository.post(topic.get, payload);
   },
   getalltopicsbysectionid(payload) {
   return Repository.get(`${topic.getalltopicsbysectionid}?sectionid=${payload.id}`);

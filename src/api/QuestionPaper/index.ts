@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { setexamType,setSelectedexamType,setUpdateexamType,setSingleexamType,setExamBeExamTypeId } from '../../store/seatUpexam/examType';
 import APIName, { examType } from '../endPoints';
-import { examTypeRepo } from './ExamTypeRepo';
+import { examTypeRepo } from './QuestionPaperRepo';
 import Swal from 'sweetalert2';
 
 interface Payload {
@@ -16,11 +16,11 @@ const GetMessage = (type: any, messga: string) => {
     timer: 2000,
   });
 };
-export const createexamType = createAsyncThunk<boolean, Payload>(
+export const createQuestionPaper = createAsyncThunk<boolean, Payload>(
   examType.create,
   async (payload, thunkAPI) => {
     try {
-      const data = await examTypeRepo.createExamType(payload);
+      const data = await examTypeRepo.createQuestionPaper(payload);
       if (data.status === 200) {
         GetMessage("success", "success");
         // thunkAPI.dispatch(setvexamType(data.data.data));
@@ -90,7 +90,7 @@ export const getExamBeExamTypeId = createAsyncThunk<boolean, Payload>(
   examType.get,
   async (payload, thunkAPI) => {
     try {
-       const data = await examTypeRepo.getExamBeExamTypeId(payload);
+       const data = await examTypeRepo.createQuestionPaper(payload);
       if (data.status === 200) {
         thunkAPI.dispatch(setExamBeExamTypeId(data.data));
         return true;
@@ -110,46 +110,3 @@ export const getExamBeExamTypeId = createAsyncThunk<boolean, Payload>(
 
 
 
-export const handleUpdateExamType = createAsyncThunk<boolean, Payload>(
-  examType.get,
-  async (payload, thunkAPI) => {
-    try {
-        thunkAPI.dispatch(setUpdateexamType(payload));
-        return true;
-    } catch (err:any) {
-      if(err.status==401){
-        localStorage.removeItem("token")
-        GetMessage("warning", "Unauthorized");
-        // window.location.href = "/signin"; 
-      }else{
-        GetMessage("warning", "something went wrong");
-      }
-    }
-    return false;
-  },
-);
-
-
-
-
-export const handleupdateExamTypes = createAsyncThunk<boolean, Payload>(
-  examType.get,
-  async (payload, thunkAPI) => {
-    try {
-       const data = await examTypeRepo.updateExamType(payload);
-      if (data.status === 200) {
-        GetMessage("success", "success");
-        return true;
-      }
-    } catch (err:any) {
-      if(err.status==401){
-        localStorage.removeItem("token")
-        GetMessage("warning", "Unauthorized");
-        // window.location.href = "/signin"; 
-      }else{
-        GetMessage("warning", "something went wrong");
-      }
-    }
-    return false;
-  },
-);

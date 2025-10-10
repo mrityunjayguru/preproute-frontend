@@ -1,5 +1,5 @@
 import Repository from "../Repository";
-import APIName, { exam } from "../endPoints";
+import APIName, { exam, questionPaper } from "../endPoints";
 import { AxiosResponse } from "axios";
 
 interface Payload {
@@ -19,13 +19,11 @@ export const examRepo: examRepo = {
     });
   },
     getexam(payload) {
-    return Repository.get(exam.get, payload);
+    return Repository.post(exam.get, payload);
   },
   handleSelectedExamDetail(payload) {
-    console.log(payload,"payloadpayload")
-  return Repository.get(`${exam.getdatabyexamtypeidandname}?examtypeid=${payload.examType}&examname=${payload.examName}`
-);
-
+    return Repository.post(questionPaper.get, payload, {
+    });
   },
 };
 

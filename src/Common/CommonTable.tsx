@@ -8,15 +8,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { FaRegEdit } from "react-icons/fa";
 
 interface Column<T> {
   header: string;
-  accessor: string; // allow dot notation like "examType.name"
+  accessor: string | ((row: T) => any); // supports both dot-notation or function accessor
 }
 
 interface CommonTableProps<T> {
   data: T[];
   columns: Column<T>[];
+  onEdit?: (row: T) => void;
 }
 
 // Helper function to access nested properties using dot notation
@@ -27,32 +30,57 @@ const getValue = (obj: any, path: string) => {
 function CommonTable<T extends Record<string, any>>({
   data,
   columns,
+  onEdit,
 }: CommonTableProps<T>) {
   return (
-    <div className="bg-[#F7F7F5] p-6 rounded-lg">
+    <div className="bg-[#F7F7F5] p-6 rounded-lg overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>
             {columns.map((col) => (
               <TableHead key={col.header}>{col.header}</TableHead>
             ))}
+            {onEdit && <TableHead className="text-center">Actions</TableHead>}
           </TableRow>
         </TableHeader>
+
         <TableBody>
           {data && data.length > 0 ? (
             data.map((row, index) => (
               <TableRow key={index}>
-                {columns.map((col) => (
-                  <TableCell key={col.header}>
-                    {getValue(row, col.accessor)?.toString() ?? "-"}
+                {columns.map((col) => {
+                  const value =
+                    typeof col.accessor === "function"
+                      ? col.accessor(row)
+                      : getValue(row, col.accessor);
+
+                  return (
+                    <TableCell key={col.header}>
+                      {value !== undefined && value !== null
+                        ? value.toString()
+                        : "-"}
+                    </TableCell>
+                  );
+                })}
+
+                {/* EDIT BUTTON */}
+                {onEdit && (
+                  <TableCell className="text-center">
+                    <Button
+                      variant="orange"
+                      size="sm"
+                      onClick={() => onEdit(row)}
+                    >
+                      <FaRegEdit className="h-4 w-4" />
+                    </Button>
                   </TableCell>
-                ))}
+                )}
               </TableRow>
             ))
           ) : (
             <TableRow>
               <TableCell
-                colSpan={columns.length}
+                colSpan={columns.length + (onEdit ? 1 : 0)}
                 className="text-center text-gray-500"
               >
                 No data found

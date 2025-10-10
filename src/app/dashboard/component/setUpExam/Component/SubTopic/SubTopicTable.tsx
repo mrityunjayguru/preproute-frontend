@@ -11,7 +11,7 @@ const SubTopicTable = () => {
   const dispatch = useDispatch<AppDispatch>();
   const subTopics = useSelector((state: any) => state?.subTopic?.subTopic || []);
   const [search, setSearch] = useState("");
-
+console.log(subTopics,"subTopicssubTopics")
   const getData = async () => {
     const payload:any={}
     await dispatch(getsubTopic(payload));
@@ -25,18 +25,14 @@ const SubTopicTable = () => {
   const filteredSubTopics = subTopics.filter((item: any) => {
     const searchLower = search.toLowerCase();
     return (
-      item?.examType?.name?.toLowerCase().includes(searchLower) ||
-      item?.sections?.sectiontype?.toLowerCase().includes(searchLower) ||
-      item?.topic?.topictype?.toLowerCase().includes(searchLower) ||
-      item?.subtopictype?.toLowerCase().includes(searchLower)
+      item?.subtopic?.toLowerCase().includes(searchLower) ||
+      item?.topic.topic?.toLowerCase().includes(searchLower) 
     );
   });
 
   const columns = [
-    { header: "Exam Type Name", accessor: "examType.name" },
-    { header: "Section Name", accessor: "sections.sectiontype" },
-    { header: "Topic Name", accessor: "topic.topictype" },
-    { header: "Subtopic Name", accessor: "subtopictype" },
+    { header: "subtopic Name", accessor: "subtopic" },
+    { header: "Section Name", accessor: "topic.topic" },
     { header: "Created At", accessor: "createdAt" },
   ];
 
