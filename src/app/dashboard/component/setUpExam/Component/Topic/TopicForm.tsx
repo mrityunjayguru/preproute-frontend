@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -32,6 +32,11 @@ console.log(topicsData,"topicsDatatopicsData")
     setTopicName("");
   };
 
+  useEffect(()=>{
+if(topicsData){
+  setTopicName(topicsData.topic)
+}
+  },[topicsData])
   return (
     <div className="bg-[#F7F7F5] p-6 rounded-lg mb-6 w-full">
       <h2 className="text-xl font-semibold mb-4">Create Topic</h2>

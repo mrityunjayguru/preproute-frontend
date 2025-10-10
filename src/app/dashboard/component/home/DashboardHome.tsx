@@ -24,7 +24,7 @@ await dispatch(getDashboardData(payload))
 getDashboard()
   },[])
   useEffect(()=>{
-if(userLogin.role!=="Admin"){
+if(userLogin?.role!=="Admin"){
   // router.push(`/home`)
 }
   },[])

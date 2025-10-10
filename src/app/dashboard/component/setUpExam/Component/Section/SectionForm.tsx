@@ -54,7 +54,6 @@ const SectionForm = () => {
       setSectionName(sectionData.section);
       setEditingId(sectionData._id);
 
-
   },[sectionData])
 
   return (
