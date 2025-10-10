@@ -11,7 +11,7 @@ const TopicForm = () => {
   const [topicName, setTopicName] = useState("");
   const dispatch = useDispatch<AppDispatch>();
   const topicsData = useSelector((state: any) => state?.topic?.updatetopic);
-
+console.log(topicsData,"topicsDatatopicsData")
   const fetchData = async () => {
     const payload: any = {};
     await dispatch(getTopic(payload));

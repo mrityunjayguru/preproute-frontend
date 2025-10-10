@@ -14,7 +14,7 @@ export const ExamList = ({ exams }: any) => (
     </div>
 
     <div className="space-y-4">
-      {exams.map((exam: any,i:any) => {
+      {exams && exams.length>0 && exams.map((exam: any,i:any) => {
        
         return <ExamCard key={i} exam={exam} />;
       })}
