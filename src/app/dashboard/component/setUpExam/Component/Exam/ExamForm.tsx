@@ -35,8 +35,9 @@ const ExamForm: React.FC = () => {
   const topic = useSelector((state: any) => state?.topic?.topic) || [];
 
   const [examName, setExamName] = useState("");
+  const [fullExamDuration, setFullExamDuration] = useState("");
   const [isSwitchable, setIsSwitchable] = useState("yes");
-  const [isSection, setIsSection] = useState("true"); // ✅ Added field for section control
+  const [isSection, setIsSection] = useState("true");
   const [sectionsData, setSectionsData] = useState<SectionData[]>([
     {
       sectionId: "",
@@ -56,10 +57,7 @@ const ExamForm: React.FC = () => {
 
   // Load sections
   useEffect(() => {
-    const loadSections = async () => {
-      await dispatch(getsection({}));
-    };
-    loadSections();
+    dispatch(getsection({}));
   }, [dispatch]);
 
   // Prefill update data
@@ -68,13 +66,15 @@ const ExamForm: React.FC = () => {
       setExamName(updateExamData.examname);
       setIsSwitchable(updateExamData.switchable ? "yes" : "no");
       setIsSection(updateExamData.isSection ? "true" : "false");
+      setFullExamDuration(updateExamData.fullExamduration || "");
+
       setSectionsData(
         updateExamData.sections?.map((s: any) => ({
-          sectionId: s.sectionId,
-          topicIds: s.topicIds || [],
-          noOfQuestions: s.noOfQuestions,
+          sectionId: s.sectionId || "",
+          topicIds: s.topic || [],
+          noOfQuestions: s.noOfQuestions || "",
           duration: s.duration || "",
-          correctMark: s.correctMark || "",
+          correctMark: s.currectMark || "",
           negativeMark: s.negativeMark || "",
         })) || [
           {
@@ -91,7 +91,7 @@ const ExamForm: React.FC = () => {
     }
   }, [updateExamData]);
 
-  // Add more section
+  // Add new section
   const handleAddMore = () => {
     setSectionsData([
       ...sectionsData,
@@ -106,6 +106,17 @@ const ExamForm: React.FC = () => {
     ]);
   };
 
+  // Handle field changes
+  const handleFieldChange = (
+    index: number,
+    field: keyof SectionData,
+    value: string | string[]
+  ) => {
+    const updated = [...sectionsData];
+    (updated[index] as any)[field] = value;
+    setSectionsData(updated);
+  };
+
   const handleSectionChange = (index: number, value: string) => {
     const updated = [...sectionsData];
     updated[index].sectionId = value;
@@ -113,37 +124,49 @@ const ExamForm: React.FC = () => {
     setSectionsData(updated);
   };
 
-  const handleFieldChange = (
-    index: number,
-    field: keyof SectionData,
-    value: string
-  ) => {
-    const updated = [...sectionsData];
-    updated[index][field] = value;
-    setSectionsData(updated);
-  };
-
+  // Submit form
   const handleSubmit = async () => {
     if (!examName.trim()) {
       alert("Please enter exam name before submitting.");
       return;
     }
 
-    const validSections = sectionsData.filter(
-      (s) => s.noOfQuestions && s.duration
-    );
-
-    if (validSections.length === 0) {
-      alert("Please fill all required fields.");
-      return;
-    }
-
     const payload: any = {
-      examname: examName,
+      examname: examName.trim(),
       switchable: isSwitchable === "yes",
       isSection: isSection === "true",
-      sections: validSections,
     };
+
+    if (isSection === "true") {
+      const validSections = sectionsData.filter(
+        (s) => s.noOfQuestions && s.duration
+      );
+
+      if (validSections.length === 0) {
+        alert("Please fill all required section fields.");
+        return;
+      }
+
+      payload.sections = validSections.map((s) => ({
+        sectionId: s.sectionId,
+        noOfQuestions: s.noOfQuestions,
+        duration: Number(s.duration),
+        currectMark: Number(s.correctMark),
+        negativeMark: Number(s.negativeMark),
+        topic: s.topicIds || [],
+      }));
+    } else {
+      const main = sectionsData[0];
+      if (!main.noOfQuestions || !main.duration) {
+        alert("Please fill all required fields.");
+        return;
+      }
+
+      payload.noOfQuestions = main.noOfQuestions;
+      payload.fullExamduration = Number(main.duration);
+      payload.currectMark = Number(main.correctMark);
+      payload.negativeMark = Number(main.negativeMark);
+    }
 
     if (editingId) {
       await dispatch(handleUpdateExam({ id: editingId, ...payload }));
@@ -154,8 +177,9 @@ const ExamForm: React.FC = () => {
     await dispatch(getexam(null));
     dispatch(handlesetUpdateExam(null));
 
-    // Reset
+    // Reset form
     setExamName("");
+    setFullExamDuration("");
     setIsSwitchable("yes");
     setIsSection("true");
     setSectionsData([
@@ -177,38 +201,48 @@ const ExamForm: React.FC = () => {
         {editingId ? "Update Exam" : "Create Exam"}
       </h2>
 
-      {/* Exam Info */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+      {/* Basic Info */}
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-4">
         <div>
           <Label>Exam Name</Label>
           <Input
             type="text"
-            placeholder="Enter Exam Name"
+            placeholder="Enter Exam Name (e.g., IPMAT Indore)"
             value={examName}
             onChange={(e) => setExamName(e.target.value)}
           />
         </div>
 
         <div>
-          <Label>Switchable</Label>
+          <Label>Full Exam Duration (minutes)</Label>
+          <Input
+            type="number"
+            placeholder="Enter total duration (e.g., 120)"
+            value={fullExamDuration}
+            onChange={(e) => setFullExamDuration(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <Label>Switchable Sections</Label>
           <RadioGroup
             onValueChange={setIsSwitchable}
             value={isSwitchable}
             className="flex space-x-4 mt-2"
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="yes" id="yes" />
-              <Label htmlFor="yes">Yes</Label>
+              <RadioGroupItem value="yes" id="switchable-yes" />
+              <Label htmlFor="switchable-yes">Yes</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="no" id="no" />
-              <Label htmlFor="no">No</Label>
+              <RadioGroupItem value="no" id="switchable-no" />
+              <Label htmlFor="switchable-no">No</Label>
             </div>
           </RadioGroup>
         </div>
 
         <div>
-          <Label>Is Section Based?</Label>
+          <Label>Section Based Exam?</Label>
           <RadioGroup
             onValueChange={setIsSection}
             value={isSection}
@@ -226,7 +260,7 @@ const ExamForm: React.FC = () => {
         </div>
       </div>
 
-      {/* Section-based Fields */}
+      {/* SECTION BASED EXAM */}
       {isSection === "true" ? (
         <>
           <Label className="text-lg font-semibold">Sections & Topics</Label>
@@ -252,6 +286,7 @@ const ExamForm: React.FC = () => {
                         label: s.section,
                       }))
                       .find((o) => o.value === item.sectionId)}
+                    placeholder="Select Section"
                   />
                 </div>
 
@@ -272,6 +307,7 @@ const ExamForm: React.FC = () => {
                         selected.map((s: any) => s.value)
                       )
                     }
+                    placeholder="Select Topics"
                   />
                 </div>
 
@@ -279,6 +315,7 @@ const ExamForm: React.FC = () => {
                   <Label>No. of Questions</Label>
                   <Input
                     type="number"
+                    placeholder="e.g. 40"
                     value={item.noOfQuestions}
                     onChange={(e) =>
                       handleFieldChange(index, "noOfQuestions", e.target.value)
@@ -290,6 +327,7 @@ const ExamForm: React.FC = () => {
                   <Label>Correct Mark</Label>
                   <Input
                     type="number"
+                    placeholder="e.g. 4"
                     value={item.correctMark}
                     onChange={(e) =>
                       handleFieldChange(index, "correctMark", e.target.value)
@@ -301,6 +339,7 @@ const ExamForm: React.FC = () => {
                   <Label>Negative Mark</Label>
                   <Input
                     type="number"
+                    placeholder="e.g. -1"
                     value={item.negativeMark}
                     onChange={(e) =>
                       handleFieldChange(index, "negativeMark", e.target.value)
@@ -309,9 +348,10 @@ const ExamForm: React.FC = () => {
                 </div>
 
                 <div>
-                  <Label>Duration (min)</Label>
+                  <Label>Duration (minutes)</Label>
                   <Input
                     type="number"
+                    placeholder="e.g. 60"
                     value={item.duration}
                     onChange={(e) =>
                       handleFieldChange(index, "duration", e.target.value)
@@ -326,48 +366,55 @@ const ExamForm: React.FC = () => {
               onClick={handleAddMore}
               className="bg-green-500 hover:bg-green-600 mt-2"
             >
-              + Add More
+              + Add Section
             </Button>
           </div>
         </>
       ) : (
-        // Non-section based fields
+        // NON-SECTION BASED EXAM
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4">
           <div>
             <Label>No. of Questions</Label>
             <Input
               type="number"
-              value={sectionsData[0].noOfQuestions}
+              placeholder="e.g. 60"
+              value={sectionsData[0]?.noOfQuestions || ""}
               onChange={(e) =>
                 handleFieldChange(0, "noOfQuestions", e.target.value)
               }
             />
           </div>
+
           <div>
             <Label>Correct Mark</Label>
             <Input
               type="number"
-              value={sectionsData[0].correctMark}
+              placeholder="e.g. 1"
+              value={sectionsData[0]?.correctMark || ""}
               onChange={(e) =>
                 handleFieldChange(0, "correctMark", e.target.value)
               }
             />
           </div>
+
           <div>
             <Label>Negative Mark</Label>
             <Input
               type="number"
-              value={sectionsData[0].negativeMark}
+              placeholder="e.g. 0"
+              value={sectionsData[0]?.negativeMark || ""}
               onChange={(e) =>
                 handleFieldChange(0, "negativeMark", e.target.value)
               }
             />
           </div>
+
           <div>
-            <Label>Duration (min)</Label>
+            <Label>Duration (minutes)</Label>
             <Input
               type="number"
-              value={sectionsData[0].duration}
+              placeholder="e.g. 90"
+              value={sectionsData[0]?.duration || ""}
               onChange={(e) =>
                 handleFieldChange(0, "duration", e.target.value)
               }
@@ -376,13 +423,12 @@ const ExamForm: React.FC = () => {
         </div>
       )}
 
-      {/* Submit */}
       <div className="mt-6">
         <Button
           onClick={handleSubmit}
           className="bg-orange-500 hover:bg-orange-600 w-full"
         >
-          {editingId ? "Update" : "Submit"}
+          {editingId ? "Update Exam" : "Create Exam"}
         </Button>
       </div>
     </div>
