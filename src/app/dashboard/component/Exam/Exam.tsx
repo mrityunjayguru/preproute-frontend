@@ -298,7 +298,7 @@ const handleActiveSection=(val:any)=>{
                     className="w-full mt-1 border border-gray-200 rounded-lg p-2"
                   >
                     <option value="">-- Select Subtopic --</option>
-                    {subtopicData.map((sub: any) => (
+                    {subtopicData && subtopicData.lenght>0 && subtopicData.map((sub: any) => (
                       <option key={sub._id} value={sub._id}>
                         {sub.subtopic}
                       </option>
