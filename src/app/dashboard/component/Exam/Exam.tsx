@@ -30,6 +30,7 @@ const Exam: React.FC = () => {
   const topic = useSelector((state: any) => state?.topic?.topic);
   const subtopicData = useSelector((state: any) => state?.subTopic?.subTopic);
   const singleQuestion=useSelector((state:any)=>state.question.singleQuestion)
+  console.log(subtopicData,"subtopicDatasubtopicData")
   // Local state
   const [questionData, setQuestionData] = useState<string>("");
   const [selectedTopic, setSelectedTopic] = useState<string>("");
@@ -82,6 +83,7 @@ setQuestionData("")
 
   // Fetch Subtopics when Topic changes
   useEffect(() => {
+  
     if (selectedTopic) {
       const payload:any={
          topicId: selectedTopic 
@@ -298,7 +300,7 @@ const handleActiveSection=(val:any)=>{
                     className="w-full mt-1 border border-gray-200 rounded-lg p-2"
                   >
                     <option value="">-- Select Subtopic --</option>
-                    {subtopicData && subtopicData.lenght>0 && subtopicData.map((sub: any) => (
+                    { subtopicData &&  subtopicData?.map((sub: any) => (
                       <option key={sub._id} value={sub._id}>
                         {sub.subtopic}
                       </option>

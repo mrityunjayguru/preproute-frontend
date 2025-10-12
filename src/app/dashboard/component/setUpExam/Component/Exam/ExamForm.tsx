@@ -50,7 +50,7 @@ const ExamForm: React.FC = () => {
   ]);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const topicOptions = topic.map((t: any) => ({
+  const topicOptions = topic?.map((t: any) => ({
     value: t._id,
     label: t.topic,
   }));
