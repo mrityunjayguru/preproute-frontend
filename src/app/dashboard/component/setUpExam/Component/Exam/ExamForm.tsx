@@ -18,7 +18,7 @@ import { getsection } from "@/api/Section";
 
 interface SectionData {
   sectionId?: string;
-  topicIds?: string[];
+  topic?: string[];
   noOfQuestions: string;
   duration: string;
   correctMark: string;
@@ -27,12 +27,9 @@ interface SectionData {
 
 const ExamForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-
-  const updateExamData = useSelector(
-    (state: any) => state?.exam?.updateexam || null
-  );
+  const updateExamData = useSelector((state: any) => state?.exam?.updateexam);
   const sections = useSelector((state: any) => state?.section?.section) || [];
-  const topic = useSelector((state: any) => state?.topic?.topic) || [];
+  const topics = useSelector((state: any) => state?.topic?.topic) || [];
 
   const [examName, setExamName] = useState("");
   const [fullExamDuration, setFullExamDuration] = useState("");
@@ -41,72 +38,60 @@ const ExamForm: React.FC = () => {
   const [sectionsData, setSectionsData] = useState<SectionData[]>([
     {
       sectionId: "",
-      topicIds: [],
+      topic: [],
       noOfQuestions: "",
       duration: "",
       correctMark: "",
       negativeMark: "",
     },
   ]);
+  const [correctMark, setCorrectMark] = useState("");
+  const [negativeMark, setNegativeMark] = useState("");
+  const [noOfQuestions, setNoOfQuestions] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const topicOptions = topic?.map((t: any) => ({
+  const topicOptions = topics.map((t: any) => ({
     value: t._id,
     label: t.topic,
   }));
 
   // Load sections
   useEffect(() => {
-    dispatch(getsection({}));
+    const payload:any={}
+    dispatch(getsection(payload));
   }, [dispatch]);
 
-  // Prefill update data
+  // Prefill form in update mode
   useEffect(() => {
     if (updateExamData && updateExamData._id) {
-      setExamName(updateExamData.examname);
+      setExamName(updateExamData.examname || "");
       setIsSwitchable(updateExamData.switchable ? "yes" : "no");
       setIsSection(updateExamData.isSection ? "true" : "false");
-      setFullExamDuration(updateExamData.fullExamduration || "");
+      setFullExamDuration(updateExamData.fullExamduration?.toString() || "");
 
-      setSectionsData(
-        updateExamData.sections?.map((s: any) => ({
-          sectionId: s.sectionId || "",
-          topicIds: s.topic || [],
-          noOfQuestions: s.noOfQuestions || "",
-          duration: s.duration || "",
-          correctMark: s.currectMark || "",
-          negativeMark: s.negativeMark || "",
-        })) || [
-          {
-            sectionId: "",
-            topicIds: [],
-            noOfQuestions: "",
-            duration: "",
-            correctMark: "",
-            negativeMark: "",
-          },
-        ]
-      );
+      if (updateExamData.isSection) {
+        setSectionsData(
+          updateExamData.sections?.map((s: any) => ({
+            sectionId: s.sectionId || "",
+            topic: s.topic || [],
+            noOfQuestions: s.noOfQuestions?.toString() || "",
+            duration: s.duration?.toString() || "",
+            correctMark: s.correctMark?.toString() || "",
+            negativeMark: s.negativeMark?.toString() || "",
+          })) || []
+        );
+      } else {
+        setNoOfQuestions(updateExamData.noOfQuestions?.toString() || "");
+        setCorrectMark(updateExamData.correctMark?.toString() || "");
+        setNegativeMark(updateExamData.negativeMark?.toString() || "");
+      }
+
       setEditingId(updateExamData._id);
     }
   }, [updateExamData]);
 
-  // Add new section
-  const handleAddMore = () => {
-    setSectionsData([
-      ...sectionsData,
-      {
-        sectionId: "",
-        topicIds: [],
-        noOfQuestions: "",
-        duration: "",
-        correctMark: "",
-        negativeMark: "",
-      },
-    ]);
-  };
-
-  // Handle field changes
+  // Handle section updates
   const handleFieldChange = (
     index: number,
     field: keyof SectionData,
@@ -117,17 +102,28 @@ const ExamForm: React.FC = () => {
     setSectionsData(updated);
   };
 
-  const handleSectionChange = (index: number, value: string) => {
-    const updated = [...sectionsData];
-    updated[index].sectionId = value;
-    updated[index].topicIds = [];
-    setSectionsData(updated);
+  const handleAddSection = () => {
+    setSectionsData([
+      ...sectionsData,
+      {
+        sectionId: "",
+        topic: [],
+        noOfQuestions: "",
+        duration: "",
+        correctMark: "",
+        negativeMark: "",
+      },
+    ]);
   };
 
-  // Submit form
+  const handleRemoveSection = (index: number) => {
+    setSectionsData(sectionsData.filter((_, i) => i !== index));
+  };
+
+  // Submit handler
   const handleSubmit = async () => {
     if (!examName.trim()) {
-      alert("Please enter exam name before submitting.");
+      alert("Exam name is required!");
       return;
     }
 
@@ -135,64 +131,74 @@ const ExamForm: React.FC = () => {
       examname: examName.trim(),
       switchable: isSwitchable === "yes",
       isSection: isSection === "true",
+      fullExamduration: Number(fullExamDuration) || undefined,
     };
 
-    if (isSection === "true") {
-      const validSections = sectionsData.filter(
-        (s) => s.noOfQuestions && s.duration
-      );
+    try {
+      setLoading(true);
 
-      if (validSections.length === 0) {
-        alert("Please fill all required section fields.");
-        return;
+      if (isSection === "true") {
+        if (!sectionsData.length) {
+          alert("Please add at least one section!");
+          return;
+        }
+
+        payload.sections = sectionsData.map((s) => ({
+          sectionId: s.sectionId,
+          topic: s.topic,
+          noOfQuestions: s.noOfQuestions,
+          duration: Number(s.duration),
+          correctMark: Number(s.correctMark),
+          negativeMark: Number(s.negativeMark),
+        }));
+
+        payload.fullExamduration =
+          Number(fullExamDuration) ||
+          sectionsData.reduce((sum, s) => sum + Number(s.duration || 0), 0);
+      } else {
+        if (!noOfQuestions || !correctMark || !negativeMark) {
+          alert("Please fill all non-section exam fields!");
+          return;
+        }
+        payload.noOfQuestions = noOfQuestions;
+        payload.correctMark = Number(correctMark);
+        payload.negativeMark = Number(negativeMark);
       }
 
-      payload.sections = validSections.map((s) => ({
-        sectionId: s.sectionId,
-        noOfQuestions: s.noOfQuestions,
-        duration: Number(s.duration),
-        currectMark: Number(s.correctMark),
-        negativeMark: Number(s.negativeMark),
-        topic: s.topicIds || [],
-      }));
-    } else {
-      const main = sectionsData[0];
-      if (!main.noOfQuestions || !main.duration) {
-        alert("Please fill all required fields.");
-        return;
+      if (editingId) {
+        await dispatch(handleUpdateExam({ id: editingId, ...payload }));
+      } else {
+        await dispatch(createexam(payload));
       }
+const data:any=null
+      await dispatch(getexam(data));
+      dispatch(handlesetUpdateExam(data));
 
-      payload.noOfQuestions = main.noOfQuestions;
-      payload.fullExamduration = Number(main.duration);
-      payload.currectMark = Number(main.correctMark);
-      payload.negativeMark = Number(main.negativeMark);
+      // Reset form
+      setExamName("");
+      setFullExamDuration("");
+      setIsSwitchable("yes");
+      setIsSection("true");
+      setSectionsData([
+        {
+          sectionId: "",
+          topic: [],
+          noOfQuestions: "",
+          duration: "",
+          correctMark: "",
+          negativeMark: "",
+        },
+      ]);
+      setNoOfQuestions("");
+      setCorrectMark("");
+      setNegativeMark("");
+      setEditingId(null);
+    } catch (err) {
+      console.error(err);
+      alert("Error saving exam!");
+    } finally {
+      setLoading(false);
     }
-
-    if (editingId) {
-      await dispatch(handleUpdateExam({ id: editingId, ...payload }));
-    } else {
-      await dispatch(createexam(payload));
-    }
-
-    await dispatch(getexam(null));
-    dispatch(handlesetUpdateExam(null));
-
-    // Reset form
-    setExamName("");
-    setFullExamDuration("");
-    setIsSwitchable("yes");
-    setIsSection("true");
-    setSectionsData([
-      {
-        sectionId: "",
-        topicIds: [],
-        noOfQuestions: "",
-        duration: "",
-        correctMark: "",
-        negativeMark: "",
-      },
-    ]);
-    setEditingId(null);
   };
 
   return (
@@ -206,10 +212,9 @@ const ExamForm: React.FC = () => {
         <div>
           <Label>Exam Name</Label>
           <Input
-            type="text"
-            placeholder="Enter Exam Name (e.g., IPMAT Indore)"
             value={examName}
             onChange={(e) => setExamName(e.target.value)}
+            placeholder="Enter exam name (e.g. JEE Main 2025)"
           />
         </div>
 
@@ -217,26 +222,26 @@ const ExamForm: React.FC = () => {
           <Label>Full Exam Duration (minutes)</Label>
           <Input
             type="number"
-            placeholder="Enter total duration (e.g., 120)"
             value={fullExamDuration}
             onChange={(e) => setFullExamDuration(e.target.value)}
+            placeholder="Enter total duration (e.g. 120)"
           />
         </div>
 
         <div>
-          <Label>Switchable Sections</Label>
+          <Label>Switchable Sections?</Label>
           <RadioGroup
             onValueChange={setIsSwitchable}
             value={isSwitchable}
             className="flex space-x-4 mt-2"
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="yes" id="switchable-yes" />
-              <Label htmlFor="switchable-yes">Yes</Label>
+              <RadioGroupItem value="yes" id="switch-yes" />
+              <Label htmlFor="switch-yes">Yes</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="no" id="switchable-no" />
-              <Label htmlFor="switchable-no">No</Label>
+              <RadioGroupItem value="no" id="switch-no" />
+              <Label htmlFor="switch-no">No</Label>
             </div>
           </RadioGroup>
         </div>
@@ -249,26 +254,26 @@ const ExamForm: React.FC = () => {
             className="flex space-x-4 mt-2"
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="true" id="section-true" />
-              <Label htmlFor="section-true">Yes</Label>
+              <RadioGroupItem value="true" id="section-yes" />
+              <Label htmlFor="section-yes">Yes</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="false" id="section-false" />
-              <Label htmlFor="section-false">No</Label>
+              <RadioGroupItem value="false" id="section-no" />
+              <Label htmlFor="section-no">No</Label>
             </div>
           </RadioGroup>
         </div>
       </div>
 
-      {/* SECTION BASED EXAM */}
+      {/* Section-based exam */}
       {isSection === "true" ? (
         <>
-          <Label className="text-lg font-semibold">Sections & Topics</Label>
+          <Label className="text-lg font-semibold">Sections</Label>
           <div className="space-y-4 mt-2">
             {sectionsData.map((item, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 sm:grid-cols-6 gap-4 items-end"
+                className="grid grid-cols-1 sm:grid-cols-7 gap-4 bg-white p-3 border rounded-md"
               >
                 <div>
                   <Label>Section</Label>
@@ -277,16 +282,16 @@ const ExamForm: React.FC = () => {
                       value: s._id,
                       label: s.section,
                     }))}
-                    onChange={(val: any) =>
-                      handleSectionChange(index, val?.value)
-                    }
                     value={sections
                       .map((s: any) => ({
                         value: s._id,
                         label: s.section,
                       }))
-                      .find((o) => o.value === item.sectionId)}
-                    placeholder="Select Section"
+                      .find((o:any) => o.value === item.sectionId)}
+                    onChange={(val: any) =>
+                      handleFieldChange(index, "sectionId", val?.value)
+                    }
+                    placeholder="Select a section"
                   />
                 </div>
 
@@ -294,20 +299,20 @@ const ExamForm: React.FC = () => {
                   <Label>Topics</Label>
                   <Select
                     closeMenuOnSelect={false}
-                    components={makeAnimated()}
                     isMulti
+                    components={makeAnimated()}
                     options={topicOptions}
-                    value={topicOptions.filter((o) =>
-                      item.topicIds?.includes(o.value)
+                    value={topicOptions.filter((o:any) =>
+                      item.topic?.includes(o.value)
                     )}
                     onChange={(selected: any) =>
                       handleFieldChange(
                         index,
-                        "topicIds",
+                        "topic",
                         selected.map((s: any) => s.value)
                       )
                     }
-                    placeholder="Select Topics"
+                    placeholder="Select one or more topics"
                   />
                 </div>
 
@@ -315,11 +320,11 @@ const ExamForm: React.FC = () => {
                   <Label>No. of Questions</Label>
                   <Input
                     type="number"
-                    placeholder="e.g. 40"
                     value={item.noOfQuestions}
                     onChange={(e) =>
                       handleFieldChange(index, "noOfQuestions", e.target.value)
                     }
+                    placeholder="e.g. 20"
                   />
                 </div>
 
@@ -327,11 +332,11 @@ const ExamForm: React.FC = () => {
                   <Label>Correct Mark</Label>
                   <Input
                     type="number"
-                    placeholder="e.g. 4"
                     value={item.correctMark}
                     onChange={(e) =>
                       handleFieldChange(index, "correctMark", e.target.value)
                     }
+                    placeholder="e.g. 4"
                   />
                 </div>
 
@@ -339,11 +344,11 @@ const ExamForm: React.FC = () => {
                   <Label>Negative Mark</Label>
                   <Input
                     type="number"
-                    placeholder="e.g. -1"
                     value={item.negativeMark}
                     onChange={(e) =>
                       handleFieldChange(index, "negativeMark", e.target.value)
                     }
+                    placeholder="e.g. -1"
                   />
                 </div>
 
@@ -351,19 +356,28 @@ const ExamForm: React.FC = () => {
                   <Label>Duration (minutes)</Label>
                   <Input
                     type="number"
-                    placeholder="e.g. 60"
                     value={item.duration}
                     onChange={(e) =>
                       handleFieldChange(index, "duration", e.target.value)
                     }
+                    placeholder="e.g. 30"
                   />
                 </div>
+
+                {sectionsData.length > 1 && (
+                  <Button
+                    variant="destructive"
+                    className="mt-6"
+                    onClick={() => handleRemoveSection(index)}
+                  >
+                    Remove
+                  </Button>
+                )}
               </div>
             ))}
-
             <Button
               type="button"
-              onClick={handleAddMore}
+              onClick={handleAddSection}
               className="bg-green-500 hover:bg-green-600 mt-2"
             >
               + Add Section
@@ -371,53 +385,33 @@ const ExamForm: React.FC = () => {
           </div>
         </>
       ) : (
-        // NON-SECTION BASED EXAM
+        // Non-section based exam
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4">
           <div>
             <Label>No. of Questions</Label>
             <Input
               type="number"
-              placeholder="e.g. 60"
-              value={sectionsData[0]?.noOfQuestions || ""}
-              onChange={(e) =>
-                handleFieldChange(0, "noOfQuestions", e.target.value)
-              }
+              value={noOfQuestions}
+              onChange={(e) => setNoOfQuestions(e.target.value)}
+              placeholder="Enter total number of questions"
             />
           </div>
-
           <div>
             <Label>Correct Mark</Label>
             <Input
               type="number"
-              placeholder="e.g. 1"
-              value={sectionsData[0]?.correctMark || ""}
-              onChange={(e) =>
-                handleFieldChange(0, "correctMark", e.target.value)
-              }
+              value={correctMark}
+              onChange={(e) => setCorrectMark(e.target.value)}
+              placeholder="Marks for each correct answer (e.g. 4)"
             />
           </div>
-
           <div>
             <Label>Negative Mark</Label>
             <Input
               type="number"
-              placeholder="e.g. 0"
-              value={sectionsData[0]?.negativeMark || ""}
-              onChange={(e) =>
-                handleFieldChange(0, "negativeMark", e.target.value)
-              }
-            />
-          </div>
-
-          <div>
-            <Label>Duration (minutes)</Label>
-            <Input
-              type="number"
-              placeholder="e.g. 90"
-              value={sectionsData[0]?.duration || ""}
-              onChange={(e) =>
-                handleFieldChange(0, "duration", e.target.value)
-              }
+              value={negativeMark}
+              onChange={(e) => setNegativeMark(e.target.value)}
+              placeholder="Negative mark (e.g. -1)"
             />
           </div>
         </div>
@@ -426,9 +420,10 @@ const ExamForm: React.FC = () => {
       <div className="mt-6">
         <Button
           onClick={handleSubmit}
+          disabled={loading}
           className="bg-orange-500 hover:bg-orange-600 w-full"
         >
-          {editingId ? "Update Exam" : "Create Exam"}
+          {loading ? "Saving..." : editingId ? "Update Exam" : "Create Exam"}
         </Button>
       </div>
     </div>

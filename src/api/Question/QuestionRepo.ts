@@ -12,6 +12,8 @@ interface QuestionRepo {
   getQuestion: (payload: Payload) => Promise<AxiosResponse>;
   getQuestionById: (payload: Payload) => Promise<AxiosResponse>;
   handleUpdateQuestion: (payload: Payload) => Promise<AxiosResponse>;
+  userQuestiongetQuestionById: (payload: Payload) => Promise<AxiosResponse>;
+  userExamResult: (payload: Payload) => Promise<AxiosResponse>;
 }
 
 export const QuestionRepo: QuestionRepo = {
@@ -28,5 +30,11 @@ export const QuestionRepo: QuestionRepo = {
   },
 handleUpdateQuestion(payload) {
     return Repository.post(Question.update, payload);
+  },
+  userQuestiongetQuestionById(payload) {
+    return Repository.post(Question.userQuestiongetQuestionById, payload);
+  },
+  userExamResult(payload) {
+    return Repository.post(Question.userExamResult, payload);
   },
 };

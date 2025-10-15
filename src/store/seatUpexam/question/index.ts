@@ -6,7 +6,8 @@ Question:any;
 updateQuestion:any;
 singleQuestion:any;
 selectedQuestion:any;
-selectedQuestionDetail:any
+selectedQuestionDetail:any,
+result:any
 }
 
 // Initial state for the slice
@@ -15,7 +16,8 @@ const initialState: UserDataState = {
   updateQuestion:null,
   singleQuestion:null,
   selectedQuestion:null,
-  selectedQuestionDetail:null
+  selectedQuestionDetail:null,
+  result:null
 };
 
 // Create the user data slice
@@ -38,11 +40,14 @@ export const QuestionSlicc = createSlice({
     setSelectedQuestionDetail: (state, action: PayloadAction<any>) => {
       state.selectedQuestionDetail = action.payload; // Set login user data
     },
+    setResult: (state, action: PayloadAction<any>) => {
+      state.result = action.payload; // Set login user data
+    },
   },
 });
 
 // Export actions
-export const {setQuestion,setUpdateQuestion,setSingleQuestion,setSelectedQuestion,setSelectedQuestionDetail} = QuestionSlicc.actions;
+export const {setQuestion,setResult,setUpdateQuestion,setSingleQuestion,setSelectedQuestion,setSelectedQuestionDetail} = QuestionSlicc.actions;
 
 // Export reducer
 export default QuestionSlicc.reducer;

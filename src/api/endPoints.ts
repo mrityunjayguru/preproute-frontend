@@ -4,17 +4,17 @@ import { createvehicletype } from "./setupSchool/VehicleType";
 
 const UserAuth={
   schoolAuth:"Auth/schoolLogin",
-  userLogin:"users/login",
+  userLogin:"Auth/userlogin",
   subject:"codemaster",
   yearMaster:"yearsmaster",
-  register:"Auth/adminLogin",
+  register:"Auth/signUp",
   exam:"statusmaster",
 }
 export const examType={
   create:"setUpexam/examType/create",
   get:"setUpexam/examType/get",
   update:"setUpexam/examType/update",
-  getExamBeExamTypeId:"createexam/findexamnamebyexamid"
+  getExamBeExamTypeId:"setUpexam/examType/getById"
 }
 export const section={
   create:"setUpexam/section/create",
@@ -47,11 +47,16 @@ export const Question={
     get:"question",
     getQuestionById:"setUpexam/question/getQuestionById",
     update:"setUpexam/question/updateQuestion",
+    userQuestiongetQuestionById:"/user/getQuestionById",
+    userExamResult:"/user/analysis"
 }
 export const questionPaper={
   create:"setUpexam/questionpaper/create",
   get:"setUpexam/questionpaper/get",
-  handleUploadImage:"setUpexam/questionpaper/uploadImage"
+  handleUploadImage:"setUpexam/questionpaper/uploadImage",
+  getQuestionBeExamId:"setUpexam/questionpaper/getQuestionBeExamId",
+  getUserQuestionData:"setUpexam/questionpaper/userExam",
+  createUserExam:"/user/exam"
 
 }
 export const Dashboard={

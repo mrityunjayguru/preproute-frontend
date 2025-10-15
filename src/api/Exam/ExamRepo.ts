@@ -12,6 +12,8 @@ interface examRepo {
   getexam: (payload: Payload) => Promise<AxiosResponse>;
   handleSelectedExamDetail: (payload: any) => Promise<AxiosResponse>;
   handleUpdateExam: (payload: any) => Promise<AxiosResponse>;
+  getQuestionBeExamId: (payload: any) => Promise<AxiosResponse>;
+  createUserExam: (payload: any) => Promise<AxiosResponse>;
 }
 
 export const examRepo: examRepo = {
@@ -27,6 +29,14 @@ export const examRepo: examRepo = {
   },
   handleSelectedExamDetail(payload) {
     return Repository.post(questionPaper.get, payload, {
+    });
+  },
+    getQuestionBeExamId(payload) {
+    return Repository.post(questionPaper.getQuestionBeExamId, payload, {
+    });
+  },
+  createUserExam(payload) {
+    return Repository.post(questionPaper.createUserExam, payload, {
     });
   },
 };

@@ -47,7 +47,6 @@ export const getExamType = createAsyncThunk<boolean, Payload>(
   async (payload, thunkAPI) => {
     try {
       const data = await examTypeRepo.getExamType(payload);
-      console.log(data,"datadata")
       if (data.status === 200) {
         thunkAPI.dispatch(setexamType(data.data.data));
         return true;
@@ -92,7 +91,7 @@ export const getExamBeExamTypeId = createAsyncThunk<boolean, Payload>(
     try {
        const data = await examTypeRepo.getExamBeExamTypeId(payload);
       if (data.status === 200) {
-        thunkAPI.dispatch(setExamBeExamTypeId(data.data));
+        thunkAPI.dispatch(setExamBeExamTypeId(data.data.data));
         return true;
       }
     } catch (err:any) {

@@ -11,6 +11,7 @@ import OptionWithLatex from "./OptionWithLatex";
 import QuestionWithOptionsEditor from "./Component/LatexCode";
 import LatexForSoluction from "./Component/LatexForSoluction";
 import { Input } from "@/components/ui/input";
+import CanvaEditor from "./Component/AAAA";
 
 type AnswerType = "Numeric" | "MCQ";
 
@@ -30,7 +31,6 @@ const Exam: React.FC = () => {
   const topic = useSelector((state: any) => state?.topic?.topic);
   const subtopicData = useSelector((state: any) => state?.subTopic?.subTopic);
   const singleQuestion=useSelector((state:any)=>state.question.singleQuestion)
-  console.log(subtopicData,"subtopicDatasubtopicData")
   // Local state
   const [questionData, setQuestionData] = useState<string>("");
   const [selectedTopic, setSelectedTopic] = useState<string>("");
@@ -261,7 +261,6 @@ const handleActiveSection=(val:any)=>{
             </button>
           </div>
         </div>
-
         {/* Main Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Section */}
@@ -328,7 +327,7 @@ const handleActiveSection=(val:any)=>{
                   ))}
                 </div>
               </div>
-
+{/* <CanvaEditor/> */}
               {/* Question Editor */}
               <QuestionWithOptionsEditor value={questionData} onChange={setQuestionData} />
 

@@ -1,71 +1,145 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Step1 from "./Step1";
-import Step2 from "./Step2";
-import Step3 from "./Step3";
-import Step4 from "./Step4";
-import Step5 from "./Step5";
-import { useDispatch } from "react-redux";
+import { handleRegister, userRegister } from "@/api/Auth/SchoolAuth";
+import { LeftLoginIcon, MailIcons, RightLoginIcon } from "@/Common/svgIcon";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { AppDispatch } from "@/store/store";
-import { getExamMaster, SubjectData, YearMaster } from "@/api/Auth/SchoolAuth";
-import Step6 from "./step6";
-import Step7 from "./Step7";
-import { Progress } from "@/components/ui/progress"
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 
-export default function RegisterPage() {
-  const dispatch=useDispatch<AppDispatch>()
-  const totalSteps = 7; // total steps
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
+interface FormData {
+  name?: string;
+  email?: string;
+  phone?: string;
+  password?: string;
+}
+
+export default function pagq() {
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
+
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     phone: "",
     password: "",
-    confirmPassword: "",
   });
 
-  const nextStep = () => setStep((prev) => prev + 1);
-  const prevStep = () => setStep((prev) => prev - 1);
+  const [loading, setLoading] = useState(false);
 
-  const updateForm = (fields: Partial<typeof formData>) => {
-    setFormData({ ...formData, ...fields });
+  const handleChange = (field: keyof FormData, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
-const getData=async()=>{
-  try{
-const payload:any={}
- await dispatch(SubjectData(payload));  
- await dispatch(YearMaster(payload)); 
- await dispatch(getExamMaster(payload)); 
 
-  }catch(err){
-    console.log(err)
-  }
-}
+  const handleSubmit = async () => {
+    const { name, email, phone, password } = formData;
 
-useEffect(()=>{
-getData()
-},[])
-  const progressValue = Math.round((step / totalSteps) * 100);
+    if (!name || !email || !phone || !password) {
+      alert("कृपया सभी फ़ील्ड भरें!");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const payload:any = {
+        username: name,
+        email,
+        phone,
+        password,
+      };
+
+      const response: any = await dispatch(userRegister(payload));
+
+      if (response?.payload === true || response?.payload?.success === true) {
+        alert("Registration successful!");
+        router.push("/Auth/signin");
+      } else {
+        alert("Registration failed. Please try again!");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong! Check console for details.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="">
-      <div className="">
-        {/* Right Form */}
-        <div className="w-full ">
-          <h1 className="text-2xl font-bold text-center mb-6">
-            the<span className="text-orange-500">prep</span>route
-          </h1>
-          <div className="w-[350px] mx-auto ">
-            <Progress value={progressValue} />
+    <div className="flex flex-col text-gray-800 min-h-screen flex items-center justify-center bg-neutral-50">
+      <div className="w-full max-w-sm mx-auto z-20">
+        <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+          <div className="flex items-center mb-4">
+            <span className="p-2 bg-orange-100 rounded-full mr-3">
+              <MailIcons />
+            </span>
+            <h2 className="text-xl font-semibold text-[#1A1D1F]">Register</h2>
           </div>
-          {step === 1 && <Step1 nextStep={nextStep} updateForm={updateForm} formData={formData} />}
-          {step === 2 && <Step2 nextStep={nextStep} prevStep={prevStep} updateForm={updateForm} formData={formData} />}
-          {step === 3 && <Step6 nextStep={nextStep} prevStep={prevStep} updateForm={updateForm} formData={formData} />}
-          {step === 4 && <Step7 nextStep={nextStep} prevStep={prevStep} updateForm={updateForm} formData={formData} />}
-          {step === 5 && <Step3 nextStep={nextStep} prevStep={prevStep} updateForm={updateForm} formData={formData} />}
-          {step === 6 && <Step4 nextStep={nextStep} prevStep={prevStep} updateForm={updateForm} formData={formData}  />}
-          {step === 7 && <Step5 nextStep={nextStep} prevStep={prevStep} updateForm={updateForm} formData={formData}  />}
+          <p className="text-sm font-Artegra font-medium my-2 text-[#1A1D1F]">
+            Sign up, dive in, and ace it with mock exams & past papers!
+          </p>
 
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Full Name</label>
+              <Input
+                type="text"
+                placeholder="Enter your name"
+                value={formData.name}
+                onChange={(e) => handleChange("name", e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Email</label>
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Phone</label>
+              <Input
+                type="tel"
+                placeholder="Enter your phone number"
+                value={formData.phone}
+                onChange={(e) => handleChange("phone", e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Password</label>
+              <Input
+                type="password"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={(e) => handleChange("password", e.target.value)}
+              />
+            </div>
+
+            <Button
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+            >
+              {loading ? "Submitting..." : "Register"}
+            </Button>
+          </div>
+
+          <div className="text-center text-sm text-gray-500 mt-6">
+            Already Signed Up?{" "}
+            <a
+              onClick={() => router.push("/Auth/signin")}
+              className="text-[#FF5635] hover:underline cursor-pointer font-medium"
+            >
+              Login
+            </a>
+          </div>
         </div>
       </div>
     </div>

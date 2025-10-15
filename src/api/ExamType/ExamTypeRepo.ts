@@ -27,7 +27,7 @@ export const examTypeRepo: examTypeRepo = {
     return Repository.get(examType.get, payload);
   },
   getExamBeExamTypeId(payload) {
- return Repository.get(`${examType.getExamBeExamTypeId}?examtypeid=${payload.id}`);
+  return Repository.get(examType.getExamBeExamTypeId, payload);
   },
     updateExamType(payload) {
  return Repository.post(examType.update, payload);

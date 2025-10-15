@@ -1,21 +1,29 @@
 "use client";
 
-import { getExamBeExamTypeId, getExamType, handleSelectedExamType } from "@/api/ExamType";
-import { AppDispatch } from "@/store/store";
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { AppDispatch } from "@/store/store";
+import {
+  getExamType,
+  getExamBeExamTypeId,
+  handleSelectedExamType,
+} from "@/api/ExamType";
 
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [data, setData] = useState("Practice");
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  const examTypeData = useSelector((state: any) => state.examType.examType) || [];
+const token=localStorage.getItem("token")
+  const examTypeData =
+    useSelector((state: any) => state.examType.examType) || [];
 
-  // Fetch exam types
+  // ✅ Fetch exam types once
   const fetchData = async () => {
-    const payload: any = {};
+    const payload:any={}
     await dispatch(getExamType(payload));
   };
 
@@ -23,22 +31,35 @@ export const Header = () => {
     fetchData();
   }, []);
 
+  // ✅ Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest(".exam-dropdown")) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
+
+  // ✅ Handle exam selection
   const handleExamClick = (exam: any) => {
-    const payload:any={
-      id:exam.id
-    }
-      dispatch(handleSelectedExamType(exam))
-      dispatch(getExamBeExamTypeId(payload))
+    setData(exam.examType);
+    dispatch(handleSelectedExamType(exam));
+    // dispatch(getExamBeExamTypeId(payload));
     setIsDropdownOpen(false);
-    // You can navigate to a specific exam page if needed:
-    // router.push(`/exam/${exam._id}`)
+    router.push(`/Exam/${exam.examType}`);
   };
+  const removeLogin=()=>{
+    localStorage.removeItem("token")
+  }
 
   return (
     <div className="container mx-auto">
-      <header className="bg-white">
+      <header className="bg-white border-b border-gray-200 shadow-sm">
         <div className="w-full mx-auto px-4 py-4 flex justify-between items-center">
-          {/* Logo Section */}
+          {/* 🧭 Logo Section */}
           <div
             className="flex items-center space-x-2 cursor-pointer"
             onClick={() => router.push("/home")}
@@ -48,15 +69,20 @@ export const Header = () => {
             </span>
           </div>
 
-          {/* Navigation Section (Desktop) */}
+          {/* 🌐 Navigation Section (Desktop) */}
           <nav className="hidden lg:flex items-center space-x-8">
             {/* Practice Dropdown */}
-            <div className="relative">
+            <div className="relative exam-dropdown">
               <button
-                className="flex items-center gap-1 text-gray-600 hover:text-gray-900 transition-colors duration-200"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                aria-expanded={isDropdownOpen}
+                aria-haspopup="listbox"
+                className="flex items-center gap-1 text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setIsDropdownOpen(!isDropdownOpen);
+                }}
               >
-                Practice
+                {data}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -75,16 +101,17 @@ export const Header = () => {
                 </svg>
               </button>
 
+              {/* Dropdown Menu */}
               {isDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 rounded-md shadow-lg py-2 z-10">
+                <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-md py-2 z-10 animate-fadeIn">
                   {examTypeData.length > 0 ? (
                     examTypeData.map((exam: any) => (
                       <div
                         key={exam._id}
                         onClick={() => handleExamClick(exam)}
-                        className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                        className="px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 cursor-pointer transition-colors duration-150"
                       >
-                        {exam.name || exam.examName || "Unnamed Exam"}
+                        {exam.examType}
                       </div>
                     ))
                   ) : (
@@ -96,47 +123,54 @@ export const Header = () => {
               )}
             </div>
 
-            {/* Regular Navigation Links */}
+            {/* Regular Nav Links */}
             <a
               href="#"
-              className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
+              className="text-gray-600 hover:text-orange-600 transition-colors duration-200"
             >
               Features
             </a>
             <a
               href="#"
-              className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
+              className="text-gray-600 hover:text-orange-600 transition-colors duration-200"
             >
               Pricing / Plans
             </a>
             <a
               href="#"
-              className="text-gray-600 hover:text-gray-900 transition-colors duration-200"
+              className="text-gray-600 hover:text-orange-600 transition-colors duration-200"
             >
               Community
             </a>
           </nav>
 
-          {/* Auth Buttons */}
+          {/* 👤 Auth Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
-            <button className="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">
+            {token?(<button onClick={(removeLogin)} className= "cursor-pointer text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">
+              logout
+            </button>):(<>
+             <button className="text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">
               Register
             </button>
             <button
               onClick={() => router.push("/Auth/signin")}
-              className="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full transition-colors duration-200 shadow-md"
+              className="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full transition-all duration-200 shadow-md"
             >
               Login
-            </button>
+            </button></>)}
+           
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* 📱 Mobile Menu Button */}
           <div className="lg:hidden">
-            <button className="text-gray-600 hover:text-gray-900">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-gray-700 hover:text-orange-600"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
+                width="26"
+                height="26"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -144,13 +178,84 @@ export const Header = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <line x1="4" x2="20" y1="12" y2="12" />
-                <line x1="4" x2="20" y1="6" y2="6" />
-                <line x1="4" x2="20" y1="18" y2="18" />
+                {isMobileMenuOpen ? (
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                ) : (
+                  <>
+                    <line x1="4" x2="20" y1="6" y2="6" />
+                    <line x1="4" x2="20" y1="12" y2="12" />
+                    <line x1="4" x2="20" y1="18" y2="18" />
+                  </>
+                )}
               </svg>
             </button>
           </div>
         </div>
+
+        {/* 📱 Mobile Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden bg-white border-t border-gray-100 shadow-md">
+            <div className="flex flex-col items-start px-6 py-4 space-y-3">
+              <div className="w-full exam-dropdown">
+                <button
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  className="flex items-center gap-1 text-gray-700 font-medium"
+                >
+                  {data}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={`transition-transform duration-200 ${
+                      isDropdownOpen ? "rotate-180" : "rotate-0"
+                    }`}
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+
+                {isDropdownOpen && (
+                  <div className="mt-2 bg-white border border-gray-200 rounded-md shadow-md w-full">
+                    {examTypeData.map((exam: any) => (
+                      <div
+                        key={exam._id}
+                        onClick={() => handleExamClick(exam)}
+                        className="px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 cursor-pointer"
+                      >
+                        {exam.examType}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <a href="#" className="text-gray-700 hover:text-orange-600">
+                Features
+              </a>
+              <a href="#" className="text-gray-700 hover:text-orange-600">
+                Pricing / Plans
+              </a>
+              <a href="#" className="text-gray-700 hover:text-orange-600">
+                Community
+              </a>
+              <button className="text-gray-700 hover:text-orange-600">
+                Register
+              </button>
+              <button
+                onClick={() => router.push("/Auth/signin")}
+                className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full shadow-md"
+              >
+                Login
+              </button>
+            </div>
+          </div>
+        )}
       </header>
     </div>
   );

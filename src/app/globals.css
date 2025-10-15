@@ -254,3 +254,17 @@
           padding: 4px 6px;
           cursor: pointer;
         }
+
+
+        .image-wrapper:hover .resize-handle {
+  background: #0056b3;
+}
+
+.image-wrapper:hover .position-toolbar {
+  opacity: 1;
+}
+
+.position-toolbar {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}

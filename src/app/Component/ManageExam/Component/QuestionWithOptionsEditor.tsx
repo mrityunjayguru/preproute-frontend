@@ -16,7 +16,7 @@ interface TableToolbarPos {
   left: number;
 }
 
-export default function QuestionEditor({ onChange, value }: QuestionEditorProps) {
+export default function QuestionWithOptionsEditor({ onChange, value }: QuestionEditorProps) {
   const dispatch = useDispatch<AppDispatch>();
   const editorRef = useRef<HTMLDivElement | null>(null);
   const savedRangeRef = useRef<Range | null>(null);

@@ -20,24 +20,32 @@ export const handleLogin = createAsyncThunk<boolean, Payload>(
   APIName.userLogin,
   async (payload, thunkAPI) => {
     try {
-      const data = await AuthRepo.userLogin(payload);
-      if (data.status === 200) {
-        // thunkAPI.dispatch(setAuth(data.data.user));
-        GetMessage("success", "success");
-        // localStorage.setItem("token",data.data.user.token);
-        window.location.href = '/home';
+      const response = await AuthRepo.userLogin(payload);
+      if (response.status === 200) {
+        const userData = response.data.user; // adjust according to your API response
+        thunkAPI.dispatch(setAuth(userData));
+        GetMessage("success", "Login successful");
+        localStorage.setItem("token", userData.token);
         return true;
       }
-    } catch (err:any) {
-      if(err.status==401){
-        GetMessage("error", err.response.data.message);
-      }else{
-        GetMessage("warning", "something went wrong");
+      // If API returns non-200 but no error thrown
+      GetMessage("warning", "Unexpected response from server");
+      return false;
+
+    } catch (err: any) {
+      const status = err.response?.status;
+
+      if (status === 401) {
+        GetMessage("error", err.response?.data?.message || "Unauthorized");
+      } else {
+        GetMessage("warning", "Something went wrong");
       }
+
+      return false;
     }
-    return false;
   },
 );
+
 
 
 
@@ -65,6 +73,30 @@ export const handleRegister = createAsyncThunk<boolean, Payload>(
   },
 );
 
+
+export const userRegister = createAsyncThunk<boolean, Payload>(
+  APIName.register,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await AuthRepo.userRegister(payload);
+      if (data.status === 200) {
+        console.log(data.data.user)
+        thunkAPI.dispatch(setAuth(data.data.data));
+        GetMessage("success", "success");
+        localStorage.setItem("token",data.data.user.token);
+        // window.location.href = '/home';
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        GetMessage("error", err.response.data.message);
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
 
 export const SubjectData = createAsyncThunk<boolean, Payload>(
   APIName.userLogin,

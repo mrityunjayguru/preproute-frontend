@@ -9,7 +9,6 @@ function Exam() {
     <div>
       <ExamHeader/> 
       <UserExam/>
-      <TopPratices/>
     </div>
   )
 }
