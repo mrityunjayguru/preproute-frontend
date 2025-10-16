@@ -8,6 +8,7 @@ const UserAuth={
   subject:"codemaster",
   yearMaster:"yearsmaster",
   register:"Auth/signUp",
+  AdminLogin:"Auth/adminLogin",
   exam:"statusmaster",
 }
 export const examType={

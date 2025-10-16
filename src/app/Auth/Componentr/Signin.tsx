@@ -78,7 +78,15 @@ const Signin = () => {
             Login
           </Button>
         </form>
-
+<div className="text-center text-sm text-gray-500 mt-6">
+            Don't have account?{" "}
+            <a
+              onClick={() => router.push("/Auth/register")}
+              className="text-[#FF5635] hover:underline cursor-pointer font-medium"
+            >
+              Register
+            </a>
+          </div>
         {/* Divider */}
         <div className="flex items-center justify-center space-x-2 text-gray-400 text-sm">
           <span>or</span>

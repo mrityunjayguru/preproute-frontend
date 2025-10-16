@@ -93,10 +93,13 @@ const Card = ({
 // --- Exam Card ---
 const MockExamCard = ({ exam }: { exam: any }) => {
     const router = useRouter();
-  
+  let token=localStorage.getItem("token")
   const dispatch=useDispatch<AppDispatch>()
 
   const handleExma=(data:any)=>{
+if(!token){
+   return router.push("/home");
+}
     const payload:any={
       examTypeId:data?.examTypeId,
       examid:data?.examid,
@@ -155,25 +158,23 @@ const MockExamCard = ({ exam }: { exam: any }) => {
 
 const UserExam = () => {
   const examById = useSelector((state: any) => state?.exam?.examById) || [];
-  const selectedExamType=useSelector((state:any)=>state.examType?.selectedExamType)
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
       <main className="container mx-auto px-6 md:px-12 py-10">
         {/* Header Section */}
-        <div className="mb-10 max-w-4xl">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
-          {(examById && examById.length > 0
-  ? examById[0]?.exam?.examname
-  : "") + ": " + (selectedExamType?.examType || "")}
+    <div className="mb-4">
+  <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
+    {examById?.length
+      ? `${examById[0]?.exam?.examname || ""}: ${examById[0]?.examType?.examType || ""}`
+      : ""}
+  </h1>
 
-
-          </h1>
-          <p className="text-base text-gray-600 leading-relaxed">
-            The Prep Route mock tests are carefully designed to mirror the
-            question style, difficulty level, and time pressure of the actual
-            exam. Read this document to learn more.
-          </p>
-        </div>
+  <p className="text-base text-gray-600 leading-relaxed">
+    The Prep Route mock tests are carefully designed to mirror the question
+    style, difficulty level, and time pressure of the actual exam. Read this
+    document to learn more.
+  </p>
+</div>
 
         {/* Mock Exam Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">

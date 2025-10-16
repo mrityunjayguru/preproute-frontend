@@ -180,6 +180,27 @@ export const getQuestionBeExamId = createAsyncThunk<boolean, Payload>(
   }
 );
 
+export const resetQuestionByExamID = createAsyncThunk<boolean, Payload>(
+  exam.get,
+  async (payload, thunkAPI) => {
+    try {
+ 
+        thunkAPI.dispatch(setexamById(payload));
+        return true;
+      
+    } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
+
 export const createUserExam = createAsyncThunk<boolean, Payload>(
   exam.get,
   async (payload, thunkAPI) => {

@@ -24,8 +24,9 @@ await dispatch(getDashboardData(payload))
 getDashboard()
   },[])
   useEffect(()=>{
-if(userLogin?.role!=="Admin"){
-  // router.push(`/home`)
+    console.log(userLogin,"userLoginuserLogin")
+if(userLogin?.role!="Admin"){
+  router.push(`/home`)
 }
   },[])
   // Mock Data

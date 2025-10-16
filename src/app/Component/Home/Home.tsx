@@ -1,12 +1,29 @@
+"use client"
+import { useEffect } from "react";
 import CardPage from "../Cards/Card";
 import { QuoteComponent } from "../Cards/QuoteComponent";
 import { ImpactChart } from "../Chart/Chart";
 import FeaturePages from "../Feature/Feature";
 import { ExamsSection } from "./ExamSection";
 import { HeroSection } from "./HeroSection";
+import { getUserQuestionData } from "@/api/QuestionPaper";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { getQuestionBeExamId, resetQuestionByExamID } from "@/api/Exam";
+import { handleSelectedExamType } from "@/api/ExamType";
 
 export const HomePage = () => {
+  const dispatch=useDispatch<AppDispatch>()
+   useEffect(()=>{
+      const payload:any=null
+    dispatch(resetQuestionByExamID(payload))
+        dispatch(handleSelectedExamType(payload));
+        dispatch(handleSelectedExamType(payload));
+    
+
+    },[])
   return (
+   
     <div className="min-h-screen bg-white font-sans text-gray-900">
       {/* Container with max-width for content */}
       <div className="">

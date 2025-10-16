@@ -9,6 +9,7 @@ import {
   getExamBeExamTypeId,
   handleSelectedExamType,
 } from "@/api/ExamType";
+import { Button } from "@/components/ui/button";
 
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -53,6 +54,8 @@ const token=localStorage.getItem("token")
   };
   const removeLogin=()=>{
     localStorage.removeItem("token")
+    router.push(`/home`);
+
   }
 
   return (
@@ -146,12 +149,12 @@ const token=localStorage.getItem("token")
 
           {/* 👤 Auth Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
-            {token?(<button onClick={(removeLogin)} className= "cursor-pointer text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">
+            {token?(<Button onClick={(removeLogin)} variant="orange" >
               logout
-            </button>):(<>
-             <button className="text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">
+            </Button>):(<>
+             {/* <button   onClick={() => router.push("/Auth/register")}    className="cursor-pointer text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">
               Register
-            </button>
+            </button> */}
             <button
               onClick={() => router.push("/Auth/signin")}
               className="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full transition-all duration-200 shadow-md"

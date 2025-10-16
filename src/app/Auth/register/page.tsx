@@ -54,7 +54,7 @@ export default function pagq() {
       const response: any = await dispatch(userRegister(payload));
 
       if (response?.payload === true || response?.payload?.success === true) {
-        alert("Registration successful!");
+        // alert("Registration successful!");
         router.push("/Auth/signin");
       } else {
         alert("Registration failed. Please try again!");

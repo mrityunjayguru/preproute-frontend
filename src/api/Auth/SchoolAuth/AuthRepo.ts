@@ -11,7 +11,8 @@ interface AuthRepo {
 subjectData: (payload: Payload) => Promise<AxiosResponse>;
 yearMaster: (payload: Payload) => Promise<AxiosResponse>;
 userRegister: (payload: Payload) => Promise<AxiosResponse>;
-ExamMaster: (payload: Payload) => Promise<AxiosResponse>;
+AdminLogin: (payload: Payload) => Promise<AxiosResponse>;
+
 }
 
 export const AuthRepo: AuthRepo = {
@@ -27,7 +28,7 @@ export const AuthRepo: AuthRepo = {
   userRegister(payload) {
     return Repository.post(APIName.register,payload);
   },
-    ExamMaster(payload) {
-    return Repository.get(APIName.exam,payload);
+    AdminLogin(payload) {
+    return Repository.post(APIName.AdminLogin,payload);
   },
 };

@@ -11,11 +11,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import React from "react";
+import { useSelector } from "react-redux";
 
 export function DashboardHeader() {
   const router = useRouter();
   const pathname = usePathname(); // ✅ get current route
-
+  const userLogin=useSelector((state:any)=>state?.Auth?.loginUser)
   const handleChangeRoute = (page: string) => {
     router.push(`${page}`);
   };
@@ -57,7 +58,8 @@ export function DashboardHeader() {
 
       {/* User Profile */}
       <div className="flex items-center gap-x-2 text-black">
-        <span className="text-sm">Operator One</span>
+
+        <span className="text-sm">{userLogin?.username}</span>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Avatar className="cursor-pointer">
