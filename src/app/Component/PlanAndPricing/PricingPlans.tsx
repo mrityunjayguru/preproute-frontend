@@ -2,8 +2,11 @@
 
 import React from "react";
 import { Check, Clock } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function PricingPlans() {
+    const router = useRouter();
+  
   return (
     <div className="min-h-screen bg-[#fff] py-12 px-4 flex flex-col items-center">
       <h2 className="text-3xl md:text-4xl font-bold text-[#000] mb-8 text-center">
@@ -70,8 +73,10 @@ export default function PricingPlans() {
               </p>
             </div>
 
-            <div className="text-center mt-4">
-              <button className="px-6 py-2 bg-[#ff5635] hover:bg-[#e14c2f] text-[#fff] rounded-lg font-semibold transition">
+            <div  className="text-center mt-4">
+              <button 
+              onClick={()=>router.push("/Auth/signin")}
+              className="cursor-pointer px-6 py-2 bg-[#ff5635] hover:bg-[#e14c2f] text-[#fff] rounded-lg font-semibold transition">
                 Enroll Now
               </button>
             </div>

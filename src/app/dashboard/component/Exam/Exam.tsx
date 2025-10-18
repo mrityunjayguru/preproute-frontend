@@ -261,10 +261,10 @@ const Exam: React.FC = () => {
         </div>
 
         {/* Main Layout */}
-        <div className="grid  grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="  gap-6">
           {/* Left Section */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="rounded-xl bg-white shadow-lg p-6 space-y-6">
+          <div className=" flex justify-between gap-2 space-y-6">
+            <div className="rounded-xl w-full bg-white shadow-lg p-6 space-y-6">
               <h2 className="text-xl font-bold text-gray-800">
                 Question No. {activeQuestion}
               </h2>
@@ -389,12 +389,9 @@ const Exam: React.FC = () => {
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
+               <div className="lg:col-span-1 space-y-6 w-[40%]">
             {/* Question Navigation */}
-            <div className="rounded-xl bg-white shadow-lg p-6">
+            <div className="rounded-xl h-full bg-white shadow-lg p-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">
                 Go to Question No.
               </h3>
@@ -415,14 +412,19 @@ const Exam: React.FC = () => {
               </div>
             </div>
 
+
             {/* Hint */}
-            <div className="rounded-xl bg-white shadow-lg p-6">
+          
+          </div>
+          </div>
+  <div className="rounded-xl bg-white shadow-lg p-6">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">
                 Solution
               </h3>
               <LatexForSoluction value={hintText} onChange={setHintText} />
             </div>
-          </div>
+          {/* Sidebar */}
+       
         </div>
       </div>
     </div>

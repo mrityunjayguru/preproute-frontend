@@ -443,8 +443,8 @@ export default function QuestionEditor({ onChange, value }: QuestionEditorProps)
 
       {/* LaTeX Modal */}
       {showLatexModal && (
-        <div className="modal-overlay" onClick={() => setShowLatexModal(false)}>
-          <div
+        <div className="modal-overlay w-full h-full" onClick={() => setShowLatexModal(false)}>
+          <div 
             className="modal"
             onClick={(e) => e.stopPropagation()}
             style={{
