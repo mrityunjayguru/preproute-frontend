@@ -89,14 +89,20 @@ export default function QuestionEditor({ onChange, value }: QuestionEditorProps)
     sel?.addRange(range);
   };
 
-  const insertNode = (node: Node) => {
-    const sel = window.getSelection();
-    if (!sel || sel.rangeCount === 0) return;
-    const range = sel.getRangeAt(0);
-    range.insertNode(node);
-    range.setStartAfter(node);
-    range.collapse(true);
-  };
+ const insertNode = (node: Node) => {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+  const range = sel.getRangeAt(0);
+
+  range.insertNode(node);
+
+  // 🩵 Move cursor after inserted node
+  range.setStartAfter(node);
+  range.setEndAfter(node);
+  sel.removeAllRanges();
+  sel.addRange(range);
+};
+
 
   // ---------------------- Image Upload ----------------------
   const handleImageUpload = async () => {

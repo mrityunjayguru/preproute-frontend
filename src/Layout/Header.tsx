@@ -156,7 +156,7 @@ const token=localStorage.getItem("token")
               href="#"
               className="text-gray-600 hover:text-orange-600 transition-colors duration-200"
             >
-              analytices
+              Analytics
             </a>):(null)}
           </nav>
 
