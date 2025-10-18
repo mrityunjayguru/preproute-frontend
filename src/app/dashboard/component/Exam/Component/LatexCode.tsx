@@ -382,7 +382,7 @@ export default function QuestionEditor({ onChange, value }: QuestionEditorProps)
   return (
     <div className="card" style={{ position: "relative" }}>
       <h3>Custom Question Editor</h3>
-<CanvaEditor/>
+{/* <CanvaEditor/> */}
       {/* Toolbar */}
       <div className="toolbar" style={{ marginBottom: "10px" }}>
         <button onClick={() => document.execCommand("bold")}><b>B</b></button>
