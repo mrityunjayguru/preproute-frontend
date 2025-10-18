@@ -5,6 +5,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
+import OpenExamPopup from "../../ManageExam/Component/OpenNewWindowButton";
 
 // 🔒 Lock Icon
 const LockIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -44,7 +45,7 @@ const MockExamCard = ({ exam }: { exam: any }) => {
       questionPapername: data?.questionPapername,
     };
     dispatch(getUserQuestionData(payload));
-    router.push("userExam");
+    // router.push("userExam");
   };
 
   return (
@@ -83,7 +84,8 @@ const MockExamCard = ({ exam }: { exam: any }) => {
           className="bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium mt-4 py-2 px-4 rounded-md transition-all duration-200 text-sm md:text-base"
           onClick={() => handleExam(exam)}
         >
-          Start Exam
+          {/* Start Exam */}
+          <OpenExamPopup/>
         </button>
       )}
     </Card>
@@ -107,7 +109,6 @@ const UserExam = () => {
               {examById[0]?.examType?.examType || ""}
             </span>
           </h1>
-
           <p className="text-sm md:text-base text-[#000000] md:w-2/3 leading-relaxed">
             The Prep Route mock tests are carefully designed to mirror the
             question style, difficulty level, and time pressure of the actual

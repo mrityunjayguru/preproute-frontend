@@ -74,9 +74,9 @@ const OpenExamPopup = () => {
   };
 
   return (
-    <Button variant="orange" onClick={handleButtonClick}>
+    <button className="cursor-pointer"  onClick={handleButtonClick}>
       Start Exam
-    </Button>
+    </button>
   );
 };
 

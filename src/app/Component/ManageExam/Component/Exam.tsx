@@ -134,6 +134,7 @@ export default function ExamUI() {
 
   const handleNextQuestion = async () => {
     if (!question) return;
+    setNumericalValue("");
 
     const payload: any = { questionId: question._id, userId: userLogin?._id };
     question.answerType === "Numeric"

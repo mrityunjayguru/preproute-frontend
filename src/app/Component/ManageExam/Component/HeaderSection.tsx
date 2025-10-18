@@ -21,12 +21,12 @@ const HeaderSection: React.FC<Props> = ({
   return (
     <div className="flex flex-wrap items-center justify-between bg-white p-3 border-b">
       {isSection && (
-        <div className="flex flex-wrap gap-2 overflow-x-auto">
+        <div className="flex flex-wrap gap-1 overflow-x-auto">
           {examSections.map((t) => (
             <button
               key={t.sectionId}
               onClick={() => handleSection(t)}
-              className={`px-4 py-2 rounded-lg border transition-all text-sm whitespace-nowrap ${
+              className={`cursor-pointer px-5 py-2 rounded-sm border transition-all text-sm whitespace-nowrap ${
                 t.sectionId === selectedSection?.sectionId
                   ? "bg-[#FF5635] text-white border-[#FF5635]"
                   : "bg-[#fff] text-[#1E1E1E] border-gray-300"
@@ -37,7 +37,6 @@ const HeaderSection: React.FC<Props> = ({
           ))}
         </div>
       )}
-
       <div
         className={`font-bold mt-2 sm:mt-0 ${
           timeLeft < 60 ? "text-red-600" : "text-green-600"

@@ -16,7 +16,6 @@ export const NumericalKeypad: React.FC<NumericalKeypadProps> = ({ value, onKeyPr
     <div className="max-w-xs mt-2">
       <input
         type="text"
-        readOnly
         value={value}
         className="w-full h-10 mb-4 rounded-lg border border-gray-300 px-3 text-right text-lg font-mono focus:ring-2 focus:ring-red-500"
         placeholder="Enter answer"

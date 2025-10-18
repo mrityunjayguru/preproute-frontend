@@ -387,7 +387,7 @@ export default function QuestionEditor({ onChange, value }: QuestionEditorProps)
   // ---------------------- Render UI ----------------------
   return (
     <div className="card" style={{ position: "relative" }}>
-      <h3>Custom Question Editor</h3>
+      {/* <h3>Custom Question Editor</h3> */}
 {/* <CanvaEditor/> */}
       {/* Toolbar */}
       <div className="toolbar" style={{ marginBottom: "10px" }}>

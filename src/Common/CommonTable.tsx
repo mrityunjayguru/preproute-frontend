@@ -33,7 +33,7 @@ function CommonTable<T extends Record<string, any>>({
   onEdit,
 }: CommonTableProps<T>) {
   return (
-    <div className="bg-[#F7F7F5] p-6 rounded-lg overflow-x-auto">
+    <div className="bg-[#F7F7F5] max-h-[400px] p-6 rounded-lg overflow-x-auto">
       <Table>
         <TableHeader>
           <TableRow>

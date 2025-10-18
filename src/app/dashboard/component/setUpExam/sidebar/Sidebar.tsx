@@ -28,7 +28,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex">
       {/* Sidebar */}
       <div className="flex flex-col w-64 bg-[#F7F7F5]  h-1/2  ">
         <nav className="flex flex-col space-y-2">

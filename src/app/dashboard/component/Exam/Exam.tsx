@@ -68,16 +68,17 @@ const Exam: React.FC = () => {
 
   const getTopicData = async () => {
     try {
-      await dispatch(getTopic({}));
+      const payload:any={}
+      await dispatch(getTopic(payload));
     } catch (err) {
       console.error(err);
     }
   };
-
-  // Fetch Subtopics when Topic changes
+  
   useEffect(() => {
     if (selectedTopic) {
-      dispatch(getSubTopicByTopicId({ topicId: selectedTopic }));
+      const payload:any={ topicId: selectedTopic }
+      dispatch(getSubTopicByTopicId(payload));
     }
   }, [selectedTopic, dispatch]);
 
@@ -220,10 +221,10 @@ const Exam: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 sm:p-8 mt-20">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#fff] p-4 sm:p-8 mt-20">
+      <div className="w-full">
         {/* Header */}
-        <div className="flex justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-md">
+        <div className="flex  justify-between items-center mb-6 bg-[#fff] p-4 rounded-sm shadow-md">
           {isSection && (
             <div className="flex space-x-2">
               {sectionsData.map((section: any) => (
@@ -260,7 +261,7 @@ const Exam: React.FC = () => {
         </div>
 
         {/* Main Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid  grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Section */}
           <div className="lg:col-span-2 space-y-6">
             <div className="rounded-xl bg-white shadow-lg p-6 space-y-6">
