@@ -23,11 +23,11 @@ jobs:
     - name: Add EC2 to known hosts
       run: |
         mkdir -p ~/.ssh
-        ssh-keyscan -H 13.232.77.140 >> ~/.ssh/known_hosts
+        ssh-keyscan -H 13.201.142.241 >> ~/.ssh/known_hosts
         
     - name: Deploy to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@13.232.77.140 << 'ENDSSH'
+        ssh -o StrictHostKeyChecking=no ubuntu@13.201.142.241 << 'ENDSSH'
         set -e
         
         echo "🚀 Starting deployment..."
@@ -65,13 +65,13 @@ jobs:
       run: |
         echo "🔍 Verifying deployment..."
         sleep 5
-        curl -f http://13.232.77.140:3000 || exit 1
+        curl -f http://13.201.142.241:3000 || exit 1
         echo "✅ Application is running successfully!"
         
     - name: Notify on Success
       if: success()
       run: |
-        echo "✅ Deployment to 13.232.77.140 completed successfully!"
+        echo "✅ Deployment to 13.201.142.241 completed successfully!"
         
     - name: Notify on Failure
       if: failure()
