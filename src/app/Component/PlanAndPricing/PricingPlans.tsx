@@ -68,8 +68,8 @@ export default function PricingPlans() {
 
             <div className="mt-6 bg-gray-50 p-4 rounded-xl text-center">
               <p className="text-lg font-semibold text-[#000]">
-                <span className="text-[#ff5635]">Launch Offer:</span> ₹4,000 + 18% GST ={" "}
-                <span className="font-bold">₹4,720</span>
+                <span className="text-[#ff5635]">Launch Offer:</span> ₹4,000 + 18% GST 
+                {/* <span className="font-bold">₹4,720</span> */}
               </p>
             </div>
 
