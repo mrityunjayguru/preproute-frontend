@@ -11,12 +11,14 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { getQuestionBeExamId, resetQuestionByExamID } from "@/api/Exam";
 import { handleSelectedExamType } from "@/api/ExamType";
+import { resetQuestion } from "@/api/Question";
 
 export const HomePage = () => {
   const dispatch=useDispatch<AppDispatch>()
    useEffect(()=>{
       const payload:any=null
     dispatch(resetQuestionByExamID(payload))
+    dispatch(resetQuestion(payload))
         dispatch(handleSelectedExamType(payload));
         dispatch(handleSelectedExamType(payload));
     

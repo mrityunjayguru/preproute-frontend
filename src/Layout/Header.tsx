@@ -46,11 +46,14 @@ const token=localStorage.getItem("token")
 
   // ✅ Handle exam selection
   const handleExamClick = (exam: any) => {
+    let route:any=exam.examType
+    if(exam.examType=="Past Year"){
+      route="pastyear"
+    }
     setData(exam.examType);
     dispatch(handleSelectedExamType(exam));
-    // dispatch(getExamBeExamTypeId(payload));
     setIsDropdownOpen(false);
-    router.push(`/Exam/${exam.examType}`);
+    router.push(`/Exam/${route}`);
   };
   const removeLogin=()=>{
     localStorage.removeItem("token")
@@ -61,7 +64,7 @@ const token=localStorage.getItem("token")
 
   return (
     <div className="container mx-auto ">
-      <header className="bg-white px-26 border-b border-gray-200 shadow-sm">
+      <header className="bg-white md:px-26 border-b border-gray-200 shadow-sm">
         <div className="w-full mx-auto px-4 py-4 flex justify-between items-center">
           {/* 🧭 Logo Section */}
           <div
@@ -128,14 +131,15 @@ const token=localStorage.getItem("token")
             </div>
 
             {/* Regular Nav Links */}
-            <a
+            {/* <a
               href="#"
               className="text-gray-600 hover:text-orange-600 transition-colors duration-200"
             >
               Features
-            </a>
+            </a> */}
             <a
               href="#"
+              onClick={()=>router.push("/PlanandPricing")}
               className="text-gray-600 hover:text-orange-600 transition-colors duration-200"
             >
               Pricing / Plans
@@ -146,6 +150,14 @@ const token=localStorage.getItem("token")
             >
               Community
             </a>
+          {token?(  <a
+              onClick={()=>router.push("/analytices")}
+
+              href="#"
+              className="text-gray-600 hover:text-orange-600 transition-colors duration-200"
+            >
+              analytices
+            </a>):(null)}
           </nav>
 
           {/* 👤 Auth Buttons */}
@@ -239,9 +251,9 @@ const token=localStorage.getItem("token")
                 )}
               </div>
 
-              <a href="#" className="text-gray-700 hover:text-orange-600">
+              {/* <a href="#" className="text-gray-700 hover:text-orange-600">
                 Features
-              </a>
+              </a> */}
               <a href="#" className="text-gray-700 hover:text-orange-600">
                 Pricing / Plans
               </a>
