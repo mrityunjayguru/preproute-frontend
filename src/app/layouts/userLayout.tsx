@@ -13,9 +13,7 @@ export default function UserLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex flex-col min-h-screen">
-      {!isExamPage? (null):(null)}
-      {/* {!isExamPage && <UserHeader />} */}
-
+      {!isExamPage && <UserHeader />}
       <main className="flex-1">{children}</main>
       {!isExamPage && <UserFooter />}
     </div>
