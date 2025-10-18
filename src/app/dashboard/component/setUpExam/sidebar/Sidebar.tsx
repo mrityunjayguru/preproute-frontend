@@ -28,6 +28,8 @@ const Sidebar = () => {
   };
 
   return (
+
+    
     <div className="flex">
       {/* Sidebar */}
       <div className="flex flex-col w-64 bg-[#F7F7F5]  h-1/2  ">
