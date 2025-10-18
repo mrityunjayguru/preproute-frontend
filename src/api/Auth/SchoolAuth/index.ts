@@ -21,6 +21,7 @@ export const handleLogin = createAsyncThunk<boolean, Payload>(
   async (payload, thunkAPI) => {
     try {
       const response = await AuthRepo.userLogin(payload);
+      console.log(response,"responseresponse")
       if (response.status === 200) {
         const userData = response.data.user; // adjust according to your API response
         thunkAPI.dispatch(setAuth(userData));
@@ -33,6 +34,7 @@ export const handleLogin = createAsyncThunk<boolean, Payload>(
       return false;
 
     } catch (err: any) {
+      console.log(err,"errerrerr")
       const status = err.response?.status;
 
       if (status === 401) {
@@ -78,40 +80,43 @@ export const userRegister = createAsyncThunk<boolean, Payload>(
   APIName.register,
   async (payload, thunkAPI) => {
     try {
-      const data= await AuthRepo.userRegister(payload);
+      const data = await AuthRepo.userRegister(payload);
+
       if (data.status === 201) {
-        // Store user auth data in redux
-        thunkAPI.dispatch(setAuth(data.data));
-  const userData = data.data.data; // adjust according to your API response
+        const userData = data.data.data;
         thunkAPI.dispatch(setAuth(userData));
-        GetMessage("success", "Login successful");
-        localStorage.setItem("token", userData.token);
-        // Success message
         GetMessage("success", "Registration successful");
 
-        // Save token to localStorage
-        if (data?.data?.user?.token) {
-          localStorage.setItem("token", data.data.user.token);
+        if (userData?.token) {
+          localStorage.setItem("token", userData.token);
         }
-
         return true;
       } else {
         GetMessage("warning", "Unexpected response from server");
         return false;
       }
     } catch (err: any) {
-      if (err?.response?.status === 401) {
-        GetMessage("error", err.response.data.message || "Unauthorized");
+      console.log("Registration error =>", err);
+
+      if (err?.response?.status === 409) {
+        // Duplicate uniqueCode error
+        const message =
+          err.response.data?.message ||
+          "User already exists with this unique code.";
+        GetMessage("error", message);
+      } else if (err?.response?.status === 401) {
+        GetMessage("error", "Unauthorized access");
       } else if (err?.response?.data?.message) {
         GetMessage("error", err.response.data.message);
       } else {
-        GetMessage("warning", "Something went wrong");
+        GetMessage("warning", "Something went wrong, please try again");
       }
 
       return false;
     }
   }
 );
+
 
 export const SubjectData = createAsyncThunk<boolean, Payload>(
   APIName.userLogin,

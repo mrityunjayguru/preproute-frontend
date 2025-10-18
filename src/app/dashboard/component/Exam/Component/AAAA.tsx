@@ -10,11 +10,7 @@ interface ImageItem {
   height: number;
 }
 
-interface CanvaEditorProps {
-  insertImage: (url: string) => void; // callback to insert into QuestionEditor
-}
-
-export default function CanvaEditor({ insertImage }: CanvaEditorProps) {
+export default function CanvaEditor() {
   const [images, setImages] = useState<ImageItem[]>([]);
   const canvasRef = useRef<HTMLDivElement | null>(null);
 
@@ -25,17 +21,13 @@ export default function CanvaEditor({ insertImage }: CanvaEditorProps) {
     const url = URL.createObjectURL(file);
     const id = Date.now().toString();
 
-    // Add to local canvas preview
     setImages((prev) => [
       ...prev,
       { id, src: url, x: 50, y: 50, width: 150, height: 150 },
     ]);
-
-    // Insert directly into editor
-    insertImage(url);
   };
 
-  // Move and resize logic (simplified)
+  // Drag functionality
   const handleMouseDown = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     const img = images.find((img) => img.id === id);
@@ -50,6 +42,43 @@ export default function CanvaEditor({ insertImage }: CanvaEditorProps) {
       const dy = moveEvent.clientY - startY;
       setImages((prev) =>
         prev.map((i) => (i.id === id ? { ...i, x: start.x + dx, y: start.y + dy } : i))
+      );
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  };
+
+  // Resize functionality
+  const handleResize = (e: React.MouseEvent, id: string, direction: "se") => {
+    e.stopPropagation();
+    const img = images.find((img) => img.id === id);
+    if (!img) return;
+
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const startWidth = img.width;
+    const startHeight = img.height;
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const dx = moveEvent.clientX - startX;
+      const dy = moveEvent.clientY - startY;
+
+      setImages((prev) =>
+        prev.map((i) =>
+          i.id === id
+            ? {
+                ...i,
+                width: Math.max(50, startWidth + dx),
+                height: Math.max(50, startHeight + dy),
+              }
+            : i
+        )
       );
     };
 
@@ -99,6 +128,11 @@ export default function CanvaEditor({ insertImage }: CanvaEditorProps) {
                 alt="canvas-item"
                 className="w-full h-full object-cover rounded"
                 draggable={false}
+              />
+              {/* Resize handle */}
+              <div
+                onMouseDown={(e) => handleResize(e, img.id, "se")}
+                className="absolute w-4 h-4 bg-white border border-gray-400 rounded-br cursor-se-resize bottom-0 right-0"
               />
               <button
                 onClick={() => handleDelete(img.id)}

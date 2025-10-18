@@ -6,7 +6,7 @@ import { ExamHeader } from './Component/ExamHeader'
 
 function Exam() {
   return (
-    <div>
+    <div className='bg-[#fff] lg:px-20'>
       <ExamHeader/> 
       <UserExam/>
     </div>

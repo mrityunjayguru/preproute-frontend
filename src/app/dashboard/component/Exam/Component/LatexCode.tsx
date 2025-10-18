@@ -1,10 +1,12 @@
 "use client";
+
 import React, { useRef, useState, useEffect } from "react";
 import { BlockMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { handleUploadImage } from "@/api/QuestionPaper"; // your API thunk
+import { handleUploadImage } from "@/api/QuestionPaper";
+import CanvaEditor from "./AAAA";
 
 interface QuestionEditorProps {
   value?: string;
@@ -26,44 +28,51 @@ export default function QuestionEditor({ onChange, value }: QuestionEditorProps)
   const [showTableToolbar, setShowTableToolbar] = useState<boolean>(false);
   const [selectedTable, setSelectedTable] = useState<HTMLTableElement | null>(null);
   const [tableToolbarPos, setTableToolbarPos] = useState<TableToolbarPos>({ top: 0, left: 0 });
-useEffect(() => {
-  const editor = editorRef.current;
-  if (!editor) return;
+  const [resizing, setResizing] = useState<boolean>(false);
+  const [resizeData, setResizeData] = useState<any>(null);
 
-  const handleClick = (e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (target.classList.contains("remove-img-btn")) {
-      const wrapper = target.closest(".image-wrapper");
-      wrapper?.remove();
-      updateContent();
-    }
-  };
-
-  editor.addEventListener("click", handleClick);
-  return () => editor.removeEventListener("click", handleClick);
-}, []);
-
-  // ---------------------- Initialize value ----------------------
+  // ---------------------- Handle Image Removal ----------------------
   useEffect(() => {
-    if (editorRef.current) {
-      if (value && value.trim() !== "") {
-        if (editorRef.current.innerHTML !== value) {
-          editorRef.current.innerHTML = value;
-          wrapAllImagesWithRemove();
-          setContent(editorRef.current.innerHTML);
-        }
-      } else {
-        editorRef.current.innerHTML = "";
-        setContent("");
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains("remove-img-btn")) {
+        const wrapper = target.closest(".image-wrapper");
+        wrapper?.remove();
+        updateContent();
       }
+    };
+
+    editor.addEventListener("click", handleClick);
+    return () => editor.removeEventListener("click", handleClick);
+  }, []);
+
+  // ---------------------- Initialize value for Edit ----------------------
+  useEffect(() => {
+    if (!editorRef.current) return;
+
+    if (value && value.trim() !== "") {
+      if (editorRef.current.innerHTML !== value) {
+        editorRef.current.innerHTML = value;
+        wrapAllImagesWithRemoveAndResize();
+        attachTableEvents();
+        renderAllLatex();
+        setContent(editorRef.current.innerHTML);
+      }
+    } else {
+      editorRef.current.innerHTML = "";
+      setContent("");
     }
   }, [value]);
 
   // ---------------------- Helpers ----------------------
   const updateContent = () => {
     if (editorRef.current) {
-      setContent(editorRef.current.innerHTML);
-      onChange(editorRef.current.innerHTML);
+      const html = editorRef.current.innerHTML;
+      setContent(html);
+      onChange(html);
     }
   };
 
@@ -99,11 +108,8 @@ useEffect(() => {
     input.onchange = async () => {
       const file = input.files?.[0];
       if (!file) return;
-const payload:any={
-  image:file
-}
-      const formData = new FormData();
-      formData.append("image", file);
+
+      const payload: any = { image: file };
 
       try {
         const response: any = await dispatch(handleUploadImage(payload));
@@ -122,60 +128,118 @@ const payload:any={
     };
   };
 
-const createImageWrapper = (imageUrl: string) => {
-  const wrapper = document.createElement("span");
-  wrapper.className = "image-wrapper";
-  wrapper.style.position = "relative";
-  wrapper.style.display = "inline-block";
-  wrapper.style.margin = "8px";
+  // ---------------------- Image Wrapper + Resize ----------------------
+  const createImageWrapper = (imageUrl: string) => {
+    const wrapper = document.createElement("span");
+    wrapper.className = "image-wrapper";
+    wrapper.style.position = "relative";
+    wrapper.style.display = "inline-block";
+    wrapper.style.margin = "8px";
 
-  const img = document.createElement("img");
-  img.src = imageUrl;
-  img.style.maxWidth = "50%";
-  img.style.maxHeight = "50%";
-  img.style.borderRadius = "6px";
-  img.style.display = "block";
+    const img = document.createElement("img");
+    img.src = imageUrl;
+    img.style.maxWidth = "100%";
+    img.style.height = "auto";
+    img.style.borderRadius = "6px";
+    img.style.display = "block";
+    img.style.resize = "none";
 
-  const removeBtn = document.createElement("button");
-  removeBtn.textContent = "✖";
-  removeBtn.className = "remove-img-btn";
-  removeBtn.style.position = "absolute";
-  removeBtn.style.top = "-8px";
-  removeBtn.style.right = "-8px";
-  removeBtn.style.background = "#ff4d4f";
-  removeBtn.style.color = "white";
-  removeBtn.style.border = "none";
-  removeBtn.style.borderRadius = "50%";
-  removeBtn.style.cursor = "pointer";
-  removeBtn.style.width = "20px";
-  removeBtn.style.height = "20px";
-  removeBtn.style.fontSize = "12px";
-  removeBtn.style.lineHeight = "18px";
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "✖";
+    removeBtn.className = "remove-img-btn";
+    Object.assign(removeBtn.style, {
+      position: "absolute",
+      top: "-8px",
+      right: "-8px",
+      background: "#ff4d4f",
+      color: "white",
+      border: "none",
+      borderRadius: "50%",
+      cursor: "pointer",
+      width: "20px",
+      height: "20px",
+      fontSize: "12px",
+      lineHeight: "18px",
+    });
 
-  wrapper.appendChild(img);
-  wrapper.appendChild(removeBtn);
-  return wrapper;
-};
+    const resizeHandle = document.createElement("div");
+    resizeHandle.className = "resize-handle";
+    Object.assign(resizeHandle.style, {
+      position: "absolute",
+      width: "10px",
+      height: "10px",
+      bottom: "0",
+      right: "0",
+      background: "rgba(0,0,0,0.5)",
+      cursor: "nwse-resize",
+      borderRadius: "2px",
+    });
 
+    resizeHandle.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      setResizing(true);
+      setResizeData({
+        img,
+        startX: e.clientX,
+        startY: e.clientY,
+        startWidth: img.offsetWidth,
+        startHeight: img.offsetHeight,
+      });
+    });
 
-  // Wrap all existing images (on value load)
-  const wrapAllImagesWithRemove = () => {
+    wrapper.appendChild(img);
+    wrapper.appendChild(removeBtn);
+    wrapper.appendChild(resizeHandle);
+    return wrapper;
+  };
+
+  // Resize logic
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!resizing || !resizeData) return;
+      const { img, startX, startY, startWidth, startHeight } = resizeData;
+      const newWidth = Math.max(50, startWidth + (e.clientX - startX));
+      const newHeight = Math.max(50, startHeight + (e.clientY - startY));
+      img.style.width = `${newWidth}px`;
+      img.style.height = `${newHeight}px`;
+    };
+
+    const handleMouseUp = () => {
+      if (resizing) {
+        setResizing(false);
+        updateContent();
+      }
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [resizing, resizeData]);
+
+  const wrapAllImagesWithRemoveAndResize = () => {
     const imgs = editorRef.current?.querySelectorAll("img");
     imgs?.forEach((img) => {
       if (img.parentElement?.classList.contains("image-wrapper")) return;
-
       const wrapper = createImageWrapper(img.src);
+      const newImg = wrapper.querySelector("img")!;
+      newImg.style.width = img.style.width || "auto";
+      newImg.style.height = img.style.height || "auto";
       img.replaceWith(wrapper);
     });
   };
 
-  // ---------------------- Table ----------------------
+  // ---------------------- Table Handling ----------------------
   const insertTable = (rows = 3, cols = 3) => {
     const table = document.createElement("table");
     table.className = "data-table";
-    table.style.borderCollapse = "collapse";
-    table.style.width = "100%";
-    table.style.border = "1px solid #aaa";
+    Object.assign(table.style, {
+      borderCollapse: "collapse",
+      width: "100%",
+      border: "1px solid #aaa",
+    });
 
     for (let i = 0; i < rows; i++) {
       const tr = document.createElement("tr");
@@ -205,6 +269,15 @@ const createImageWrapper = (imageUrl: string) => {
       setShowTableToolbar(false);
       setSelectedTable(null);
     }
+  };
+
+  const attachTableEvents = () => {
+    const tables = editorRef.current?.querySelectorAll("table");
+    tables?.forEach((table) => {
+      table.querySelectorAll("td").forEach((td) => {
+        td.contentEditable = "true";
+      });
+    });
   };
 
   const handleAddRow = () => {
@@ -251,10 +324,23 @@ const createImageWrapper = (imageUrl: string) => {
   };
 
   // ---------------------- LaTeX ----------------------
+  const renderAllLatex = () => {
+    const spans = editorRef.current?.querySelectorAll(".latex-span");
+    if (!spans) return;
+    spans.forEach((span) => {
+      const tex = (span as HTMLElement).dataset.tex;
+      if (!tex) return;
+      try {
+        (span as HTMLElement).innerHTML = window.katex.renderToString(tex, { throwOnError: false });
+      } catch (err) {
+        console.warn("LaTeX render failed:", err);
+      }
+    });
+  };
+
   const insertLatex = (latex: string) => {
     const cleanLatex = latex.trim();
     if (!cleanLatex) return;
-
     restoreSelection();
     const html = `<span class="latex-span" data-tex="${cleanLatex}">$$${cleanLatex}$$</span>`;
     const temp = document.createElement("span");
@@ -269,13 +355,12 @@ const createImageWrapper = (imageUrl: string) => {
     range.collapse(false);
     sel.removeAllRanges();
     sel.addRange(range);
-
     setShowLatexModal(false);
     setLatexInput("");
     updateContent();
   };
 
-  // ---------------------- Preview ----------------------
+  // ---------------------- Render Preview ----------------------
   const renderPreview = () => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(content, "text/html");
@@ -293,12 +378,13 @@ const createImageWrapper = (imageUrl: string) => {
     });
   };
 
+  // ---------------------- Render UI ----------------------
   return (
     <div className="card" style={{ position: "relative" }}>
       <h3>Custom Question Editor</h3>
 
       {/* Toolbar */}
-      <div className="toolbar">
+      <div className="toolbar" style={{ marginBottom: "10px" }}>
         <button onClick={() => document.execCommand("bold")}><b>B</b></button>
         <button onClick={() => document.execCommand("italic")}><i>I</i></button>
         <button onClick={() => document.execCommand("underline")}><u>U</u></button>
@@ -312,35 +398,65 @@ const createImageWrapper = (imageUrl: string) => {
         ref={editorRef}
         className="editor"
         contentEditable
-        suppressContentEditableWarning={true}
+        suppressContentEditableWarning
         onInput={updateContent}
         onClick={handleEditorClick}
+        style={{
+          minHeight: "200px",
+          border: "1px solid #ccc",
+          padding: "10px",
+          borderRadius: "6px",
+          background: "white",
+        }}
       />
 
       {/* Table Toolbar */}
       {showTableToolbar && (
         <div
           className="table-toolbar"
-          style={{ position: "absolute", top: tableToolbarPos.top, left: tableToolbarPos.left }}
+          style={{
+            position: "absolute",
+            top: tableToolbarPos.top,
+            left: tableToolbarPos.left,
+            background: "white",
+            border: "1px solid #ddd",
+            borderRadius: "6px",
+            padding: "4px",
+            display: "flex",
+            gap: "4px",
+            zIndex: 10,
+          }}
         >
           <button onClick={handleAddRow}>➕ Row</button>
           <button onClick={handleAddColumn}>➕ Col</button>
           <button onClick={handleRemoveRow}>➖ Row</button>
           <button onClick={handleRemoveColumn}>➖ Col</button>
-          <button onClick={handleRemoveTable}>🗑 Remove</button>
+          <button onClick={handleRemoveTable}>🗑</button>
         </div>
       )}
 
       {/* LaTeX Modal */}
       {showLatexModal && (
         <div className="modal-overlay" onClick={() => setShowLatexModal(false)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="modal"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "white",
+              borderRadius: "8px",
+              padding: "20px",
+              width: "400px",
+              margin: "100px auto",
+              boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
+            }}
+          >
             <h4>Insert LaTeX Formula</h4>
             <textarea
               rows={4}
               value={latexInput}
               onChange={(e) => setLatexInput(e.target.value)}
               placeholder="Type LaTeX formula"
+              style={{ width: "100%", marginBottom: "10px" }}
             />
             <div className="preview">
               <strong>Preview:</strong>
@@ -352,12 +468,10 @@ const createImageWrapper = (imageUrl: string) => {
       )}
 
       {/* Preview */}
-      <div className="preview-box">
+      <div className="preview-box" style={{ marginTop: "20px" }}>
         <h4>Preview</h4>
         <div className="question-preview">{renderPreview()}</div>
       </div>
-
-      
     </div>
   );
 }

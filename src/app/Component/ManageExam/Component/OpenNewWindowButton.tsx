@@ -1,44 +1,82 @@
+import { Button } from "@/components/ui/button";
 import React from "react";
 
 const OpenExamPopup = () => {
   const handleButtonClick = () => {
-    const url = "/Exam/userExam"; // exam page route
+    const url = "/Exam/userExam"; // your exam page
+
+    // open fullscreen popup
     const features = `
-      width=1000,
-      height=700,
-      top=${window.innerHeight / 2 - 350},
-      left=${window.innerWidth / 2 - 500},
+      fullscreen=yes,
       toolbar=no,
       menubar=no,
-      scrollbars=no,
+      location=no,
+      status=no,
       resizable=no,
-      status=no
+      scrollbars=no
     `;
 
     const popup = window.open(url, "_blank", features);
 
-    // Attempt to block right click and key shortcuts inside popup
     if (popup) {
+      popup.moveTo(0, 0);
+      popup.resizeTo(screen.width, screen.height);
+
       popup.onload = () => {
-        popup.document.oncontextmenu = () => false; // right click disable
-        popup.document.onkeydown = (e) => {
+        const doc = popup.document;
+
+        // 🚫 Disable right-click
+        doc.addEventListener("contextmenu", (e) => e.preventDefault());
+
+        // 🚫 Disable all DevTools and navigation shortcuts
+        doc.addEventListener("keydown", (e) => {
           if (
             e.key === "F12" ||
-            (e.ctrlKey && e.shiftKey && e.key === "I") ||
-            (e.ctrlKey && e.key === "U")
+            (e.ctrlKey && e.shiftKey && ["i", "j", "c"].includes(e.key.toLowerCase())) ||
+            (e.ctrlKey && ["u", "r", "t", "w", "l"].includes(e.key.toLowerCase())) ||
+            e.key === "Escape"
           ) {
             e.preventDefault();
-            return false;
+            e.stopPropagation();
           }
+        });
+
+        // 🚫 Block all anchor/link clicks
+        doc.addEventListener("click", (e) => {
+          const target = e.target as HTMLElement;
+          if (target.tagName === "A") {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        });
+
+        // 🚫 Block typing or manual URL changes in address bar
+        // (this keeps the user locked in the current page)
+        popup.history.pushState(null, "", popup.location.href);
+        popup.onpopstate = () => {
+          popup.history.pushState(null, "", popup.location.href);
+        };
+
+        // 🚫 Constantly enforce the current URL — if user tries to type another route
+        setInterval(() => {
+          if (popup.location.pathname !== "/Exam/userExam") {
+            popup.location.href = "/Exam/userExam";
+          }
+        }, 1000);
+
+        // 🚫 Prevent page close/reload
+        popup.onbeforeunload = (e) => {
+          e.preventDefault();
+          e.returnValue = "";
         };
       };
     }
   };
 
   return (
-    <button onClick={handleButtonClick}>
-      Open Exam Window
-    </button>
+    <Button variant="orange" onClick={handleButtonClick}>
+      Start Exam
+    </Button>
   );
 };
 

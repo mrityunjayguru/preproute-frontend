@@ -268,3 +268,21 @@
   opacity: 0;
   transition: opacity 0.2s ease-in-out;
 }
+
+.image-wrapper {
+  position: relative;
+  display: inline-block;
+  margin: 8px;
+}
+
+.resize-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #1890ff;
+  border-radius: 50%;
+  cursor: nwse-resize;
+  bottom: 0;
+  right: 0;
+  z-index: 10;
+}

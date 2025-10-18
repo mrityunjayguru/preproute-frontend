@@ -56,9 +56,7 @@ export default function pagq() {
       if (response?.payload === true || response?.payload?.success === true) {
         // alert("Registration successful!");
         router.push("/Auth/signin");
-      } else {
-        alert("Registration failed. Please try again!");
-      }
+      } 
     } catch (err) {
       console.error(err);
       alert("Something went wrong! Check console for details.");

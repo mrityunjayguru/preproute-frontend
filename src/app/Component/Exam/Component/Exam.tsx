@@ -2,13 +2,11 @@
 import { getUserQuestionData } from "@/api/QuestionPaper";
 import { AppDispatch } from "@/store/store";
 import React from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
+import { Card } from "@/components/ui/card";
 
-// --- Utility Components (mimicking shadcn/ui) ---
-
-// Lock Icon (lucide-react style)
+// 🔒 Lock Icon
 const LockIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     {...props}
@@ -28,107 +26,43 @@ const LockIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-// Button Component
-type ButtonProps = {
-  variant?: "default" | "secondary" | "primary" | "outline";
-  size?: "default" | "sm" | "lg" | "icon";
-  className?: string;
-  children?: React.ReactNode;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>;
-
-const Button: React.FC<ButtonProps> = ({
-  variant = "default",
-  size = "default",
-  className = "",
-  children,
-  ...props
-}) => {
-  const baseStyles =
-    "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
-
-  const sizeStyles = {
-    default: "h-10 px-4 py-2",
-    sm: "h-9 rounded-md px-3",
-    lg: "h-11 rounded-md px-8",
-    icon: "h-10 w-10",
-  };
-
-  const variantStyles = {
-    default: "bg-gray-900 text-gray-50 hover:bg-gray-900/90",
-    secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
-    primary: "bg-red-600 text-white hover:bg-red-700",
-    outline:
-      "border border-gray-200 bg-white hover:bg-gray-100 hover:text-gray-900",
-  };
-
-  return (
-    <button
-      className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
-
-// Card Component
-const Card = ({
-  className = "",
-  children,
-  ...props
-}: {
-  className?: string;
-  children?: React.ReactNode;
-}) => {
-  return (
-    <div
-      className={`rounded-xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md ${className}`}
-      {...props}
-    >
-      {children}
-    </div>
-  );
-};
-
-// --- Exam Card ---
+// 🎯 Exam Card
 const MockExamCard = ({ exam }: { exam: any }) => {
-    const router = useRouter();
-  let token=localStorage.getItem("token")
-  const dispatch=useDispatch<AppDispatch>()
+  const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const examById = useSelector((state: any) => state?.exam?.examById) || [];
 
-  const handleExma=(data:any)=>{
-if(!token){
-   return router.push("/home");
-}
-    const payload:any={
-      examTypeId:data?.examTypeId,
-      examid:data?.examid,
-      questionPapername:data?.questionPapername,
+  const handleExam = (data: any) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      return router.push("/home");
     }
-    dispatch(getUserQuestionData(payload))
-    router.push("userExam");
 
-  }
+    const payload: any = {
+      examTypeId: data?.examTypeId,
+      examid: data?.examid,
+      questionPapername: data?.questionPapername,
+    };
+    dispatch(getUserQuestionData(payload));
+    router.push("userExam");
+  };
+
   return (
-    <Card
-      className={`p-6 flex flex-col h-full ${
-        exam.isLocked ? "bg-gray-50" : "bg-white"
-      }`}
-    >
-      <div className="flex justify-between items-start mb-4">
+    <Card className="flex flex-col justify-between p-5 bg-[#F7F7F5] rounded-xl  shadow-none">
+      <div className="flex items-start justify-between mb-4">
         <div className="flex flex-col">
-          <span className="text-xs font-semibold uppercase tracking-wider text-green-600">
-            Mock Exam
-          </span>
+          <h1 className="text-xs md:text-sm font-medium uppercase tracking-wider text-[#000]">
+            {examById[0]?.examType?.examType || "Exam"}
+          </h1>
           <h3
-            className={`text-xl font-bold mt-1 ${
+            className={`text-base md:text-lg font-bold mt-1 ${
               exam.isLocked ? "text-gray-400" : "text-gray-800"
             }`}
           >
             {exam.questionPapername || "Untitled Exam"}
           </h3>
           {exam.status === "Free" && (
-            <span className="text-xs font-medium mt-1 inline-block px-2 py-0.5 rounded-full bg-green-100 text-green-700">
+            <span className="text-[10px] md:text-xs font-semibold mt-1 inline-block px-2 py-0.5 rounded-full bg-green-100 text-green-700 w-fit">
               Free
             </span>
           )}
@@ -137,7 +71,7 @@ if(!token){
       </div>
 
       <p
-        className={`text-sm mt-auto ${
+        className={`text-xs md:text-sm mt-auto ${
           exam.isLocked ? "text-gray-400" : "text-gray-500"
         }`}
       >
@@ -145,45 +79,50 @@ if(!token){
       </p>
 
       {!exam.isLocked && (
-        <Button onClick={()=>{handleExma(exam)}}
-          variant="secondary"
-          className="mt-4 bg-gray-300 hover:bg-gray-400 text-gray-800 self-start"
+        <button
+          className="bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium mt-4 py-2 px-4 rounded-md transition-all duration-200 text-sm md:text-base"
+          onClick={() => handleExam(exam)}
         >
-          Start
-        </Button>
+          Start Exam
+        </button>
       )}
     </Card>
   );
 };
 
+// 🧩 Main User Exam Page
 const UserExam = () => {
   const examById = useSelector((state: any) => state?.exam?.examById) || [];
-  return (
-    <div className="min-h-screen bg-gray-50 font-sans">
-      <main className="container mx-auto px-6 md:px-12 py-10">
-        {/* Header Section */}
-    <div className="mb-4">
-  <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3">
-    {examById?.length
-      ? `${examById[0]?.exam?.examname || ""}: ${examById[0]?.examType?.examType || ""}`
-      : ""}
-  </h1>
 
-  <p className="text-base text-gray-600 leading-relaxed">
-    The Prep Route mock tests are carefully designed to mirror the question
-    style, difficulty level, and time pressure of the actual exam. Read this
-    document to learn more.
-  </p>
-</div>
+  return (
+    <div className="min-h-screen font-sans bg-[#fff]">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-12 py-8">
+        {/* Header Section */}
+        <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <h1 className="text-2xl md:text-3xl font-semibold text-[#FF5635]">
+            {examById?.length
+              ? `${examById[0]?.exam?.examname || ""}: `
+              : ""}
+            <span className="text-[#000000]">
+              {examById[0]?.examType?.examType || ""}
+            </span>
+          </h1>
+
+          <p className="text-sm md:text-base text-[#000000] md:w-2/3 leading-relaxed">
+            The Prep Route mock tests are carefully designed to mirror the
+            question style, difficulty level, and time pressure of the actual
+            exam. Read this document to learn more.
+          </p>
+        </div>
 
         {/* Mock Exam Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6">
           {examById?.length > 0 ? (
             examById.map((exam: any, index: number) => (
               <MockExamCard key={exam._id || index} exam={exam} />
             ))
           ) : (
-            <div className="col-span-full text-center text-gray-500 py-10">
+            <div className="col-span-full text-center text-[#000000] py-10">
               No exams available.
             </div>
           )}

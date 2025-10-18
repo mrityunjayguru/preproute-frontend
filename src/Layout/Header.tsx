@@ -55,12 +55,13 @@ const token=localStorage.getItem("token")
   const removeLogin=()=>{
     localStorage.removeItem("token")
     router.push(`/home`);
+    window.location.reload()
 
   }
 
   return (
-    <div className="container mx-auto">
-      <header className="bg-white border-b border-gray-200 shadow-sm">
+    <div className="container mx-auto ">
+      <header className="bg-white px-26 border-b border-gray-200 shadow-sm">
         <div className="w-full mx-auto px-4 py-4 flex justify-between items-center">
           {/* 🧭 Logo Section */}
           <div
@@ -149,7 +150,7 @@ const token=localStorage.getItem("token")
 
           {/* 👤 Auth Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
-            {token?(<Button onClick={(removeLogin)} variant="orange" >
+            {token?(<Button onClick={removeLogin} variant="orange" >
               logout
             </Button>):(<>
              {/* <button   onClick={() => router.push("/Auth/register")}    className="cursor-pointer text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">
