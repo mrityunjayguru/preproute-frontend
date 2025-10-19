@@ -133,6 +133,7 @@ export default function ExamUI() {
   };
 
   const handleNextQuestion = async () => {
+    // alert(mcqSelected)
     if (!question || !mcqSelected){
     updateStatus("visited");
 
@@ -192,7 +193,18 @@ setMcqSelected("")
 
   const handleMarkForReview = () => {
     updateStatus("review");
-    handleNextQuestion();
+    // handleNextQuestion();
+        if (currentQuestionIndex + 1 < totalNoOfQuestions) {
+      setCurrentQuestionIndex((p) => p + 1);
+      fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
+    } else if (isSection && currentSectionIndex + 1 < examSections.length) {
+      const nextSection = examSections[currentSectionIndex + 1];
+      setSelectedSection(nextSection);
+      setCurrentSectionIndex((p) => p + 1);
+      setCurrentQuestionIndex(0);
+      setTotalNoOfQuestions(nextSection.noOfQuestions);
+      fetchQuestion(1, nextSection.sectionId);
+    }
   };
 
   const handleClearResponse = () => {
