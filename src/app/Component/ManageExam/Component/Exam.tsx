@@ -133,8 +133,23 @@ export default function ExamUI() {
   };
 
   const handleNextQuestion = async () => {
-    if (!question) return;
-    // setNumericalValue("");
+    if (!question || !mcqSelected){
+    updateStatus("visited");
+
+         if (currentQuestionIndex + 1 < totalNoOfQuestions) {
+      setCurrentQuestionIndex((p) => p + 1);
+      fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
+    } else if (isSection && currentSectionIndex + 1 < examSections.length) {
+      const nextSection = examSections[currentSectionIndex + 1];
+      setSelectedSection(nextSection);
+      setCurrentSectionIndex((p) => p + 1);
+      setCurrentQuestionIndex(0);
+      setTotalNoOfQuestions(nextSection.noOfQuestions);
+      fetchQuestion(1, nextSection.sectionId);
+    }
+      return;
+    }
+  
 
     const payload: any = { questionId: question._id, userId: userLogin?._id };
     question.answerType === "Numeric"
@@ -147,7 +162,7 @@ export default function ExamUI() {
     } catch (err) {
       console.error("Failed to save user answer:", err);
     }
-
+setMcqSelected("")
     if (currentQuestionIndex + 1 < totalNoOfQuestions) {
       setCurrentQuestionIndex((p) => p + 1);
       fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
