@@ -33,9 +33,8 @@ const SelectExamForm = () => {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
 
-  // Mock exam sets
  // Generate mock sets from 1 to 50
-const mockSets = Array.from({ length: 50 }, (_, i) => `Mock ${i + 1}`);
+const mockSets = Array.from({ length: 50 }, (_, i) => `Mocks ${i + 1}`);
 
   const handleExamTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setExamType(e.target.value);
@@ -73,7 +72,7 @@ const mockSets = Array.from({ length: 50 }, (_, i) => `Mock ${i + 1}`);
     examTypeData.find((t: any) => t._id === examType)?.examType || "";
 
   return (
-    <div className="flex items-center justify-center bg-white">
+    <div className="flex items-center min-h-screen justify-center bg-white">
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md bg-white p-6 rounded-lg shadow"
@@ -112,7 +111,7 @@ const mockSets = Array.from({ length: 50 }, (_, i) => `Mock ${i + 1}`);
         </select>
 
         {/* Conditional Dropdown */}
-        {selectedExamTypeName.toLowerCase() === "mock" ? (
+        {selectedExamTypeName.toLowerCase() === "mocks" ? (
           <select
             value={yearOrSet}
             onChange={(e) => setYearOrSet(e.target.value)}

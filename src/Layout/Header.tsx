@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const userLogin=useSelector((state:any)=>state?.Auth?.loginUser)
+  
   const [data, setData] = useState("Practice");
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
@@ -162,6 +164,14 @@ const token=localStorage.getItem("token")
 
           {/* 👤 Auth Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
+             {(userLogin.role=="Admin" || userLogin.role=="Expert") && token ?(
+                <Button variant="orange"
+                onClick={() => router.push("/dashboard/home")}
+                className=""
+              >
+                Dashboard
+              </Button>
+            ):(null)}
             {token?(<Button onClick={removeLogin} variant="orange" >
               logout
             </Button>):(<>
@@ -174,6 +184,7 @@ const token=localStorage.getItem("token")
             >
               Login
             </button></>)}
+           
            
           </div>
 
@@ -268,6 +279,12 @@ const token=localStorage.getItem("token")
                 className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full shadow-md"
               >
                 Login
+              </button>
+                 <button
+                onClick={() => router.push("/Auth/signin")}
+                className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full shadow-md"
+              >
+                Dashboard
               </button>
             </div>
           </div>

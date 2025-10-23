@@ -31,7 +31,8 @@ const Exam: React.FC = () => {
   const selectedExamDetail = useSelector(
     (state: any) => state?.exam?.selectedExamDetail
   );
-  const topic = useSelector((state: any) => state?.topic?.topic);
+  // const topic = useSelector((state: any) => state?.topic?.topic);
+  const [topic,setTopic]=useState<any>([])
   const subtopicData = useSelector((state: any) => state?.subTopic?.subTopic);
   const singleQuestion = useSelector(
     (state: any) => state.question.singleQuestion
@@ -53,6 +54,7 @@ const Exam: React.FC = () => {
   const [numberOfQuestion, setNumberOfQuestion] = useState<number>(0);
 
   const sectionsData = selectedExamDetail[0]?.examDetail?.sections || [];
+  
 
   // initialize exam type
   useEffect(() => {
@@ -211,7 +213,9 @@ const Exam: React.FC = () => {
     setActiveSection(val.sectionId);
     setSelectedSectionData(val);
     setNumberOfQuestion(val.noOfQuestions);
-
+ if(val?.topicDetails){
+ setTopic(val?.topicDetails)
+  }
     const payload: any = {
       questionNo: 1,
       questionPaperId: selectedExamDetail[0]?._id,

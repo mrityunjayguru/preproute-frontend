@@ -25,7 +25,7 @@ getDashboard()
   },[])
   useEffect(()=>{
     console.log(userLogin,"userLoginuserLogin")
-if(userLogin?.role!="Admin"){
+if(userLogin?.role!="Admin" && userLogin?.role!="Expert"  ){
   router.push(`/home`)
 }
   },[])

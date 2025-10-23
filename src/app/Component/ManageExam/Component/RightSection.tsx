@@ -64,7 +64,7 @@ const RightSection: React.FC<Props> = ({
               size="sm"
               className="cursor-pointer w-10 h-10 font-bold text-white border-none flex items-center justify-center"
               style={{ backgroundColor: bgColor, ...shapeStyle }}
-              disabled={!isTimeUp}
+              disabled={isTimeUp}
             >
               {idx + 1}
             </Button>

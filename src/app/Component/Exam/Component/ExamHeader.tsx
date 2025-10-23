@@ -39,6 +39,7 @@ export const ExamHeader = () => {
     const payload: any = {
       examid: selectedExam?._id,
       examTypeId: selectedExamType?._id,
+      isPublished:true
     };
     dispatch(getQuestionBeExamId(payload));
     setSelectedExam(selectedExam);

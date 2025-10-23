@@ -1,4 +1,6 @@
-import { handleSelectedExamDetail } from "@/api/Exam";
+import { getDashboardData } from "@/api/dashboard";
+import { handleSelectedExamDetail, handleUpdateStaus } from "@/api/Exam";
+import { formatDateTime } from "@/Common/ComonDate";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -39,7 +41,15 @@ const ExamCard = ({ exam }: any) => {
         await dispatch(handleSelectedExamDetail(payload))
         router.push("manageExam");
   };
+const updateStatus=async(val:any)=>{
 
+  const payload:any={
+_id:val._id,
+isPublished:!val.isPublished
+  }
+ await dispatch(handleUpdateStaus(payload))
+await dispatch(getDashboardData(payload))
+}
   return (
     <div className="flex flex-col w-full bg-white px-5 py-4 rounded-md shadow-sm border">
       {/* Top Section */}
@@ -48,7 +58,7 @@ const ExamCard = ({ exam }: any) => {
           <h3 className="text-sm font-semibold text-gray-900 truncate">
             {exam.questionPapername} - <span className="textorange">{exam.examDetail.examname}</span>
           </h3>
-          <p className="text-xs text-gray-500">Created on: {exam.createdAt}</p>
+          <p className="text-xs text-gray-500">Created on: {formatDateTime(exam.createdAt)}</p>
         </div>
 
         <div className="flex flex-col text-left md:text-right">
@@ -72,11 +82,9 @@ const ExamCard = ({ exam }: any) => {
         {/* Buttons */}
         <div className="flex flex-row gap-2 shrink-0">
           <Button onClick={() => handleEdit(exam)} variant="edit">Edit</Button>
-          {isDraft ? (
-            <Button variant="orange">Publish</Button>
-          ) : (
-            <Button variant="orange">Submit</Button>
-          )}
+          {exam.overallCompletion=="100"?(
+           <Button  onClick={()=>updateStatus(exam)} variant="orange"> {exam?.isPublished==true?"Publish":"Un Published"} </Button>
+          ):(null)}
         </div>
       </div>
     </div>

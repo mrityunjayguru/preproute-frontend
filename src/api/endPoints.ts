@@ -37,6 +37,13 @@ export const subTopic={
   getSubTopicByTopicId:"setUpexam/subtopic/getSubTopicByTopicId",
   update:"setUpexam/subTopic/update",
 }
+export const User={
+    create:"user/create",
+  get:"user/get",
+  getallsubtopicsbytopicid:"subtopic/getallsubtopicsbytopicid",
+  getSubTopicByTopicId:"setUpexam/subtopic/getSubTopicByTopicId",
+  update:"user/update",
+}
 export const exam={
   create:"setUpexam/exam/create",
   get:"setUpexam/exam/get",
@@ -57,7 +64,8 @@ export const questionPaper={
   handleUploadImage:"setUpexam/questionpaper/uploadImage",
   getQuestionBeExamId:"setUpexam/questionpaper/getQuestionBeExamId",
   getUserQuestionData:"setUpexam/questionpaper/userExam",
-  createUserExam:"/user/exam"
+  createUserExam:"/user/exam",
+  update:"setUpexam/questionpaper/update"
 
 }
 export const Dashboard={

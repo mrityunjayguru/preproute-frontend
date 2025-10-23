@@ -15,9 +15,11 @@ import Auth from "./Auth/index"
 import staffToclass from "./seatUpexam/AssingStaffToclass/index"
 import dashboard from "./dashboard/index"
 import question from "./seatUpexam/question/index"
+import user from "./user/index"
 const appReducer = combineReducers({
  school:school,
  exam:exam,
+ user:user,
  section:section,
  vehicleType:vehicleType,
  examType:examType,

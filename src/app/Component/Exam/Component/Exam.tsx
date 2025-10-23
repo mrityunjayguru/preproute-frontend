@@ -45,7 +45,7 @@ const MockExamCard = ({ exam }: { exam: any }) => {
       questionPapername: data?.questionPapername,
     };
     dispatch(getUserQuestionData(payload));
-    // router.push("userExam");
+    router.push("userExam");
   };
 
   return (
@@ -85,7 +85,8 @@ const MockExamCard = ({ exam }: { exam: any }) => {
           onClick={() => handleExam(exam)}
         >
           {/* Start Exam */}
-          <OpenExamPopup/>
+          submit
+          {/* <OpenExamPopup/> */}
         </button>
       )}
     </Card>

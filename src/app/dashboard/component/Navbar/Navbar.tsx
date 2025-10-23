@@ -21,6 +21,11 @@ export function DashboardHeader() {
     router.push(`${page}`);
   };
 
+  const logOut=()=>{
+    localStorage.removeItem("token")
+    router.push(`/Auth/signin`);
+
+  }
   // ✅ Helper to check if the current path is active
   const isActive = (path: string) => pathname === `${path}`;
   return (
@@ -31,30 +36,33 @@ export function DashboardHeader() {
       </span>
 
       {/* Navigation Links */}
-      <div className="flex gap-x-8 text-sm text-black">
-        {[
-          { label: "Dashboard", path: "home" },
-          { label: "Setup Exam", path: "setupexam" },
-          { label: "Create Question", path: "exam" },
-          { label: "Create Account", path: "createaccount" },
-          { label: "Analytics", path: "analytics" },
-        ].map((item) => (
-          <a
-            key={item.path}
-            onClick={() => handleChangeRoute(item.path)}
-            className={`cursor-pointer relative transition-colors duration-200 ${
-              isActive(item.path)
-                ? "text-orange-500 font-semibold"
-                : "hover:text-orange-400"
-            }`}
-          >
-            {item.label}
-            {isActive(item.path) && (
-              <span className="absolute bottom-[-4px] left-0 w-full h-[2px] bg-orange-500 rounded-full"></span>
-            )}
-          </a>
-        ))}
-      </div>
+ <div className="flex gap-x-8 text-sm text-black">
+  {[
+    { label: "Dashboard", path: "home", isView: true },
+    { label: "Setup Exam", path: "setupexam",isView: userLogin.role === "Admin" },
+    { label: "Create Question", path: "exam", isView: true},
+    { label: "Create Account", path: "users", isView: userLogin.role === "Admin" },
+    { label: "Analytics", path: "analytics", isView: userLogin.role === "Admin" },
+  ]
+    .filter(item => item.isView) // ✅ only show items where isView is true
+    .map(item => (
+      <a
+        key={item.path}
+        onClick={() => handleChangeRoute(item.path)}
+        className={`cursor-pointer relative transition-colors duration-200 ${
+          isActive(item.path)
+            ? "text-orange-500 font-semibold"
+            : "hover:text-orange-400"
+        }`}
+      >
+        {item.label}
+        {isActive(item.path) && (
+          <span className="absolute bottom-[-4px] left-0 w-full h-[2px] bg-orange-500 rounded-full"></span>
+        )}
+      </a>
+    ))}
+</div>
+
 
       {/* User Profile */}
       <div className="flex items-center gap-x-2 text-black">
@@ -73,7 +81,7 @@ export function DashboardHeader() {
             <DropdownMenuItem>Profile</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Log Out</DropdownMenuItem>
+            <DropdownMenuItem onClick={logOut} >Log Out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -45,7 +45,7 @@ export default function ExamUI() {
   const [numericalValue, setNumericalValue] = useState("");
   const [mcqSelected, setMcqSelected] = useState<string | null>(null);
   const [sectionQuestionStatus, setSectionQuestionStatus] = useState<Record<string, Record<number, string>>>({});
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(1);
   const [isTimeUp, setIsTimeUp] = useState(false);
 
   const exam = examData?.[0]?.exam || {};
@@ -59,10 +59,9 @@ export default function ExamUI() {
 
     setIsSection(examInfo.isSection);
     setSwitchable(examInfo?.switchable);
-
     // Calculate exam duration
     const totalDuration = examInfo.isSection
-      ? examInfo.sections?.reduce((acc: number, sec: any) => acc + Number(sec.duration || 0), 0)
+      ? examInfo.sections[0].duration
       : Number(examInfo.fullExamduration || 0);
 
     setTimeLeft(totalDuration * 60); // seconds
@@ -81,18 +80,30 @@ export default function ExamUI() {
 
   // ---------------- Timer Countdown ----------------
   useEffect(() => {
-    if (timeLeft <= 0) {
-      setIsTimeUp(true);
+    if (timeLeft == 0) {
+     
+       if (isSection && currentSectionIndex + 1 < examSections.length) {
+      const nextSection:any = examSections[currentSectionIndex + 1];
+      setSelectedSection(nextSection);
+    setTimeLeft(nextSection.duration * 60); // seconds
+
+      setCurrentSectionIndex((p) => p + 1);
+      setCurrentQuestionIndex(0);
+      setTotalNoOfQuestions(nextSection.noOfQuestions);
+      fetchQuestion(1, nextSection.sectionId);
+    }
       return;
     }
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev <= 1 ? 0 : prev - 1));
     }, 1000);
-
     return () => clearInterval(timer);
   }, [timeLeft]);
 
+  useEffect(()=>{
+console.log(isTimeUp,"isTimeUpisTimeUp")
+  },[isTimeUp])
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
@@ -141,7 +152,10 @@ export default function ExamUI() {
       setCurrentQuestionIndex((p) => p + 1);
       fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
     } else if (isSection && currentSectionIndex + 1 < examSections.length) {
-      const nextSection = examSections[currentSectionIndex + 1];
+      const nextSection:any = examSections[currentSectionIndex + 1];
+      // console.log(nextSection,"nextSectionnextSection")
+    setTimeLeft(nextSection?.duration * 60); 
+
       setSelectedSection(nextSection);
       setCurrentSectionIndex((p) => p + 1);
       setCurrentQuestionIndex(0);
@@ -182,12 +196,12 @@ setMcqSelected("")
       setCurrentQuestionIndex((p) => p - 1);
       fetchQuestion(currentQuestionIndex, selectedSection?.sectionId);
     } else if (isSection && currentSectionIndex > 0) {
-      const prevSection = examSections[currentSectionIndex - 1];
-      setSelectedSection(prevSection);
-      setCurrentSectionIndex((p) => p - 1);
-      setCurrentQuestionIndex(prevSection.noOfQuestions - 1);
-      setTotalNoOfQuestions(prevSection.noOfQuestions);
-      fetchQuestion(prevSection.noOfQuestions, prevSection.sectionId);
+      // const prevSection = examSections[currentSectionIndex - 1];
+      // setSelectedSection(prevSection);
+      // setCurrentSectionIndex((p) => p - 1);
+      // setCurrentQuestionIndex(prevSection.noOfQuestions - 1);
+      // setTotalNoOfQuestions(prevSection.noOfQuestions);
+      // fetchQuestion(prevSection.noOfQuestions, prevSection.sectionId);
     }
   };
 
