@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 function userTable() {
     const router = useRouter();
     const dispatch=useDispatch<AppDispatch>()
-    const data=useSelector((state:any)=>state.user.user)
+    const data=useSelector((state:any)=>state?.user?.user || [])
     const [search,setSearch]=useState<string>("")
     const fetchUsers = async () => {
       const payload:any={}
@@ -32,7 +32,7 @@ function userTable() {
               row.createdAt ? formatDateTime(row.createdAt) : "-",
          },
       ];
-        const filteredData = data.filter((item: any) =>
+        const filteredData = data?.filter((item: any) =>
     item.username?.toLowerCase().includes(search.toLowerCase())
   );
   const handleEdit=async(val:any)=>{
