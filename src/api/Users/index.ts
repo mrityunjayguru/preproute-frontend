@@ -115,3 +115,23 @@ export const handleSetUpdateUser= createAsyncThunk<boolean, Payload>(
   },
 );
 
+
+export const updaquesPaperTime = createAsyncThunk<boolean, Payload>(
+  "topic/get", // ✅ action type string must be a string, not a variable
+  async (payload, thunkAPI) => {
+    try {
+      // Dispatch your synchronous action
+    const data = await UserRepo.updaquesPaperTime(payload);
+
+      // thunkAPI.dispatch(setSelecteduser(payload));
+
+      // Return success flag
+      return true;
+    } catch (err: any) {
+      console.error("Error in updaquesPaperTime:", err);
+      // Properly reject the thunk if something fails
+      return thunkAPI.rejectWithValue(false) as any;
+    }
+  }
+);
+      

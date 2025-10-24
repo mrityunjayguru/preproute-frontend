@@ -43,6 +43,7 @@ export const User={
   getallsubtopicsbytopicid:"subtopic/getallsubtopicsbytopicid",
   getSubTopicByTopicId:"setUpexam/subtopic/getSubTopicByTopicId",
   update:"user/update",
+  updaquesPaperTime:"user/updateTime",
 }
 export const exam={
   create:"setUpexam/exam/create",

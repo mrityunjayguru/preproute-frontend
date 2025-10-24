@@ -14,6 +14,7 @@ import RightSection from "./RightSection";
 import FooterActions from "./FooterActions";
 import { NumericalKeypad } from "./NumericalKeypad";
 import { MCQOptions } from "./MCQOptions";
+import { updaquesPaperTime } from "@/api/Users";
 
 interface SectionDetail {
   _id: string;
@@ -51,7 +52,14 @@ export default function ExamUI() {
   const exam = examData?.[0]?.exam || {};
   const examSections: Section[] = exam?.sections || [];
   const currentStatus = sectionQuestionStatus[selectedSection?.sectionId || "no-section"] || {};
+const [questionStartTime, setQuestionStartTime] = useState<number | null>(null);
 
+const getISTDate=() =>{
+  const date = new Date();
+  const utcOffsetInMinutes = 5 * 60 + 30; // IST is UTC + 5:30
+  const istDate = new Date(date.getTime() + utcOffsetInMinutes * 60000);
+  return istDate;
+}
   // ---------------- Setup Exam ----------------
   useEffect(() => {
     if (!examData?.length) return;
@@ -70,8 +78,18 @@ export default function ExamUI() {
     if (examInfo.isSection && examSections.length) {
       const firstSection = examSections[0];
       setSelectedSection(firstSection);
+
       setTotalNoOfQuestions(firstSection.noOfQuestions);
       fetchQuestion(1, firstSection.sectionId);
+      const payload:any={
+        questionPaperId: examData?.[0]?._id,
+        sectionWise:[{
+          sectionId:firstSection.sectionId,
+          startTime:getISTDate()
+        }]
+      }
+      
+      dispatch(updaquesPaperTime(payload))
     } else {
       setTotalNoOfQuestions(Number(examInfo.noOfQuestions) || 0);
       fetchQuestion(1);
@@ -111,15 +129,19 @@ console.log(isTimeUp,"isTimeUpisTimeUp")
   };
 
   // ---------------- Sync Question ----------------
-  useEffect(() => {
-    if (!singleQuestion?.[0]) return;
-    const q = singleQuestion[0];
-    setQuestion(q);
-    if (q.userAttempt && q.usergiven?.length) {
-      setMcqSelected(q.usergiven[0]?.userAnswer || null);
-      setNumericalValue(q.usergiven[0]?.numericAnswer || "");
-    }
-  }, [singleQuestion]);
+useEffect(() => {
+  if (!singleQuestion?.[0]) return;
+  const q = singleQuestion[0];
+  setQuestion(q);
+
+  // Start timer when question is displayed
+  setQuestionStartTime(Date.now());
+
+  if (q.userAttempt && q.usergiven?.length) {
+    setMcqSelected(q.usergiven[0]?.userAnswer || null);
+    setNumericalValue(q.usergiven[0]?.numericAnswer || "");
+  }
+}, [singleQuestion]);
 
   // ---------------- Handlers ----------------
   const fetchQuestion = async (questionNo: number, sectionId?: string) => {
@@ -164,9 +186,11 @@ console.log(isTimeUp,"isTimeUpisTimeUp")
     }
       return;
     }
-  
+    const endTime = Date.now();
+  const timeTaken = questionStartTime ? Math.floor((endTime - questionStartTime) / 1000) : 0; // seconds
 
-    const payload: any = { questionId: question._id, userId: userLogin?._id };
+
+    const payload: any = { questionId: question._id, userId: userLogin?._id ,timeTaken:timeTaken};
     question.answerType === "Numeric"
       ? (payload.numericAnswer = numericalValue)
       : (payload.userAnswer = mcqSelected);
@@ -177,6 +201,7 @@ console.log(isTimeUp,"isTimeUpisTimeUp")
     } catch (err) {
       console.error("Failed to save user answer:", err);
     }
+     setQuestionStartTime(Date.now());
 setMcqSelected("")
     if (currentQuestionIndex + 1 < totalNoOfQuestions) {
       setCurrentQuestionIndex((p) => p + 1);

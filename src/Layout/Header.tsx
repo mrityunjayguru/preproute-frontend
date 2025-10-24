@@ -164,7 +164,7 @@ const token=localStorage.getItem("token")
 
           {/* 👤 Auth Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
-             {(userLogin.role=="Admin" || userLogin.role=="Expert") && token ?(
+             {(userLogin?.role=="Admin" || userLogin?.role=="Expert") && token ?(
                 <Button variant="orange"
                 onClick={() => router.push("/dashboard/home")}
                 className=""

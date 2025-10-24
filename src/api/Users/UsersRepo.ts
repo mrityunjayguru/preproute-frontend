@@ -11,6 +11,7 @@ interface UserRepo {
   createUser: (payload: Payload) => Promise<AxiosResponse>;
   getUser: (payload: Payload) => Promise<AxiosResponse>;
   handleUpdateData: (payload: any) => Promise<AxiosResponse>;
+  updaquesPaperTime: (payload: any) => Promise<AxiosResponse>;
 }
 
 export const UserRepo: UserRepo = {
@@ -24,5 +25,7 @@ export const UserRepo: UserRepo = {
   handleUpdateData(payload) {
     return Repository.post(User.update, payload);
   },
-
+  updaquesPaperTime(payload) {
+    return Repository.post(User.updaquesPaperTime, payload);
+  },
 };

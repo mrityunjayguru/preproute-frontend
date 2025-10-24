@@ -39,10 +39,10 @@ export function DashboardHeader() {
  <div className="flex gap-x-8 text-sm text-black">
   {[
     { label: "Dashboard", path: "home", isView: true },
-    { label: "Setup Exam", path: "setupexam",isView: userLogin.role === "Admin" },
+    { label: "Setup Exam", path: "setupexam",isView: userLogin?.role === "Admin" },
     { label: "Create Question", path: "exam", isView: true},
-    { label: "Create Account", path: "users", isView: userLogin.role === "Admin" },
-    { label: "Analytics", path: "analytics", isView: userLogin.role === "Admin" },
+    { label: "Create Account", path: "users", isView: userLogin?.role === "Admin" },
+    { label: "Analytics", path: "analytics", isView: userLogin?.role === "Admin" },
   ]
     .filter(item => item.isView) // ✅ only show items where isView is true
     .map(item => (

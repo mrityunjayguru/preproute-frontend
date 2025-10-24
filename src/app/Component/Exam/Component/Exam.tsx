@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import OpenExamPopup from "../../ManageExam/Component/OpenNewWindowButton";
+import { questionPaper } from "@/api/endPoints";
 
 // 🔒 Lock Icon
 const LockIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -29,6 +30,8 @@ const LockIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 // 🎯 Exam Card
 const MockExamCard = ({ exam }: { exam: any }) => {
+  console.log(exam,"examexam")
+
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const examById = useSelector((state: any) => state?.exam?.examById) || [];
@@ -41,6 +44,7 @@ const MockExamCard = ({ exam }: { exam: any }) => {
 
     const payload: any = {
       examTypeId: data?.examTypeId,
+      questionPaperId: data?._id,
       examid: data?.examid,
       questionPapername: data?.questionPapername,
     };
