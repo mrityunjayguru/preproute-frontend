@@ -98,20 +98,25 @@ const getISTDate=() =>{
 
   // ---------------- Timer Countdown ----------------
   useEffect(() => {
-    if (timeLeft == 0) {
-     
-       if (isSection && currentSectionIndex + 1 < examSections.length) {
-      const nextSection:any = examSections[currentSectionIndex + 1];
-      setSelectedSection(nextSection);
-    setTimeLeft(nextSection.duration * 60); // seconds
+   if (timeLeft === 0) {
+  if (isSection && currentSectionIndex + 1 < examSections.length) {
+    const prevSectionId = selectedSection?.sectionId;
+    const nextSection: any = examSections[currentSectionIndex + 1];
 
-      setCurrentSectionIndex((p) => p + 1);
-      setCurrentQuestionIndex(0);
-      setTotalNoOfQuestions(nextSection.noOfQuestions);
-      fetchQuestion(1, nextSection.sectionId);
-    }
-      return;
-    }
+    // ✅ Update backend with section timing
+     updateSectionTime(prevSectionId, nextSection.sectionId);
+
+    // Switch section
+    setSelectedSection(nextSection);
+    setTimeLeft(nextSection.duration * 60);
+    setCurrentSectionIndex((p) => p + 1);
+    setCurrentQuestionIndex(0);
+    setTotalNoOfQuestions(nextSection.noOfQuestions);
+    fetchQuestion(1, nextSection.sectionId);
+  }
+  return;
+}
+
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev <= 1 ? 0 : prev - 1));
@@ -177,12 +182,13 @@ useEffect(() => {
       const nextSection:any = examSections[currentSectionIndex + 1];
       // console.log(nextSection,"nextSectionnextSection")
     setTimeLeft(nextSection?.duration * 60); 
-
       setSelectedSection(nextSection);
       setCurrentSectionIndex((p) => p + 1);
       setCurrentQuestionIndex(0);
       setTotalNoOfQuestions(nextSection.noOfQuestions);
       fetchQuestion(1, nextSection.sectionId);
+  await updateSectionTime(selectedSection?.sectionId, nextSection.sectionId);
+
     }
       return;
     }
@@ -254,6 +260,8 @@ setMcqSelected("")
   const handleSubmit = async () => {
     try {
       await dispatch(userExamResult(examData));
+  await updateSectionTime(null, selectedSection?.sectionId);
+
       router.push("result");
     } catch (err) {
       console.error("Error submitting exam:", err);
@@ -266,14 +274,58 @@ setMcqSelected("")
     updateStatus("visited");
   };
 
-  const handleSection = (section: Section) => {
-    if (!switchable) return alert("Switching sections is not allowed until completion");
-    setSelectedSection(section);
-    setCurrentSectionIndex(examSections.findIndex((s) => s.sectionId === section.sectionId));
-    setCurrentQuestionIndex(0);
-    setTotalNoOfQuestions(section.noOfQuestions);
-    fetchQuestion(1, section.sectionId);
+// Helper to get IST Date
+
+
+// ⏱️ Update section times API call
+const updateSectionTime = async (prevSectionId?: any, newSectionId?: string) => {
+  const payload: any = {
+    questionPaperId: examData?.[0]?._id,
+    userId: userLogin?._id,
+    sectionWise: [],
   };
+
+  // ⏳ Mark previous section end time
+  if (prevSectionId) {
+    payload.sectionWise.push({
+      sectionId: prevSectionId,
+      endTime: getISTDate(),
+    });
+  }
+
+  // 🟢 Mark new section start time
+  if (newSectionId) {
+    payload.sectionWise.push({
+      sectionId: newSectionId,
+      startTime: getISTDate(),
+    });
+  }
+
+  try {
+    await dispatch(updaquesPaperTime(payload));
+  } catch (err) {
+    console.error("Failed to update section time:", err);
+  }
+};
+
+// 🧭 Handle manual section change
+const handleSection = async (section: Section) => {
+  if (!switchable) return alert("Switching sections is not allowed until completion");
+
+  const prevSectionId = selectedSection?.sectionId;
+  const newSectionId = section.sectionId;
+
+  // ✅ Call backend API for start/end time tracking
+  await updateSectionTime(prevSectionId, newSectionId);
+
+  // Update local states
+  setSelectedSection(section);
+  setCurrentSectionIndex(examSections.findIndex((s) => s.sectionId === newSectionId));
+  setCurrentQuestionIndex(0);
+  setTotalNoOfQuestions(section.noOfQuestions);
+  fetchQuestion(1, newSectionId);
+};
+
 
 
 

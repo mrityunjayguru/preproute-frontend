@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
+import { useRouter } from "next/navigation";
+
 import {
   createUser,
   getUsers,
@@ -30,6 +32,7 @@ const UserForm: React.FC = () => {
   });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const dispatch = useDispatch<AppDispatch>();
   const updateUser:any = useSelector((state:any)=>state?.user?.updateuser); // Replace with: useSelector((state: any) => state.user.updateUser)
@@ -93,6 +96,8 @@ console.log(updateUser,"updateUserupdateUser")
       const data:any=null
       dispatch(handleUpdateUserData(data));
       await fetchUsers();
+      // dashboard/users
+       router.push(`/dashboard/users`);
 
       // Reset form
       setFormData({ name: "", email: "", phone: "", password: "" });
