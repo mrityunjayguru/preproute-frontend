@@ -65,6 +65,29 @@ export const getExamType = createAsyncThunk<boolean, Payload>(
 );
 
 
+export const getCommonExamType = createAsyncThunk<boolean, Payload>(
+  examType.get,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await examTypeRepo.getCommonExamType(payload);
+      if (data.status === 200) {
+        thunkAPI.dispatch(setexamType(data.data.data));
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
+
 
 export const handleSelectedExamType = createAsyncThunk<boolean, Payload>(
   examType.get,

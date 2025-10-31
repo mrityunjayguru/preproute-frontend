@@ -6,7 +6,7 @@ interface Props {
   examSections: any[];
   selectedSection: any;
   handleSection: (section: any) => void;
-  timeLeft: number;
+  timeLeft: any;
   formatTime: (seconds: number) => string;
 }
 
@@ -37,13 +37,16 @@ const HeaderSection: React.FC<Props> = ({
           ))}
         </div>
       )}
-      <div
+      {timeLeft?(
+         <div
         className={`font-bold mt-2 sm:mt-0 ${
           timeLeft < 60 ? "text-red-600" : "text-green-600"
         }`}
       >
         Time Left: {formatTime(timeLeft)}
       </div>
+      ):(null)}
+     
     </div>
   );
 };

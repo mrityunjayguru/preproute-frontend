@@ -43,13 +43,14 @@ const Exam: React.FC = () => {
   const [selectedTopic, setSelectedTopic] = useState<string>("");
   const [selectedSubtopic, setSelectedSubtopic] = useState<string>("");
   const [questionType, setQuestionType] = useState<string>("Easy");
+  const [questionPessage, setQuestionPessage] = useState<string>("Normal");
   const [answerType, setAnswerType] = useState<AnswerType>("MCQ");
   const [hintText, setHintText] = useState<string>("");
   const [activeSection, setActiveSection] = useState<string>("");
   const [activeQuestion, setActiveQuestion] = useState<number>(1);
   const [selectedSectionData, setSelectedSectionData] = useState<any>(null);
   const [numericAnswer, setNumericAnswer] = useState<number>(0);
-
+  const [passage,setPassage]=useState<string>("");
   const [isSection, setIsSection] = useState<boolean>(true);
   const [numberOfQuestion, setNumberOfQuestion] = useState<number>(0);
 
@@ -96,7 +97,8 @@ const Exam: React.FC = () => {
       setSelectedTopic(q.topicId || "");
       setSelectedSubtopic(q.subtopicId || "");
       setNumericAnswer(q.numericAnswer || 0);
-
+      setQuestionPessage(q.questionPessage || "Normal");
+setPassage(q.passage || "");
       if (q.answerType === "MCQ" && Array.isArray(q.options)) {
         setOptions(
           q.options.map((opt: any, i: number) => ({
@@ -168,7 +170,9 @@ const Exam: React.FC = () => {
         questionText: questionData,
         questionType,
         answerType,
+        questionPessage,
         numericAnswer,
+        passage,
         options:
           answerType === "MCQ"
             ? options.map((opt) => ({
@@ -246,7 +250,6 @@ const Exam: React.FC = () => {
               ))}
             </div>
           )}
-
           <div className="flex items-center space-x-4">
             <div className="text-sm">
               <span className="text-gray-500 mr-2">Exam:</span>
@@ -336,62 +339,116 @@ const Exam: React.FC = () => {
                       <span className="text-sm">{type}</span>
                     </label>
                   ))}
-                </div>
-              </div>
-
-              {/* Question Editor */}
-              <QuestionWithOptionsEditor
-                value={questionData}
-                onChange={setQuestionData}
-              />
-
-              {/* Answer Type */}
-              <div className="flex items-center space-x-6 pt-4">
-                <span className="text-base font-semibold text-gray-700">
-                  Answer:
-                </span>
-                <div className="flex items-center space-x-4">
-                  {["Numeric", "MCQ"].map((type) => (
+                  <div className="flex items-center space-x-6">
+             {["Normal", "Pass"].map((type) => (
                     <label key={type} className="flex items-center space-x-1">
                       <input
                         type="radio"
-                        name="answerType"
+                        name="questionPessage"
                         value={type}
-                        checked={answerType === type}
-                        onChange={() => setAnswerType(type as AnswerType)}
+                        checked={questionPessage === type}
+                        onChange={() => setQuestionPessage(type)}
+                        className="accent-red-500"
                       />
                       <span className="text-sm">{type}</span>
                     </label>
                   ))}
+                  </div>
                 </div>
               </div>
 
-              {/* Options */}
-              {answerType === "MCQ" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6 pt-4">
-                  {options.map((opt) => (
-                    <OptionWithLatex
-                      key={opt.id}
-                      choice={opt.label}
-                      value={opt.text}
-                      isCorrect={opt.isCorrect}
-                      onChange={(html) => handleOptionTextChange(opt.id, html)}
-                      onCheckToggle={() => handleCorrectToggle(opt.id)}
-                    />
-                  ))}
-                </div>
-              )}
+              {/* Question Editor */}
+<div
+  className={`assss ${
+    questionPessage === "Pass"
+      ? "flex gap-4 items-start" // side-by-side layout
+      : "block"                  // stacked layout
+  }`}
+>
+  {/* ✅ Question Section */}
+  <div
+    className={`${
+      questionPessage === "Pass" ? "w-[65%]" : "w-full"
+    } border rounded-lg p-4 bg-white shadow-sm`}
+  >
+    <QuestionWithOptionsEditor
+      value={questionData}
+      onChange={setQuestionData}
+      QuestionType={questionPessage}
+    />
+  </div>
 
-              {answerType === "Numeric" && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6 pt-4">
-                  <Input
-                    value={numericAnswer}
-                    onChange={(e) => setNumericAnswer(Number(e.target.value))}
-                    type="number"
-                    placeholder="Enter Value"
-                  />
-                </div>
-              )}
+  {/* ✅ Answer Section */}
+  <div
+    className={`${
+      questionPessage === "Pass" ? "w-[35%]" : "w-full"
+    } border rounded-lg p-4 bg-gray-50 shadow-sm`}
+  >
+    {questionPessage === "Pass"?(
+      <div>
+        <Input type="text" placeholder="Enter Text" onChange={(e)=>setPassage(e.target.value)} />
+      </div>
+    ):(null)}
+    {/* Answer Type */}
+    <div className="flex items-center space-x-6 pt-2">
+      <span className="text-base font-semibold text-gray-700">
+        Answer:
+      </span>
+      <div className="flex items-center space-x-4">
+        {["Numeric", "MCQ"].map((type) => (
+          <label key={type} className="flex items-center space-x-1">
+            <input
+              type="radio"
+              name="answerType"
+              value={type}
+              checked={answerType === type}
+              onChange={() => setAnswerType(type as AnswerType)}
+            />
+            <span className="text-sm">{type}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+
+    {/* MCQ Options */}
+    {answerType === "MCQ" && (
+     <div
+  className={
+    questionPessage === "Pass"
+      ? "flex flex-col gap-4 pt-4"
+      : "grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4"
+  }
+>
+        {options.map((opt) => (
+          <OptionWithLatex
+            key={opt.id}
+            choice={opt.label}
+            value={opt.text}
+            isCorrect={opt.isCorrect}
+            onChange={(html) => handleOptionTextChange(opt.id, html)}
+            onCheckToggle={() => handleCorrectToggle(opt.id)}
+            QuestionType={questionPessage}
+
+          />
+        ))}
+      </div>
+    )}
+
+    {/* Numeric Answer */}
+    {answerType === "Numeric" && (
+      <div className="pt-4">
+        <input
+          value={numericAnswer}
+          onChange={(e) => setNumericAnswer(Number(e.target.value))}
+          type="number"
+          placeholder="Enter Value"
+          className="border rounded p-2 w-full"
+        />
+      </div>
+    )}
+  </div>
+</div>
+
             </div>
                <div className="lg:col-span-1 space-y-6 w-[40%]">
             {/* Question Navigation */}

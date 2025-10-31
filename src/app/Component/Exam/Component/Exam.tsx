@@ -30,18 +30,14 @@ const LockIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 // 🎯 Exam Card
 const MockExamCard = ({ exam }: { exam: any }) => {
-  console.log(exam,"examexam")
-
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const examById = useSelector((state: any) => state?.exam?.examById) || [];
-
   const handleExam = (data: any) => {
     const token = localStorage.getItem("token");
     if (!token) {
       return router.push("/home");
     }
-
     const payload: any = {
       examTypeId: data?.examTypeId,
       questionPaperId: data?._id,

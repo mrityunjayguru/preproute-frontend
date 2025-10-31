@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import { Button } from "@/components/ui/button";
 import { useSelector, useDispatch } from "react-redux";
-import { getexam, getQuestionBeExamId } from "@/api/Exam";
+import { getCommonexam, getCommonQuestionBeExamId, getexam, getQuestionBeExamId } from "@/api/Exam";
 import { AppDispatch } from "@/store/store";
 import { BookIcon } from "lucide-react";
 import { CutOffIcons } from "@/Common/svgIcon";
@@ -22,7 +22,7 @@ export const ExamHeader = () => {
   const getData = async () => {
     try {
       const payload: any = {};
-      await dispatch(getexam(payload));
+      await dispatch(getCommonexam(payload));
     } catch (error) {
       console.error("Failed to fetch exams:", error);
     }
@@ -41,7 +41,7 @@ export const ExamHeader = () => {
       examTypeId: selectedExamType?._id,
       isPublished:true
     };
-    dispatch(getQuestionBeExamId(payload));
+    dispatch(getCommonQuestionBeExamId(payload));
     setSelectedExam(selectedExam);
   };
 

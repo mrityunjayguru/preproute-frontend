@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 import { BlockMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { useDispatch } from "react-redux";
@@ -10,6 +10,7 @@ import CanvaEditor from "./AAAA";
 
 interface QuestionEditorProps {
   value?: string;
+  QuestionType:any,
   onChange: (content: string) => void;
 }
 
@@ -18,7 +19,8 @@ interface TableToolbarPos {
   left: number;
 }
 
-export default function QuestionEditor({ onChange, value }: QuestionEditorProps) {
+export default function QuestionEditor({ onChange, value,QuestionType }: QuestionEditorProps) {
+   console.log(QuestionType)
   const dispatch = useDispatch<AppDispatch>();
   const editorRef = useRef<HTMLDivElement | null>(null);
   const savedRangeRef = useRef<Range | null>(null);
@@ -367,22 +369,48 @@ export default function QuestionEditor({ onChange, value }: QuestionEditorProps)
   };
 
   // ---------------------- Render Preview ----------------------
-  const renderPreview = () => {
+  const renderPreview = useMemo(() => {
+    if (!content) return null;
+
     const parser = new DOMParser();
     const doc = parser.parseFromString(content, "text/html");
     const nodes = Array.from(doc.body.childNodes);
 
     return nodes.map((node, i) => {
-      if (node.nodeType === 1 && (node as HTMLElement).classList.contains("latex-span")) {
-        return <BlockMath key={i} math={(node as HTMLElement).dataset.tex || ""} />;
-      } else if (node.nodeType === 1) {
-        return <span key={i} dangerouslySetInnerHTML={{ __html: (node as HTMLElement).outerHTML }} />;
-      } else if (node.nodeType === 3) {
+      // ✅ If it's a LaTeX span
+      if (
+        node.nodeType === 1 &&
+        (node as HTMLElement).classList.contains("latex-span")
+      ) {
+        const rawTex = (node as HTMLElement).dataset.tex || "";
+
+        // Decode any HTML entities (e.g. &lt; -> <)
+        const decodedTex = new DOMParser().parseFromString(rawTex, "text/html")
+          .documentElement.textContent;
+
+        return <BlockMath key={i} math={decodedTex || ""} />;
+      }
+
+      // ✅ If it's any other HTML element
+      if (node.nodeType === 1) {
+        return (
+          <span
+            key={i}
+            dangerouslySetInnerHTML={{
+              __html: (node as HTMLElement).outerHTML,
+            }}
+          />
+        );
+      }
+
+      // ✅ If it's just text
+      if (node.nodeType === 3) {
         return <span key={i}>{node.textContent}</span>;
       }
+
       return null;
     });
-  };
+  }, [content]);
 
   // ---------------------- Render UI ----------------------
   return (
@@ -472,12 +500,14 @@ export default function QuestionEditor({ onChange, value }: QuestionEditorProps)
           </div>
         </div>
       )}
-
       {/* Preview */}
-      <div className="preview-box" style={{ marginTop: "20px" }}>
+      {QuestionType=="Normal"?(
+         <div className="preview-box" style={{ marginTop: "20px" }}>
         <h4>Preview</h4>
-        <div className="question-preview">{renderPreview()}</div>
+        <div className="question-preview">{renderPreview}</div>
       </div>
+      ):(null)}
+     
     </div>
   );
 }

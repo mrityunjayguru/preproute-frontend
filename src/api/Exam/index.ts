@@ -69,6 +69,29 @@ export const getexam = createAsyncThunk<boolean, Payload>(
   }
 );
 
+
+export const getCommonexam = createAsyncThunk<boolean, Payload>(
+  exam.get,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await examRepo.getCommonexam(payload);
+      if (data.status === 200) {
+        thunkAPI.dispatch(setexam(data.data.data));
+        return true;
+      }
+    } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
+
 export const handlesetSelectedExam = createAsyncThunk<boolean, Payload>(
   exam.get,
   async (payload, thunkAPI) => {
@@ -163,6 +186,29 @@ export const getQuestionBeExamId = createAsyncThunk<boolean, Payload>(
   async (payload, thunkAPI) => {
     try {
    const data = await examRepo.getQuestionBeExamId(payload);
+      if (data.status === 200) {
+        thunkAPI.dispatch(setexamById(data.data.data));
+        return true;
+      }
+    } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
+
+
+export const getCommonQuestionBeExamId = createAsyncThunk<boolean, Payload>(
+  exam.get,
+  async (payload, thunkAPI) => {
+    try {
+   const data = await examRepo.getCommonQuestionBeExamId(payload);
       if (data.status === 200) {
         thunkAPI.dispatch(setexamById(data.data.data));
         return true;

@@ -15,6 +15,7 @@ export const examType={
   create:"setUpexam/examType/create",
   get:"setUpexam/examType/get",
   update:"setUpexam/examType/update",
+  getCommonExamType:"UnAuth/examType",
   getExamBeExamTypeId:"setUpexam/examType/getById"
 }
 export const section={
@@ -66,7 +67,9 @@ export const questionPaper={
   getQuestionBeExamId:"setUpexam/questionpaper/getQuestionBeExamId",
   getUserQuestionData:"setUpexam/questionpaper/userExam",
   createUserExam:"/user/exam",
-  update:"setUpexam/questionpaper/update"
+  update:"setUpexam/questionpaper/update",
+  getCommonQuestionBeExamId:"unauth/QuestionByExamId",
+  getCommonexam:"unauth/commonExam",
 
 }
 export const Dashboard={

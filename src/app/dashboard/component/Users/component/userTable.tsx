@@ -27,7 +27,7 @@ function userTable() {
         { header: "Phone", accessor: "phone" },
 
          {
-              header: "Created At",
+               header: "Created At",
               accessor: (row: any) =>
               row.createdAt ? formatDateTime(row.createdAt) : "-",
          },

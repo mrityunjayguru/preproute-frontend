@@ -8,6 +8,7 @@ import {
   getExamType,
   getExamBeExamTypeId,
   handleSelectedExamType,
+  getCommonExamType,
 } from "@/api/ExamType";
 import { Button } from "@/components/ui/button";
 
@@ -27,7 +28,7 @@ const token=localStorage.getItem("token")
   // ✅ Fetch exam types once
   const fetchData = async () => {
     const payload:any={}
-    await dispatch(getExamType(payload));
+    await dispatch(getCommonExamType(payload));
   };
 
   useEffect(() => {

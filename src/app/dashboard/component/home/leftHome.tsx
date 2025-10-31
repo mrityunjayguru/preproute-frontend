@@ -27,9 +27,6 @@ export const ExamList = ({ exams }: any) => (
 const ExamCard = ({ exam }: any) => {
   const dispatch=useDispatch<AppDispatch>()
     const router = useRouter();
-  console.log(exam,"examexam")
-
-  
   const isDraft = exam.status === "Draft";
 
   const handleEdit = async(val: any) => {

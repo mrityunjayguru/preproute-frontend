@@ -8,13 +8,16 @@ import { BlockMath } from "react-katex";
 import { createUserExam } from "@/api/Exam";
 import { userExamResult, userQuestiongetQuestionById } from "@/api/Question";
 
-import HeaderSection from "./HeaderSection";
-import QuestionView from "./QuestionView";
-import RightSection from "./RightSection";
-import FooterActions from "./FooterActions";
-import { NumericalKeypad } from "./NumericalKeypad";
-import { MCQOptions } from "./MCQOptions";
 import { updaquesPaperTime } from "@/api/Users";
+import { NumericalKeypad } from "../../ManageExam/Component/NumericalKeypad";
+import { MCQOptions } from "../../ManageExam/Component/MCQOptions";
+import HeaderSection from "../../ManageExam/Component/HeaderSection";
+import QuestionView from "../../ManageExam/Component/QuestionView";
+import FooterActions from "../../ManageExam/Component/FooterActions";
+import RightSection from "../../ManageExam/Component/RightSection";
+import QuestionWiseHeader from "./QuestionComponent/QuestionWiseHeader";
+import QuestionWiseRightSection from "./QuestionComponent/QuestionWiseRightSection";
+import QuestionWiswView from "./QuestionComponent/QuestionWiswView";
 
 interface SectionDetail {
   _id: string;
@@ -28,7 +31,11 @@ interface Section {
   duration?: number;
 }
 
-export default function ExamUI() {
+interface QuestionWiseTabProps {
+  data: any; // Replace 'any' with a more specific type if possible
+}
+
+export default function QuestionWiseTab({data}: QuestionWiseTabProps) {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -96,37 +103,6 @@ const getISTDate=() =>{
     }
   }, [examData]);
 
-  // ---------------- Timer Countdown ----------------
-  useEffect(() => {
-   if (timeLeft === 0) {
-  if (isSection && currentSectionIndex + 1 < examSections.length) {
-    const prevSectionId = selectedSection?.sectionId;
-    const nextSection: any = examSections[currentSectionIndex + 1];
-
-    // ✅ Update backend with section timing
-     updateSectionTime(prevSectionId, nextSection.sectionId);
-
-    // Switch section
-    setSelectedSection(nextSection);
-    setTimeLeft(nextSection.duration * 60);
-    setCurrentSectionIndex((p) => p + 1);
-    setCurrentQuestionIndex(0);
-    setTotalNoOfQuestions(nextSection.noOfQuestions);
-    fetchQuestion(1, nextSection.sectionId);
-  }
-  return;
-}
-
-
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => (prev <= 1 ? 0 : prev - 1));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [timeLeft]);
-
-  useEffect(()=>{
-console.log(isTimeUp,"isTimeUpisTimeUp")
-  },[isTimeUp])
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
@@ -187,7 +163,7 @@ useEffect(() => {
       setCurrentQuestionIndex(0);
       setTotalNoOfQuestions(nextSection.noOfQuestions);
       fetchQuestion(1, nextSection.sectionId);
-  await updateSectionTime(selectedSection?.sectionId, nextSection.sectionId);
+  // await updateSectionTime(selectedSection?.sectionId, nextSection.sectionId);
 
     }
       return;
@@ -259,7 +235,7 @@ setMcqSelected("")
 
   const handleSubmit = async () => {
     try {
-  await updateSectionTime(null, selectedSection?.sectionId);
+  // await updateSectionTime(null, selectedSection?.sectionId);
   await dispatch(userExamResult(examData));
 
       router.push("result");
@@ -278,45 +254,41 @@ setMcqSelected("")
 
 
 // ⏱️ Update section times API call
-const updateSectionTime = async (prevSectionId?: any, newSectionId?: string) => {
-  const payload: any = {
-    questionPaperId: examData?.[0]?._id,
-    userId: userLogin?._id,
-    sectionWise: [],
-  };
+// const updateSectionTime = async (prevSectionId?: any, newSectionId?: string) => {
+//   const payload: any = {
+//     questionPaperId: examData?.[0]?._id,
+//     userId: userLogin?._id,
+//     sectionWise: [],
+//   };
 
-  // ⏳ Mark previous section end time
-  if (prevSectionId) {
-    payload.sectionWise.push({
-      sectionId: prevSectionId,
-      endTime: getISTDate(),
-    });
-  }
+//   if (prevSectionId) {
+//     payload.sectionWise.push({
+//       sectionId: prevSectionId,
+//       endTime: getISTDate(),
+//     });
+//   }
 
-  // 🟢 Mark new section start time
-  if (newSectionId) {
-    payload.sectionWise.push({
-      sectionId: newSectionId,
-      startTime: getISTDate(),
-    });
-  }
+//   if (newSectionId) {
+//     payload.sectionWise.push({
+//       sectionId: newSectionId,
+//       startTime: getISTDate(),
+//     });
+//   }
 
-  try {
-    await dispatch(updaquesPaperTime(payload));
-  } catch (err) {
-    console.error("Failed to update section time:", err);
-  }
-};
+//   try {
+//     await dispatch(updaquesPaperTime(payload));
+//   } catch (err) {
+//     console.error("Failed to update section time:", err);
+//   }
+// };
 
-// 🧭 Handle manual section change
 const handleSection = async (section: Section) => {
-  if (!switchable) return alert("Switching sections is not allowed until completion");
 
   const prevSectionId = selectedSection?.sectionId;
   const newSectionId = section.sectionId;
 
   // ✅ Call backend API for start/end time tracking
-  await updateSectionTime(prevSectionId, newSectionId);
+  // await updateSectionTime(prevSectionId, newSectionId);
 
   // Update local states
   setSelectedSection(section);
@@ -325,10 +297,6 @@ const handleSection = async (section: Section) => {
   setTotalNoOfQuestions(section.noOfQuestions);
   fetchQuestion(1, newSectionId);
 };
-
-
-
-
   const CurrentInput = useMemo(() => {
     if (!question) return null;
     return question.answerType === "Numeric" ? (
@@ -341,18 +309,19 @@ const handleSection = async (section: Section) => {
   if (!examData?.length) return <div className="p-8 text-center">No exam data found.</div>;
 
   return (
-    <div className="flex flex-col min-h-screen sm:px-0 lg:px-20 my-5">
-      <HeaderSection
+    <div className="flex flex-col min-h-screen sm:px-0  ">
+      <QuestionWiseHeader
         isSection={isSection}
         examSections={examSections}
         selectedSection={selectedSection}
         handleSection={handleSection}
-        timeLeft={timeLeft}
+        timeLeft=""
         formatTime={formatTime}
+        data={data}
       />
 
       <div className="flex flex-col lg:flex-row flex-1">
-        <QuestionView
+        <QuestionWiswView
           question={question}
           examName={examData[0]?.exam?.examname}
           paperName={examData[0]?.questionPaper}
@@ -360,8 +329,8 @@ const handleSection = async (section: Section) => {
           CurrentInput={CurrentInput}
         />
 
-        <RightSection
-          userLogin={userLogin}
+        <QuestionWiseRightSection
+          userLogin=""
           totalNoOfQuestions={totalNoOfQuestions}
           currentStatus={currentStatus}
           currentQuestionIndex={currentQuestionIndex}
@@ -369,17 +338,18 @@ const handleSection = async (section: Section) => {
           isSection={isSection}
           selectedSection={selectedSection}
           isTimeUp={isTimeUp}
+          data={data}
         />
       </div>
 
-      <FooterActions
+      {/* <FooterActions
         handleMarkForReview={handleMarkForReview}
         handleClearResponse={handleClearResponse}
         handlePreviousQuestion={handlePreviousQuestion}
         handleNextQuestion={handleNextQuestion}
         handleSubmit={handleSubmit}
         isTimeUp={isTimeUp}
-      />
+      /> */}
     </div>
   );
 }
