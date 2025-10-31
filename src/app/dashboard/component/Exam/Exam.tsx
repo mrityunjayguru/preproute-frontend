@@ -195,6 +195,8 @@ setPassage(q.passage || "");
         await dispatch(createQuestion(payload));
         resetQuestionFields();
       }
+      setActiveQuestion(activeQuestion+1)
+      handleActiveQuestion(activeQuestion+1)
     } catch (err) {
       console.error("Error creating question:", err);
     }

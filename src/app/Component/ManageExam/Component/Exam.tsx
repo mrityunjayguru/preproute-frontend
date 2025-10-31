@@ -15,6 +15,7 @@ import FooterActions from "./FooterActions";
 import { NumericalKeypad } from "./NumericalKeypad";
 import { MCQOptions } from "./MCQOptions";
 import { updaquesPaperTime } from "@/api/Users";
+import ExamHeader from "./ExamHeader";
 
 interface SectionDetail {
   _id: string;
@@ -341,6 +342,11 @@ const handleSection = async (section: Section) => {
   if (!examData?.length) return <div className="p-8 text-center">No exam data found.</div>;
 
   return (
+  <>
+  <div>
+    <ExamHeader/>
+  </div>
+  
     <div className="flex flex-col min-h-screen sm:px-0 lg:px-20 my-5">
       <HeaderSection
         isSection={isSection}
@@ -381,5 +387,6 @@ const handleSection = async (section: Section) => {
         isTimeUp={isTimeUp}
       />
     </div>
+  </>
   );
 }

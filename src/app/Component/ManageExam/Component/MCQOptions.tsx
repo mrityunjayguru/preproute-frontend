@@ -10,7 +10,7 @@ interface MCQOptionsProps {
   options: Option[];
   selected: string | null;
   setSelected: (value: string) => void;
-  disabled?: boolean; // new prop
+  disabled?: boolean;
 }
 
 export const MCQOptions: React.FC<MCQOptionsProps> = ({
@@ -26,7 +26,7 @@ export const MCQOptions: React.FC<MCQOptionsProps> = ({
       return (
         <div
           key={opt._id}
-          onClick={() => !disabled && setSelected(opt._id)} // disable click
+          onClick={() => !disabled && setSelected(opt._id)}
           className={`flex items-center p-3 border rounded-lg transition select-none
             ${
               isSelected
@@ -48,8 +48,11 @@ export const MCQOptions: React.FC<MCQOptionsProps> = ({
             {String.fromCharCode(65 + idx)}
           </span>
 
-          {/* Option Text */}
-          <span className="text-gray-800">{opt.text}</span>
+          {/* Option Text (supports HTML) */}
+          <span
+            className="text-gray-800"
+            dangerouslySetInnerHTML={{ __html: opt.text }}
+          />
         </div>
       );
     })}
