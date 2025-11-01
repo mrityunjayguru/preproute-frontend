@@ -142,8 +142,7 @@ useEffect(() => {
 
   // Start timer when question is displayed
   setQuestionStartTime(Date.now());
-
-  if (q.userAttempt && q.usergiven?.length) {
+  if (q.userAttempted && q.usergiven?.length) {
     setMcqSelected(q.usergiven[0]?.userAnswer || null);
     setNumericalValue(q.usergiven[0]?.numericAnswer || "");
   }

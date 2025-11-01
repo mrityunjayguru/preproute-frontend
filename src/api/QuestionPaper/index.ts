@@ -148,10 +148,10 @@ export const getUserQuestionData = createAsyncThunk<boolean, Payload>(
     } catch (err:any) {
       if(err.status==401){
         localStorage.removeItem("token")
-        GetMessage("warning", "Unauthorized");
+        // GetMessage("warning", "Unauthorized");
         // window.location.href = "/signin"; 
       }else{
-        GetMessage("warning", "something went wrong");
+        // GetMessage("warning", "something went wrong");
       }
     }
     return false;
