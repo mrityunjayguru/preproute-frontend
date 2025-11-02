@@ -42,7 +42,7 @@ export default function QuestionWiseTab({data}: QuestionWiseTabProps) {
   const examData = useSelector((state: any) => state.examType?.examDetail);
   const singleQuestion = useSelector((state: any) => state.question?.singleQuestion);
   const userLogin = useSelector((state: any) => state.Auth?.loginUser);
-
+console.log(examData,"examDataexamData")
   const [isSection, setIsSection] = useState(false);
   const [switchable, setSwitchable] = useState(false);
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);

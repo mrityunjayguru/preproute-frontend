@@ -59,7 +59,7 @@ await dispatch(getDashboardData(payload))
         </div>
 
         <div className="flex flex-col text-left md:text-right">
-          <span className="text-xs textorange font-medium">Expert</span>
+          <span className="text-xs textorange font-medium">Expert- <strong>{exam?.userDetail?.username}</strong> </span>
           <span className="text-sm font-semibold text-gray-800">{exam.person}</span>
         </div>
 

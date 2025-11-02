@@ -7,7 +7,7 @@ interface Props {
   selectedSection: any;
   handleSection: (section: any) => void;
   timeLeft: any;
-  formatTime: (seconds: number) => string;
+  formatTime: (seconds: number) => string
 }
 
 const HeaderSection: React.FC<Props> = ({

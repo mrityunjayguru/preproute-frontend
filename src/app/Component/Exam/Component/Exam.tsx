@@ -78,14 +78,13 @@ const MockExamCard = ({ exam }: { exam: any }) => {
       >
         {exam.description || "Unattempted"}
       </p>
-
       {!exam.isLocked && (
         <button
           className="bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium mt-4 py-2 px-4 rounded-md transition-all duration-200 text-sm md:text-base"
           onClick={() => handleExam(exam)}
         >
           {/* Start Exam */}
-          submit
+          Start {exam.questionPapername}
           {/* <OpenExamPopup/> */}
         </button>
       )}

@@ -25,27 +25,49 @@ const singleQuestion=useSelector((state:any)=>state.question?.singleQuestion)
 console.log(singleQuestion,"singleQuestionsingleQuestion")
 // usergiven[0].timeTaken
   // Memoize the parsed question to avoid re-rendering and blinking
-  const renderedQuestion = useMemo(() => {
-    if (!question?.questionText) return null;
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(question.questionText, "text/html");
-    return Array.from(doc.body.childNodes).map((node, i) => {
-      if (node.nodeType === 1 && (node as HTMLElement).classList.contains("latex-span")) {
-        return <BlockMath key={i} math={(node as HTMLElement).dataset.tex || ""} />;
-      } else if (node.nodeType === 1) {
-        return (
-          <span
-            key={i}
-            dangerouslySetInnerHTML={{ __html: (node as HTMLElement).outerHTML }}
-          />
-        );
-      } else if (node.nodeType === 3) {
-        return <span key={i}>{node.textContent}</span>;
-      }
-      return null;
-    });
-  }, [question?.questionText]);
-
+   const renderPreview = useMemo(() => {
+     if (!question?.questionText) return null;
+ 
+     const parser = new DOMParser();
+     const doc = parser.parseFromString(question.questionText, "text/html");
+     const nodes = Array.from(doc.body.childNodes);
+ 
+     return nodes.map((node, i) => {
+       // ✅ If it's a LaTeX span
+       if (
+         node.nodeType === 1 &&
+         (node as HTMLElement).classList.contains("latex-span")
+       ) {
+         const rawTex = (node as HTMLElement).dataset.tex || "";
+ 
+         // Decode any HTML entities (e.g. &lt; -> <)
+         const decodedTex = new DOMParser().parseFromString(rawTex, "text/html")
+           .documentElement.textContent;
+ 
+         return <BlockMath key={i} math={decodedTex || ""} />;
+       }
+ 
+       // ✅ If it's any other HTML element
+       if (node.nodeType === 1) {
+         return (
+           <span
+             key={i}
+             dangerouslySetInnerHTML={{
+               __html: (node as HTMLElement).outerHTML,
+             }}
+           />
+         );
+       }
+ 
+       // ✅ If it's just text
+       if (node.nodeType === 3) {
+         return <span key={i}>{node.textContent}</span>;
+       }
+ 
+       return null;
+     });
+   }, [question?.questionText]);
+ 
   return (
    <>
     <div className="bg-white p-4 rounded-lg flex-1">
@@ -59,7 +81,8 @@ console.log(singleQuestion,"singleQuestionsingleQuestion")
     {singleQuestion[0]?.userAttempted ? (
       <>
         Time: {singleQuestion[0]?.userTime}s &nbsp; | &nbsp; 
-        Avg Time: {singleQuestion[0]?.averageTime}s
+      Avg Time: {singleQuestion[0]?.averageTime?.toFixed(2)}s
+
       </>
     ) : (
       "(Not Attempted)"
@@ -67,8 +90,7 @@ console.log(singleQuestion,"singleQuestionsingleQuestion")
   </span>
 </p>
 
-
-      <div className="mb-4">{renderedQuestion}</div>
+      <div className="mb-4">{renderPreview}</div>
       {CurrentInput}
      <div className="flex justify-center items-center mt-10">
         <Button
