@@ -6,7 +6,6 @@ import axios from "axios";
 const Repository: AxiosInstance = axios.create({
   baseURL:baseUrl,
 });
-
 // Add a request interceptor to set the Authorization header
 Repository.interceptors.request.use(
   (config) => {
@@ -17,7 +16,7 @@ Repository.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error)
-  
+
 );
 
 

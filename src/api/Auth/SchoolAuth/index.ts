@@ -21,7 +21,6 @@ export const handleLogin = createAsyncThunk<boolean, Payload>(
   async (payload, thunkAPI) => {
     try {
       const response = await AuthRepo.userLogin(payload);
-      console.log(response,"responseresponse")
       if (response.status === 200) {
         const userData = response.data.user; // adjust according to your API response
         thunkAPI.dispatch(setAuth(userData));
