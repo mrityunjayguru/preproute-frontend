@@ -76,17 +76,23 @@ const singleQuestion=useSelector((state:any)=>state.question?.singleQuestion)
  <p className="font-bold text-lg mb-4">
   Question: {currentQuestionIndex + 1}
   &nbsp;&nbsp;
-  <span className="text-green-500">
-    {singleQuestion[0]?.userAttempted ? (
+<span className="text-green-500">
+  {singleQuestion?.length > 0 ? (
+    singleQuestion[0]?.userAttempted ? (
       <>
-        Time: {singleQuestion[0]?.userTime}s &nbsp; | &nbsp; 
-       Avg Time: {singleQuestion[0]?.averageTime?.toFixed(2)}s
-
+        Time: {singleQuestion[0]?.userTime ?? 0}s &nbsp; | &nbsp; 
+        Avg Time: {singleQuestion[0]?.averageTime
+          ? singleQuestion[0]?.averageTime.toFixed(2)
+          : "0.00"}s
       </>
     ) : (
       "(Not Attempted)"
-    )}
-  </span>
+    )
+  ) : (
+    "(No Data)"
+  )}
+</span>
+
 </p>
 
       <div className="mb-4">{renderPreview}</div>
