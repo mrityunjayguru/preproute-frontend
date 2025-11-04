@@ -30,7 +30,6 @@ const DifficultyWiseTab: React.FC<TopicWiseTabProps> = ({ data }) => {
     );
   }
 
-  console.log(typeWise,"typeWisetypeWise")
   return (
     <div className="overflow-x-auto mt-4">
       <table className="min-w-full border border-gray-200 rounded-lg">

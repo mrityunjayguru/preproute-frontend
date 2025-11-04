@@ -45,6 +45,8 @@ export const User={
   getSubTopicByTopicId:"setUpexam/subtopic/getSubTopicByTopicId",
   update:"user/update",
   updaquesPaperTime:"user/updateTime",
+  fetchAttemptedExam:"user/AttemptExam",
+  QuestionPaperResult:"user/QuestionPaperResult",
 }
 export const exam={
   create:"setUpexam/exam/create",

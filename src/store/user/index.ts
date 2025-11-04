@@ -7,7 +7,8 @@ updateuser:any;
 singleuser:any;
 selecteduser:any;
 selecteduserDetail:any;
-userById:any
+userById:any;
+AttemptedExam:any
 }
 
 // Initial state for the slice
@@ -17,7 +18,8 @@ const initialState: UserDataState = {
   singleuser:null,
   selecteduser:null,
   selecteduserDetail:null,
-  userById:null
+  userById:null,
+  AttemptedExam:null
 };
 
 // Create the user data slice
@@ -27,6 +29,9 @@ export const userSlicc = createSlice({
   reducers: {
     setuser: (state, action: PayloadAction<any>) => {
       state.user = action.payload; // Set login user data
+    },
+    setAttemptedExam: (state, action: PayloadAction<any>) => {
+      state.AttemptedExam = action.payload; // Set login user data
     },
     setUpdateuser: (state, action: PayloadAction<any>) => {
       state.updateuser = action.payload; // Set login user data
@@ -47,7 +52,7 @@ export const userSlicc = createSlice({
 });
 
 // Export actions
-export const {setuser,setUpdateuser,setuserById,setSingleuser,setSelecteduser,setSelecteduserDetail} = userSlicc.actions;
+export const {setuser,setUpdateuser,setuserById,setSingleuser,setSelecteduser,setSelecteduserDetail,setAttemptedExam} = userSlicc.actions;
 
 // Export reducer
 export default userSlicc.reducer;

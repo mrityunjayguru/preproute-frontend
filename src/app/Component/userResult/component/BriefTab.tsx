@@ -16,7 +16,7 @@ type BriefTabProps = {
 const BriefTab = ({ data }: BriefTabProps) => {
   const percentile = "15.03";
   const avgTime = "1 min 26 sec";
-
+// console.log(data,"datadatadatadata")
   return (
     <div>
       {/* Top Cards */}

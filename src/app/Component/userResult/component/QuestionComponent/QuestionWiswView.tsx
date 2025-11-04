@@ -22,7 +22,6 @@ const QuestionWiswView: React.FC<Props> = ({
 }) => {
  const [showAnswer, setShowAnswer] = useState<any>(false);
 const singleQuestion=useSelector((state:any)=>state.question?.singleQuestion)
-console.log(singleQuestion,"singleQuestionsingleQuestion")
 // usergiven[0].timeTaken
   // Memoize the parsed question to avoid re-rendering and blinking
    const renderPreview = useMemo(() => {
@@ -81,7 +80,7 @@ console.log(singleQuestion,"singleQuestionsingleQuestion")
     {singleQuestion[0]?.userAttempted ? (
       <>
         Time: {singleQuestion[0]?.userTime}s &nbsp; | &nbsp; 
-      Avg Time: {singleQuestion[0]?.averageTime?.toFixed(2)}s
+       Avg Time: {singleQuestion[0]?.averageTime?.toFixed(2)}s
 
       </>
     ) : (

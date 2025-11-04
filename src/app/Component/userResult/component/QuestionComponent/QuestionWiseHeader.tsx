@@ -22,7 +22,7 @@ const QuestionWiseHeader: React.FC<Props> = ({
   formatTime,
   data,
 }) => {
-    console.log(data,"datadatadata")
+    console.log(examSections,"datadatadata")
   return (
     <div className="flex flex-wrap items-center justify-between bg-white p-3 border-b shadow-sm">
       {/* ---- Section Tabs ---- */}
@@ -38,7 +38,7 @@ const QuestionWiseHeader: React.FC<Props> = ({
                   : "bg-white text-[#1E1E1E] border-gray-300 hover:bg-gray-100"
               }`}
             >
-              {t.sectionDetail?.section || "Section"}
+              {t.section || "Section"}
             </button>
           ))}
         </div>

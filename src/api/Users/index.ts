@@ -1,8 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setuser,setUpdateuser,setSelecteduser} from '../../store/user';
+import { setuser,setUpdateuser,setSelecteduser,setAttemptedExam} from '../../store/user';
 import APIName, { topic} from '../endPoints';
 import { UserRepo } from './UsersRepo';
 import Swal from 'sweetalert2';
+import { setResult } from '@/store/seatUpexam/question';
 
 interface Payload {
   // Define your payload structure here, for example:
@@ -134,4 +135,50 @@ export const updaquesPaperTime = createAsyncThunk<boolean, Payload>(
     }
   }
 );
+
+export const fetchAttemptedExam = createAsyncThunk<boolean, Payload>(
+  "topic/get", // ✅ action type string must be a string, not a variable
+  async (payload, thunkAPI) => {
+    try {
+      // Dispatch your synchronous action
+    const data = await UserRepo.fetchAttemptedExam(payload);
+if(data.status==200){
+      thunkAPI.dispatch(setAttemptedExam(data.data.data));
+
+}
+      // Return success flag
+      return true;
+    } catch (err: any) {
+      console.error("Error in updaquesPaperTime:", err);
+      // Properly reject the thunk if something fails
+      return thunkAPI.rejectWithValue(false) as any;
+    }
+  }
+);
+export const QuestionPaperResult = createAsyncThunk<boolean, Payload>(
+  "topic/get", // ✅ action type string must be a string, not a variable
+  async (payload, thunkAPI) => {
+    try {
+      // Dispatch your synchronous action
+    const data = await UserRepo.QuestionPaperResult(payload);
+if(data.status==200){
+      // thunkAPI.dispatch(setAttemptedExam(data.data.data));
+              thunkAPI.dispatch(setResult(data.data));
+      
+
+}
+      // Return success flag
+      return true;
+    } catch (err: any) {
+      console.error("Error in updaquesPaperTime:", err);
+      // Properly reject the thunk if something fails
+      return thunkAPI.rejectWithValue(false) as any;
+    }
+  }
+);
+
+
+
+
+
       

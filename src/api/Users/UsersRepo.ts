@@ -12,6 +12,9 @@ interface UserRepo {
   getUser: (payload: Payload) => Promise<AxiosResponse>;
   handleUpdateData: (payload: any) => Promise<AxiosResponse>;
   updaquesPaperTime: (payload: any) => Promise<AxiosResponse>;
+  fetchAttemptedExam: (payload: any) => Promise<AxiosResponse>;
+QuestionPaperResult: (payload: any) => Promise<AxiosResponse>;
+
 }
 
 export const UserRepo: UserRepo = {
@@ -27,5 +30,11 @@ export const UserRepo: UserRepo = {
   },
   updaquesPaperTime(payload) {
     return Repository.post(User.updaquesPaperTime, payload);
+  },
+  QuestionPaperResult(payload) {
+    return Repository.post(User.QuestionPaperResult, payload);
+  },
+  fetchAttemptedExam(payload) {
+    return Repository.post(User.fetchAttemptedExam, payload);
   },
 };

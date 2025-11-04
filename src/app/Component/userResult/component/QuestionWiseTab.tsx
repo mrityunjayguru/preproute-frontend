@@ -42,7 +42,6 @@ export default function QuestionWiseTab({data}: QuestionWiseTabProps) {
   const examData = useSelector((state: any) => state.examType?.examDetail);
   const singleQuestion = useSelector((state: any) => state.question?.singleQuestion);
   const userLogin = useSelector((state: any) => state.Auth?.loginUser);
-console.log(examData,"examDataexamData")
   const [isSection, setIsSection] = useState(false);
   const [switchable, setSwitchable] = useState(false);
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
@@ -55,9 +54,9 @@ console.log(examData,"examDataexamData")
   const [sectionQuestionStatus, setSectionQuestionStatus] = useState<Record<string, Record<number, string>>>({});
   const [timeLeft, setTimeLeft] = useState(1);
   const [isTimeUp, setIsTimeUp] = useState(false);
-
-  const exam = examData?.[0]?.exam || {};
-  const examSections: Section[] = exam?.sections || [];
+  const examResult = useSelector((state: any) => state.question?.result?.data);
+  const exam = examResult || {};
+  const examSections: Section[] = examResult?.examdetail.sections || [];
   const currentStatus = sectionQuestionStatus[selectedSection?.sectionId || "no-section"] || {};
 const [questionStartTime, setQuestionStartTime] = useState<number | null>(null);
 
@@ -67,22 +66,21 @@ const getISTDate=() =>{
   const istDate = new Date(date.getTime() + utcOffsetInMinutes * 60000);
   return istDate;
 }
-  // ---------------- Setup Exam ----------------
   useEffect(() => {
-    if (!examData?.length) return;
-    const examInfo = examData[0].exam;
-
-    setIsSection(examInfo.isSection);
-    setSwitchable(examInfo?.switchable);
+   
+    const examInfo = examResult;
+console.log(examInfo,"examInfoexamInfo")
+    setIsSection(examInfo?.examdetail?.isSection);
+    setSwitchable(examInfo?.examdetail?.switchable);
     // Calculate exam duration
     const totalDuration = examInfo.isSection
-      ? examInfo.sections[0].duration
+      ? examInfo?.examdetail?.sections[0].duration
       : Number(examInfo.fullExamduration || 0);
 
     setTimeLeft(totalDuration * 60); // seconds
 
     // Load first question
-    if (examInfo.isSection && examSections.length) {
+    if (examInfo?.examdetail.isSection ) {
       const firstSection = examSections[0];
       setSelectedSection(firstSection);
 
@@ -111,7 +109,7 @@ const getISTDate=() =>{
 
   // ---------------- Sync Question ----------------
 useEffect(() => {
-  if (!singleQuestion?.[0]) return;
+  if (singleQuestion && !singleQuestion?.[0]) return;
   const q = singleQuestion[0];
   setQuestion(q);
 
@@ -184,7 +182,7 @@ useEffect(() => {
       console.error("Failed to save user answer:", err);
     }
      setQuestionStartTime(Date.now());
-setMcqSelected("")
+    setMcqSelected("")
     if (currentQuestionIndex + 1 < totalNoOfQuestions) {
       setCurrentQuestionIndex((p) => p + 1);
       fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
@@ -286,7 +284,7 @@ const handleSection = async (section: Section) => {
 
   const prevSectionId = selectedSection?.sectionId;
   const newSectionId = section.sectionId;
-
+console.log(section,"sectionsection")
   // ✅ Call backend API for start/end time tracking
   // await updateSectionTime(prevSectionId, newSectionId);
 

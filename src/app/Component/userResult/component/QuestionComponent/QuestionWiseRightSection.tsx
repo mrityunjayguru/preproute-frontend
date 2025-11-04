@@ -81,7 +81,6 @@ const QuestionWiseRightSection: React.FC<Props> = ({
     }, {});
   }, [data.details]);
 
-  console.log(groupedData,"groupedDatagroupedData")
 
   // ✅ Filter only selected section
   const selectedSectionKey =
@@ -90,7 +89,6 @@ const QuestionWiseRightSection: React.FC<Props> = ({
   const selectedSectionQuestions =
     groupedData[selectedSectionKey] || [];
     const shortingData=selectedSectionQuestions.sort((a,b)=>a.questionNo - b.questionNo)
-console.log(selectedSectionKey,"selectedSectionKeyselectedSectionKey")
   return (
     <aside className="lg:w-1/4 w-full bg-white p-4 border-t lg:border-t-0 lg:border-l flex-shrink-0 overflow-y-auto">
       {/* ✅ User Profile */}
@@ -115,7 +113,7 @@ console.log(selectedSectionKey,"selectedSectionKeyselectedSectionKey")
       {/* ✅ Selected Section Palette */}
       <div className="mb-6">
         <h3 className="text-sm font-bold text-gray-600 mb-3">
-          Section: {selectedSection?.sectionDetail?.section || "N/A"}
+          Section: {selectedSection?.section || "N/A"}
         </h3>
 
         {shortingData.length > 0 ? (
