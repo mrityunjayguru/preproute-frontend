@@ -47,6 +47,7 @@ export const User={
   updaquesPaperTime:"user/updateTime",
   fetchAttemptedExam:"user/AttemptExam",
   QuestionPaperResult:"user/QuestionPaperResult",
+  updateUserInfo:"user/updateProfile",
 }
 export const exam={
   create:"setUpexam/exam/create",

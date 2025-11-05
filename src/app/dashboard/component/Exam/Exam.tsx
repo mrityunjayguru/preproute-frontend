@@ -241,7 +241,7 @@ setPassage(q.passage || "");
                 <button
                   key={section.sectionId}
                   onClick={() => handleActiveSection(section)}
-                  className={`w-24 h-12 text-lg font-semibold rounded-lg transition-colors ${
+                  className={`w-52 cursor-pointer h-12 text-[14px] font-semibold rounded-lg transition-colors ${
                     section.sectionId === activeSection
                       ? "bg-red-500 text-white shadow-md"
                       : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-100"

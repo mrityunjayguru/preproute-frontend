@@ -98,7 +98,7 @@ export const ExamHeader = () => {
       </div>
 
       {/* Right: Buttons */}
-      <div className="flex flex-wrap justify-center md:justify-end gap-3">
+      {/* <div className="flex flex-wrap justify-center md:justify-end gap-3">
         <Button
           size="sm"
           className="flex items-center gap-2 px-4 py-2 bg-[#FF5635] text-white text-sm md:text-base font-medium rounded-lg hover:bg-[#ff4b2b] shadow-md transition-all"
@@ -114,7 +114,7 @@ export const ExamHeader = () => {
           <CutOffIcons />
           <span>Cutoff</span>
         </Button>
-      </div>
+      </div> */}
     </header>
   );
 };

@@ -48,11 +48,17 @@ export const userSlicc = createSlice({
     setuserById: (state, action: PayloadAction<any>) => {
       state.userById = action.payload; // Set login user data
     },
+    
+     updateProfileData: (state, action: PayloadAction<any>) => {
+      if (state.user) {
+        state.user.isProfile = true;
+      }
+    },
   },
 });
 
 // Export actions
-export const {setuser,setUpdateuser,setuserById,setSingleuser,setSelecteduser,setSelecteduserDetail,setAttemptedExam} = userSlicc.actions;
+export const {updateProfileData,setuser,setUpdateuser,setuserById,setSingleuser,setSelecteduser,setSelecteduserDetail,setAttemptedExam} = userSlicc.actions;
 
 // Export reducer
 export default userSlicc.reducer;
