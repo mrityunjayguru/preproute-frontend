@@ -49,6 +49,9 @@ export const User={
   QuestionPaperResult:"user/QuestionPaperResult",
   updateUserInfo:"user/updateProfile",
 }
+export const Order={
+  createOrder:"razorpay/createOrder"
+}
 export const exam={
   create:"setUpexam/exam/create",
   get:"setUpexam/exam/get",
