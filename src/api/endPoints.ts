@@ -5,6 +5,7 @@ import { createvehicletype } from "./setupSchool/VehicleType";
 const UserAuth={
   schoolAuth:"Auth/schoolLogin",
   userLogin:"Auth/userlogin",
+  googlelogin:"Auth/googlelogin",
   subject:"codemaster",
   yearMaster:"yearsmaster",
   register:"Auth/signUp",
@@ -48,6 +49,7 @@ export const User={
   fetchAttemptedExam:"user/AttemptExam",
   QuestionPaperResult:"user/QuestionPaperResult",
   updateUserInfo:"user/updateProfile",
+  createReport:"user/report"
 }
 export const Order={
   createOrder:"razorpay/createOrder"

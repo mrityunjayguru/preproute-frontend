@@ -14,8 +14,9 @@ import RightSection from "./RightSection";
 import FooterActions from "./FooterActions";
 import { NumericalKeypad } from "./NumericalKeypad";
 import { MCQOptions } from "./MCQOptions";
-import { updaquesPaperTime } from "@/api/Users";
+import { createReport, updaquesPaperTime } from "@/api/Users";
 import ExamHeader from "./ExamHeader";
+import Popup from "./Report";
 
 interface SectionDetail {
   _id: string;
@@ -48,19 +49,20 @@ export default function ExamUI() {
   const [question, setQuestion] = useState<any>(null);
   const [numericalValue, setNumericalValue] = useState("");
   const [mcqSelected, setMcqSelected] = useState<string | null>(null);
+  const [loder,setloder]=useState<boolean>(false)
   const [sectionQuestionStatus, setSectionQuestionStatus] = useState<
     Record<string, Record<number, string>>
   >({});
   const [timeLeft, setTimeLeft] = useState(1);
   const [isTimeUp, setIsTimeUp] = useState(false);
-
+const [showPopup, setShowPopup] = useState(false);
   const exam = examData?.[0]?.exam || {};
   const examSections: Section[] = exam?.sections || [];
   const currentStatus =
     sectionQuestionStatus[selectedSection?.sectionId || "no-section"] || {};
   const [questionStartTime, setQuestionStartTime] = useState<number | null>(
     null
-  );
+  )
 
   const getISTDate = () => {
     const date = new Date();
@@ -134,6 +136,7 @@ export default function ExamUI() {
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev <= 1 ? 0 : prev - 1));
+      localStorage.setItem("exam_timeLeft", timeLeft.toString());
     }, 1000);
     return () => clearInterval(timer);
   }, [timeLeft]);
@@ -184,6 +187,7 @@ export default function ExamUI() {
 
   const handleNextQuestion = async () => {
     // alert(mcqSelected)
+    setloder(true)
     if (!question || !mcqSelected) {
       updateStatus("visited");
       if (currentQuestionIndex + 1 < totalNoOfQuestions) {
@@ -205,6 +209,8 @@ export default function ExamUI() {
           nextSection.sectionId
         );
       }
+    setloder(false)
+
       return;
     }
     const endTime = Date.now();
@@ -239,6 +245,8 @@ export default function ExamUI() {
       setTotalNoOfQuestions(nextSection.noOfQuestions);
       fetchQuestion(1, nextSection.sectionId);
     }
+    setloder(false)
+
   };
 
   const handlePreviousQuestion = async () => {
@@ -288,9 +296,16 @@ export default function ExamUI() {
 
   const getQuestionByNumberId = async (number: number) => {
     setCurrentQuestionIndex(number);
-    await fetchQuestion(number + 1, selectedSection?.sectionId);
-    updateStatus("visited");
+     await fetchQuestion(number + 1, selectedSection?.sectionId);
+    // updateStatus("visited");
   };
+  useEffect(()=>{
+if(question?.userAttempted){
+    updateStatus("answered");
+}else{
+    updateStatus("visited");
+}
+  },[question])
 
   // Helper to get IST Date
 
@@ -348,6 +363,17 @@ export default function ExamUI() {
     fetchQuestion(1, newSectionId);
   };
 
+  const ReportQuestion=()=>{
+    setShowPopup(true);
+  }
+const submitReport=async(val:any)=>{
+  const payload:any={
+    title:val,
+    questionId:question._id,
+  }
+  await dispatch(createReport(payload))
+    setShowPopup(false);
+}
   const CurrentInput = useMemo(() => {
     if (!question) return null;
     return question.answerType === "Numeric" ? (
@@ -366,6 +392,14 @@ export default function ExamUI() {
 
   return (
     <>
+
+      <Popup
+        title="Submit Report"
+        isOpen={showPopup}
+        onClose={() => setShowPopup(false)}
+        onSubmit={submitReport}
+        question={question}
+      />
       <div>
         <ExamHeader />
       </div>
@@ -408,6 +442,8 @@ export default function ExamUI() {
           handleNextQuestion={handleNextQuestion}
           handleSubmit={handleSubmit}
           isTimeUp={isTimeUp}
+          loder={loder}
+          ReportQuestion={ReportQuestion}
         />
       </div>
     </>

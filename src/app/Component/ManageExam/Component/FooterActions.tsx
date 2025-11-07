@@ -1,14 +1,16 @@
 "use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
-
+import { Loader2 } from "lucide-react";
 interface Props {
   handleMarkForReview: () => void;
   handleClearResponse: () => void;
   handlePreviousQuestion: () => void;
   handleNextQuestion: () => void;
   handleSubmit: () => void;
+  ReportQuestion: () => void;
   isTimeUp: boolean;
+  loder:boolean
 }
 
 const FooterActions: React.FC<Props> = ({
@@ -17,8 +19,11 @@ const FooterActions: React.FC<Props> = ({
   handlePreviousQuestion,
   handleNextQuestion,
   handleSubmit,
+  ReportQuestion,
   isTimeUp,
-}) => (
+  loder
+}
+) => (
   <footer className="bg-white p-4 shadow-md flex flex-wrap gap-2 justify-between sticky bottom-0">
     <div className="flex gap-2 flex-wrap">
       <Button variant="outline" size="sm" onClick={handleMarkForReview} disabled={isTimeUp}>
@@ -27,13 +32,27 @@ const FooterActions: React.FC<Props> = ({
       <Button variant="outline" size="sm" onClick={handleClearResponse} disabled={isTimeUp}>
         Clear Response
       </Button>
+      <Button variant="outline" size="sm" onClick={ReportQuestion} >
+        Report
+      </Button>
     </div>
     <div className="flex gap-2 flex-wrap">
       <Button variant="secondary" onClick={handlePreviousQuestion} disabled={isTimeUp}>
         Previous
       </Button>
-      <Button onClick={handleNextQuestion} disabled={isTimeUp}>
-        Save & Next
+     <Button
+        onClick={handleNextQuestion}
+        disabled={isTimeUp || loder}
+        className="flex items-center gap-2"
+      >
+        {loder ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Saving...
+          </>
+        ) : (
+          "Save & Next"
+        )}
       </Button>
     </div>
     <Button

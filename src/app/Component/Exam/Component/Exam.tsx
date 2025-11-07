@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import OpenExamPopup from "../../ManageExam/Component/OpenNewWindowButton";
 import { questionPaper } from "@/api/endPoints";
+import { Button } from "@/components/ui/button";
+import { QuestionPaperResult } from "@/api/Users";
 
 // 🔒 Lock Icon
 const LockIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -33,12 +35,13 @@ const MockExamCard = ({ exam }: { exam: any }) => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const examById = useSelector((state: any) => state?.exam?.examById) || [];
-  const handleExam = (data: any) => {
+  const handleExam = async(data: any) => {
     const token = localStorage.getItem("token");
     if (!token) {
       return router.push("/home");
     }
-    const payload: any = {
+    // if(exam.hasGivenExam==false){
+  const payload: any = {
       examTypeId: data?.examTypeId,
       questionPaperId: data?._id,
       examid: data?.examid,
@@ -46,6 +49,16 @@ const MockExamCard = ({ exam }: { exam: any }) => {
     };
     dispatch(getUserQuestionData(payload));
     router.push("userExam");
+    // }
+    // else{
+    //   const payload:any={
+    //       examId:data._id
+    //   }
+    //      await dispatch(QuestionPaperResult(payload))
+    //       // console.log("Show analysis for:", examId);
+    //         router.push("/Exam/result");
+    // }
+  
   };
 
   return (
@@ -70,7 +83,6 @@ const MockExamCard = ({ exam }: { exam: any }) => {
         </div>
         {exam.isLocked && <LockIcon className="mt-1" />}
       </div>
-
       <p
         className={`text-xs md:text-sm mt-auto ${
           exam.isLocked ? "text-gray-400" : "text-gray-500"
@@ -78,7 +90,8 @@ const MockExamCard = ({ exam }: { exam: any }) => {
       >
         {exam.description || "Unattempted"}
       </p>
-      {!exam.isLocked && (
+      {exam.hasGivenExam}
+      {!exam.isLocked && exam.hasGivenExam==false ? (
         <button
           className="bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium mt-4 py-2 px-4 rounded-md transition-all duration-200 text-sm md:text-base"
           onClick={() => handleExam(exam)}
@@ -87,7 +100,7 @@ const MockExamCard = ({ exam }: { exam: any }) => {
           Start {exam.questionPapername}
           {/* <OpenExamPopup/> */}
         </button>
-      )}
+      ):(<Button variant="orange"  onClick={() => handleExam(exam)}>Analysis</Button>)}
     </Card>
   );
 };

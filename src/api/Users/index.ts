@@ -5,7 +5,7 @@ import { UserRepo } from './UsersRepo';
 import Swal from 'sweetalert2';
 import { setResult } from '@/store/seatUpexam/question';
 import { setAuth } from '@/store/Auth';
-
+import { toast } from "react-toastify";
 interface Payload {
   // Define your payload structure here, for example:
   someField: string; // replace this with actual fields
@@ -220,5 +220,36 @@ export const updateUserProfile = createAsyncThunk<boolean, Payload>(
     }
   }
 );
-  
+
+export const createReport = createAsyncThunk<boolean, Payload>(
+  "report/create",
+  async (payload, thunkAPI) => {
+    try {
+      const data: any = await UserRepo.createReport(payload);
+
+      if (data?.status == 200) {
+        console.log(data?.status ,"data?.status data?.status ")
+        toast.success("Report submitted successfully 🎉", {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "colored",
+        });
+        return true;
+      } else {
+        toast.error("Failed to submit report ❌");
+        return thunkAPI.rejectWithValue(false) as any;
+      }
+    } catch (err: any) {
+      console.error("Error in createReport:", err);
+      toast.error("Something went wrong ⚠️");
+      return thunkAPI.rejectWithValue(false) as any;
+    }
+  }
+);
+
+
 

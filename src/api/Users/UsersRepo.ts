@@ -15,6 +15,7 @@ interface UserRepo {
   fetchAttemptedExam: (payload: any) => Promise<AxiosResponse>;
 QuestionPaperResult: (payload: any) => Promise<AxiosResponse>;
 updateUserInfo: (payload: any) => Promise<AxiosResponse>;
+createReport: (payload: any) => Promise<AxiosResponse>;
 
 }
 
@@ -38,7 +39,15 @@ export const UserRepo: UserRepo = {
   fetchAttemptedExam(payload) {
     return Repository.post(User.fetchAttemptedExam, payload);
   },
-  updateUserInfo(payload) {
-    return Repository.post(User.updateUserInfo, payload);
+  createReport(payload) {
+    return Repository.post(User.createReport, payload);
   },
+ updateUserInfo(payload) {
+  return Repository.post(User.updateUserInfo, payload, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+}
+
 };

@@ -5,29 +5,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { AppDispatch } from "@/store/store";
 import {
-  getExamType,
-  getExamBeExamTypeId,
-  handleSelectedExamType,
   getCommonExamType,
+  handleSelectedExamType,
 } from "@/api/ExamType";
 import { Button } from "@/components/ui/button";
 
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const userLogin=useSelector((state:any)=>state?.Auth?.loginUser)
-  
+  const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
   const [data, setData] = useState("Practice");
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-const token=localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   const examTypeData =
     useSelector((state: any) => state.examType.examType) || [];
 
-  // ✅ Fetch exam types once
   const fetchData = async () => {
-    const payload:any={}
+    const payload: any = {};
     await dispatch(getCommonExamType(payload));
   };
 
@@ -35,7 +31,6 @@ const token=localStorage.getItem("token")
     fetchData();
   }, []);
 
-  // ✅ Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
@@ -47,29 +42,28 @@ const token=localStorage.getItem("token")
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  // ✅ Handle exam selection
   const handleExamClick = (exam: any) => {
-    let route:any=exam.examType
-    if(exam.examType=="Past Year"){
-      route="pastyear"
+    let route: any = exam.examType;
+    if (exam.examType == "Past Year") {
+      route = "pastyear";
     }
     setData(exam.examType);
     dispatch(handleSelectedExamType(exam));
     setIsDropdownOpen(false);
     router.push(`/Exam/${route}`);
   };
-  const removeLogin=()=>{
-    localStorage.removeItem("token")
-    router.push(`/home`);
-    window.location.reload()
 
-  }
+  const removeLogin = () => {
+    localStorage.removeItem("token");
+    router.push(`/home`);
+    window.location.reload();
+  };
 
   return (
     <div className="container mx-auto ">
       <header className="bg-white md:px-26 border-b border-gray-200 shadow-sm">
         <div className="w-full mx-auto px-4 py-4 flex justify-between items-center">
-          {/* 🧭 Logo Section */}
+          {/* 🧭 Logo */}
           <div
             className="flex items-center space-x-2 cursor-pointer"
             onClick={() => router.push("/home")}
@@ -79,13 +73,11 @@ const token=localStorage.getItem("token")
             </span>
           </div>
 
-          {/* 🌐 Navigation Section (Desktop) */}
+          {/* 🌐 Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            {/* Practice Dropdown */}
             <div className="relative exam-dropdown">
               <button
                 aria-expanded={isDropdownOpen}
-                aria-haspopup="listbox"
                 className="flex items-center gap-1 text-gray-700 hover:text-orange-600 font-medium transition-colors duration-200"
                 onClick={(e) => {
                   e.preventDefault();
@@ -111,15 +103,14 @@ const token=localStorage.getItem("token")
                 </svg>
               </button>
 
-              {/* Dropdown Menu */}
               {isDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-md py-2 z-10 animate-fadeIn">
+                <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-md py-2 z-10">
                   {examTypeData.length > 0 ? (
                     examTypeData.map((exam: any) => (
                       <div
                         key={exam._id}
                         onClick={() => handleExamClick(exam)}
-                        className="px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 cursor-pointer transition-colors duration-150"
+                        className="px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 cursor-pointer"
                       >
                         {exam.examType}
                       </div>
@@ -133,60 +124,69 @@ const token=localStorage.getItem("token")
               )}
             </div>
 
-            {/* Regular Nav Links */}
-            {/* <a
-              href="#"
-              className="text-gray-600 hover:text-orange-600 transition-colors duration-200"
-            >
-              Features
-            </a> */}
             <a
               href="#"
-              onClick={()=>router.push("/PlanandPricing")}
+              onClick={() => router.push("/PlanandPricing")}
               className="text-gray-600 hover:text-orange-600 transition-colors duration-200"
             >
               Pricing / Plans
             </a>
+
             <a
               href="#"
               className="text-gray-600 hover:text-orange-600 transition-colors duration-200"
             >
               Community
             </a>
-          {token?(  <a
-              onClick={()=>router.push("/analytices")}
 
-              href="#"
-              className="text-gray-600 hover:text-orange-600 transition-colors duration-200"
-            >
-              Analytics
-            </a>):(null)}
+            {token && (
+              <a
+                onClick={() => router.push("/analytices")}
+                href="#"
+                className="text-gray-600 hover:text-orange-600 transition-colors duration-200"
+              >
+                Analytics
+              </a>
+            )}
           </nav>
 
           {/* 👤 Auth Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
-             {(userLogin?.role=="Admin" || userLogin?.role=="Expert") && token ?(
-                <Button variant="orange"
-                onClick={() => router.push("/dashboard/home")}
-                className=""
+            {(userLogin?.role === "Admin" || userLogin?.role === "Expert") &&
+              token && (
+                <Button
+                  variant="orange"
+                  onClick={() => router.push("/dashboard/home")}
+                >
+                  Dashboard
+                </Button>
+              )}
+
+            {/* ✅ Added Profile Button */}
+            {token && (
+              <Button
+                variant="outline"
+                onClick={() => router.push("/profile")}
+                className="border-orange-500 text-orange-600 hover:bg-orange-50"
               >
-                Dashboard
+                Profile
               </Button>
-            ):(null)}
-            {token?(<Button onClick={removeLogin} variant="orange" >
-              logout
-            </Button>):(<>
-             {/* <button   onClick={() => router.push("/Auth/register")}    className="cursor-pointer text-gray-600 hover:text-orange-600 font-medium transition-colors duration-200">
-              Register
-            </button> */}
-            <button
-              onClick={() => router.push("/Auth/signin")}
-              className="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full transition-all duration-200 shadow-md"
-            >
-              Login
-            </button></>)}
-           
-           
+            )}
+
+            {token ? (
+              <Button onClick={removeLogin} variant="orange">
+                Logout
+              </Button>
+            ) : (
+              <>
+                <Button
+                  onClick={() => router.push("/Auth/signin")}
+                  className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full shadow-md"
+                >
+                  Login
+                </Button>
+              </>
+            )}
           </div>
 
           {/* 📱 Mobile Menu Button */}
@@ -263,30 +263,42 @@ const token=localStorage.getItem("token")
                 )}
               </div>
 
-              {/* <a href="#" className="text-gray-700 hover:text-orange-600">
-                Features
-              </a> */}
-              <a href="#" className="text-gray-700 hover:text-orange-600">
+              <a
+                href="#"
+                onClick={() => router.push("/PlanandPricing")}
+                className="text-gray-700 hover:text-orange-600"
+              >
                 Pricing / Plans
               </a>
               <a href="#" className="text-gray-700 hover:text-orange-600">
                 Community
               </a>
-              <button className="text-gray-700 hover:text-orange-600">
-                Register
-              </button>
-              <button
-                onClick={() => router.push("/Auth/signin")}
-                className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full shadow-md"
-              >
-                Login
-              </button>
-                 <button
-                onClick={() => router.push("/Auth/signin")}
-                className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full shadow-md"
-              >
-                Dashboard
-              </button>
+
+              {/* ✅ Added Profile in mobile menu */}
+              {token && (
+                <button
+                  onClick={() => router.push("/profile")}
+                  className="text-gray-700 hover:text-orange-600"
+                >
+                  Profile
+                </button>
+              )}
+
+              {token ? (
+                <button
+                  onClick={removeLogin}
+                  className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full shadow-md"
+                >
+                  Logout
+                </button>
+              ) : (
+                <button
+                  onClick={() => router.push("/Auth/signin")}
+                  className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-6 rounded-full shadow-md"
+                >
+                  Login
+                </button>
+              )}
             </div>
           </div>
         )}

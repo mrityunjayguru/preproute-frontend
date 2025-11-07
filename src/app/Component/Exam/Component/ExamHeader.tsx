@@ -12,6 +12,8 @@ import { CutOffIcons } from "@/Common/svgIcon";
 export const ExamHeader = () => {
   const dispatch = useDispatch<AppDispatch>();
   const examdata = useSelector((state: any) => state?.exam?.exam) || [];
+  const loginUser=useSelector((state:any)=>state?.Auth?.loginUser)
+  console.log(loginUser,"loginUserloginUser")
   const selectedExamType = useSelector(
     (state: any) => state.examType?.selectedExamType
   );
@@ -21,7 +23,8 @@ export const ExamHeader = () => {
   // Fetch exam data
   const getData = async () => {
     try {
-      const payload: any = {};
+      const payload: any = {
+      };
       await dispatch(getCommonexam(payload));
     } catch (error) {
       console.error("Failed to fetch exams:", error);
@@ -39,7 +42,8 @@ export const ExamHeader = () => {
     const payload: any = {
       examid: selectedExam?._id,
       examTypeId: selectedExamType?._id,
-      isPublished:true
+      isPublished:true,
+      uid:loginUser?._id
     };
     dispatch(getCommonQuestionBeExamId(payload));
     setSelectedExam(selectedExam);

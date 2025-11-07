@@ -46,6 +46,38 @@ export const handleLogin = createAsyncThunk<boolean, Payload>(
     }
   },
 );
+export const googlelogin = createAsyncThunk<boolean, Payload>(
+  APIName.userLogin,
+  async (payload, thunkAPI) => {
+    try {
+      const response = await AuthRepo.googlelogin(payload);
+      if (response.status === 200) {
+        const userData = response.data.user; // adjust according to your API response
+        thunkAPI.dispatch(setAuth(userData));
+        GetMessage("success", "Login successful");
+        localStorage.setItem("token", userData.token);
+        return true;
+      }
+      // If API returns non-200 but no error thrown
+      GetMessage("warning", "Unexpected response from server");
+      return false;
+
+    } catch (err: any) {
+      console.log(err,"errerrerr")
+      const status = err.response?.status;
+
+      if (status === 401) {
+        GetMessage("error", err.response?.data?.message || "Unauthorized");
+      } else {
+        GetMessage("warning", "Something went wrong");
+      }
+
+      return false;
+    }
+  },
+);
+
+
 
 
 

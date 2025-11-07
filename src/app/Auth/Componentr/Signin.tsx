@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { handleLogin } from "@/api/Auth/SchoolAuth";
+import { googlelogin, handleLogin } from "@/api/Auth/SchoolAuth";
 import { GoogleLogin } from "@react-oauth/google";
 import { useRouter } from "next/navigation";
 
@@ -28,10 +28,13 @@ const Signin = () => {
     // credentialResponse.credential contains the JWT token from Google
     const token:any = credentialResponse?.credential;
     if (token) {
-      await dispatch(handleLogin({ token }));
+      const payload:any={ token:token }
+    let responce:any=  await dispatch(googlelogin(payload));
+        if(responce.payload==true){
+    router.push(`/home`);
+    }
     }
   };
-
   const handleGoogleError = () => {
     console.log("Google login failed");
   };

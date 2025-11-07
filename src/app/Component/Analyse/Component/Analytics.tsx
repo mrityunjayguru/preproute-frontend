@@ -29,7 +29,6 @@ const payload:any={
    await dispatch(QuestionPaperResult(payload))
     console.log("Show analysis for:", examId);
       router.push("/Exam/result");
-
     // You can navigate or open modal here
   };
 

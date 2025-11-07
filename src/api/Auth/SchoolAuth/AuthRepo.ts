@@ -12,7 +12,7 @@ subjectData: (payload: Payload) => Promise<AxiosResponse>;
 yearMaster: (payload: Payload) => Promise<AxiosResponse>;
 userRegister: (payload: Payload) => Promise<AxiosResponse>;
 AdminLogin: (payload: Payload) => Promise<AxiosResponse>;
-
+googlelogin: (payload: Payload) => Promise<AxiosResponse>;
 }
 
 export const AuthRepo: AuthRepo = {
@@ -30,5 +30,8 @@ export const AuthRepo: AuthRepo = {
   },
     AdminLogin(payload) {
     return Repository.post(APIName.AdminLogin,payload);
+  },
+  googlelogin(payload) {
+    return Repository.post(APIName.googlelogin,payload);
   },
 };
