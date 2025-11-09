@@ -26,12 +26,11 @@ export const HomePage = () => {
     dispatch(resetQuestion(payload))
         dispatch(handleSelectedExamType(payload));
         dispatch(handleSelectedExamType(payload));
-    
-
     },[])
-    if(userLogin?.isProfile==false && userLogin?.role=="User"){
-    router.push(`/Auth/Profile`);
-    }
+if ((userLogin?.isProfile === false || userLogin?.isProfile === undefined) && userLogin?.role === "User") {
+  router.push("/Auth/Profile");
+}
+
   return (
    
     <div className="min-h-screen bg-white font-sans text-gray-900">

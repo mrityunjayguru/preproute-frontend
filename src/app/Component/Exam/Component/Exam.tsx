@@ -40,7 +40,7 @@ const MockExamCard = ({ exam }: { exam: any }) => {
     if (!token) {
       return router.push("/home");
     }
-    // if(exam.hasGivenExam==false){
+    if(exam.hasGivenExam==false){
   const payload: any = {
       examTypeId: data?.examTypeId,
       questionPaperId: data?._id,
@@ -49,15 +49,15 @@ const MockExamCard = ({ exam }: { exam: any }) => {
     };
     dispatch(getUserQuestionData(payload));
     router.push("userExam");
-    // }
-    // else{
-    //   const payload:any={
-    //       examId:data._id
-    //   }
-    //      await dispatch(QuestionPaperResult(payload))
-    //       // console.log("Show analysis for:", examId);
-    //         router.push("/Exam/result");
-    // }
+    }
+    else{
+      const payload:any={
+          examId:data._id
+      }
+         await dispatch(QuestionPaperResult(payload))
+          // console.log("Show analysis for:", examId);
+            router.push("/Exam/result");
+    }
   
   };
 

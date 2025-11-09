@@ -233,7 +233,7 @@ const [showPopup, setShowPopup] = useState(false);
       console.error("Failed to save user answer:", err);
     }
     setQuestionStartTime(Date.now());
-    setMcqSelected("");
+    // setMcqSelected("");
     if (currentQuestionIndex + 1 < totalNoOfQuestions) {
       setCurrentQuestionIndex((p) => p + 1);
       fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);

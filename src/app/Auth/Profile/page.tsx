@@ -16,7 +16,6 @@ export default function Page() {
   const router = useRouter();
 
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
-console.log(userLogin,"userLoginuserLogin")
   // ✅ Central form data state
   const [formData, setFormData] = useState({
     stream: "",
@@ -41,6 +40,7 @@ console.log(userLogin,"userLoginuserLogin")
     const payload:any = {
       _id: userLogin._id,
       profile: formData,
+      isProfile:true
     };
 
     try {
