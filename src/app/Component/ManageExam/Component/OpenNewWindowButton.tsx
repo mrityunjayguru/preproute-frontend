@@ -3,6 +3,8 @@ import React from "react";
 
 const OpenExamPopup = ({ name }: { name: string }) => {
   const handleButtonClick = () => {
+     const token = localStorage.getItem("token");
+    // if (!token) return router.push("/home");
     const url = "/Exam/InstructionPaeg"; // your exam page
 
     // open fullscreen popup
