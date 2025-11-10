@@ -13,7 +13,7 @@ import {
   handleSetUpdateUser,
   handleUpdateUserData,
 } from "@/api/Users";
-import { decrypt } from "@/Utils/dssd";
+import { decrypt } from "@/Utils/Crypto";
 
 interface IUserForm {
   name: string;
