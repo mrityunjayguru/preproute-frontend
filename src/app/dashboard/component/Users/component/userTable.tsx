@@ -35,6 +35,8 @@ function userTable() {
         const filteredData = data?.filter((item: any) =>
     item.username?.toLowerCase().includes(search.toLowerCase())
   );
+    const [userpassword,setuserpassword]=useState<any>("")
+
   const handleEdit=async(val:any)=>{
       //  router.push("users/create");
       await dispatch(handleUpdateUserData(val))
