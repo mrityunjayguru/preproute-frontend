@@ -98,7 +98,7 @@ const Exam: React.FC = () => {
       setSelectedSubtopic(q.subtopicId || "");
       setNumericAnswer(q.numericAnswer || 0);
       setQuestionPessage(q.questionPessage || "Normal");
-setPassage(q.passage || "");
+setPassage(q?.passage || "");
       if (q.answerType === "MCQ" && Array.isArray(q.options)) {
         setOptions(
           q.options.map((opt: any, i: number) => ({
@@ -388,7 +388,13 @@ setPassage(q.passage || "");
   >
     {questionPessage === "Pass"?(
       <div>
-        <Input type="text" placeholder="Enter Text" onChange={(e)=>setPassage(e.target.value)} />
+       <textarea
+  placeholder="Enter Text"
+  value={passage}
+  onChange={(e) => setPassage(e.target.value)}
+  className="w-full p-2 border rounded-md"
+/>
+
       </div>
     ):(null)}
     {/* Answer Type */}
