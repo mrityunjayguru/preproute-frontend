@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -17,6 +16,7 @@ import { MCQOptions } from "./MCQOptions";
 import { createReport, updaquesPaperTime } from "@/api/Users";
 import ExamHeader from "./ExamHeader";
 import Popup from "./Report";
+import InstructionPaeg from "./InstructionPaeg";
 
 interface SectionDetail {
   _id: string;
@@ -392,7 +392,6 @@ const submitReport=async(val:any)=>{
 
   return (
     <>
-
       <Popup
         title="Submit Report"
         isOpen={showPopup}

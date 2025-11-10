@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import React from "react";
 
-const OpenExamPopup = ({ name }: { name: string }) => {
+const UserExamPop = () => {
   const handleButtonClick = () => {
-    const url = "/Exam/InstructionPaeg"; // your exam page
+    const url = "/Exam/userExam"; // your exam page
 
     // open fullscreen popup
     const features = `
@@ -58,8 +58,8 @@ const OpenExamPopup = ({ name }: { name: string }) => {
 
         // 🚫 Constantly enforce the current URL
         setInterval(() => {
-          if (popup.location.pathname !== "/Exam/InstructionPaeg") {
-            popup.location.href = "/Exam/InstructionPaeg";
+          if (popup.location.pathname !== "/Exam/userExam") {
+            popup.location.href = "/Exam/userExam";
           }
         }, 1000);
 
@@ -74,9 +74,9 @@ const OpenExamPopup = ({ name }: { name: string }) => {
 
   return (
     <button className="cursor-pointer" onClick={handleButtonClick}>
-      Start {name}
+      Start Mock
     </button>
   );
 };
 
-export default OpenExamPopup;
+export default UserExamPop;

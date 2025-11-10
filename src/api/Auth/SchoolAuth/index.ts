@@ -195,3 +195,30 @@ export const YearMaster = createAsyncThunk<boolean, Payload>(
 
 
 
+
+
+export const handleLogout = createAsyncThunk<boolean, Payload>(
+  APIName.userLogin,
+  async (payload, thunkAPI) => {
+    try {
+        thunkAPI.dispatch(setAuth(payload));
+        return true;
+      
+      // If API returns non-200 but no error thrown
+      GetMessage("warning", "Unexpected response from server");
+      return false;
+
+    } catch (err: any) {
+      console.log(err,"errerrerr")
+      const status = err.response?.status;
+
+      if (status === 401) {
+        GetMessage("error", err.response?.data?.message || "Unauthorized");
+      } else {
+        GetMessage("warning", "Something went wrong");
+      }
+
+      return false;
+    }
+  },
+);

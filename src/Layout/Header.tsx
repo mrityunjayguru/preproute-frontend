@@ -9,6 +9,7 @@ import {
   handleSelectedExamType,
 } from "@/api/ExamType";
 import { Button } from "@/components/ui/button";
+import { handleLogout } from "@/api/Auth/SchoolAuth";
 
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -53,7 +54,9 @@ export const Header = () => {
     router.push(`/Exam/${route}`);
   };
 
-  const removeLogin = () => {
+  const removeLogin =async () => {
+    const payload:any=null
+    await  dispatch(handleLogout(payload))
     localStorage.removeItem("token");
     router.push(`/home`);
     window.location.reload();

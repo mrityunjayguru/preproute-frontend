@@ -300,7 +300,7 @@ console.log(section,"sectionsection")
     return question.answerType === "Numeric" ? (
       <NumericalKeypad value={numericalValue} onKeyPress={handleKeyPress} />
     ) : (
-      <MCQOptions options={question?.options || []} selected={mcqSelected} setSelected={setMcqSelected} />
+      <MCQOptions options={question?.options || []} selected={mcqSelected} setSelected={setMcqSelected} question={question} />
     );
   }, [question, numericalValue, mcqSelected, handleKeyPress]);
 

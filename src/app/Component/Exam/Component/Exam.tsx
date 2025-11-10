@@ -35,75 +35,110 @@ const MockExamCard = ({ exam }: { exam: any }) => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const examById = useSelector((state: any) => state?.exam?.examById) || [];
-  const handleExam = async(data: any) => {
+  const userlogin = useSelector((state: any) => state?.Auth.loginUser);
+  const hasPurchase = userlogin?.PurchaseDetail?.length > 0;
+  const isMock1 = exam?.questionPapername === "mock 1" || "mocks 1";
+  const isAttempted = exam?.hasGivenExam === true;
+
+  // ✅ Only Mock 1 is free; all others require purchase
+  const isUnlocked = isMock1 || hasPurchase;
+
+  const handleExam = async (data: any) => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      return router.push("/home");
+    if (!token) return router.push("/home");
+
+    if (!isAttempted) {
+      const payload: any = {
+        examTypeId: data?.examTypeId,
+        questionPaperId: data?._id,
+        examid: data?.examid,
+        questionPapername: data?.questionPapername,
+      };
+      dispatch(getUserQuestionData(payload));
+      // router.push("/Exam/userExam");
+    } else {
+      const payload: any = { examId: data._id };
+      await dispatch(QuestionPaperResult(payload));
+      router.push("/Exam/result");
     }
-    if(exam.hasGivenExam==false){
-  const payload: any = {
-      examTypeId: data?.examTypeId,
-      questionPaperId: data?._id,
-      examid: data?.examid,
-      questionPapername: data?.questionPapername,
-    };
-    dispatch(getUserQuestionData(payload));
-    router.push("userExam");
-    }
-    else{
-      const payload:any={
-          examId:data._id
-      }
-         await dispatch(QuestionPaperResult(payload))
-          // console.log("Show analysis for:", examId);
-            router.push("/Exam/result");
-    }
-  
   };
 
   return (
-    <Card className="flex flex-col justify-between p-5 bg-[#F7F7F5] rounded-xl  shadow-none">
+    <Card
+      className={`flex flex-col justify-between p-5 rounded-xl transition-all duration-300 ${
+        isUnlocked
+          ? "bg-[#F7F7F5] border border-green-300 hover:shadow-md"
+          : "bg-gray-100 border border-gray-300"
+      }`}
+    >
+      {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex flex-col">
-          <h1 className="text-xs md:text-sm font-medium uppercase tracking-wider text-[#000]">
+          <h1 className="text-xs md:text-sm font-medium uppercase tracking-wider text-gray-700">
             {examById[0]?.examType?.examType || "Exam"}
           </h1>
+
           <h3
             className={`text-base md:text-lg font-bold mt-1 ${
-              exam.isLocked ? "text-gray-400" : "text-gray-800"
+              isUnlocked ? "text-gray-900" : "text-gray-500"
             }`}
           >
             {exam.questionPapername || "Untitled Exam"}
           </h3>
-          {exam.status === "Free" && (
-            <span className="text-[10px] md:text-xs font-semibold mt-1 inline-block px-2 py-0.5 rounded-full bg-green-100 text-green-700 w-fit">
-              Free
-            </span>
-          )}
+
+          {/* Status message */}
+          <p className="text-sm text-gray-600 mt-1">
+            {isMock1
+              ? "Free Mock Test (Always Unlocked)"
+              : isUnlocked
+              ? "Unlocked — You can attempt this exam"
+              : "Locked — Purchase required to unlock"}
+          </p>
         </div>
-        {exam.isLocked && <LockIcon className="mt-1" />}
+
+        {/* 🔒 Lock icon for locked exams */}
+        {!isUnlocked && !isAttempted && <LockIcon className="mt-1" />}
       </div>
-      <p
-        className={`text-xs md:text-sm mt-auto ${
-          exam.isLocked ? "text-gray-400" : "text-gray-500"
-        }`}
-      >
-        {exam.description || "Unattempted"}
+
+      {/* Description */}
+      <p className="text-xs md:text-sm text-gray-600">
+        {exam.description || "Unattempted Exam"}
       </p>
-      {exam.hasGivenExam}
-      {!exam.isLocked && exam.hasGivenExam==false ? (
-        <button
-          className="bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium mt-4 py-2 px-4 rounded-md transition-all duration-200 text-sm md:text-base"
-          onClick={() => handleExam(exam)}
-        >
-          {/* Start Exam */}
-          Start {exam.questionPapername}
-          {/* <OpenExamPopup/> */}
-        </button>
-      ):(<Button variant="orange"  onClick={() => handleExam(exam)}>Analysis</Button>)}
+
+      {/* Footer Button */}
+      <div className="mt-4">
+        {isAttempted ? (
+          // 📊 Go to analytics page
+          <Button
+            variant="outline"
+            onClick={() => handleExam(exam)}
+            className="w-full border-blue-500 text-blue-600 hover:bg-blue-50 font-medium"
+          >
+            View Analytics
+          </Button>
+        ) : isUnlocked ? (
+          // 🚀 Start exam
+          <Button
+            className="w-full bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
+            onClick={() => handleExam(exam)}
+          >
+            <OpenExamPopup name={exam.questionPapername} />
+          </Button>
+        ) : (
+          // 🔒 Locked state
+          <Button
+            disabled
+            className="w-full bg-gray-300 text-gray-700 cursor-not-allowed"
+          >
+            Locked
+          </Button>
+        )}
+      </div>
     </Card>
   );
 };
+
+
 
 // 🧩 Main User Exam Page
 const UserExam = () => {

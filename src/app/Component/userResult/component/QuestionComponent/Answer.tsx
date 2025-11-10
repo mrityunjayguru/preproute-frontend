@@ -52,7 +52,7 @@ const Answer: React.FC<{ question: Question }> = ({ question }) => {
     <div className="p-4 bg-white rounded-lg shadow-md">
       {/* Question */}
       <div className="text-gray-800 text-base mb-4">
-        {renderPreview(question.questionText)}
+        {/* {renderPreview(question.questionText)} */}
       </div>
 
       {/* Answer Status */}
@@ -76,7 +76,7 @@ const Answer: React.FC<{ question: Question }> = ({ question }) => {
         </div>
       ) : (
         <>
-          <p className="text-gray-500 italic mb-4">Not Attempted</p>
+          {/* <p className="text-gray-500 italic mb-4">Not Attempted</p> */}
           <strong>Correct Answer:</strong>{" "}
           {correctOption
             ? renderPreview(correctOption.text)

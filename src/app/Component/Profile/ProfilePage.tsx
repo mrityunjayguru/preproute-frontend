@@ -64,7 +64,7 @@ export default function ProfilePage() {
               onClick={() => fileInputRef.current?.click()}
             >
              <img
-  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user.image}`}
+  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user?.image}`}
   alt="Profile"
   className="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover"
 />
