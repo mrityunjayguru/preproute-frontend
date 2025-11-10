@@ -169,7 +169,7 @@ export const Header = () => {
             {token && (
               <Button
                 variant="outline"
-                onClick={() => router.push("/profile")}
+                onClick={() => router.push("/Profile")}
                 className="border-orange-500 text-orange-600 hover:bg-orange-50"
               >
                 Profile
