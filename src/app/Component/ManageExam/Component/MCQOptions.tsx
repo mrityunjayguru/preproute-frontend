@@ -34,7 +34,7 @@ export const MCQOptions: React.FC<MCQOptionsProps> = ({
     <div className="space-y-3">
       {options.map((opt, idx) => {
         const isCorrect = !!opt.isCorrect;
-        const isUserSelected = userAnswer === opt._id;
+        const isUserSelected = userAnswer == opt._id;
 
         // 🎨 Background Logic
         let bgClass = "border-gray-200 hover:bg-gray-50";

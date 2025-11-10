@@ -55,7 +55,7 @@ const MockExamCard = ({ exam }: { exam: any }) => {
         questionPapername: data?.questionPapername,
       };
       dispatch(getUserQuestionData(payload));
-      // router.push("/Exam/userExam");
+      router.push("/Exam/userExam");
     } else {
       const payload: any = { examId: data._id };
       await dispatch(QuestionPaperResult(payload));
@@ -122,7 +122,8 @@ const MockExamCard = ({ exam }: { exam: any }) => {
             className="w-full bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
             onClick={() => handleExam(exam)}
           >
-            <OpenExamPopup name={exam.questionPapername} />
+            Start
+            {/* <OpenExamPopup name={exam.questionPapername} /> */}
           </Button>
         ) : (
           // 🔒 Locked state

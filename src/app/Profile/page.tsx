@@ -2,7 +2,7 @@ import React from 'react'
 import Profile from '../Auth/Profile/page'
 import ProfilePage from '../Component/Profile/ProfilePage'
 
-function page() {
+function pageProfile() {
   return (
     <div>
       <ProfilePage/>
@@ -10,4 +10,4 @@ function page() {
   )
 }
 
-export default page
+export default pageProfile
