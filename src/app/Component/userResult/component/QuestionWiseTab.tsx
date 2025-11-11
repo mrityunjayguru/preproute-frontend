@@ -59,7 +59,7 @@ export default function QuestionWiseTab({data}: QuestionWiseTabProps) {
   const examSections: Section[] = examResult?.examdetail.sections || [];
   const currentStatus = sectionQuestionStatus[selectedSection?.sectionId || "no-section"] || {};
 const [questionStartTime, setQuestionStartTime] = useState<number | null>(null);
-
+console.log(examResult,"examResultexamResult")
 const getISTDate=() =>{
   const date = new Date();
   const utcOffsetInMinutes = 5 * 60 + 30; // IST is UTC + 5:30
@@ -69,7 +69,6 @@ const getISTDate=() =>{
   useEffect(() => {
    
     const examInfo = examResult;
-console.log(examResult,"examResultexamResultexamResultexamResult")
     setIsSection(examInfo?.examdetail?.isSection);
     setSwitchable(examInfo?.examdetail?.switchable);
     // Calculate exam duration
@@ -280,7 +279,6 @@ useEffect(() => {
 //   }
 // };
 
-
 const handleSection = async (section: Section) => {
 
   const prevSectionId = selectedSection?.sectionId;
@@ -322,7 +320,7 @@ const handleSection = async (section: Section) => {
         <QuestionWiswView
           question={question}
           examName={examResult?.examdetail?.examname}
-          paperName={examData[0]?.questionPaper}
+          paperName={examResult?.questionpaper?.questionPapername}
           currentQuestionIndex={currentQuestionIndex}
           CurrentInput={CurrentInput}
         />
