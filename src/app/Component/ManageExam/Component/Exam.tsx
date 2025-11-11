@@ -63,7 +63,6 @@ const [showPopup, setShowPopup] = useState(false);
   const [questionStartTime, setQuestionStartTime] = useState<number | null>(
     null
   )
-console.log(examData,"examDataexamDataexamData")
 
   const getISTDate = () => {
     const date = new Date();
@@ -191,10 +190,13 @@ console.log(examData,"examDataexamDataexamData")
     if (!question || !mcqSelected) {
       updateStatus("visited");
       if (currentQuestionIndex + 1 < totalNoOfQuestions) {
+         console.log("true")
+       
         setCurrentQuestionIndex((p) => p + 1);
         fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
       } else if (isSection && currentSectionIndex + 1 < examSections.length) {
         const nextSection: any = examSections[currentSectionIndex + 1];
+         console.log("true")
         // console.log(nextSection,"nextSectionnextSection")
         if(switchable==false){
         setTimeLeft(nextSection?.duration * 60);
@@ -210,9 +212,9 @@ console.log(examData,"examDataexamDataexamData")
         );
       }
     setloder(false)
-
       return;
     }
+
     const endTime = Date.now();
     const timeTaken = questionStartTime
       ? Math.floor((endTime - questionStartTime) / 1000)
@@ -229,11 +231,11 @@ console.log(examData,"examDataexamDataexamData")
     try {
       await dispatch(createUserExam(payload));
       updateStatus("answered");
+
     } catch (err) {
       console.error("Failed to save user answer:", err);
     }
     setQuestionStartTime(Date.now());
-    setMcqSelected("");
     if (currentQuestionIndex + 1 < totalNoOfQuestions) {
       setCurrentQuestionIndex((p) => p + 1);
       fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
@@ -300,9 +302,11 @@ console.log(examData,"examDataexamDataexamData")
     // updateStatus("visited");
   };
   useEffect(()=>{
+    // console.log(question,"questionquestion")
 if(question?.userAttempted){
     updateStatus("answered");
 }else{
+    setMcqSelected("")
     updateStatus("visited");
 }
   },[question])
