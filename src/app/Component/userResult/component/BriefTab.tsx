@@ -23,19 +23,19 @@ const BriefTab = ({ data }: BriefTabProps) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="border rounded-xl p-4 flex flex-col items-center text-center">
           <div className="text-yellow-500 text-3xl mb-2">👍</div>
-          <p className="text-3xl font-semibold">{data.totalMarks || 98}</p>
+          <p className="text-3xl font-semibold">{data.totalMarks  || 0}</p>
           <p className="text-gray-600 text-sm">SCORE</p>
         </div>
 
         <div className="border rounded-xl p-4 flex flex-col items-center text-center">
           <div className="text-green-400 text-3xl mb-2">⭐</div>
-          <p className="text-3xl font-semibold">{data.accuracy || "81%"}</p>
+          <p className="text-3xl font-semibold">{data.accuracy || "0"}</p>
           <p className="text-gray-600 text-sm">ACCURACY</p>
         </div>
 
         <div className="border rounded-xl p-4 flex flex-col items-center text-center">
           <div className="text-green-500 text-3xl mb-2">🏆</div>
-          <p className="text-3xl font-semibold">{data.percentage || "20%"}</p>
+          <p className="text-3xl font-semibold">{data.percentage || "0"}</p>
           <p className="text-gray-600 text-sm">PERCENTAGE</p>
         </div>
 
@@ -51,7 +51,7 @@ const BriefTab = ({ data }: BriefTabProps) => {
         <div>
           <p className="font-semibold">Attempted</p>
           <p>
-            {data.attempted} out of {data.totalQuestions || 120}
+            {data.attempted} out of {data.totalQuestions || 0}
           </p>
         </div>
 
