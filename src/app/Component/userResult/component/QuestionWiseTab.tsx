@@ -59,7 +59,6 @@ export default function QuestionWiseTab({data}: QuestionWiseTabProps) {
   const examSections: Section[] = examResult?.examdetail.sections || [];
   const currentStatus = sectionQuestionStatus[selectedSection?.sectionId || "no-section"] || {};
 const [questionStartTime, setQuestionStartTime] = useState<number | null>(null);
-console.log(examResult,"examResultexamResult")
 const getISTDate=() =>{
   const date = new Date();
   const utcOffsetInMinutes = 5 * 60 + 30; // IST is UTC + 5:30
@@ -67,7 +66,6 @@ const getISTDate=() =>{
   return istDate;
 }
   useEffect(() => {
-   
     const examInfo = examResult;
     setIsSection(examInfo?.examdetail?.isSection);
     setSwitchable(examInfo?.examdetail?.switchable);
@@ -80,11 +78,10 @@ const getISTDate=() =>{
 
     // Load first question
     if (examInfo?.examdetail.isSection ) {
-      const firstSection = examSections[0];
+      const firstSection:any = examSections[0];
       setSelectedSection(firstSection);
-
       setTotalNoOfQuestions(firstSection.noOfQuestions);
-      fetchQuestion(1, firstSection.sectionId);
+      fetchQuestion(1, firstSection._id);
       const payload:any={
         questionPaperId: examResult?.questionPaperID,
         sectionWise:[{
@@ -92,7 +89,6 @@ const getISTDate=() =>{
           startTime:getISTDate()
         }]
       }
-      
       dispatch(updaquesPaperTime(payload))
     } else {
       setTotalNoOfQuestions(Number(examInfo.noOfQuestions) || 0);
@@ -124,7 +120,7 @@ useEffect(() => {
   // ---------------- Handlers ----------------
   const fetchQuestion = async (questionNo: number, sectionId?: string) => {
     const payload: any = { questionNo, questionPaperId: examResult?.questionPaperID };
-    if (isSection) payload.section = sectionId;
+     payload.section = sectionId;
     await dispatch(userQuestiongetQuestionById(payload));
   };
 

@@ -22,7 +22,6 @@ const QuestionWiseHeader: React.FC<Props> = ({
   formatTime,
   data,
 }) => {
-    console.log(examSections,"datadatadata")
   return (
     <div className="flex flex-wrap items-center justify-between bg-white p-3 border-b shadow-sm">
       {/* ---- Section Tabs ---- */}
