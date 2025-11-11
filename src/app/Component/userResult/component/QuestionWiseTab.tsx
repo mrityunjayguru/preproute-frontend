@@ -86,7 +86,7 @@ const getISTDate=() =>{
       setTotalNoOfQuestions(firstSection.noOfQuestions);
       fetchQuestion(1, firstSection.sectionId);
       const payload:any={
-        questionPaperId: examResult?.questionPaperId,
+        questionPaperId: examResult?.questionPaperID,
         sectionWise:[{
           sectionId:firstSection.sectionId,
           startTime:getISTDate()
@@ -123,7 +123,7 @@ useEffect(() => {
 
   // ---------------- Handlers ----------------
   const fetchQuestion = async (questionNo: number, sectionId?: string) => {
-    const payload: any = { questionNo, questionPaperId: examResult?.questionPaperId };
+    const payload: any = { questionNo, questionPaperId: examResult?.questionPaperID };
     if (isSection) payload.section = sectionId;
     await dispatch(userQuestiongetQuestionById(payload));
   };
