@@ -304,7 +304,7 @@ const handleSection = async (section: Section) => {
     );
   }, [question, numericalValue, mcqSelected, handleKeyPress]);
 
-  if (!examData?.length) return <div className="p-8 text-center">No exam data found.</div>;
+  // if (!examData?.length) return <div className="p-8 text-center">No exam data found.</div>;
 
   return (
     <div className="flex flex-col min-h-screen sm:px-0  ">
