@@ -69,7 +69,7 @@ const getISTDate=() =>{
   useEffect(() => {
    
     const examInfo = examResult;
-console.log(examInfo,"examInfoexamInfo")
+console.log(examResult,"examResultexamResultexamResultexamResult")
     setIsSection(examInfo?.examdetail?.isSection);
     setSwitchable(examInfo?.examdetail?.switchable);
     // Calculate exam duration
@@ -87,7 +87,7 @@ console.log(examInfo,"examInfoexamInfo")
       setTotalNoOfQuestions(firstSection.noOfQuestions);
       fetchQuestion(1, firstSection.sectionId);
       const payload:any={
-        questionPaperId: examData?.[0]?._id,
+        questionPaperId: examResult?.questionPaperId,
         sectionWise:[{
           sectionId:firstSection.sectionId,
           startTime:getISTDate()
@@ -124,7 +124,7 @@ useEffect(() => {
 
   // ---------------- Handlers ----------------
   const fetchQuestion = async (questionNo: number, sectionId?: string) => {
-    const payload: any = { questionNo, questionPaperId: examData?.[0]?._id };
+    const payload: any = { questionNo, questionPaperId: examResult?.questionPaperId };
     if (isSection) payload.section = sectionId;
     await dispatch(userQuestiongetQuestionById(payload));
   };
@@ -280,11 +280,11 @@ useEffect(() => {
 //   }
 // };
 
+
 const handleSection = async (section: Section) => {
 
   const prevSectionId = selectedSection?.sectionId;
   const newSectionId = section.sectionId;
-console.log(section,"sectionsection")
   // ✅ Call backend API for start/end time tracking
   // await updateSectionTime(prevSectionId, newSectionId);
 
@@ -321,7 +321,7 @@ console.log(section,"sectionsection")
       <div className="flex flex-col lg:flex-row flex-1">
         <QuestionWiswView
           question={question}
-          examName={examData[0]?.exam?.examname}
+          examName={examResult?.examdetail?.examname}
           paperName={examData[0]?.questionPaper}
           currentQuestionIndex={currentQuestionIndex}
           CurrentInput={CurrentInput}

@@ -63,6 +63,7 @@ const [showPopup, setShowPopup] = useState(false);
   const [questionStartTime, setQuestionStartTime] = useState<number | null>(
     null
   )
+console.log(examData,"examDataexamDataexamData")
 
   const getISTDate = () => {
     const date = new Date();
@@ -184,7 +185,6 @@ const [showPopup, setShowPopup] = useState(false);
       [sectionKey]: { ...prev[sectionKey], [currentQuestionIndex]: status },
     }));
   };
-
   const handleNextQuestion = async () => {
     // alert(mcqSelected)
     setloder(true)
@@ -233,7 +233,7 @@ const [showPopup, setShowPopup] = useState(false);
       console.error("Failed to save user answer:", err);
     }
     setQuestionStartTime(Date.now());
-    // setMcqSelected("");
+    setMcqSelected("");
     if (currentQuestionIndex + 1 < totalNoOfQuestions) {
       setCurrentQuestionIndex((p) => p + 1);
       fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);

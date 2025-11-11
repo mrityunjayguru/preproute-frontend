@@ -57,7 +57,7 @@ const MockExamCard = ({ exam }: { exam: any }) => {
       dispatch(getUserQuestionData(payload));
       router.push("/Exam/userExam");
     } else {
-      const payload: any = { examId: data._id };
+      const payload: any = { questionPaperID: data._id };
       await dispatch(QuestionPaperResult(payload));
       router.push("/Exam/result");
     }
