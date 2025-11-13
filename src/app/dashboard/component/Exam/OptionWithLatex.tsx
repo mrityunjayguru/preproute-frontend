@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
-import { BlockMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { handleUploadImage } from "@/api/QuestionPaper";
+import RenderPreview from "@/Common/CommonLatex";
 
 interface OptionProps {
   choice: string;
@@ -13,7 +13,7 @@ interface OptionProps {
   isCorrect: boolean;
   onChange: (val: string) => void;
   onCheckToggle: () => void;
-  QuestionType:any
+  QuestionType: any;
 }
 
 export default function OptionWithLatex({
@@ -22,12 +22,10 @@ export default function OptionWithLatex({
   isCorrect,
   onChange,
   onCheckToggle,
-  QuestionType
+  QuestionType,
 }: OptionProps) {
   const dispatch = useDispatch<AppDispatch>();
   const editorRef = useRef<HTMLDivElement | null>(null);
-  const [latexInput, setLatexInput] = useState("");
-  const [showLatexModal, setShowLatexModal] = useState(false);
   const [resizing, setResizing] = useState(false);
   const [resizeData, setResizeData] = useState<any>(null);
 
@@ -36,7 +34,6 @@ export default function OptionWithLatex({
     if (editorRef.current && editorRef.current.innerHTML !== value) {
       editorRef.current.innerHTML = value || "";
       wrapAllImagesWithTools();
-      renderAllLatex();
     }
   }, [value]);
 
@@ -114,7 +111,6 @@ export default function OptionWithLatex({
       borderRadius: "2px",
     });
 
-    // Resize logic
     resizeHandle.addEventListener("mousedown", (e) => {
       e.preventDefault();
       setResizing(true);
@@ -180,47 +176,6 @@ export default function OptionWithLatex({
     };
   }, [resizing, resizeData]);
 
-  // ---------------------- 🧮 Handle LaTeX ----------------------
-  const insertLatex = (latex: string) => {
-    const html = `<span class="latex-span" data-tex="${latex}">$$${latex}$$</span>`;
-    insertHTMLAtCursor(html);
-    setShowLatexModal(false);
-    setLatexInput("");
-    updateContent();
-  };
-
-  const insertHTMLAtCursor = (html: string) => {
-    editorRef.current?.focus();
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
-    const range = selection.getRangeAt(0);
-    range.deleteContents();
-    const temp = document.createElement("div");
-    temp.innerHTML = html;
-    const frag = document.createDocumentFragment();
-    let node;
-    while ((node = temp.firstChild)) frag.appendChild(node);
-    range.insertNode(frag);
-    range.collapse(false);
-    selection.removeAllRanges();
-    selection.addRange(range);
-  };
-
-  const renderAllLatex = () => {
-    const spans = editorRef.current?.querySelectorAll(".latex-span");
-    spans?.forEach((span) => {
-      const tex = (span as HTMLElement).dataset.tex;
-      if (!tex) return;
-      try {
-        (span as HTMLElement).innerHTML = window.katex.renderToString(tex, {
-          throwOnError: false,
-        });
-      } catch (err) {
-        console.warn("Latex render error:", err);
-      }
-    });
-  };
-
   // ---------------------- 🖊️ Remove Image Event ----------------------
   useEffect(() => {
     const editor = editorRef.current;
@@ -239,7 +194,7 @@ export default function OptionWithLatex({
 
   return (
     <div className="border p-3 rounded bg-gray-50 space-y-3">
-      {/* Option Editable Area */}
+      {/* Editable Option Input */}
       <div
         ref={editorRef}
         contentEditable
@@ -250,16 +205,12 @@ export default function OptionWithLatex({
 
       {/* Toolbar */}
       <div className="flex items-center gap-3 text-sm">
-        <button onClick={handleImageUpload} className="text-blue-600 hover:underline">
+        <button
+          onClick={handleImageUpload}
+          className="text-blue-600 hover:underline"
+        >
           🖼️ Add Image
         </button>
-
-        {/* <button
-          onClick={() => setShowLatexModal(true)}
-          className="text-purple-600 hover:underline"
-        >
-          ∑ Add Formula
-        </button> */}
 
         <button
           onClick={onCheckToggle}
@@ -273,41 +224,11 @@ export default function OptionWithLatex({
         </button>
       </div>
 
-      {/* LaTeX Modal */}
-      {showLatexModal && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center"
-          onClick={() => setShowLatexModal(false)}
-        >
-          <div
-            className="bg-white p-5 rounded shadow-md w-[400px]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h4 className="font-semibold mb-2">Insert LaTeX Formula</h4>
-            <textarea
-              rows={3}
-              value={latexInput}
-              onChange={(e) => setLatexInput(e.target.value)}
-              placeholder="Type LaTeX formula"
-              className="w-full border rounded p-2 mb-3"
-            />
-            <div className="mb-3">
-              <strong>Preview:</strong>
-              {latexInput ? (
-                <BlockMath math={latexInput} />
-              ) : (
-                <p className="text-gray-400">Type to see preview...</p>
-              )}
-            </div>
-            <button
-              onClick={() => insertLatex(latexInput)}
-              className="bg-blue-500 text-white px-4 py-1 rounded"
-            >
-              Insert
-            </button>
-          </div>
-        </div>
-      )}
+      {/* ✅ Live Rendered Preview */}
+      <div className="bg-white p-3 rounded border">
+        <h4 className="font-semibold mb-2 text-gray-700">Preview:</h4>
+        <RenderPreview content={value} />
+      </div>
     </div>
   );
 }

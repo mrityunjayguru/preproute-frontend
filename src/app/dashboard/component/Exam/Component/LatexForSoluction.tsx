@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { handleUploadImage } from "@/api/QuestionPaper";
 import CanvaEditor from "./AAAA";
+import RenderPreview from "@/Common/CommonLatex";
 
 interface QuestionEditorProps {
   value?: string;
@@ -367,22 +368,7 @@ export default function LatexForSoluction({ onChange, value }: QuestionEditorPro
   };
 
   // ---------------------- Render Preview ----------------------
-  const renderPreview = () => {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(content, "text/html");
-    const nodes = Array.from(doc.body.childNodes);
-
-    return nodes.map((node, i) => {
-      if (node.nodeType === 1 && (node as HTMLElement).classList.contains("latex-span")) {
-        return <BlockMath key={i} math={(node as HTMLElement).dataset.tex || ""} />;
-      } else if (node.nodeType === 1) {
-        return <span key={i} dangerouslySetInnerHTML={{ __html: (node as HTMLElement).outerHTML }} />;
-      } else if (node.nodeType === 3) {
-        return <span key={i}>{node.textContent}</span>;
-      }
-      return null;
-    });
-  };
+ 
 
   // ---------------------- Render UI ----------------------
   return (
@@ -476,7 +462,10 @@ export default function LatexForSoluction({ onChange, value }: QuestionEditorPro
       {/* Preview */}
       <div className="preview-box" style={{ marginTop: "20px" }}>
         <h4>Preview</h4>
-        <div className="question-preview">{renderPreview()}</div>
+        {/* <div className="question-preview">{renderPreview()}</div>
+         */}
+                <RenderPreview content={content} />
+
       </div>
     </div>
   );
