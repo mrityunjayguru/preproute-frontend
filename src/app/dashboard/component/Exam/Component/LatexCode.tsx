@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useMemo } from "react";
-import { BlockMath } from "react-katex";
+import { BlockMath, InlineMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
@@ -369,48 +369,242 @@ export default function QuestionEditor({ onChange, value,QuestionType }: Questio
   };
 
   // ---------------------- Render Preview ----------------------
-  const renderPreview = useMemo(() => {
+ const renderPreview = useMemo(() => {
     if (!content) return null;
 
+    // LaTeX regex patterns
+    const latexRegex = /(\$\$[\s\S]+?\$\$|\$[^$]+\$)/g;
+    const blockLatexTest = (t: string) => /^\$\$[\s\S]+\$\$$/.test(t);
+    const inlineLatexTest = (t: string) => /^\$[^$]+\$$/.test(t);
+
     const parser = new DOMParser();
-    const doc = parser.parseFromString(content, "text/html");
-    const nodes = Array.from(doc.body.childNodes);
+    const doc = parser.parseFromString(`<div id="__root__">${content}</div>`, "text/html");
+    const root = doc.getElementById("__root__");
+    if (!root) return null;
 
-    return nodes.map((node, i) => {
-      // ✅ If it's a LaTeX span
-      if (
-        node.nodeType === 1 &&
-        (node as HTMLElement).classList.contains("latex-span")
-      ) {
-        const rawTex = (node as HTMLElement).dataset.tex || "";
+    const normalizeText = (s: string) =>
+      s.replace(/\u00A0/g, " ").replace(/\r/g, "");
 
-        // Decode any HTML entities (e.g. &lt; -> <)
-        const decodedTex = new DOMParser().parseFromString(rawTex, "text/html")
-          .documentElement.textContent;
+    const renderNode = (node: ChildNode, key: string | number): React.ReactNode => {
+      // --- Handle text nodes ---
+      if (node.nodeType === Node.TEXT_NODE) {
+        const raw = normalizeText(node.textContent || "");
+        if (!raw) return null;
 
-        return <BlockMath key={i} math={decodedTex || ""} />;
+        const parts = raw.split(latexRegex);
+        return parts.map((part, idx) => {
+          if (part === "") return null;
+
+          if (!latexRegex.test(part)) {
+            const html = part
+              .replace(/\n/g, "<br/>")
+              .replace(/ {2}/g, "&nbsp;&nbsp;");
+            return <span key={`${key}-t-${idx}`} dangerouslySetInnerHTML={{ __html: html }} />;
+          }
+
+          if (blockLatexTest(part)) {
+            const math = part.slice(2, -2).trim();
+            return (
+              <div
+                key={`${key}-b-${idx}`}
+                style={{ textAlign: "center", margin: "0.5rem 0" }}
+              >
+                <BlockMath math={math} />
+              </div>
+            );
+          }
+
+          if (inlineLatexTest(part)) {
+            const math = part.slice(1, -1).trim();
+            return <InlineMath key={`${key}-i-${idx}`} math={math} />;
+          }
+
+          return null;
+        });
       }
 
-      // ✅ If it's any other HTML element
-      if (node.nodeType === 1) {
-        return (
-          <span
-            key={i}
-            dangerouslySetInnerHTML={{
-              __html: (node as HTMLElement).outerHTML,
-            }}
-          />
+      // --- Handle element nodes ---
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const el = node as Element;
+        const tag = el.tagName.toLowerCase();
+        const children = Array.from(node.childNodes);
+        const renderedChildren = children.map((child, i) =>
+          renderNode(child, `${key}-${tag}-${i}`)
         );
-      }
 
-      // ✅ If it's just text
-      if (node.nodeType === 3) {
-        return <span key={i}>{node.textContent}</span>;
+        switch (tag) {
+        case "img": {
+  const src = el.getAttribute("src") || "";
+  const alt = el.getAttribute("alt") || "";
+
+  // Parse inline style string if present (e.g. style="width:50px;height:40px;")
+  const styleAttr = el.getAttribute("style") || "";
+  const inlineStyles: Record<string, string> = {};
+  styleAttr.split(";").forEach((rule) => {
+    const [prop, value] = rule.split(":").map((s) => s && s.trim());
+    if (prop && value) {
+      // Convert CSS property to camelCase for React
+      const jsProp = prop.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+      inlineStyles[jsProp] = value;
+    }
+  });
+
+  // Respect width/height attributes as well
+  const widthAttr = el.getAttribute("width");
+  const heightAttr = el.getAttribute("height");
+
+  return (
+    <img
+      key={key}
+      src={src}
+      alt={alt}
+      width={widthAttr || undefined}
+      height={heightAttr || undefined}
+      style={{
+        display: "inline-block",
+        maxWidth: "100%",
+        height: "auto",
+        verticalAlign: "middle",
+        margin: "0 .3rem",
+        ...inlineStyles, // merge inline styles from content
+      }}
+    />
+  );
+}
+
+
+          case "table":
+            return (
+              <table
+                key={key}
+                style={{
+                  borderCollapse: "collapse",
+                  margin: "0.5rem 0",
+                  width: "100%",
+                }}
+              >
+                {renderedChildren}
+              </table>
+            );
+
+          case "tr":
+            return <tr key={key}>{renderedChildren}</tr>;
+
+          case "td":
+            return (
+              <td
+                key={key}
+                style={{
+                  border: "1px solid #ccc",
+                  padding: 6,
+                  verticalAlign: "middle",
+                }}
+              >
+                {renderedChildren}
+              </td>
+            );
+
+          case "th":
+            return (
+              <th
+                key={key}
+                style={{
+                  border: "1px solid #ccc",
+                  padding: 6,
+                  verticalAlign: "middle",
+                }}
+              >
+                {renderedChildren}
+              </th>
+            );
+
+          case "tbody":
+          case "thead":
+            return React.createElement(tag, { key }, renderedChildren);
+
+          case "p":
+            return (
+              <p key={key} style={{ margin: "0.6rem 0" }}>
+                {renderedChildren}
+              </p>
+            );
+
+          case "div":
+            return <div key={key}>{renderedChildren}</div>;
+
+          case "span":
+            return <span key={key}>{renderedChildren}</span>;
+
+          case "b":
+          case "strong":
+            return <strong key={key}>{renderedChildren}</strong>;
+
+          case "i":
+          case "em":
+            return <em key={key}>{renderedChildren}</em>;
+
+          case "u":
+            return <u key={key}>{renderedChildren}</u>;
+
+          case "br":
+            return <br key={key} />;
+
+          case "ul":
+            return <ul key={key}>{renderedChildren}</ul>;
+
+          case "ol":
+            return <ol key={key}>{renderedChildren}</ol>;
+
+          case "li":
+            return <li key={key}>{renderedChildren}</li>;
+
+          default:
+            return (
+              <span key={key} dangerouslySetInnerHTML={{ __html: el.innerHTML }} />
+            );
+        }
       }
 
       return null;
-    });
+    };
+
+    const output = Array.from(root.childNodes).map((n, i) =>
+      renderNode(n, `root-${i}`)
+    );
+
+    return (
+      <div
+        style={{
+          lineHeight: 1.6,
+          wordBreak: "break-word",
+          overflowX: "auto",
+        }}
+        className="preview-container"
+      >
+        <style>{`
+          .preview-container img {
+            display:inline-block;
+            max-width:100%;
+            height:auto;
+            vertical-align:middle;
+            margin:0 .3rem;
+          }
+          .preview-container table {
+            border-collapse: collapse;
+            margin: 0.5rem 0;
+            width: 100%;
+          }
+          .preview-container td, .preview-container th {
+            border:1px solid #ddd;
+            padding:6px;
+            vertical-align:middle;
+          }
+        `}</style>
+        {output}
+      </div>
+    );
   }, [content]);
+
 
   // ---------------------- Render UI ----------------------
   return (
