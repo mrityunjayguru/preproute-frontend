@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { AppDispatch } from "@/store/store";
 import { BlockMath } from "react-katex";
 import { createUserExam } from "@/api/Exam";
-import { userExamResult, userQuestiongetQuestionById } from "@/api/Question";
+import { clearQuestionResponce, userExamResult, userQuestiongetQuestionById } from "@/api/Question";
 
 import HeaderSection from "./HeaderSection";
 import QuestionView from "./QuestionView";
@@ -17,6 +17,7 @@ import { createReport, updaquesPaperTime } from "@/api/Users";
 import ExamHeader from "./ExamHeader";
 import Popup from "./Report";
 import InstructionPaeg from "./InstructionPaeg";
+import { questionPaper } from "@/api/endPoints";
 
 interface SectionDetail {
   _id: string;
@@ -281,7 +282,13 @@ const [showPopup, setShowPopup] = useState(false);
     }
   };
 
-  const handleClearResponse = () => {
+  const handleClearResponse =async () => {
+    const payload:any={
+      questionPaperId:question?._id
+    }
+    await dispatch(clearQuestionResponce(payload))
+     setMcqSelected("")
+    updateStatus("visited");
     setNumericalValue("");
     setMcqSelected(null);
   };

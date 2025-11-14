@@ -116,6 +116,25 @@ export const userQuestiongetQuestionById= createAsyncThunk<boolean, Payload>(
 
 
 
+export const clearQuestionResponce= createAsyncThunk<boolean, Payload>(
+  Question.get,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await QuestionRepo.clearQuestionResponce(payload);
+     return true
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
 export const userExamResult= createAsyncThunk<boolean, Payload>(
   Question.get,
   async (payload, thunkAPI) => {

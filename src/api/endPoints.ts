@@ -66,7 +66,8 @@ export const Question={
     getQuestionById:"setUpexam/question/getQuestionById",
     update:"setUpexam/question/updateQuestion",
     userQuestiongetQuestionById:"/user/getQuestionById",
-    userExamResult:"/user/analysis"
+    userExamResult:"/user/analysis",
+    clearQuestionResponce:"/user/clearQuestionResponce"
 }
 export const questionPaper={
   create:"setUpexam/questionpaper/create",
