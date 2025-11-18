@@ -45,13 +45,13 @@ export const Header = () => {
 
   const handleExamClick = (exam: any) => {
     let route: any = exam.examType;
-    if (exam.examType == "Past Year") {
-      route = "pastyear";
-    }
+    // if (exam.examType == "Past Year") {
+    //   route = "pastyear";
+    // }
     setData(exam.examType);
     dispatch(handleSelectedExamType(exam));
     setIsDropdownOpen(false);
-    router.push(`/Exam/${route}`);
+    router.push(`/Exam/Mocks`);
   };
 
   const removeLogin =async () => {
