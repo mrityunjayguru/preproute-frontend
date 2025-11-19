@@ -188,7 +188,7 @@ const [showPopup, setShowPopup] = useState(false);
   const handleNextQuestion = async () => {
     // alert(mcqSelected)
     setloder(true)
-    if (!question || !mcqSelected) {
+  if (!question || (!mcqSelected && !numericalValue)){
       updateStatus("visited");
       if (currentQuestionIndex + 1 < totalNoOfQuestions) {
          console.log("true")
@@ -197,7 +197,6 @@ const [showPopup, setShowPopup] = useState(false);
         fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
       } else if (isSection && currentSectionIndex + 1 < examSections.length) {
         const nextSection: any = examSections[currentSectionIndex + 1];
-         console.log("true")
         // console.log(nextSection,"nextSectionnextSection")
         if(switchable==false){
         setTimeLeft(nextSection?.duration * 60);
@@ -291,6 +290,7 @@ const [showPopup, setShowPopup] = useState(false);
     updateStatus("visited");
     setNumericalValue("");
     setMcqSelected(null);
+    setNumericalValue("")
   };
 
   const handleSubmit = async () => {
@@ -314,6 +314,8 @@ if(question?.userAttempted){
     updateStatus("answered");
 }else{
     setMcqSelected("")
+    setNumericalValue("")
+
     updateStatus("visited");
 }
   },[question])
