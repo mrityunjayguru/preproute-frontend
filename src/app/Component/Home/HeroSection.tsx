@@ -28,10 +28,10 @@ export const HeroSection = () => {
         </div>
 
         {/* Right Floating Logo */}
-        <div className="w-full lg:w-1/3 flex justify-center lg:justify-end items-center">
-          {/* <ExamLogo /> */}
+        {/* <div className="w-full lg:w-1/3 flex justify-center lg:justify-end items-center">
+        
           <Image src={rotateText} alt="Logo" className="max-w-[180px] animate-spin" />
-        </div>
+        </div> */}
       </div>
 
       {/* Full-width Hero Illustration */}
