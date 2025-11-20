@@ -853,7 +853,7 @@ export const LeftLoginIcon = () => {
 
 export const HeroSectionIcon=()=>{
   return (
-    <svg width="1230" height="236" viewBox="0 0 1230 236" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="100%" height="236" viewBox="0 0 1230 236" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_103_2061)">
 <path d="M14.0877 167.956H82.9578C83.9641 167.956 84.7825 168.774 84.7825 169.782V235.837H14.0877V167.956Z" fill="#C5622F"/>
 <path d="M41.7037 167.956H40.1587V235.842H41.7037V167.956Z" fill="#050914"/>

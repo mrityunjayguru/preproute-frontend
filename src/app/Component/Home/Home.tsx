@@ -32,11 +32,15 @@ if ((userLogin?.isProfile === false || userLogin?.isProfile === undefined) && us
 }
 
   return (
-   
+  <>
+
+    <div className="container mx-auto">
+      <HeroSection />
+    </div>
     <div className="min-h-screen bg-white font-sans text-gray-900">
       {/* Container with max-width for content */}
       <div className="">
-        <HeroSection />
+        
         <ExamsSection />
       </div>
       <div>
@@ -50,5 +54,7 @@ if ((userLogin?.isProfile === false || userLogin?.isProfile === undefined) && us
         <ImpactChart/>
       </div>
     </div>
+
+    </>
   );
 };

@@ -15,7 +15,7 @@ export const ExamsSection = () => {
   return (
     <section className="flex flex-col items-center text-center px-4 sm:px-6 lg:px-16 py-12">
       {/* Heading */}
-      <h1 className="text-[#000000] max-w-2xl text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[ArtegraSoft-Medium] mb-10">
+      <h1 className="text-[#000000] max-w-3xl text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-10">
         Prepare for the most competitive higher education entrance exams, including:
       </h1>
 
@@ -28,7 +28,7 @@ export const ExamsSection = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-4xl justify-items-center">
         {exams.map((exam, index) => (
           <div key={index} className="relative inline-block w-full sm:w-auto">
-            <button className="w-full sm:min-w-[180px] bg-[#050914] text-white font-medium py-2 px-6 rounded-full shadow-xl text-base sm:text-lg md:text-xl whitespace-nowrap">
+            <button className="w-full sm:min-w-[180px] bg-[#050914] text-white font-medium py-2 px-6 rounded-full hover:shadow-lg text-[18px] whitespace-nowrap">
               {exam.name}
             </button>
             {exam.isComingSoon && (
