@@ -57,9 +57,9 @@ export const ExamHeader = () => {
     })) || [];
 
   return (
-    <header className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8 py-4 px-4 md:px-12 ">
+    <header className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8 py-4">
       {/* Left: Exam Dropdown */}
-      <div className="w-full md:w-1/3 min-w-[250px]">
+      <div className="max-w-[350px] w-[100%]">
         <Select
           options={examOptions}
           value={
@@ -69,7 +69,7 @@ export const ExamHeader = () => {
           }
           onChange={handleSelect}
           placeholder="Select Exam"
-          className="text-base font-medium"
+          className="text-[16px] font-medium"
           styles={{
             control: (provided) => ({
               ...provided,
@@ -102,23 +102,23 @@ export const ExamHeader = () => {
       </div>
 
       {/* Right: Buttons */}
-      {/* <div className="flex flex-wrap justify-center md:justify-end gap-3">
+      <div className="flex flex-wrap justify-center md:justify-end gap-3">
         <Button
-          size="sm"
-          className="flex items-center gap-2 px-4 py-2 bg-[#FF5635] text-white text-sm md:text-base font-medium rounded-lg hover:bg-[#ff4b2b] shadow-md transition-all"
+          
+          className="flex items-start gap-2 bg-[#FF5635] px-10 py-2 text-white md:text-base font-medium rounded-lg hover:bg-[#ff4b2b] shadow-md transition-all"
         >
+          <span className="text-[15px]">Syllabus</span>
           <BookIcon className="h-4 w-4" />
-          <span>Syllabus</span>
-        </Button>
+          </Button>
 
         <Button
-          size="sm"
-          className="flex items-center gap-2 px-4 py-2 bg-[#000] text-white text-sm md:text-base font-medium rounded-lg hover:bg-gray-800 shadow-md transition-all"
+          className="flex items-start gap-2 bg-[#000] px-10 py-2 text-white md:text-base font-medium rounded-lg hover:bg-[#ff4b2b] shadow-md transition-all"
         >
+          <span className="text-[15px]">Cutoff</span>
           <CutOffIcons />
-          <span>Cutoff</span>
         </Button>
-      </div> */}
+      </div>
+
     </header>
   );
 };

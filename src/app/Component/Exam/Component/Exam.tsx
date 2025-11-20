@@ -65,14 +65,30 @@ const MockExamCard = ({ exam }: { exam: any }) => {
 
   return (
     <Card
-      className={`flex flex-col justify-between p-5 rounded-xl transition-all duration-300 ${
+      className={`flex flex-col justify-between p-3 rounded-xl transition-all duration-300 mt-10 ${
         isUnlocked
-          ? "bg-[#F7F7F5] border border-green-300 hover:shadow-md"
-          : "bg-gray-100 border border-gray-300"
+          ? "bg-[#F7F7F5] hover:shadow-md"
+          : "bg-gray-10"
       }`}
     >
+
+      <div className="flex flex-row justify-between items-center mt-1">
+        <p className="text-[16px] text-gray-600">
+          Mock Exam
+        </p>
+
+        <button className="text-[#FF5635] bg-[#4FA77E] px-3 py-1 rounded-md text-sm font-medium text-white">
+          Free
+        </button>
+      </div>
+
+      <div>
+        <h3 className="text-[28px] text-[#FF5635] mb-6">
+          Warm Up
+        </h3>
+      </div>
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
+      {/* <div className="flex items-start justify-between mb-4">
         <div className="flex flex-col">
           <h1 className="text-xs md:text-sm font-medium uppercase tracking-wider text-gray-700">
             {examById[0]?.examType?.examType || "Exam"}
@@ -86,7 +102,7 @@ const MockExamCard = ({ exam }: { exam: any }) => {
             {exam.questionPapername || "Untitled Exam"}
           </h3>
 
-          {/* Status message */}
+          
           <p className="text-sm text-gray-600 mt-1">
             {isMock1
               ? "Free Mock Test (Always Unlocked)"
@@ -96,16 +112,16 @@ const MockExamCard = ({ exam }: { exam: any }) => {
           </p>
         </div>
 
-        {/* 🔒 Lock icon for locked exams */}
+       
         {!isUnlocked && !isAttempted && <LockIcon className="mt-1" />}
-      </div>
+      </div> */}
 
-      {/* Description */}
-      <p className="text-xs md:text-sm text-gray-600">
+      
+      {/* <p className="text-xs md:text-sm text-gray-600">
         {exam.description || "Unattempted Exam"}
-      </p>
+      </p> */}
 
-      {/* Footer Button */}
+      
       <div className="mt-4">
         {isAttempted ? (
           // 📊 Go to analytics page
@@ -119,7 +135,7 @@ const MockExamCard = ({ exam }: { exam: any }) => {
         ) : isUnlocked ? (
           // 🚀 Start exam
           <Button
-            className="w-full bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
+            className="bg-[#FF5635] hover:bg-[#e34d2e] px-10 text-white font-medium"
             onClick={() => handleExam(exam)}
           >
             Start
@@ -129,7 +145,7 @@ const MockExamCard = ({ exam }: { exam: any }) => {
           // 🔒 Locked state
           <Button
             disabled
-            className="w-full bg-gray-300 text-gray-700 cursor-not-allowed"
+            className="bg-gray-300 text-gray-700 cursor-not-allowed"
           >
             Locked
           </Button>
@@ -147,10 +163,10 @@ const UserExam = () => {
 
   return (
     <div className="min-h-screen font-sans bg-[#fff]">
-      <main className="container mx-auto px-4 sm:px-6 lg:px-12 py-8">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-0 py-8">
         {/* Header Section */}
-        <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <h1 className="text-2xl md:text-3xl font-semibold text-[#FF5635]">
+        <div className="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <h1 className="text-2xl md:text-3xl font-normal text-[#FF5635]">
             {examById?.length
               ? `${examById[0]?.exam?.examname || ""}: `
               : ""}
@@ -164,7 +180,7 @@ const UserExam = () => {
             exam. Read this document to learn more.
           </p>
         </div>
-
+        <hr className="w-full border-t border-gray-100" />
         {/* Mock Exam Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6">
           {examById?.length > 0 ? (
@@ -176,6 +192,13 @@ const UserExam = () => {
               No exams available.
             </div>
           )}
+        </div>
+
+        <div className="mt-50 text-center">
+          <div className="max-w-4xl mx-auto relative before:content-[url('../assets/images/quotes-up.png')] before:absolute before:top-0 before:left-0 after:content-[url('../assets/images/quotes-down.png')] after:absolute after:bottom-0 after:right-0">
+            <p className="text-[32px]">Exams test your memory, not your intelligence —</p>
+            <p className="text-[32px] text-[#FF5635]">but discipline turns both into power.</p>
+          </div>
         </div>
       </main>
     </div>
