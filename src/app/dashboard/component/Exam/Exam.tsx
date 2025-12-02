@@ -150,6 +150,7 @@ setPassage(q?.passage || "");
       opts.map((opt) => ({ ...opt, isCorrect: opt.id === id }))
     );
   };
+  const [loader,setLoder]=useState(false)
 
   // 🧠 Dynamic total questions
   const totalQuestions = isSection
@@ -159,6 +160,7 @@ setPassage(q?.passage || "");
 
   const handleSubmit = async () => {
     try {
+      setLoder(true)
       const correctAnswer = options.find((opt) => opt.isCorrect)?.text || "";
 
       const payload: any = {
@@ -197,7 +199,11 @@ setPassage(q?.passage || "");
       }
       setActiveQuestion(activeQuestion+1)
       handleActiveQuestion(activeQuestion+1)
+      setLoder(false)
+
     } catch (err) {
+      setLoder(false)
+
       console.error("Error creating question:", err);
     }
   };
@@ -260,12 +266,14 @@ setPassage(q?.passage || "");
                 {selectedExamDetail[0]?.questionPapername}
               </span>
             </div>
-            <button
-              onClick={handleSubmit}
-              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-            >
-              Save And Process
-            </button>
+           <button
+  onClick={handleSubmit}
+  disabled={loader}
+  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50"
+>
+  {loader ? "Processing..." : "Save And Process"}
+</button>
+
           </div>
         </div>
 
@@ -342,7 +350,7 @@ setPassage(q?.passage || "");
                     </label>
                   ))}
                   <div className="flex items-center space-x-6">
-             {["Normal", "Pass"].map((type) => (
+                  {["Normal", "Pass"].map((type) => (
                     <label key={type} className="flex items-center space-x-1">
                       <input
                         type="radio"
