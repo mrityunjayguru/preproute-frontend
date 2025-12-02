@@ -6,8 +6,9 @@ import { ExamHeader } from './Component/ExamHeader'
 
 function Exam() {
   return (
-    <div className='bg-[#fff] lg:px-20'>
+    <div className='container mx-auto'>
       <ExamHeader/> 
+      
       <UserExam/>
     </div>
   )

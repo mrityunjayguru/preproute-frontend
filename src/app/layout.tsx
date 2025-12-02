@@ -1,14 +1,20 @@
 "use client";
 import "./globals.css";
-import { Geist, Geist_Mono } from "next/font/google";
+// import { Geist, Geist_Mono } from "next/font/google";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import ReduxProvider from "@/store/ReduxProvider";
 import AdminLayout from "./layouts/AdminLayout";
 import UserLayout from "./layouts/userLayout";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+import localFont from "next/font/local";
+
+const artegra = localFont({
+  src : "../assets/fonts/artegra-soft-regular.woff",
+})
+
+// const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+// const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -27,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${artegra.className}`}>
         <ReduxProvider>
           <LayoutComponent>{children}</LayoutComponent>
         </ReduxProvider>
