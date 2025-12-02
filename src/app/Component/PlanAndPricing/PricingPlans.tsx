@@ -71,7 +71,8 @@ console.log(order, key_id,"order, key_idorder, key_id")
 
       <div className="min-h-screen bg-[#fff] py-12 px-4 flex flex-col items-center">
         <h2 className="text-3xl md:text-4xl font-bold text-[#000] mb-8 text-center">
-          Pricing & Plans
+          
+           & Plans
         </h2>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-6xl w-full">

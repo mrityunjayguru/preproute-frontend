@@ -3,12 +3,12 @@ module.exports = {
     "./app/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
-  // theme: {
-  //   extend: {
-  //     fontFamily: {
-  //       artegra: ["Artegra", "sans-serif"],
-  //     },
-  //   },
-  // },
+  theme: {
+    extend: {
+      fontFamily: {
+        artegra: ["Artegra", "sans-serif"],
+      },
+    },
+  },
   plugins: [],
 };

@@ -76,6 +76,7 @@
   --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
   --sidebar-border: oklch(0.928 0.006 264.531);
   --sidebar-ring: oklch(0.707 0.022 261.325);
+    --font-family-base: var(--font-artegra);
 }
 
 .dark {
@@ -121,13 +122,6 @@
   }
 }
 
-
-@font-face {
-  font-family: 'Artegra';
-  src: url('/Archive/Artegra-Soft-Medium.ttf') format('truetype');
-  font-weight: 500; /* Medium */
-  font-style: normal;
-}
 
 .text5858{
   color: #585859;
