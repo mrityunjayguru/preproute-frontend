@@ -76,64 +76,48 @@ export default function HomePage() {
           <button className="px-10 py-3 bg-[#FF5635] text-white text-lg lg:text-2xl font-semibold rounded-[4px]">Enroll Now</button>
         </div>
       </section>
+<section className="mt-10 px-5 lg:px-30">
+  <h3 className="text-center text-xl lg:text-3xl font-semibold text-[#FF5635]">
+    The Impact of Real Practice
+  </h3>
+  <p className="text-center text-sm sm:text-base lg:text-xl mt-2 text-gray-600">
+    Data from 50,000+ students shows how mock tests transform exam performance
+  </p>
 
-      <section className="mt-10 px-5 lg:px-30">
-        <h3 className="text-center text-xl lg:text-3xl font-semibold text-[#FF5635]">
-          The Impact of Real Practice
-        </h3>
-        <p className="text-center text-sm sm:text-base lg:text-xl mt-2 text-gray-600">
-          Data from 50,000+ students shows how mock tests transform exam performance
-        </p>
+  <div className="mt-6 bg-[#F7ECFF] rounded-3xl px-4 sm:px-10 lg:px-30 py-6 lg:py-10">
 
-        <div className="mt-6 bg-[#F7ECFF] rounded-3xl px-4 sm:px-10 lg:px-30 py-6 lg:py-4">
+    {/* Table Header */}
+    <div className="grid grid-cols-3 text-center font-semibold text-base sm:text-xl mb-6">
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 text-center font-semibold text-sm sm:text-xl mb-4">
+      <div></div>
 
-            <div></div>
+      <div className="flex flex-col justify-center items-center leading-tight">
+        <span>With</span>
+        <Image src={logo} alt="Logo" className="h-5 w-auto mt-1" />
+      </div>
 
-            <div className="flex flex-col justify-center items-center leading-tight">
-              <span>With</span>
-              <Image src={logo} alt="Logo" className="h-5 w-auto mt-1" />
-            </div>
+      <div className="flex flex-col justify-center items-center leading-tight">
+        <span>Without Online</span>
+        <span>Practice</span>
+      </div>
 
-            <div className="flex flex-col justify-center items-center leading-tight">
-              <span>Without Online</span>
-              <span>Practice</span>
-            </div>
-          </div>
+    </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 text-center font-semibold mb-6">
+    {/* Table Rows */}
+    <div className="space-y-6">
 
-            <div></div>
+      {IMPACT_ROW("Confident & Prepared", "70%", "30%")}
+      <div className="h-[1px] bg-[#F3C969]"></div>
 
-            <div className="flex justify-center items-center">
-              <RightIcon />
-            </div>
+      {IMPACT_ROW("Struggle with Time", "15%", "35%")}
+      <div className="h-[1px] bg-[#F3C969]"></div>
 
-            <div className="flex justify-center items-center">
-              <WrongIcon />
-            </div>
-          </div>
-          <div className="space-y-6">
+      {IMPACT_ROW("High Anxiety", "15%", "35%")}
 
-            <div>
-              {IMPACT_ROW("Confident & Prepared", "70%", "30%", true)}
-              <div className="h-[1px] bg-[#F3C969] mt-4"></div>
-            </div>
+    </div>
 
-            <div>
-              {IMPACT_ROW("Struggle with Time", "15%", "35%", false)}
-              <div className="h-[1px] bg-[#F3C969] mt-4"></div>
-            </div>
-
-            <div>
-              {IMPACT_ROW("High Anxiety", "15%", "35%", false)}
-
-            </div>
-
-          </div>
-        </div>
-      </section>
+  </div>
+</section>
 
 
       <section className="mt-8 px-5 lg:px-30 mb-8">
@@ -305,29 +289,21 @@ function ICON_ITEM(title: string, subtitle: string, logo: any) {
     </div>
   );
 }
-
-function IMPACT_ROW(
-  label: string,
-  withPct: string,
-  withoutPct: string,
-  highlight: boolean
-) {
+function IMPACT_ROW(label: string, withPct: string, withoutPct: string) {
   return (
-    <div>
+    <div className="grid grid-cols-3 items-center text-center text-[15px] sm:text-xl font-medium text-gray-800">
 
-      <div className="flex flex-col sm:flex-row items-center justify-between text-sm sm:text-xl font-medium text-gray-800 gap-2">
-
-        <div className="flex flex-col items-center w-full sm:w-1/3">
-          <span>{label}</span>
-
-        </div>
-        <div className="flex flex-col items-center w-full sm:w-1/3">
-          <span className="text-green-600 text-base sm:text-xl font-bold mt-1">{withPct}</span>
-        </div>
-        <div className="flex flex-col items-center w-full sm:w-1/3">
-          <span className=" text-base sm:text-xl font-bold mt-1">{withoutPct}</span>
-        </div>
+      {/* Label */}
+      <div className="flex justify-center sm:justify-start font-semibold text-black">
+        {label}
       </div>
+
+      {/* With Percentage */}
+      <div className="text-green-600 font-bold">{withPct}</div>
+
+      {/* Without Percentage */}
+      <div className="text-red-600 font-bold">{withoutPct}</div>
+
     </div>
   );
 }
