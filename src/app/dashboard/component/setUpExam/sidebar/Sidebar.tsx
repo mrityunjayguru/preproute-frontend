@@ -6,6 +6,7 @@ import SetUpSection from "../Component/Section/Section";
 import SubTopic from "../Component/SubTopic/SubTopic";
 import ExamTypes from "../ExamType/ExamType";
 import CreateExamPage from "../Component/Exam/Exam";
+import PlanPricing from "../Component/Plan&Pricing/Plan&Pricing";
 
 const Sidebar = () => {
   const [activeComponent, setActiveComponent] = useState("sections");
@@ -22,6 +23,8 @@ const Sidebar = () => {
         return <CreateExamPage />;
           case "examtype":
         return <ExamTypes />;
+         case "Plan":
+        return <PlanPricing />;
       default:
         // return <Section />;
     }
@@ -86,6 +89,17 @@ const Sidebar = () => {
             }`}
           >
             Create Exam
+          </button>
+
+                    <button
+            onClick={() => setActiveComponent("Plan")}
+            className={`p-2 rounded-md font-semibold ${
+              activeComponent === "Plan"
+                ? "bg-orange-500 text-white"
+                : "hover:bg-gray-200"
+            }`}
+          >
+            Create Plan
           </button>
         </nav>
       </div>

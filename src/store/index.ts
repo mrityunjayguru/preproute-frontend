@@ -16,6 +16,7 @@ import staffToclass from "./seatUpexam/AssingStaffToclass/index"
 import dashboard from "./dashboard/index"
 import question from "./seatUpexam/question/index"
 import user from "./user/index"
+import palnAndpricing from "./seatUpexam/planAndPricing/index"
 const appReducer = combineReducers({
  school:school,
  exam:exam,
@@ -33,7 +34,8 @@ const appReducer = combineReducers({
  Auth:Auth,
  staffToclass:staffToclass,
  dashboard:dashboard,
- question:question
+ question:question,
+ palnAndpricing:palnAndpricing
 });
 
 // Create a root reducer with reset functionality

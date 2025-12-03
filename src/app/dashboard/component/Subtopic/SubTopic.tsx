@@ -3,15 +3,15 @@ import React, { useState } from "react";
 function SubTopic() {
   const [topic, setTopic] = useState("");
   const [subtopic, setSubtopic] = useState("");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<any>({});
 
   // Example topics (you can fetch from API)
   const topics = ["Mathematics", "Physics", "Chemistry", "Biology"];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:any) => {
     e.preventDefault();
 
-    let newErrors = {};
+    let newErrors:any = {};
     if (!topic) newErrors.topic = "Please select a topic";
     if (!subtopic.trim()) newErrors.subtopic = "Subtopic name is required";
 

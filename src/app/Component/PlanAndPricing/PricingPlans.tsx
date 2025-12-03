@@ -1,47 +1,60 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Check, Clock } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { createOrder } from "@/api/razorpay";
 import Script from "next/script";
+import { getPlanandPricing } from "@/api/Plan&Pricing";
 
 export default function PricingPlans() {
   const dispatch = useDispatch<AppDispatch>();
+
   const user = useSelector((state: any) => state?.Auth?.loginUser);
 
-  const handleCreatePayment = async () => {
+  const palnAndpricing = useSelector(
+    (state: any) => state?.palnAndpricing?.plandetail || []
+  );
+
+  // 🔥 Fetch plan pricing data
+  const getData = async () => {
+    await dispatch(getPlanandPricing({}));
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  // 🔥 Razorpay Payment Handler
+  const handleCreatePayment = async (plan: any) => {
     try {
-      // 1️⃣ Create order from backend
-      const payload:any = {
-        amount: 4000, // ₹4000
+      const payload: any = {
+        amount: Number(plan.price) * 100, // price in paise
         currency: "INR",
         userId: user?._id,
+        planId: plan._id,
       };
+
       const response: any = await dispatch(createOrder(payload));
 
       if (!response?.payload?.success) {
         alert("Unable to create order. Please try again.");
         return;
       }
-// console.log(response.payload,"response.payload")
+
       const { order, key_id } = response.payload;
-console.log(order, key_id,"order, key_idorder, key_id")
-      // 2️⃣ Initialize Razorpay popup
+
       const options = {
-        key: "rzp_test_Rc3F5TR7UPCXIy", // from backend
-        amount: order.amount, // in paise
+        key: key_id,
+        amount: order.amount,
         currency: order.currency,
         name: "PreeRoute",
-        description: "Mock Test Subscription",
-        order_id: order.id, // Razorpay order ID
-        handler: async function (paymentResponse: any) {
-          console.log("Payment Success ✅:", paymentResponse);
+        description: plan.title,
+        order_id: order.id,
+        handler: function (paymentResponse: any) {
+          console.log("Payment Success:", paymentResponse);
           alert("Payment Successful!");
-
-          // Optional: verify signature on backend
-          // await axios.post("/api/verify-payment", { ...paymentResponse });
         },
         prefill: {
           name: user?.username,
@@ -50,6 +63,7 @@ console.log(order, key_id,"order, key_idorder, key_id")
         },
         notes: {
           userId: user?._id,
+          planId: plan._id,
         },
         theme: {
           color: "#ff5635",
@@ -66,7 +80,7 @@ console.log(order, key_id,"order, key_idorder, key_id")
 
   return (
     <>
-      {/* Razorpay Checkout Script */}
+      {/* Razorpay Script */}
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
 
       <div className="min-h-screen bg-[#fff] py-12 px-4 flex flex-col items-center">
@@ -74,77 +88,78 @@ console.log(order, key_id,"order, key_idorder, key_id")
           Pricing & Plans
         </h2>
 
+        {/* 🔥 Dynamic Pricing Cards */}
         <div className="grid md:grid-cols-2 gap-8 max-w-6xl w-full">
-          {/* --- IPMAT & Others --- */}
-          <div className="bg-[#fff] rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200">
-            <div className="bg-[#000] text-[#fff] text-center rounded-t-2xl py-4">
-              <h3 className="text-2xl font-semibold">IPMAT & Others</h3>
-            </div>
+          {palnAndpricing.map((plan: any, index: number) => (
+            <div
+              key={index}
+              className="bg-[#fff] rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200"
+            >
+              {/* Card Header */}
+              <div className="bg-[#000] text-[#fff] text-center rounded-t-2xl py-4">
+                <h3 className="text-2xl font-semibold">{plan.title}</h3>
+              </div>
 
-            <div className="p-6 space-y-4">
-              <table className="w-full text-sm md:text-base border-collapse">
-                <thead>
-                  <tr className="bg-gray-100 text-[#000]">
-                    <th className="p-3 text-left rounded-tl-lg">Exam</th>
-                    <th className="p-3 text-right rounded-tr-lg">Mocks</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    ["IPMAT Indore", 25],
-                    ["IPMAT Rohtak", 25],
-                    ["JIPMAT", 25],
-                    ["IIM DBE", 10],
-                    ["SET", 10],
-                    ["NPAT", 10],
-                    ["CHRIST", 10],
-                    ["ST. Xavier’s", 10],
-                  ].map(([exam, mocks], idx) => (
-                    <tr key={idx} className="border-b hover:bg-gray-50">
-                      <td className="p-3 text-[#000]">{exam}</td>
-                      <td className="p-3 text-right font-semibold text-[#000]">
-                        {mocks}
-                      </td>
+              <div className="p-6 space-y-4">
+                {/* Exams Table */}
+                <table className="w-full text-sm md:text-base border-collapse">
+                  <thead>
+                    <tr className="bg-gray-100 text-[#000]">
+                      <th className="p-3 text-left rounded-tl-lg">Exam</th>
+                      <th className="p-3 text-right rounded-tr-lg">Mocks</th>
                     </tr>
+                  </thead>
+                  <tbody>
+                    {plan.examDetails?.map((exam: any, idx: number) => (
+                      <tr key={idx} className="border-b hover:bg-gray-50">
+                        <td className="p-3 text-[#000]">{exam.examname}</td>
+                        <td className="p-3 text-right font-semibold text-[#000]">
+                          {exam.fullExamduration || 0}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                {/* Features */}
+                <ul className="mt-4 space-y-2 text-[#000]">
+                  {[
+                    "Past Year Papers",
+                    "Sectional Tests - QA, LRDI, VARC",
+                    "Topic-wise Tests with Daily Practice",
+                    "Level of Difficulty based Questions",
+                    "Community Access",
+                    "Bookmark Questions",
+                    "Free Interview Preparation",
+                  ].map((item, idx) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <Check className="text-[#ff5635] w-5 h-5" />
+                      <span>{item}</span>
+                    </li>
                   ))}
-                </tbody>
-              </table>
+                </ul>
 
-              <ul className="mt-4 space-y-2 text-[#000]">
-                {[
-                  "Past Year Papers",
-                  "Sectional Tests - QA, LRDI, VARC",
-                  "Topic-wise Tests with Daily Practice",
-                  "Level of Difficulty based Questions",
-                  "Community Access",
-                  "Bookmark Questions",
-                  "Free Interview Preparation",
-                ].map((item, idx) => (
-                  <li key={idx} className="flex items-center gap-2">
-                    <Check className="text-[#ff5635] w-5 h-5" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
+                {/* Price Section */}
+                <div className="mt-6 bg-gray-50 p-4 rounded-xl text-center">
+                  <p className="text-lg font-semibold text-[#000]">
+                    <span className="text-[#ff5635]">Price:</span> ₹{plan.price} + 18% GST
+                  </p>
+                </div>
 
-              <div className="mt-6 bg-gray-50 p-4 rounded-xl text-center">
-                <p className="text-lg font-semibold text-[#000]">
-                  <span className="text-[#ff5635]">Launch Offer:</span> ₹4,000 + 18% GST
-                </p>
-              </div>
-
-              <div className="text-center mt-4">
-                <button
-                  onClick={handleCreatePayment}
-                  className="cursor-pointer px-6 py-2 bg-[#ff5635] hover:bg-[#e14c2f] text-[#fff] rounded-lg font-semibold transition"
-                >
-                  Enroll Now
-                </button>
+                {/* Enroll Button */}
+                <div className="text-center mt-4">
+                  <button
+                    onClick={() => handleCreatePayment(plan)}
+                    className="cursor-pointer px-6 py-2 bg-[#ff5635] hover:bg-[#e14c2f] text-[#fff] rounded-lg font-semibold transition"
+                  >
+                    Enroll Now
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          ))}
 
-          {/* --- CUET --- */}
+          {/* Coming Soon Card */}
           <div className="bg-[#fff] rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200">
             <div className="bg-[#000] text-[#fff] text-center rounded-t-2xl py-4">
               <h3 className="text-2xl font-semibold">CUET</h3>

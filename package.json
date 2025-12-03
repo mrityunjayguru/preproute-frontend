@@ -27,6 +27,7 @@
     "better-react-mathjax": "^2.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "crypto-js": "^4.2.0",
     "jwt-decode": "^4.0.0",
     "katex": "^0.16.23",
