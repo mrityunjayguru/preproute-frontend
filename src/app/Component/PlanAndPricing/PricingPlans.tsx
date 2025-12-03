@@ -19,7 +19,8 @@ export default function PricingPlans() {
 
   // 🔥 Fetch plan pricing data
   const getData = async () => {
-    await dispatch(getPlanandPricing({}));
+    const payload: any = {};
+    await dispatch(getPlanandPricing(payload));
   };
 
   useEffect(() => {
@@ -85,7 +86,8 @@ export default function PricingPlans() {
 
       <div className="min-h-screen bg-[#fff] py-12 px-4 flex flex-col items-center">
         <h2 className="text-3xl md:text-4xl font-bold text-[#000] mb-8 text-center">
-          Pricing & Plans
+          
+           & Plans
         </h2>
 
         {/* 🔥 Dynamic Pricing Cards */}

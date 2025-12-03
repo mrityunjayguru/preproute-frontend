@@ -59,7 +59,6 @@ const PricingTable = () => {
     },
   ];
 const handleEdit=(val:any)=>{
-console.log(val,"lllll")
 }
   return (
     <div className="bg-[#F7F7F5] p-6 rounded-lg">

@@ -10,8 +10,9 @@ import UserLayout from "./layouts/userLayout";
 import localFont from "next/font/local";
 
 const artegra = localFont({
-  src : "../assets/fonts/artegra-soft-regular.woff",
-})
+  src: "../assets/fonts/artegra-soft-regular.woff",
+  variable: "--font-artegra",
+});
 
 // const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 // const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
