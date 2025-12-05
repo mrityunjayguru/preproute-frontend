@@ -1,17 +1,24 @@
 "use client";
-import { getUserQuestionData } from "@/api/QuestionPaper";
-import { AppDispatch } from "@/store/store";
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card } from "@/components/ui/card";
-import OpenExamPopup from "../../ManageExam/Component/OpenNewWindowButton";
-import { questionPaper } from "@/api/endPoints";
+import Select from "react-select";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/store/store";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { BookIcon } from "lucide-react";
+import { CutOffIcons } from "@/Common/svgIcon";
+
+import {
+  getCommonexam,
+  getCommonQuestionBeExamId,
+} from "@/api/Exam";
+import { getUserQuestionData } from "@/api/QuestionPaper";
 import { QuestionPaperResult } from "@/api/Users";
 
-// 🔒 Lock Icon
-const LockIcon = (props: React.SVGProps<SVGSVGElement>) => (
+
+const LockIcon = (props) => (
   <svg
     {...props}
     xmlns="http://www.w3.org/2000/svg"
@@ -30,101 +37,32 @@ const LockIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-// 🎯 Exam Card
-const MockExamCard = ({ exam }: { exam: any }) => {
-  const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
-  const examById = useSelector((state: any) => state?.exam?.examById) || [];
-  const userlogin = useSelector((state: any) => state?.Auth.loginUser);
-  const hasPurchase = userlogin?.PurchaseDetail?.length > 0;
-  const isMock1 = exam?.questionPapername === "mock 1" || "mocks 1";
-  const isAttempted = exam?.hasGivenExam === true;
 
-  // ✅ Only Mock 1 is free; all others require purchase
+const MockExamCard = ({ exam, handleExam }) => {
+  const user = useSelector((s) => s.Auth?.loginUser);
+
+  const hasPurchase = user?.PurchaseDetail?.length > 0;
+  const isMock1 = ["mock 1", "mocks 1"].includes(exam?.questionPapername?.toLowerCase());
+  const isAttempted = exam?.hasGivenExam;
+
   const isUnlocked = isMock1 || hasPurchase;
-
-  const handleExam = async (data: any) => {
-    const token = localStorage.getItem("token");
-    if (!token) return router.push("/home");
-
-    if (!isAttempted) {
-      const payload: any = {
-        examTypeId: data?.examTypeId,
-        questionPaperId: data?._id,
-        examid: data?.examid,
-        questionPapername: data?.questionPapername,
-      };
-      dispatch(getUserQuestionData(payload));
-      router.push("/Exam/userExam");
-    } else {
-      const payload: any = { questionPaperID: data._id };
-      await dispatch(QuestionPaperResult(payload));
-      router.push("/Exam/result");
-    }
-  };
 
   return (
     <Card
-      className={`flex flex-col justify-between p-3 rounded-xl transition-all duration-300 mt-10 ${
-        isUnlocked
-          ? "bg-[#F7F7F5] hover:shadow-md"
-          : "bg-gray-10"
-      }`}
+      className={`flex flex-col justify-between p-3 rounded-xl transition-all duration-300 mt-10 ${isUnlocked ? "bg-[#F7F7F5] hover:shadow-md" : "bg-gray-100"
+        }`}
     >
-
       <div className="flex flex-row justify-between items-center mt-1">
-        <p className="text-[16px] text-gray-600">
-          Mock Exam
-        </p>
-
+        <p className="text-[16px] text-gray-600">Mock Exam</p>
         <button className="text-[#FF5635] bg-[#4FA77E] px-3 py-1 rounded-md text-sm font-medium text-white">
           Free
         </button>
       </div>
 
-      <div>
-        <h3 className="text-[28px] text-[#FF5635] mb-6">
-          Warm Up
-        </h3>
-      </div>
-      {/* Header */}
-      {/* <div className="flex items-start justify-between mb-4">
-        <div className="flex flex-col">
-          <h1 className="text-xs md:text-sm font-medium uppercase tracking-wider text-gray-700">
-            {examById[0]?.examType?.examType || "Exam"}
-          </h1>
+      <h3 className="text-[28px] text-[#FF5635] mb-6">Warm Up</h3>
 
-          <h3
-            className={`text-base md:text-lg font-bold mt-1 ${
-              isUnlocked ? "text-gray-900" : "text-gray-500"
-            }`}
-          >
-            {exam.questionPapername || "Untitled Exam"}
-          </h3>
-
-          
-          <p className="text-sm text-gray-600 mt-1">
-            {isMock1
-              ? "Free Mock Test (Always Unlocked)"
-              : isUnlocked
-              ? "Unlocked — You can attempt this exam"
-              : "Locked — Purchase required to unlock"}
-          </p>
-        </div>
-
-       
-        {!isUnlocked && !isAttempted && <LockIcon className="mt-1" />}
-      </div> */}
-
-      
-      {/* <p className="text-xs md:text-sm text-gray-600">
-        {exam.description || "Unattempted Exam"}
-      </p> */}
-
-      
       <div className="mt-4">
         {isAttempted ? (
-          // 📊 Go to analytics page
           <Button
             variant="outline"
             onClick={() => handleExam(exam)}
@@ -133,20 +71,14 @@ const MockExamCard = ({ exam }: { exam: any }) => {
             View Analytics
           </Button>
         ) : isUnlocked ? (
-          // 🚀 Start exam
           <Button
             className="bg-[#FF5635] hover:bg-[#e34d2e] px-10 text-white font-medium"
             onClick={() => handleExam(exam)}
           >
             Start
-            {/* <OpenExamPopup name={exam.questionPapername} /> */}
           </Button>
         ) : (
-          // 🔒 Locked state
-          <Button
-            disabled
-            className="bg-gray-300 text-gray-700 cursor-not-allowed"
-          >
+          <Button disabled className="bg-gray-300 text-gray-700 cursor-not-allowed w-full">
             Locked
           </Button>
         )}
@@ -156,53 +88,168 @@ const MockExamCard = ({ exam }: { exam: any }) => {
 };
 
 
+export default function MergedExamPage() {
+  const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
-// 🧩 Main User Exam Page
-const UserExam = () => {
-  const examById = useSelector((state: any) => state?.exam?.examById) || [];
+  const examdata = useSelector((s) => s.exam?.exam) || [];
+  const examById = useSelector((s) => s.exam?.examById) || [];
+  const selectedExamType = useSelector((s) => s.examType?.selectedExamType);
+  const loginUser = useSelector((s) => s.Auth?.loginUser);
+
+  const [selectedExam, setSelectedExam] = useState(null);
+
+
+  useEffect(() => {
+    dispatch(getCommonexam({}));
+  }, []);
+
+
+  useEffect(() => {
+    if (examById.length > 0) {
+      setSelectedExam({
+        examname: examById[0]?.exam?.examname,
+        _id: examById[0]?.exam?._id,
+      });
+    }
+  }, [examById]);
+
+
+  // Handle dropdown
+  const handleSelectExam = (option) => {
+    if (!option) return;
+
+    const exam = option.value;
+    setSelectedExam(exam);
+
+    const payload = {
+      examid: exam?._id,
+      examTypeId: selectedExamType?._id,
+      isPublished: true,
+      uid: loginUser?._id,
+    };
+
+    dispatch(getCommonQuestionBeExamId(payload));
+  };
+
+
+  const handleExam = async (examData) => {
+    if (!localStorage.getItem("token")) return router.push("/home");
+
+    if (!examData?.hasGivenExam) {
+      dispatch(
+        getUserQuestionData({
+          examTypeId: examData?.examTypeId,
+          questionPaperId: examData?._id,
+          examid: examData?.examid,
+          questionPapername: examData?.questionPapername,
+        })
+      );
+      router.push("/Exam/userExam");
+    } else {
+      await dispatch(QuestionPaperResult({ questionPaperID: examData?._id }));
+      router.push("/Exam/result");
+    }
+  };
+
+
+  const examOptions = examdata.map((ex) => ({
+    label: ex.examname,
+    value: ex,
+  }));
+
 
   return (
-    <div className="min-h-screen font-sans bg-[#fff]">
-      <main className="container mx-auto px-4 sm:px-6 lg:px-0 py-8">
-        {/* Header Section */}
-        <div className="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <h1 className="text-2xl md:text-3xl font-normal text-[#FF5635]">
-            {examById?.length
-              ? `${examById[0]?.exam?.examname || ""}: `
-              : ""}
-            <span className="text-[#000000]">
-              {examById[0]?.examType?.examType || ""}
-            </span>
-          </h1>
-          <p className="text-sm md:text-base text-[#000000] md:w-2/3 leading-relaxed">
-            The Prep Route mock tests are carefully designed to mirror the
-            question style, difficulty level, and time pressure of the actual
-            exam. Read this document to learn more.
-          </p>
-        </div>
-        <hr className="w-full border-t border-gray-100" />
-        {/* Mock Exam Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6">
-          {examById?.length > 0 ? (
-            examById.map((exam: any, index: number) => (
-              <MockExamCard key={exam._id || index} exam={exam} />
-            ))
-          ) : (
-            <div className="col-span-full text-center text-[#000000] py-10">
-              No exams available.
-            </div>
-          )}
+    <div className="min-h-screen font-sans bg-white px-6 lg:px-0 py-6">
+
+
+      <header className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8 py-4">
+
+        <div className="max-w-[350px] w-full">
+
+          <Select
+            options={examOptions}
+            value={
+              selectedExam
+                ? { label: selectedExam.examname, value: selectedExam }
+                : null
+            }
+            onChange={handleSelectExam}
+            placeholder="Select Exam"
+            isSearchable
+          />
         </div>
 
-        <div className="mt-50 text-center">
-          <div className="max-w-4xl mx-auto relative before:content-[url('../assets/images/quotes-up.png')] before:absolute before:top-0 before:left-0 after:content-[url('../assets/images/quotes-down.png')] after:absolute after:bottom-0 after:right-0">
-            <p className="text-[32px]">Exams test your memory, not your intelligence —</p>
-            <p className="text-[32px] text-[#FF5635]">but discipline turns both into power.</p>
+        {/* Buttons */}
+        <div className="flex flex-wrap justify-center md:justify-end gap-3">
+          <Button className="flex items-start gap-2 bg-[#FF5635] px-10 py-2 text-white rounded-lg shadow-md">
+            <span className="text-[15px]">Syllabus</span>
+            <BookIcon className="h-4 w-4" />
+          </Button>
+
+          <Button className="flex items-start gap-2 bg-[#000] px-10 py-2 text-white rounded-lg shadow-md">
+            <span className="text-[15px]">Cutoff</span>
+            <CutOffIcons />
+          </Button>
+        </div>
+      </header>
+
+
+
+      {!examById.length && (
+        <div className="text-center mt-6">
+          <h2 className="text-3xl font-semibold text-gray-700 mb-4">Select Mock Test</h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mt-6">
+            {examdata.map((exam) => (
+              <Card key={exam._id} className="p-5 rounded-xl bg-[#FAFAF9] hover:shadow-lg hover:scale-[1.01] cursor-pointer">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">{exam.examname}</h3>
+
+                <Button
+                  className="bg-[#FF5635] hover:bg-[#e34d2e] text-white w-full"
+                  onClick={() =>
+                    handleSelectExam({
+                      label: exam.examname,
+                      value: exam,
+                    })
+                  }
+
+
+                >
+                  View Mock Tests
+                </Button>
+              </Card>
+            ))}
           </div>
         </div>
-      </main>
+      )}
+
+
+      {examById.length > 0 && (
+        <main className="container mx-auto mt-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6 mr-20">
+            <h1 className="text-3xl font-semibold text-[#FF5635]">
+              <span className="text-black">Mock - </span>
+              {selectedExam?.examname || "Mock Tests"}
+            </h1>
+
+
+            <p className="text-black text-sm md:text-base max-w-2xl">
+              The Prep Route mock tests are carefully designed to mirror the question
+              style, difficulty level, and time pressure of the actual exam.
+              Read this document to learn more.
+
+            </p>
+          </div>
+
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {examById.map((exam) => (
+              <MockExamCard key={exam._id} exam={exam} handleExam={handleExam} />
+            ))}
+          </div>
+        </main>
+      )}
     </div>
   );
-};
-
-export default UserExam;
+}

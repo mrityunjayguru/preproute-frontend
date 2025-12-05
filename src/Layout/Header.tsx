@@ -149,7 +149,7 @@ export const Header: React.FC = () => {
 
           {token && (
             <Link
-              href="/Analytics"
+              href="/analytics"
               className="hover:text-orange-600 transition-colors duration-200"
             >
               Analytics
@@ -175,7 +175,7 @@ export const Header: React.FC = () => {
               <Button
                 variant="outline"
                 onClick={() => router.push("/Profile")}
-                className="border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC] text-lg px-6 py-3 rounded-[14px]"
+                className="border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC] text-lg px-6 py-3 rounded-[4px] font-semibold"
               >
                 Profile
               </Button>

@@ -1,15 +1,14 @@
 import React from 'react'
-import UserExam from './Component/Exam'
 import TopPratices from './Component/TopPratices'
-import { ExamHeader } from './Component/ExamHeader'
+import MergedExamPage from './Component/Exam'
 
 
 function Exam() {
   return (
     <div className='container mx-auto'>
-      <ExamHeader/> 
+
       
-      <UserExam/>
+      <MergedExamPage/>
     </div>
   )
 }

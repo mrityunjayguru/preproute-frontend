@@ -26,11 +26,11 @@ const RightSection: React.FC<Props> = ({
   isTimeUp,
 }) => {
   return (
-    <aside className="lg:w-1/4 w-full bg-white p-4 border-t lg:border-t-0 lg:border-l flex-shrink-0">
+    <aside className="lg:w-1/4 w-full bg-white font-semibold p-4 border-t lg:border-t-0 lg:border-l flex-shrink-0">
       {userLogin?(
          
      <>
-     user Profile
+     User Profile
       <div className="flex flex-col items-center mb-4">
         <div className="w-16 h-16 bg-gray-300 rounded-full mb-2 flex items-center justify-center text-white text-2xl">
           {userLogin?.username?.[0]?.toUpperCase() || "U"}
