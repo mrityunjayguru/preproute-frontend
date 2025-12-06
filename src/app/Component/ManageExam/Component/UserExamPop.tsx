@@ -3,7 +3,7 @@ import React from "react";
 
 const UserExamPop = () => {
   const handleButtonClick = () => {
-    const url = "/Exam/userExam"; // your exam page
+    const url = "/Exam/InstructionPaeg"; // your exam page
 
     // open fullscreen popup
     const features = `
@@ -57,11 +57,11 @@ const UserExamPop = () => {
         };
 
         // 🚫 Constantly enforce the current URL
-        setInterval(() => {
-          if (popup.location.pathname !== "/Exam/userExam") {
-            popup.location.href = "/Exam/userExam";
-          }
-        }, 1000);
+        // setInterval(() => {
+        //   if (popup.location.pathname !== "/Exam/userExam") {
+        //     popup.location.href = "/Exam/userExam";
+        //   }
+        // }, 1000);
 
         // 🚫 Prevent page close/reload
         popup.onbeforeunload = (e) => {

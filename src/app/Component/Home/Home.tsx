@@ -292,16 +292,12 @@ function ICON_ITEM(title: string, subtitle: string, logo: any) {
 function IMPACT_ROW(label: string, withPct: string, withoutPct: string) {
   return (
     <div className="grid grid-cols-3 items-center text-center text-[15px] sm:text-xl font-medium text-gray-800">
-
-      {/* Label */}
       <div className="flex justify-center sm:justify-start font-semibold text-black">
         {label}
       </div>
 
-      {/* With Percentage */}
       <div className="text-green-600 font-bold">{withPct}</div>
 
-      {/* Without Percentage */}
       <div className="text-red-600 font-bold">{withoutPct}</div>
 
     </div>

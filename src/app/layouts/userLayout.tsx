@@ -9,7 +9,7 @@ export default function UserLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   // Check if current route is the exam page
-  const isExamPage = pathname === "/Exam/userExam" ;
+  const isExamPage = pathname === "/Exam/userExam" ||pathname ===  "/Exam/InstructionPaeg" ;
 
   return (
     <div className="flex flex-col min-h-screen">

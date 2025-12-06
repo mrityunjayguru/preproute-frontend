@@ -59,9 +59,11 @@ const FooterActions: React.FC<Props> = ({
       onClick={handleSubmit}
       variant="destructive"
       size="lg"
-      className="w-full sm:w-auto"
-    >
-      Submit
+      className="w-full lg:w-auto px-40 py-2"
+    ><div
+    className="font-semibold text-xl"
+    >Submit</div>
+    
     </Button>
   </footer>
 );
