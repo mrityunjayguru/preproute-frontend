@@ -6,7 +6,7 @@ function Instruction() {
   return (
     <div>
       <InstructionPage/>
-    </div>
+  </div>
   )
 }
 
