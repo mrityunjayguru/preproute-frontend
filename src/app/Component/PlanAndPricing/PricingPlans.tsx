@@ -31,7 +31,7 @@ export default function PricingPlans() {
   const handleCreatePayment = async (plan: any) => {
     try {
       const payload: any = {
-        amount: Number(plan.price) * 100, // price in paise
+        amount: Number(plan.price) * 100,
         currency: "INR",
         userId: user?._id,
         planId: plan._id,
@@ -47,7 +47,7 @@ export default function PricingPlans() {
       const { order, key_id } = response.payload;
 
       const options = {
-        key: key_id,
+        key: "rzp_test_Rc3F5TR7UPCXIy",
         amount: order.amount,
         currency: order.currency,
         name: "PreeRoute",
@@ -86,7 +86,6 @@ export default function PricingPlans() {
 
       <div className="min-h-screen bg-[#fff] py-12 px-4 flex flex-col items-center">
         <h2 className="text-3xl md:text-4xl font-bold text-[#000] mb-8 text-center">
-          
            & Plans
         </h2>
 

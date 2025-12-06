@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import { Button } from "@/components/ui/button";
 import { useSelector, useDispatch } from "react-redux";
-import { getCommonexam, getCommonQuestionBeExamId, getexam, getQuestionBeExamId } from "@/api/Exam";
+import { getCommonexam, getCommonQuestionBeExamId, getexam, getQuestionBeExamId, handleSetSelectedExam } from "@/api/Exam";
 import { AppDispatch } from "@/store/store";
 import { BookIcon } from "lucide-react";
 import { CutOffIcons } from "@/Common/svgIcon";
@@ -24,6 +24,7 @@ export const ExamHeader = () => {
   const getData = async () => {
     try {
       const payload: any = {
+        userId:loginUser?._id
       };
       await dispatch(getCommonexam(payload));
     } catch (error) {
@@ -37,6 +38,7 @@ export const ExamHeader = () => {
 
   // Handle select
   const handleSelect = (selectedOption: any) => {
+   
     if (!selectedOption) return;
     const selectedExam = selectedOption.value;
     const payload: any = {
@@ -46,6 +48,7 @@ export const ExamHeader = () => {
       uid:loginUser?._id
     };
     dispatch(getCommonQuestionBeExamId(payload));
+    dispatch(handleSetSelectedExam(selectedOption.value))
     setSelectedExam(selectedExam);
   };
 

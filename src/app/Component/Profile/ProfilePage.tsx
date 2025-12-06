@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { AppDispatch } from "@/store/store";
 import axios from "axios";
-import { updateUserInfo } from "@/api/Users";
+import { updateUserInfo, userProfileData } from "@/api/Users";
+import PurchasedPlanSection from "./PurchasedPlanSection";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const user = useSelector((state: any) => state?.Auth?.loginUser);
+  console.log(user,"useruseruser")
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
@@ -51,6 +53,15 @@ export default function ProfilePage() {
       setUploading(false);
     }
   };
+  const getuserData=async()=>{
+    const payload:any={_id:user?._id}
+    dispatch(userProfileData(payload))
+  }
+
+
+ useEffect(()=>{
+getuserData()
+  },[])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 flex items-center justify-center px-4 py-10">
@@ -125,7 +136,7 @@ export default function ProfilePage() {
               </p>
             </div>
           </div>
-
+<PurchasedPlanSection user={user}/>
           {/* ⚙️ Buttons */}
           <div className="mt-10 flex justify-center gap-6">
             <Button

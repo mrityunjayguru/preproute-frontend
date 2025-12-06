@@ -5,6 +5,7 @@ import {
   setexamById,
   setSelectedExam,
   setSelectedExamDetail,
+  SelectedExam
 } from "../../store/seatUpexam/exam";
 import APIName, { exam } from "../endPoints";
 import { examRepo } from "./ExamRepo";
@@ -293,6 +294,27 @@ export const handleUpdateStaus = createAsyncThunk<boolean, Payload>(
   }
 );
 
+
+
+export const handleSetSelectedExam = createAsyncThunk<boolean, Payload>(
+  exam.get,
+  async (payload, thunkAPI) => {
+    try {
+
+        thunkAPI.dispatch(SelectedExam(payload));
+        return true;
+    } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
 
  
 

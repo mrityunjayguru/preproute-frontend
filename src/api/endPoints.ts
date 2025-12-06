@@ -49,7 +49,8 @@ export const User={
   fetchAttemptedExam:"user/AttemptExam",
   QuestionPaperResult:"user/QuestionPaperResult",
   updateUserInfo:"user/updateProfile",
-  createReport:"user/report"
+  createReport:"user/report",
+  userProfiel:"user/userData",
 }
 export const Order={
   createOrder:"razorpay/createOrder"

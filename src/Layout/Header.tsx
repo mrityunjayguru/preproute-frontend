@@ -34,7 +34,10 @@ export const Header: React.FC = () => {
   ) || [];
 
   useEffect(() => {
-    const payload: any = {};
+    const payload: any = {
+      userId:userLogin?._id
+    }
+    ;
     dispatch(getCommonExamType(payload));
   }, [dispatch]);
 

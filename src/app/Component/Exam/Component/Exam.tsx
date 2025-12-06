@@ -9,7 +9,22 @@ import OpenExamPopup from "../../ManageExam/Component/OpenNewWindowButton";
 import { questionPaper } from "@/api/endPoints";
 import { Button } from "@/components/ui/button";
 import { QuestionPaperResult } from "@/api/Users";
+interface Exam {
+  _id: string;
+  name?: string;
+  // add any other fields you use
+}
 
+interface ExamHeader {
+  examPlan?: boolean;  // true when purchased
+}
+
+interface MockExamCardProps {
+  exam: Exam;
+  index: number;           // 👈 TypeScript typing
+  examHeader?: ExamHeader; // optional prop
+  handleExam: (exam: Exam) => void;
+}
 // 🔒 Lock Icon
 const LockIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
@@ -31,7 +46,10 @@ const LockIcon = (props: React.SVGProps<SVGSVGElement>) => (
 );
 
 // 🎯 Exam Card
-const MockExamCard = ({ exam }: { exam: any }) => {
+const MockExamCard: React.FC<MockExamCardProps> = ({
+  exam,
+  index,
+}) => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const examById = useSelector((state: any) => state?.exam?.examById) || [];
@@ -39,10 +57,10 @@ const MockExamCard = ({ exam }: { exam: any }) => {
   const hasPurchase = userlogin?.PurchaseDetail?.length > 0;
   const isMock1 = exam?.questionPapername === "mock 1" || "mocks 1";
   const isAttempted = exam?.hasGivenExam === true;
-
+const examHeader=useSelector((state:any)=>state?.exam?.examHeader)
   // ✅ Only Mock 1 is free; all others require purchase
   const isUnlocked = isMock1 || hasPurchase;
-
+console.log(exam,"llllllllllllllll")
   const handleExam = async (data: any) => {
     const token = localStorage.getItem("token");
     if (!token) return router.push("/home");
@@ -133,14 +151,20 @@ const MockExamCard = ({ exam }: { exam: any }) => {
             View Analytics
           </Button>
         ) : isUnlocked ? (
-          // 🚀 Start exam
-          <Button
-            className="bg-[#FF5635] hover:bg-[#e34d2e] px-10 text-white font-medium"
-            onClick={() => handleExam(exam)}
-          >
-            Start
-            {/* <OpenExamPopup name={exam.questionPapername} /> */}
-          </Button>
+        <Button
+  className="cursor-pointer bg-[#FF5635] hover:bg-[#e34d2e] px-10 text-white font-medium
+             disabled:opacity-50 disabled:cursor-not-allowed"
+ disabled={!(index  === 1 || examHeader?.examPlan)}
+   // 👈 disable condition
+  onClick={() => {
+    if (!examHeader?.planDetails) {
+      handleExam(exam);                   // 👈 only run when not disabled
+    }
+  }}
+>
+  Start
+</Button>
+
         ) : (
           // 🔒 Locked state
           <Button
@@ -185,7 +209,7 @@ const UserExam = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 md:gap-6">
           {examById?.length > 0 ? (
             examById.map((exam: any, index: number) => (
-              <MockExamCard key={exam._id || index} exam={exam} />
+              <MockExamCard key={exam._id || index} exam={exam} index={index+1} />
             ))
           ) : (
             <div className="col-span-full text-center text-[#000000] py-10">

@@ -253,3 +253,27 @@ export const createReport = createAsyncThunk<boolean, Payload>(
 
 
 
+
+
+
+
+
+export const userProfileData = createAsyncThunk<boolean, Payload>(
+  "topic/get", // ✅ action type string must be a string, not a variable
+  async (payload, thunkAPI) => {
+    try {
+      // Dispatch your synchronous action
+    const data = await UserRepo.userProfiel(payload);
+if(data.status==200){
+      thunkAPI.dispatch(setAuth(data.data.data));
+
+}
+      // Return success flag
+      return true;
+    } catch (err: any) {
+      console.error("Error in updaquesPaperTime:", err);
+      // Properly reject the thunk if something fails
+      return thunkAPI.rejectWithValue(false) as any;
+    }
+  }
+);

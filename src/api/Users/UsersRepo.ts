@@ -16,6 +16,7 @@ interface UserRepo {
 QuestionPaperResult: (payload: any) => Promise<AxiosResponse>;
 updateUserInfo: (payload: any) => Promise<AxiosResponse>;
 createReport: (payload: any) => Promise<AxiosResponse>;
+userProfiel: (payload: any) => Promise<AxiosResponse>;
 
 }
 
@@ -41,6 +42,9 @@ export const UserRepo: UserRepo = {
   },
   createReport(payload) {
     return Repository.post(User.createReport, payload);
+  },
+  userProfiel(payload) {
+    return Repository.post(User.userProfiel, payload);
   },
  updateUserInfo(payload) {
   return Repository.post(User.updateUserInfo, payload, {
