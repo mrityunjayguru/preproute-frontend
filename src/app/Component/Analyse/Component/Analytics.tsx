@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { fetchAttemptedExam, QuestionPaperResult } from "@/api/Users";
 import { useRouter } from "next/navigation";
-
+import { Button } from "@/components/ui/button";
+import analytics from "../../../../assets/images/analytics.svg"
 function Analytics() {
   const dispatch = useDispatch<AppDispatch>();
   const data = useSelector((state: any) => state?.user?.AttemptedExam || []);
@@ -34,7 +35,7 @@ const payload:any={
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">📊 Attempted Exams</h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-800"><img src={analytics} alt="" /> Attempted Exams</h1>
 
       {data.length === 0 ? (
         <div className="text-gray-500 text-center mt-10">No exams attempted yet.</div>
@@ -54,12 +55,12 @@ const payload:any={
               </p>
              
 
-              <button
+              <Button
                 onClick={() => handleAnalysis(exam)}
-                className="cursor-pointer mt-4 w-full bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition"
+                 className="bg-[#FF5635] hover:bg-[#e34d2e] text-white w-full cursor-pointer"
               >
                 View Analysis
-              </button>
+              </Button>
             </div>
           ))}
         </div>

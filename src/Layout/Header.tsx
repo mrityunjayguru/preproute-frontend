@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [selectedExam, setSelectedExam] = useState("Practice");
+  const [selectedExam, setSelectedExam] = useState("Select Exam");
 
   const token = localStorage.getItem("token");
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
@@ -56,7 +56,7 @@ export const Header: React.FC = () => {
   }, []);
 
   const handleExamClick = (exam: any) => {
-    setSelectedExam(exam.examType);
+    // setSelectedExam(exam.examType);
     dispatch(handleSelectedExamType(exam));
     setIsDropdownOpen(false);
         const payload: any = null;

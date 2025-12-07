@@ -99,8 +99,6 @@ export default function MergedExamPage() {
   const loginUser = useSelector((s:any) => s.Auth?.loginUser);
 
   const [selectedExam, setSelectedExam] = useState<any>(null);
-
-console.log(selectedExamType,"selectedExamTypeselectedExamTypeselectedExamType")
   useEffect(() => {
     const payload:any={
       userId:loginUser?._id
@@ -203,7 +201,7 @@ dispatch(handleSetSelectedExam(option.value));
 
       {!examById.length && (
         <div className="text-center mt-6">
-          <h2 className="text-3xl font-semibold text-gray-700 mb-4">Select Mock Exam</h2>
+          <h2 className="text-3xl font-semibold text-gray-700 mb-4">{selectedExamType?.examType} Exam</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mt-6">
             {examdata.map((exam:any) => (
@@ -221,7 +219,7 @@ dispatch(handleSetSelectedExam(option.value));
 
 
                 >
-                  View Mock Tests
+                  View {selectedExamType?.examType} Tests
                 </Button>
               </Card>
             ))}
