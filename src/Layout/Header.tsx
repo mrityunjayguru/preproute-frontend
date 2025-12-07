@@ -176,7 +176,7 @@ export const Header: React.FC = () => {
       </div>
 
       {/* Auth Buttons */}
-      <div className="hidden lg:flex items-center gap-4">
+      <div className="hidden lg:flex items-center gap-3">
         {(userLogin?.role === "Admin" || userLogin?.role === "Expert") &&
           token && (
             <Button
@@ -192,14 +192,14 @@ export const Header: React.FC = () => {
               <Button
                 variant="outline"
                 onClick={() => router.push("/Profile")}
-                className="border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC] text-lg px-6 py-3 rounded-[4px] font-semibold"
+                className="border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC] text-[14px] px-5 py-3 rounded-[4px] font-semibold"
               >
                 Profile
               </Button>
 
               <Button
                 onClick={handleLogoutClick}
-                className="bg-[#FF5635] hover:bg-[#FF5635] text-white text-lg px-6 py-3 rounded-[4px] shadow-md"
+                className="bg-[#FF5635] hover:bg-[#FF5635] text-white text-[14px] px-5 py-3 rounded-[4px] shadow-md"
               >
                 Logout
               </Button>
@@ -207,7 +207,7 @@ export const Header: React.FC = () => {
           ) : (
             <Button
               onClick={() => router.push("/Auth/signin")}
-              className="bg-[#FF5635] hover:bg-[#FF5635] text-white text-lg px-6 py-6 rounded-[4px] shadow-md"
+              className="bg-[#FF5635] hover:bg-[#FF5635] text-white text-[14px] px-5 py-6 rounded-[4px] shadow-md"
             >
               Login
             </Button>
