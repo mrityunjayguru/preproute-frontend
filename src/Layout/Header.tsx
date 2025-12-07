@@ -13,6 +13,8 @@ import {
   handleSelectedExamType,
 } from "@/api/ExamType";
 import { handleLogout } from "@/api/Auth/SchoolAuth";
+import { resetQuestionByExamID } from "@/api/Exam";
+import { resetQuestion } from "@/api/Question";
 
 // Local Font
 const artegra = localFont({
@@ -57,6 +59,9 @@ export const Header: React.FC = () => {
     setSelectedExam(exam.examType);
     dispatch(handleSelectedExamType(exam));
     setIsDropdownOpen(false);
+        const payload: any = null;
+        dispatch(resetQuestionByExamID(payload));
+        dispatch(resetQuestion(payload));
     router.push("/Exam/Mocks");
   };
 
@@ -152,7 +157,7 @@ export const Header: React.FC = () => {
 
           {token && (
             <Link
-              href="/analytics"
+              href="/analytices"
               className="hover:text-orange-600 transition-colors duration-200"
             >
               Analytics
@@ -164,7 +169,7 @@ export const Header: React.FC = () => {
               href="/resources"
               className="hover:text-orange-600 transition-colors duration-200"
             >
-              resources
+              Resources
             </Link>
           )}
         </nav>

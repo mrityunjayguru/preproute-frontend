@@ -86,7 +86,7 @@ export default function PricingPlans() {
 
       <div className="min-h-screen bg-[#fff] py-12 px-4 flex flex-col items-center">
         <h2 className="text-3xl md:text-4xl font-bold text-[#000] mb-8 text-center">
-           & Plans
+          Pricing & Plans
         </h2>
 
         {/* 🔥 Dynamic Pricing Cards */}

@@ -41,7 +41,7 @@ const LockIcon = (props:any) => (
 
 
 const MockExamCard = ({ exam, handleExam }) => {
-  const user = useSelector((s) => s.Auth?.loginUser);
+  const user = useSelector((s:any) => s.Auth?.loginUser);
   const hasPurchase = user?.PurchaseDetail?.length > 0;
   const isMock1 = ["mock 1", "mocks 1"].includes(exam?.questionPapername?.toLowerCase());
   const isAttempted = exam?.hasGivenExam;
@@ -100,7 +100,7 @@ export default function MergedExamPage() {
 
   const [selectedExam, setSelectedExam] = useState<any>(null);
 
-
+console.log(selectedExamType,"selectedExamTypeselectedExamTypeselectedExamType")
   useEffect(() => {
     const payload:any={
       userId:loginUser?._id
@@ -119,7 +119,9 @@ export default function MergedExamPage() {
     }
   }, [examById]);
 
-
+useEffect(()=>{
+  setSelectedExam(null)
+},[selectedExamType])
   // Handle dropdown
   const handleSelectExam = (option:any) => {
     if (!option) return;
@@ -199,11 +201,9 @@ dispatch(handleSetSelectedExam(option.value));
         </div>
       </header>
 
-
-
       {!examById.length && (
         <div className="text-center mt-6">
-          <h2 className="text-3xl font-semibold text-gray-700 mb-4">Select Mock Test</h2>
+          <h2 className="text-3xl font-semibold text-gray-700 mb-4">Select Mock Exam</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mt-6">
             {examdata.map((exam:any) => (

@@ -71,13 +71,13 @@ export default function PurchasedPlanSection({ user }: Props) {
                       {exam.examname}
                     </p>
 
-                    <p className="text-sm text-gray-600">
+                    {/* <p className="text-sm text-gray-600">
                       Duration: {exam.fullExamduration} mins
                     </p>
 
                     <p className="text-sm text-gray-500">
                       Sections: {exam.sections?.length || 0}
-                    </p>
+                    </p> */}
                   </li>
                 ))}
               </ul>
