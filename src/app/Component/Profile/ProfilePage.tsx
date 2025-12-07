@@ -67,7 +67,7 @@ getuserData()
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 flex items-center justify-center px-4 py-10">
       <div className="relative bg-white/80 backdrop-blur-xl shadow-2xl rounded-3xl max-w-2xl w-full overflow-hidden border border-orange-100">
         {/* 🌈 Banner */}
-        <div className="h-32 bg-gradient-to-r from-orange-500 to-pink-500 relative">
+        <div className="h-32 bg-gradient-to-r bg-[#FF5635] relative">
           <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
             {/* 📸 Profile Image Upload */}
             <div
@@ -141,14 +141,14 @@ getuserData()
           <div className="mt-10 flex justify-center gap-6">
             <Button
               variant="outline"
-              className="border-orange-500 text-orange-600 hover:bg-orange-50 px-6 py-2 rounded-full"
+              className="border-orange-500 text-orange-600  px-6 py-2 rounded-full"
               onClick={() => router.push("/profile/edit")}
             >
               Edit Profile
             </Button>
             <Button
               onClick={handleLogout}
-              className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white px-6 py-2 rounded-full shadow-md"
+              className=" bg-[#e34d2e]   text-white px-6 py-2 rounded-full "
             >
               Logout
             </Button>

@@ -80,7 +80,7 @@ export const Header: React.FC = () => {
   ];
 
   return (
- <header className={`w-full py-8 px-4 lg:px-30 bg-[#F8F7F3] flex justify-between items-center ${artegra.className}`}>
+ <header className={ `sticky top-0 bg-white z-10 w-full py-8 px-4 lg:px-30 bg-[#F8F7F3] flex justify-between items-center ${artegra.className}`}>
 
       {/* Logo + Desktop Nav */}
       <div className="flex items-center gap-20">

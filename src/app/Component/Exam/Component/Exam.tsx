@@ -69,7 +69,7 @@ const MockExamCard = ({ exam, handleExam,index }) => {
           <Button
             variant="outline"
             onClick={() => handleExam(exam)}
-            className="w-full border-blue-500 text-blue-600 hover:bg-blue-50 font-medium"
+            className="w-full border-[#FF5635] text-[#FF5635]  font-medium"
           >
             View Analytics
           </Button>
@@ -167,7 +167,7 @@ dispatch(handleSetSelectedExam(option.value));
 
 
   return (
-    <div className="min-h-screen font-sans bg-white px-6 lg:px-0 py-6">
+    <div className="h-[79vh] font-sans bg-white px-6 lg:px-0 py-6">
 
 
       <header className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8 py-4">

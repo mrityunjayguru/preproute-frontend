@@ -305,3 +305,9 @@ div[class*="badge"] {
   font-weight: 400;
 }
 
+.stickypositios{
+   position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+}

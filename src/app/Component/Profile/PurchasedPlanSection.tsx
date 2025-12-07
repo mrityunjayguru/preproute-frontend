@@ -33,8 +33,8 @@ export default function PurchasedPlanSection({ user }: Props) {
       {/* 📘 Purchased Plan Details */}
       {user?.PlanDetails && (
         <div className="mt-10 p-5 bg-white rounded-2xl border border-orange-200 shadow-sm">
-          <h2 className="text-xl font-semibold text-orange-700 mb-3">
-            📦 Purchased Plan
+          <h2 className="text-xl font-semibold text-[#FF5635] mb-3">
+             Purchased Plan
           </h2>
 
           <div className="space-y-2 text-gray-700">
@@ -56,8 +56,8 @@ export default function PurchasedPlanSection({ user }: Props) {
 
           {/* 📚 Purchased Exams List */}
           <div className="mt-5">
-            <h3 className="text-lg font-semibold text-orange-600 mb-2">
-              📝 Exams Included In Plan
+            <h3 className="text-lg font-semibold text-[#FF5635] mb-2">
+               Exams Included In Plan
             </h3>
 
             {user?.PurchasedExams?.length ? (
