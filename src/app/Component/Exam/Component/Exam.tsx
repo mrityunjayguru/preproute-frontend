@@ -40,13 +40,14 @@ const LockIcon = (props:any) => (
 );
 
 
-const MockExamCard = ({ exam, handleExam }) => {
+const MockExamCard = ({ exam, handleExam,index }) => {
   const user = useSelector((s:any) => s.Auth?.loginUser);
   const hasPurchase = user?.PurchaseDetail?.length > 0;
   const isMock1 = ["mock 1", "mocks 1"].includes(exam?.questionPapername?.toLowerCase());
   const isAttempted = exam?.hasGivenExam;
   const isUnlocked = isMock1 || hasPurchase;
   const haaccessExam = useSelector((s:any) => s.exam?.examHeader);
+  const selectedExamType = useSelector((s:any) => s.examType?.selectedExamType);
 
   return (
     <Card
@@ -54,13 +55,14 @@ const MockExamCard = ({ exam, handleExam }) => {
         }`}
     >
       <div className="flex flex-row justify-between items-center mt-1">
-        <p className="text-[16px] text-gray-600">Mock Exam</p>
-        <button className="text-[#FF5635] bg-[#4FA77E] px-3 py-1 rounded-md text-sm font-medium text-white">
+        <p className="text-[16px] text-gray-600">{selectedExamType?.examType}</p>
+{index==0?(<button className="text-[#FF5635] bg-[#4FA77E] px-3 py-1 rounded-md text-sm font-medium text-white">
           Free
-        </button>
+        </button>):(null)}
+        
       </div>
 
-      <h3 className="text-[28px] text-[#FF5635] mb-6">Warm Up</h3>
+      {/* <h3 className="text-[28px] text-[#FF5635] mb-6">Warm Up</h3> */}
 
       <div className="mt-4">
         {isAttempted ? (
@@ -187,7 +189,7 @@ dispatch(handleSetSelectedExam(option.value));
 
         {/* Buttons */}
         <div className="flex flex-wrap justify-center md:justify-end gap-3">
-          <Button className="flex items-start gap-2 bg-[#FF5635] px-10 py-2 text-white rounded-lg shadow-md">
+          {/* <Button className="flex items-start gap-2 bg-[#FF5635] px-10 py-2 text-white rounded-lg shadow-md">
             <span className="text-[15px]">Syllabus</span>
             <BookIcon className="h-4 w-4" />
           </Button>
@@ -195,7 +197,7 @@ dispatch(handleSetSelectedExam(option.value));
           <Button className="flex items-start gap-2 bg-[#000] px-10 py-2 text-white rounded-lg shadow-md">
             <span className="text-[15px]">Cutoff</span>
             <CutOffIcons />
-          </Button>
+          </Button> */}
         </div>
       </header>
 
@@ -232,7 +234,7 @@ dispatch(handleSetSelectedExam(option.value));
         <main className="container mx-auto mt-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6 mr-20">
             <h1 className="text-3xl font-semibold text-[#FF5635]">
-              <span className="text-black">Mock - </span>
+              <span className="text-black">{selectedExamType?.examType} - </span>
               {selectedExam?.examname || "Mock Tests"}
             </h1>
 
@@ -247,8 +249,8 @@ dispatch(handleSetSelectedExam(option.value));
 
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {examById.map((exam:any) => (
-              <MockExamCard key={exam._id} exam={exam} handleExam={handleExam} />
+            {examById.map((exam:any,i:any) => (
+              <MockExamCard key={exam._id} exam={exam} handleExam={handleExam} index={i} />
             ))}
           </div>
         </main>
