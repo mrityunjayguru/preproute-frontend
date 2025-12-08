@@ -2286,3 +2286,10 @@ export const svgIcon4 = (
 </defs>
 </svg>
 );
+
+
+export const questionIcon = (
+  <svg width="31" height="26" viewBox="0 0 31 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M30.5 9V25.5H0V9L9 0H21.5L30.5 9Z" fill="currentColor"/>
+</svg>
+);
