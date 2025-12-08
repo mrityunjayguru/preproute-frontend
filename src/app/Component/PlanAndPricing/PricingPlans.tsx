@@ -6,10 +6,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { createOrder } from "@/api/razorpay";
 import Script from "next/script";
+import { useRouter } from "next/navigation";
+
 import { getPlanandPricing } from "@/api/Plan&Pricing";
 
 export default function PricingPlans() {
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
   const user = useSelector((state: any) => state?.Auth?.loginUser);
 
@@ -56,6 +59,7 @@ export default function PricingPlans() {
         handler: function (paymentResponse: any) {
           console.log("Payment Success:", paymentResponse);
           alert("Payment Successful!");
+          router.push("/Profile");
         },
         prefill: {
           name: user?.username,

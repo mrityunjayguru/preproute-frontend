@@ -171,8 +171,7 @@ dispatch(handleSetSelectedExam(option.value));
 
 
       <header className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8 py-4">
-
-        <div className="max-w-[350px] w-full">
+{examById && examById.length>0 ?(   <div className="max-w-[350px] w-full">
 
           <Select
             options={examOptions}
@@ -185,7 +184,8 @@ dispatch(handleSetSelectedExam(option.value));
             placeholder="Select Exam"
             isSearchable
           />
-        </div>
+        </div>):(null)}
+     
 
         {/* Buttons */}
         <div className="flex flex-wrap justify-center md:justify-end gap-3">

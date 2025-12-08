@@ -293,15 +293,19 @@ const [showPopup, setShowPopup] = useState(false);
     setNumericalValue("")
   };
 
-  const handleSubmit = async () => {
-    try {
-      await updateSectionTime(null, selectedSection?.sectionId);
-      await dispatch(userExamResult(examData));
-      router.push("result");
-    } catch (err) {
-      console.error("Error submitting exam:", err);
-    }
-  };
+const handleSubmit = async () => {
+  const confirmSubmit = window.confirm("Are you sure you want to finish this exam?");
+  if (!confirmSubmit) return; // ❌ User cancelled
+
+  try {
+    await updateSectionTime(null, selectedSection?.sectionId);
+    await dispatch(userExamResult(examData));
+    router.push("result");
+  } catch (err) {
+    console.error("Error submitting exam:", err);
+  }
+};
+ 
 
   const getQuestionByNumberId = async (number: number) => {
     setCurrentQuestionIndex(number);
