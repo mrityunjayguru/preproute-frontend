@@ -26,7 +26,9 @@ const FooterActions: React.FC<Props> = ({
 ) => (
   <footer className="bg-white p-4 shadow-md flex flex-wrap gap-2 justify-between sticky bottom-0">
     <div className="flex gap-2 flex-wrap">
-      <Button variant="outline" size="sm" onClick={handleMarkForReview} disabled={isTimeUp}>
+      <Button variant="outline" size="sm" 
+  
+      onClick={handleMarkForReview} disabled={isTimeUp}>
         Mark for Review & Next
       </Button>
       <Button variant="outline" size="sm" onClick={handleClearResponse} disabled={isTimeUp}>
@@ -36,14 +38,16 @@ const FooterActions: React.FC<Props> = ({
         Report
       </Button>
     </div>
-    <div className="flex gap-2 flex-wrap">
-      <Button variant="secondary" onClick={handlePreviousQuestion} disabled={isTimeUp}>
+    <div className="flex gap-4 flex-wrap ">
+      <Button variant="secondary" onClick={handlePreviousQuestion} disabled={isTimeUp}
+      className="bg-black text-white text-xl font-semibold p-5"
+      >
         Previous
       </Button>
      <Button
         onClick={handleNextQuestion}
         disabled={isTimeUp || loder}
-        className="flex items-center gap-2"
+        className="flex items-center gap-4 p-5 text-xl font-semibold bg-[#FF5635]"
       >
         {loder ? (
           <>
@@ -59,9 +63,9 @@ const FooterActions: React.FC<Props> = ({
       onClick={handleSubmit}
       variant="destructive"
       size="lg"
-      className="w-full lg:w-auto px-40 py-2"
+      className="  px-30 py-2 bg-[#FF5635]   "
     ><div
-    className="font-semibold text-xl"
+    className="font-semibold text-xl "
     >Submit</div>
     
     </Button>

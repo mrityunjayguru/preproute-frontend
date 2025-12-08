@@ -15,13 +15,12 @@ function ExamHeader() {
 
   return (
     <div>
-<div className="w-full flex justify-between items-center px-20 mt-5">
-      <Image src={logo} alt="Logo" className="h-5 w-auto mt-1" />
+<div className="w-full flex justify-between items-center px-20 ">
+      <Image src={logo} alt="Logo" className="h-8 w-auto mt-3" />
 
   {/* RIGHT: Calculator Button */}
   <Button
-    className="rounded-md"
-    variant="orange"
+    className="rounded-md bg-[#FF5635] text-lg font-semibold mt-5"
     onClick={toggleCalculator}
   >
     Calculator
