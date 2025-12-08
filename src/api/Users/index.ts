@@ -226,9 +226,7 @@ export const createReport = createAsyncThunk<boolean, Payload>(
   async (payload, thunkAPI) => {
     try {
       const data: any = await UserRepo.createReport(payload);
-
       if (data?.status == 200) {
-        console.log(data?.status ,"data?.status data?.status ")
         toast.success("Report submitted successfully 🎉", {
           position: "top-center",
           autoClose: 2000,

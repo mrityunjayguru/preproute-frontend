@@ -35,7 +35,8 @@ const payload:any={
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800"><img src={analytics} alt="" /> Attempted Exams</h1>
+      <img src={analytics} alt="" />
+      <h1 className="text-2xl font-bold mb-6 text-gray-800"> Attempted Exams</h1>
 
       {data.length === 0 ? (
         <div className="text-gray-500 text-center mt-10">No exams attempted yet.</div>

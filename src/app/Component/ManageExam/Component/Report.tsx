@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import React from "react";
 
 interface PopupProps {
@@ -32,23 +33,24 @@ export default function Popup({ title, isOpen, onClose, onSubmit }: PopupProps) 
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="Type something..."
-            className="w-full border border-gray-300 rounded-lg p-3 mb-5 focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white/60 placeholder-gray-500"
+            className="w-full border border-[#e34d2e] rounded-lg p-3 mb-5 focus:outline-none focus:ring-2 focus:ring-[#e34d2e] bg-white/60 placeholder-gray-500"
           />
 
-          <div className="flex justify-end gap-3">
-            <button
+          <div className="flex w-full justify-end gap-3">
+            <Button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
+              className="px-4 py-2 w-1/2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
-              className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
+               className=" w-1/2 bg-[#FF5635] hover:bg-[#e34d2e] text-white "
+
             >
               Submit
-            </button>
+            </Button>
           </div>
         </form>
 

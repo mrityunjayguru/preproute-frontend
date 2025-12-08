@@ -64,28 +64,32 @@ const MockExamCard = ({ exam, handleExam,index }) => {
 
       {/* <h3 className="text-[28px] text-[#FF5635] mb-6">Warm Up</h3> */}
 
-      <div className="mt-4">
-        {isAttempted ? (
-          <Button
-            variant="outline"
-            onClick={() => handleExam(exam)}
-            className="w-full border-[#FF5635] text-[#FF5635]  font-medium"
-          >
-            View Analytics
-          </Button>
-        ) : haaccessExam?.hasAccess ? (
-          <Button
-            className="bg-[#FF5635] hover:bg-[#e34d2e] px-10 text-white font-medium"
-            onClick={() => handleExam(exam)}
-          >
-            <UserExamPop/>
-          </Button>
-        ) : (
-          <Button disabled className="bg-gray-300 text-gray-700 cursor-not-allowed w-full">
-            Locked
-          </Button>
-        )}
-      </div>
+<div className="mt-4">
+  {isAttempted ? (
+    <Button
+      variant="outline"
+      onClick={() => handleExam(exam)}
+      className="w-full border-[#FF5635] text-[#FF5635] font-medium"
+    >
+      View Analytics
+    </Button>
+  ) : haaccessExam?.hasAccess || index === 0 ? (     // 👈 First exam always free
+    <Button
+      className="bg-[#FF5635] hover:bg-[#e34d2e] px-10 text-white font-medium"
+      onClick={() => handleExam(exam)}
+    >
+      <UserExamPop />
+    </Button>
+  ) : (
+    <Button
+      disabled
+      className="bg-gray-300 text-gray-700 cursor-not-allowed w-full"
+    >
+      Locked
+    </Button>
+  )}
+</div>
+
     </Card>
   );
 };
@@ -159,17 +163,13 @@ dispatch(handleSetSelectedExam(option.value));
     }
   };
 
-
   const examOptions = examdata.map((ex:any) => ({
     label: ex.examname,
     value: ex,
   }));
 
-
   return (
-    <div className="h-[79vh] font-sans bg-white px-6 lg:px-0 py-6">
-
-
+    <div className="min-h-[79vh] font-sans bg-white px-6 lg:px-10 py-6">
       <header className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8 py-4">
 {examById && examById.length>0 ?(   <div className="max-w-[350px] w-full">
 
