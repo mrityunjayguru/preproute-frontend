@@ -118,7 +118,7 @@ const mockSets = Array.from({ length: 50 }, (_, i) => `Mocks ${i + 1}`);
             className="w-full mb-6 px-4 py-3 border rounded-md bg-gray-100 focus:outline-none"
           >
             <option value="">Select Mock Set</option>
-            {   ets.map((set) => (
+            {   mockSets.map((set:any) => (
               <option key={set} value={set}>
                 {set}
               </option>
