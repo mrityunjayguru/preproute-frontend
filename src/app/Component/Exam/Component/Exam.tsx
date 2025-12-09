@@ -55,7 +55,7 @@ const MockExamCard = ({ exam, handleExam,index }) => {
         }`}
     >
       <div className="flex flex-row justify-between items-center mt-1">
-        <p className="text-[16px] text-gray-600">{selectedExamType?.examType}</p>
+        <p className="text-[16px] text-gray-600">{exam?.questionPapername}</p>
 {index==0?(<button className="text-[#FF5635] bg-[#4FA77E] px-3 py-1 rounded-md text-sm font-medium text-white">
           Free
         </button>):(null)}
@@ -167,7 +167,7 @@ dispatch(handleSetSelectedExam(option.value));
     label: ex.examname,
     value: ex,
   }));
-
+console.log(examById,"examByIdexamById")
   return (
     <div className="min-h-[79vh] font-sans bg-white px-6 lg:px-10 py-6">
       <header className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8 py-4">
@@ -204,7 +204,6 @@ dispatch(handleSetSelectedExam(option.value));
       {!examById.length && (
         <div className="text-center mt-6">
           <h2 className="text-3xl font-semibold text-gray-700 mb-4">{selectedExamType?.examType} Exam</h2>
-
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mt-6">
             {examdata.map((exam:any) => (
               <Card key={exam._id} className="p-5 rounded-xl bg-[#FAFAF9] hover:shadow-lg hover:scale-[1.01] cursor-pointer">

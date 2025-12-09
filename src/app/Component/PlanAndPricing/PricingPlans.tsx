@@ -50,7 +50,7 @@ export default function PricingPlans() {
       const { order, key_id } = response.payload;
 
       const options = {
-        key: "rzp_test_Rc3F5TR7UPCXIy",
+        key: "rzp_test_RpR02SnjfQgbaE",
         amount: order.amount,
         currency: order.currency,
         name: "PreeRoute",
@@ -119,7 +119,7 @@ export default function PricingPlans() {
                       <tr key={idx} className="border-b hover:bg-gray-50">
                         <td className="p-3 text-[#000]">{exam.examname}</td>
                         <td className="p-3 text-right font-semibold text-[#000]">
-                          {exam.fullExamduration || 0}
+                          {exam.Mocks || 0}
                         </td>
                       </tr>
                     ))}

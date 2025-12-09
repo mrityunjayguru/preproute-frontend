@@ -120,7 +120,7 @@ const [showPopup, setShowPopup] = useState(false);
       if (isSection && currentSectionIndex + 1 < examSections.length) {
         const prevSectionId = selectedSection?.sectionId;
         const nextSection: any = examSections[currentSectionIndex + 1];
-
+setIsTimeUp(true)
         // ✅ Update backend with section timing
         updateSectionTime(prevSectionId, nextSection.sectionId);
 
