@@ -164,14 +164,12 @@ export const Header: React.FC = () => {
             </Link>
           )}
 
-           {token && (
             <Link
               href="/resources"
               className="hover:text-orange-600 transition-colors duration-200"
             >
               Resources
             </Link>
-          )}
         </nav>
       </div>
 

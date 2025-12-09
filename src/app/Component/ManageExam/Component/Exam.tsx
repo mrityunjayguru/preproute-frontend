@@ -116,6 +116,7 @@ const [showPopup, setShowPopup] = useState(false);
 
   // ---------------- Timer Countdown ----------------
   useEffect(() => {
+    console.log(timeLeft,"timeLefttimeLeft")
     if (timeLeft === 0) {
       if (isSection && currentSectionIndex + 1 < examSections.length) {
         const prevSectionId = selectedSection?.sectionId;
