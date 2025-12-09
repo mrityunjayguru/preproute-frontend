@@ -88,9 +88,9 @@ export const Dashboard={
 
 }
 export const PlnAndPricing={
-  create:"setUpexam/PlanPricing/create",
-  get:"setUpexam/PlanPricing/get",
-  update:"setUpexam/planAndPricing/update",
+  create:"PlanPricing/create",
+  get:"PlanPricing/get",
+  update:"planAndPricing/update",
   getallPlnAndPricingsbysectionid:"planAndPricing/getallPlnAndPricingsbysectionid"
 }
 const APIName = {
