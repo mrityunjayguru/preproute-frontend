@@ -1,7 +1,7 @@
 import { AxiosInstance } from "axios";
 import axios from "axios";
 // const baseUrl="http://13.232.97.77:3200/api/"
-const baseUrl="http://localhost:3200/api/"
+// const baseUrl="http://localhost:3200/api/"git
  const baseUrl="https://testbackend.thepreproute.com/api/"
 const Repository: AxiosInstance = axios.create({
   baseURL:baseUrl,
