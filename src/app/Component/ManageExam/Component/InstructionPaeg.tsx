@@ -19,7 +19,7 @@ export default function InstructionsPage() {
     <h1 className="text-2xl font-bold text-[#FF5635]">Instructions</h1>
 
     <Button
-      className="bg-[#FF5635] hover:bg-[#e34d2e] px-6 py-3 text-sm text-white font-medium"
+      className="cursor-pointer bg-[#FF5635] hover:bg-[#e34d2e] px-10 py-6 text-sm text-white font-medium"
       onClick={handleExam}
     >
       Start Exam

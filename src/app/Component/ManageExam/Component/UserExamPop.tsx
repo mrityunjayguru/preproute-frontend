@@ -1,8 +1,15 @@
 import { Button } from "@/components/ui/button";
 import React from "react";
+import { useRouter } from "next/navigation";
 
-const UserExamPop = () => {
+interface UserExamPopProps {
+  text?: string | number;
+}
+const UserExamPop: React.FC<UserExamPopProps> = ({ text }) => {
+    const router = useRouter();
+  
   const handleButtonClick = () => {
+  if (!localStorage.getItem("token")) return router.push("/Auth/signin");
     const url = "/Exam/InstructionPaeg"; // your exam page
 
     // open fullscreen popup
@@ -74,7 +81,7 @@ const UserExamPop = () => {
 
   return (
     <button className="cursor-pointer" onClick={handleButtonClick}>
-      Start Mock
+      {text} Mock
     </button>
   );
 };

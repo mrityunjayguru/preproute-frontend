@@ -8,14 +8,13 @@ import { AppDispatch } from "@/store/store";
 import axios from "axios";
 import { updateUserInfo, userProfileData } from "@/api/Users";
 import PurchasedPlanSection from "./PurchasedPlanSection";
-
+import { FaRegUserCircle } from "react-icons/fa";
 export default function ProfilePage() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const user = useSelector((state: any) => state?.Auth?.loginUser);
-  console.log(user,"useruseruser")
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
@@ -74,11 +73,19 @@ getuserData()
               className="relative cursor-pointer group"
               onClick={() => fileInputRef.current?.click()}
             >
-             <img
-  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user?.image}`}
-  alt="Profile"
-  className="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover"
-/>
+     {user?.image ? (
+  <img
+    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user.image}`}
+    alt="Profile"
+    onError={(e) => {
+      e.currentTarget.src = "/default-user.png";
+    }}
+    className="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover"
+  />
+) : (
+  <FaRegUserCircle className="w-28 h-28 text-gray-400" />
+)}
+
 
               <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <span className="text-white text-sm font-medium">
@@ -142,7 +149,7 @@ getuserData()
             <Button
               variant="outline"
               className="border-orange-500 text-orange-600  px-6 py-2 rounded-full"
-              onClick={() => router.push("/profile/edit")}
+              onClick={() => router.push("/Profile/edit")}
             >
               Edit Profile
             </Button>

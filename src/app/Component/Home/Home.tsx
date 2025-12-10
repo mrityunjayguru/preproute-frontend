@@ -8,7 +8,6 @@ import { AppDispatch } from "@/store/store";
 import { resetQuestionByExamID } from "@/api/Exam";
 import { handleSelectedExamType } from "@/api/ExamType";
 import { resetQuestion } from "@/api/Question";
-
 import heroImage from '../../../assets/images/hero-image.svg';
 import feature1 from '../../../assets/images/features/feature-1.svg';
 import feature2 from '../../../assets/images/features/feature-2.svg';
@@ -20,6 +19,7 @@ import icon3 from '../../../assets/images/icons/icon-3.svg';
 import icon4 from '../../../assets/images/icons/icon-4.svg';
 import logo from '../../../assets/images/logo.svg';
 import { ArrowLeft, ArrowRight, BulletIcon, RightIcon, WrongIcon } from "@/Common/svgIcon";
+import SocialMedia from "./SocialMedia";
 
 
 export default function HomePage() {
@@ -40,7 +40,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-white text-[#0F1724] antialiased">
-
+<SocialMedia/>
       <HeroSection logoSrc={heroImage} />
 
       <section className="mt-12 px-5 lg:px-30 py-10 lg:py-15">
@@ -59,11 +59,11 @@ export default function HomePage() {
 
       <ExamsSection />
 
-      <section className="mt-10 bg-[#F8F7F3] p-5 lg:p-8 px-5 lg:px-40 py-10 lg:py-20 rounded-xl shadow-sm">
+      <section className="mt-5 bg-[#F8F7F3] p-5 lg:p-8 px-5 lg:px-40 py-10 lg:py-20 rounded-xl shadow-sm">
 
-        <h2 className="text-center text-xl md:text-2xl font-semibold text-[#FF5635] mb-10">
-          Mock, Past Year Exams <span className="text-black">and </span> Sectional Tests<span className="text-black"> (QA, LRDI, VARC) </span>
-        </h2>
+        <div className="flex justify-center mb-5">
+        <span className="inline-block bg-[#FFCB00] text-black px-6 sm:px-10 py-2 rounded-full text-sm sm:text-lg lg:text-xl font-semibold">IPMAT 2026 Full Access</span>
+      </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 text-center gap-6">
           {ICON_ITEM('Topic wise tests', 'with daily practice', icon1)}
@@ -160,10 +160,11 @@ export default function HomePage() {
   );
 }
 
-
-//hero
-
 function HeroSection({ logoSrc }: { logoSrc: any }) {
+  const router = useRouter();
+  const handlenavigate=(link:any)=>{
+    router.push(link);
+  }
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 items-center bg-[#FEFAF6] px-5 lg:px-30 py-8 lg:py-12">
 
@@ -193,11 +194,11 @@ function HeroSection({ logoSrc }: { logoSrc: any }) {
         </ul>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <button className="px-6 sm:px-8 lg:px-8 py-2 sm:py-3 bg-[#FF5635] text-white rounded-[4px] shadow-md font-semibold transition-transform duration-200 hover:scale-105 text-sm sm:text-base lg:text-base">
+          <button className="px-6 cursor-pointer sm:px-8 lg:px-8 py-2 sm:py-3 bg-[#FF5635] text-white rounded-[4px] shadow-md font-semibold transition-transform duration-200 hover:scale-105 text-sm sm:text-base lg:text-base">
             Start Free Mock Test
           </button>
 
-          <button className="px-6 sm:px-10 py-2 sm:py-3 border border-[#FF5635] text-[#FF5635] rounded-[4px] font-semibold transition-transform duration-200 hover:scale-105 text-sm sm:text-base lg:text-base">
+          <button onClick={()=>handlenavigate("/Exam/Mocks")} className="cursor-pointer px-6 sm:px-10 py-2 sm:py-3 border border-[#FF5635] text-[#FF5635] rounded-[4px] font-semibold transition-transform duration-200 hover:scale-105 text-sm sm:text-base lg:text-base">
             View All Exam
           </button>
         </div>
@@ -224,9 +225,7 @@ function ExamsSection() {
   const exams = ['IPMAT Indore', 'IPMAT Rohtak', 'JIPMAT', 'IIM B-(BBA-DBE)', 'NPAT', 'SET', 'CHRIST', 'ST.XAVIER\'s'];
   return (
     <section className="mt-10 px-5 lg:px-30">
-      <div className="flex justify-center">
-        <span className="inline-block bg-[#FFCB00] text-black px-6 sm:px-10 py-2 rounded-full text-sm sm:text-lg lg:text-xl font-semibold">IPMAT 2026 Full Access</span>
-      </div>
+     
 
       <h4 className="mt-6 text-center text-xl lg:text-4xl font-semibold">Exams we help you prepare for</h4>
 

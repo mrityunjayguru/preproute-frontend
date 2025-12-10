@@ -9,6 +9,7 @@ import { AppDispatch } from "@/store/store";
 import { updateUserInfo, updateUserProfile } from "@/api/Users";
 import { useRouter } from "next/navigation";
 import Step6 from "./step6";
+import Step2 from "./Step2";
 
 export default function Page() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -60,10 +61,17 @@ export default function Page() {
 
   // ✅ Define steps
   const steps = [
+     <Step2
+      key="step2"
+      nextStep={() => setCurrentStep((s) => s + 1)}
+      updateForm={updateForm}
+      formData={formData}
+    />,
     <Step3
       key="step3"
       nextStep={() => setCurrentStep((s) => s + 1)}
       updateForm={updateForm}
+      prevStep={() => setCurrentStep((s) => s - 1)}
       formData={formData}
     />,
     <Step4

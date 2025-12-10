@@ -57,10 +57,10 @@ export default function PurchasedPlanSection({ user }: Props) {
           {/* 📚 Purchased Exams List */}
           <div className="mt-5">
             <h3 className="text-lg font-semibold text-[#FF5635] mb-2">
-               Exams Included In Plan
+              <strong>Validity</strong> <span>Till Exam</span>
             </h3>
 
-            {user?.PurchasedExams?.length ? (
+            {/* {user?.PurchasedExams?.length ? (
               <ul className="space-y-3">
                 {user.PurchasedExams.map((exam: Exam) => (
                   <li
@@ -71,19 +71,12 @@ export default function PurchasedPlanSection({ user }: Props) {
                       {exam.examname}
                     </p>
 
-                    {/* <p className="text-sm text-gray-600">
-                      Duration: {exam.fullExamduration} mins
-                    </p>
-
-                    <p className="text-sm text-gray-500">
-                      Sections: {exam.sections?.length || 0}
-                    </p> */}
                   </li>
                 ))}
               </ul>
             ) : (
               <p className="text-gray-500 text-sm">No exams purchased yet.</p>
-            )}
+            )} */}
           </div>
         </div>
       )}

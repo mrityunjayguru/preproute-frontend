@@ -41,6 +41,7 @@ const LockIcon = (props:any) => (
 
 
 const MockExamCard = ({ exam, handleExam,index }) => {
+  console.log(exam,"examexamexamexam")
   const user = useSelector((s:any) => s.Auth?.loginUser);
   const hasPurchase = user?.PurchaseDetail?.length > 0;
   const isMock1 = ["mock 1", "mocks 1"].includes(exam?.questionPapername?.toLowerCase());
@@ -64,31 +65,58 @@ const MockExamCard = ({ exam, handleExam,index }) => {
 
       {/* <h3 className="text-[28px] text-[#FF5635] mb-6">Warm Up</h3> */}
 
-<div className="mt-4">
-  {isAttempted ? (
+<div className="mt-4 w-full">
+  {isAttempted && exam?.userSummary?.target == 100 ? (
+    // ---------------------- VIEW ANALYTICS ------------------------
     <Button
       variant="outline"
       onClick={() => handleExam(exam)}
-      className="w-full border-[#FF5635] text-[#FF5635] font-medium"
+      className="w-full border-[#1b1a19] text-[#FF5635] font-medium"
     >
       View Analytics
     </Button>
-  ) : haaccessExam?.hasAccess || index === 0 ? (     // 👈 First exam always free
-    <Button
-      className="bg-[#FF5635] hover:bg-[#e34d2e] px-10 text-white font-medium"
-      onClick={() => handleExam(exam)}
-    >
-      <UserExamPop />
-    </Button>
+  ) : haaccessExam?.hasAccess || index === 0 || selectedExamType?.examType === "Past Year " ? (
+    // ---------------------- FREE / ALLOWED ACCESS ------------------------
+    <div className="flex w-full gap-2">
+      {exam?.userSummary?.target == 0 ? (
+        <>
+          {/* RESUME BUTTON */}
+          <Button
+            className="flex-1 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
+            onClick={() => handleExam(exam)}
+          >
+            <UserExamPop text="Resume" />
+          </Button>
+
+          {/* USER POP BUTTON */}
+          <Button
+            className="flex-1 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
+            onClick={() => handleExam(exam,"start")}
+          >
+            <UserExamPop text="Start"/>
+          </Button>
+        </>
+      ) : (
+        // ONLY START BUTTON
+        <Button
+          className="flex-1 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
+          onClick={() => handleExam(exam,"start")}
+        >
+          <UserExamPop text="Start"/>
+        </Button>
+      )}
+    </div>
   ) : (
+    // ---------------------- LOCKED ------------------------
     <Button
       disabled
-      className="bg-gray-300 text-gray-700 cursor-not-allowed w-full"
+      className="w-full bg-gray-300 text-gray-700 cursor-not-allowed"
     >
       Locked
     </Button>
   )}
 </div>
+
 
     </Card>
   );
@@ -103,7 +131,6 @@ export default function MergedExamPage() {
   const examById = useSelector((s:any) => s.exam?.examById) || [];
   const selectedExamType = useSelector((s:any) => s.examType?.selectedExamType);
   const loginUser = useSelector((s:any) => s.Auth?.loginUser);
-
   const [selectedExam, setSelectedExam] = useState<any>(null);
   useEffect(() => {
     const payload:any={
@@ -143,15 +170,18 @@ dispatch(handleSetSelectedExam(option.value));
     dispatch(getCommonQuestionBeExamId(payload));
   };
 
-  const handleExam = async (examData:any) => {
-    if (!localStorage.getItem("token")) return router.push("/home");
+  const handleExam = async (examData:any,type:any) => {
 
-    if (!examData?.hasGivenExam) {
+    if (!localStorage.getItem("token")) return router.push("/Auth/signin");
+
+    if (!examData?.hasGivenExam || type=="start") {
       const payload:any={
           examTypeId: examData?.examTypeId,
           questionPaperId: examData?._id,
           examid: examData?.examid,
+          type:type,
           questionPapername: examData?.questionPapername,
+          records:examData
         }
       dispatch(
         getUserQuestionData(payload)
@@ -167,7 +197,6 @@ dispatch(handleSetSelectedExam(option.value));
     label: ex.examname,
     value: ex,
   }));
-console.log(examById,"examByIdexamById")
   return (
     <div className="min-h-[79vh] font-sans bg-white px-6 lg:px-10 py-6">
       <header className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8 py-4">
@@ -203,7 +232,7 @@ console.log(examById,"examByIdexamById")
 
       {!examById.length && (
         <div className="text-center mt-6">
-          <h2 className="text-3xl font-semibold text-gray-700 mb-4">{selectedExamType?.examType} Exam</h2>
+          <h2 className="text-3xl font-semibold text-gray-700 mb-4"> Exams</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mt-6">
             {examdata.map((exam:any) => (
               <Card key={exam._id} className="p-5 rounded-xl bg-[#FAFAF9] hover:shadow-lg hover:scale-[1.01] cursor-pointer">
@@ -241,7 +270,6 @@ console.log(examById,"examByIdexamById")
             <p className="text-black text-sm md:text-base max-w-2xl">
               The Prep Route mock tests are carefully designed to mirror the question
               style, difficulty level, and time pressure of the actual exam.
-              Read this document to learn more.
 
             </p>
           </div>

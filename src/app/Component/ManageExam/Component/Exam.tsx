@@ -36,6 +36,7 @@ export default function ExamUI() {
   const dispatch = useDispatch<AppDispatch>();
 
   const examData = useSelector((state: any) => state.examType?.examDetail);
+  
   const singleQuestion = useSelector(
     (state: any) => state.question?.singleQuestion
   );
@@ -116,7 +117,6 @@ const [showPopup, setShowPopup] = useState(false);
 
   // ---------------- Timer Countdown ----------------
   useEffect(() => {
-    console.log(timeLeft,"timeLefttimeLeft")
     if (timeLeft === 0) {
       if (isSection && currentSectionIndex + 1 < examSections.length) {
         const prevSectionId = selectedSection?.sectionId;
@@ -133,6 +133,7 @@ setIsTimeUp(true)
         setTotalNoOfQuestions(nextSection.noOfQuestions);
         fetchQuestion(1, nextSection.sectionId);
       }
+      handleSubmit()
       return;
     }
 
@@ -224,6 +225,7 @@ setIsTimeUp(true)
       questionId: question._id,
       userId: userLogin?._id,
       timeTaken: timeTaken,
+      questionPaperId: examData?.[0]?._id,
     };
     question.answerType === "Numeric"
       ? (payload.numericAnswer = numericalValue)
@@ -295,8 +297,8 @@ setIsTimeUp(true)
   };
 
 const handleSubmit = async () => {
-  const confirmSubmit = window.confirm("Are you sure you want to finish this exam?");
-  if (!confirmSubmit) return; // ❌ User cancelled
+  // const confirmSubmit = window.confirm("Are you sure you want to finish this exam?");
+  // if (!confirmSubmit) return; 
 
   try {
     await updateSectionTime(null, selectedSection?.sectionId);

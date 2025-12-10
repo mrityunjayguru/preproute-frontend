@@ -85,9 +85,11 @@ const QuestionWiseRightSection: React.FC<Props> = ({
   // ✅ Filter only selected section
   const selectedSectionKey =
     selectedSection?.sectionId;
+console.log(groupedData,"selectedSectionselectedSection")
 
   const selectedSectionQuestions =
     groupedData[selectedSectionKey] || [];
+    // console.log(selectedSectionQuestions,"selectedSectionQuestionsselectedSectionQuestions")
     const shortingData=selectedSectionQuestions.sort((a,b)=>a.questionNo - b.questionNo)
   return (
     <aside className="lg:w-1/4 w-full bg-white p-4 border-t lg:border-t-0 lg:border-l flex-shrink-0 overflow-y-auto">

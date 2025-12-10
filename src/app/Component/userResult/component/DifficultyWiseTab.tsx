@@ -25,7 +25,6 @@ const DifficultyWiseTab: React.FC<TopicWiseTabProps> = ({ data }) => {
   if (!typeWise.length) {
     return (
       <div className="text-center text-gray-600">
-        Topic-wise report coming soon...
       </div>
     );
   }

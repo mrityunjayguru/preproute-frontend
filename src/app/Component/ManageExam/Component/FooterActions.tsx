@@ -34,9 +34,9 @@ const FooterActions: React.FC<Props> = ({
       <Button variant="outline" size="sm" onClick={handleClearResponse} disabled={isTimeUp}>
         Clear Response
       </Button>
-      <Button variant="outline" size="sm" onClick={ReportQuestion} >
+      {/* <Button variant="outline" size="sm" onClick={ReportQuestion} >
         Report
-      </Button>
+      </Button> */}
     </div>
     <div className="flex gap-4 flex-wrap ">
       <Button variant="secondary" onClick={handlePreviousQuestion} disabled={isTimeUp}

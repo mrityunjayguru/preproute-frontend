@@ -10,10 +10,10 @@ const SectionWiseTab: React.FC<DifficultyWiseTabProps> = ({ data }) => {
   console
   return (
     <div>
-      <h2 className="text-lg font-semibold mb-4">Section-wise Difficulty Stats</h2>
+      {/* <h2 className="text-lg font-semibold mb-4">Section-wise Difficulty Stats</h2> */}
 
       {data?.sectiondifculty.length === 0 ? (
-        <p className="text-center text-gray-500">No section data found.</p>
+        <p className="text-center text-gray-500"></p>
       ) : (
         <div className="space-y-6">
           {data?.sectiondifculty.map((section: any) => (

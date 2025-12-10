@@ -20,7 +20,7 @@ const TimeWiseTab: React.FC<TimeWiseTabProps> = ({ data, timewiseData = [] }) =>
   return (
     <div className="overflow-x-auto mt-4">
       {data?.typeWiseTime.length === 0 ? (
-        <p className="text-center text-gray-500">No topic data found.</p>
+        <p className="text-center text-gray-500"></p>
       ) : (
         <table className="min-w-full border border-gray-200 text-sm text-left">
           <thead className="bg-gray-100 text-gray-700">

@@ -255,9 +255,9 @@ const CalculatorApp = ({onClose}) => {
 
   return (
     <div className=" bg-gray-100 flex items-center justify-center  font-inter">
-      <div className="w-full max-w-lg bg-white shadow-xl border border-gray-300 rounded-lg overflow-hidden">
+      <div className="w-full max-w-[450px] bg-white shadow-xl border border-gray-300 rounded-lg overflow-hidden">
         {/* Header */}
-        <div className="flex justify-between items-center bg-blue-600 text-white p-2">
+        <div className="flex justify-between items-center bg-[#FF5635] text-white p-2">
           <h1 className="text-sm font-semibold">Calculator</h1>
           <div className="flex items-center space-x-2">
             {isMemoryActive && (

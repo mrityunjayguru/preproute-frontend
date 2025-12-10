@@ -23,7 +23,10 @@ export default function PricingPlans() {
 
   // Fetch plan pricing
   const getData = async () => {
-    await dispatch(getPlanandPricing({}));
+    const payload:any={
+
+    }
+    await dispatch(getPlanandPricing(payload));
   };
 
   useEffect(() => {
@@ -32,6 +35,11 @@ export default function PricingPlans() {
 
   // Razorpay Payment Handler
   const handleCreatePayment = async (plan: any) => {
+    let token=localStorage.getItem("token");
+    if(!token){
+      router.push("/Auth/signin");
+      return
+    }
     try {
       const payload: any = {
         amount: Number(plan.price) * 100,
@@ -103,11 +111,11 @@ export default function PricingPlans() {
               {/* Header */}
               <div className="bg-[#FF5635] text-white px-6 py-5 relative flex justify-center items-center">
                 <h2 className="text-2xl font-bold">{plan.title}</h2>
-{index===1 ?( <Image
+{/* {index===1 ?( <Image
                   src={supper}
                   alt="Best Seller"
                   className="absolute right-5 w-20 h-20 object-contain"
-                />):(null)}
+                />):(null)} */}
                
               </div>
 
@@ -157,7 +165,7 @@ export default function PricingPlans() {
                 {/* Price */}
                 <div className="mt-6 bg-gray-100 p-4 rounded-xl text-center">
                   <p className="text-lg font-semibold text-black">
-                    <span className="text-[#FF5635]">Price:</span> ₹{plan.price} + 18% GST
+                    <span className="text-[#FF5635]">Price:</span> ₹{plan.price} 
                   </p>
                 </div>
 

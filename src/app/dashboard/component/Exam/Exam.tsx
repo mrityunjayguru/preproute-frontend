@@ -124,6 +124,8 @@ setPassage(q?.passage || "");
   const resetQuestionFields = () => {
     setQuestionData("");
     setHintText("");
+    setSelectedTopic("");
+    setSelectedSubtopic("");
     setOptions([
       { id: 1, text: "", isCorrect: true, label: "1st" },
       { id: 2, text: "", isCorrect: false, label: "2nd" },
@@ -187,7 +189,7 @@ setPassage(q?.passage || "");
             ? numericAnswer
             : options.find((opt) => opt.isCorrect)?.text || "",
         hint: hintText,
-        createdBy: "6710fbc3f2b9b9e...", // replace dynamically
+        createdBy: "6710fbc3f2b9b9e...", 
       };
 
       if (singleQuestion && singleQuestion.length > 0) {
@@ -200,25 +202,44 @@ setPassage(q?.passage || "");
       setActiveQuestion(activeQuestion+1)
       handleActiveQuestion(activeQuestion+1)
       setLoder(false)
-
     } catch (err) {
       setLoder(false)
-
       console.error("Error creating question:", err);
     }
   };
 
-  const handleActiveQuestion = (val: number) => {
-    const payload: any = {
-      questionNo: val,
-      questionPaperId: selectedExamDetail[0]?._id,
-    };
+const handleActiveQuestion = (val: number) => {
+  let currentIndex = sectionsData.findIndex(
+    (sec: any) => sec.sectionId === activeSection
+  );
 
-    if (isSection) payload.section = activeSection;
+  let currentSection = sectionsData[currentIndex];
 
-    dispatch(getQuestionById(payload));
-    setActiveQuestion(val);
+  // If question exceeds current section limit → move to next section
+  if (currentSection?.noOfQuestions < val) {
+    const nextSection = sectionsData[currentIndex + 1];
+
+    // If next section exists → move to next section
+    if (nextSection) {
+      return handleActiveSection(nextSection); // <-- PASS FULL DATA
+    }
+
+    // If NO next section → stop (end of all sections)
+    return;
+  }
+
+  // Load question inside current section
+  const payload: any = {
+    questionNo: val,
+    questionPaperId: selectedExamDetail[0]?._id,
   };
+
+  if (isSection) payload.section = activeSection;
+
+  dispatch(getQuestionById(payload));
+  setActiveQuestion(val);
+};
+
 
   const handleActiveSection = (val: any) => {
     setActiveQuestion(1);

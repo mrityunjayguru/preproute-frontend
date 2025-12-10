@@ -27,7 +27,7 @@ export const Header: React.FC = () => {
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [selectedExam, setSelectedExam] = useState("Select Exam");
+  const [selectedExam, setSelectedExam] = useState("Practice");
 
   const token = localStorage.getItem("token");
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
@@ -157,7 +157,7 @@ export const Header: React.FC = () => {
 
           {token && (
             <Link
-              href="/analytices"
+              href="/analytics"
               className="hover:text-orange-600 transition-colors duration-200"
             >
               Analytics
@@ -205,7 +205,7 @@ export const Header: React.FC = () => {
           ) : (
             <Button
               onClick={() => router.push("/Auth/signin")}
-              className="bg-[#FF5635] hover:bg-[#FF5635] text-white text-[14px] px-5 py-6 rounded-[4px] shadow-md"
+              className="cursor-pointer bg-[#FF5635] hover:bg-[#FF5635] text-white text-[14px] px-5 py-6 rounded-[4px] shadow-md"
             >
               Login
             </Button>
