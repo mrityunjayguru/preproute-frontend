@@ -24,7 +24,7 @@ const StatusIndicators = ({ questionIcon }) => {
   const indicatorsData = [
     { color: "#8BC34A", label: "Answered" },
     { color: "#F44336", label: "Not Answered" },
-    { color: "#AED581", label: "Not Visited" },
+    { color: "#BDBDBD", label: "Not Visited" },
     { color: "#9C27B0", label: "Marked for Review" },
   ];
 

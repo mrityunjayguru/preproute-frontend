@@ -80,7 +80,7 @@ export const Header: React.FC = () => {
   ];
 
   return (
- <header className={ `sticky top-0 bg-white z-10 w-full py-8 px-4 lg:px-30 bg-[#F8F7F3] flex justify-between items-center ${artegra.className}`}>
+ <header className={ `sticky top-0 bg-[#F8F7F3] z-10 w-full py-8 px-4 lg:px-30  flex justify-between items-center ${artegra.className}`}>
 
       {/* Logo + Desktop Nav */}
       <div className="flex items-center gap-20">
@@ -91,7 +91,7 @@ export const Header: React.FC = () => {
           <Image
             src={logo}
             alt="Logo"
-            className="h-10 w-auto object-contain"
+            className="h-8 w-auto object-contain"
           />
         </div>
 
@@ -205,7 +205,7 @@ export const Header: React.FC = () => {
           ) : (
             <Button
               onClick={() => router.push("/Auth/signin")}
-              className="cursor-pointer bg-[#FF5635] hover:bg-[#FF5635] text-white text-[14px] px-5 py-6 rounded-[4px] shadow-md"
+              className="cursor-pointer bg-[#FF5635] hover:bg-[#FF5635] text-white text-[16px] px-5 py-5 rounded-[4px] shadow-md"
             >
               Login
             </Button>

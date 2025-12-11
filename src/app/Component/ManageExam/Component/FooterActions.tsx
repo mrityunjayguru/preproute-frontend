@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+
 interface Props {
   handleMarkForReview: () => void;
   handleClearResponse: () => void;
@@ -13,7 +14,8 @@ interface Props {
   loder:boolean
 }
 
-const FooterActions: React.FC<Props> = ({
+const 
+FooterActions: React.FC<Props> = ({
   handleMarkForReview,
   handleClearResponse,
   handlePreviousQuestion,
@@ -24,7 +26,7 @@ const FooterActions: React.FC<Props> = ({
   loder
 }
 ) => (
-  <footer className="bg-white p-4 shadow-md flex flex-wrap gap-2 justify-between sticky bottom-0">
+  <footer className="bg-white p-4  flex flex-wrap gap-2 justify-between sticky bottom-0">
     <div className="flex gap-2 flex-wrap">
       <Button variant="outline" size="sm" 
   
@@ -40,14 +42,14 @@ const FooterActions: React.FC<Props> = ({
     </div>
     <div className="flex gap-4 flex-wrap ">
       <Button variant="secondary" onClick={handlePreviousQuestion} disabled={isTimeUp}
-      className="bg-black text-white text-xl font-semibold p-5"
+      className="bg-white text-black  border border-gray-200 text-lg font-semibold p-5"
       >
         Previous
       </Button>
      <Button
         onClick={handleNextQuestion}
         disabled={isTimeUp || loder}
-        className="flex items-center gap-4 p-5 text-xl font-semibold bg-[#FF5635]"
+        className="flex items-center gap-4 p-5 text-lg font-semibold bg-[#007bff]"
       >
         {loder ? (
           <>
@@ -63,7 +65,7 @@ const FooterActions: React.FC<Props> = ({
       onClick={handleSubmit}
       variant="destructive"
       size="lg"
-      className="  px-30 py-2 bg-[#FF5635]   "
+      className="  px-15 py-2 bg-[#FF5635]   "
     ><div
     className="font-semibold text-xl "
     >Submit</div>

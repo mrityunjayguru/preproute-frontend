@@ -13,10 +13,7 @@ import feature1 from '../../../assets/images/features/feature-1.svg';
 import feature2 from '../../../assets/images/features/feature-2.svg';
 import feature3 from '../../../assets/images/features/feature-3.svg';
 import feature4 from '../../../assets/images/features/feature-4.svg';
-import icon1 from '../../../assets/images/icons/icon-1.svg';
-import icon2 from '../../../assets/images/icons/icon-2.svg';
-import icon3 from '../../../assets/images/icons/icon-3.svg';
-import icon4 from '../../../assets/images/icons/icon-4.svg';
+import featureImage from '../../../assets/images/image.png';
 import logo from '../../../assets/images/logo.svg';
 import { ArrowLeft, ArrowRight, BulletIcon, RightIcon, WrongIcon } from "@/Common/svgIcon";
 import SocialMedia from "./SocialMedia";
@@ -40,16 +37,35 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-white text-[#0F1724] antialiased">
-<SocialMedia/>
-      <HeroSection logoSrc={heroImage} />
 
-      <section className="mt-12 px-5 lg:px-30 py-10 lg:py-15">
+
+
+<div className="relative pb-[180px] sm:pb-[260px] lg:pb-[420px]">
+  <HeroSection logoSrc={heroImage} />
+
+  <div
+    className="absolute left-1/2 -translate-x-1/2 bottom-4
+               w-[90%] sm:w-[70%] lg:w-[55%] aspect-video rounded-xl overflow-hidden shadow-xl"
+  >
+    <iframe
+      className="w-full h-full"
+      src="https://www.youtube.com/embed/3fZxrn-A7HQ?si=O02DRFYEGUWYi8hk"
+      title="YouTube video player"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+    />
+  </div>
+</div>
+
+
+
+      <section className="mt-10 px-5 lg:px-30 py-10 lg:py-15">
         <h3 className="text-center text-xl lg:text-3xl text-black font-semibold ">
           Not just another question bank. A complete exam preparation <br />
           ecosystem designed to make you exam-ready.
         </h3>
 
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 lg:gap-12 mt-10">
+        <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 lg:gap-12 mt-10">
           {FEATURE_CARD('Real Exam Simulation', 'Take mock tests in a realistic exam setup that prepares you for the actual exam day by letting you practice in real-like conditions. Train your mind to stay calm, focused, and accurate under real exam pressure.', feature1)}
           {FEATURE_CARD('Smart Analytics Dashboard', 'Our analytics engine breaks down your performance into clear, actionable insights, showing what went wrong, why it happened, and how you can fix it.', feature2)}
           {FEATURE_CARD('Expert Curated Content', 'Our questions are created and reviewed by subject matter experts ensuring accuracy, clarity, and complete alignment with the latest exam patterns.', feature3)}
@@ -59,11 +75,13 @@ export default function HomePage() {
 
       <ExamsSection />
 
-      <section className="mt-5 bg-[#F8F7F3] p-5 lg:p-8 px-5 lg:px-40 py-10 lg:py-20 rounded-xl shadow-sm">
+      <Image src={featureImage} alt="Logo" className="h-auto w-auto mx-auto mt:2 lg:mt-10 lg:px-30 px-2 py-2 lg:py-10" />
+
+      {/* <section className="mt-5 bg-[#F8F7F3] p-5 lg:p-8 px-5 lg:px-40 py-10 lg:py-20 rounded-xl shadow-sm">
 
         <div className="flex justify-center mb-5">
-        <span className="inline-block bg-[#FFCB00] text-black px-6 sm:px-10 py-2 rounded-full text-sm sm:text-lg lg:text-xl font-semibold">IPMAT 2026 Full Access</span>
-      </div>
+          <span className="inline-block bg-[#FFCB00] text-black px-6 sm:px-10 py-2 rounded-full text-sm sm:text-lg lg:text-xl font-semibold">IPMAT 2026 Full Access</span>
+        </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 text-center gap-6">
           {ICON_ITEM('Topic wise tests', 'with daily practice', icon1)}
@@ -75,83 +93,93 @@ export default function HomePage() {
         <div className="mt-12 flex justify-center">
           <button className="px-10 py-3 bg-[#FF5635] text-white text-lg lg:text-2xl font-semibold rounded-[4px]">Enroll Now</button>
         </div>
-      </section>
-<section className="mt-10 px-5 lg:px-30">
-  <h3 className="text-center text-xl lg:text-3xl font-semibold text-[#FF5635]">
-    The Impact of Real Practice
-  </h3>
-  <p className="text-center text-sm sm:text-base lg:text-xl mt-2 text-gray-600">
-    Data from 50,000+ students shows how mock tests transform exam performance
-  </p>
+      </section> */}
+      <section className="mt-10 px-5 lg:px-30">
+        <h3 className="text-center text-xl lg:text-3xl font-semibold text-[#FF5635]">
+          The Impact of Real Practice
+        </h3>
+        <p className="text-center text-sm sm:text-base lg:text-xl mt-2 text-gray-600">
+          Data from 50,000+ students shows how mock tests transform exam performance
+        </p>
 
-  <div className="mt-6 bg-[#F7ECFF] rounded-3xl px-4 sm:px-10 lg:px-30 py-6 lg:py-10">
+        <div className="mt-6 bg-[#F7ECFF] rounded-3xl px-4 sm:px-10 lg:px-30 py-6 lg:py-10">
 
-    {/* Table Header */}
-    <div className="grid grid-cols-3 text-center font-semibold text-base sm:text-xl mb-6">
+          {/* Table Header */}
+          <div className="grid grid-cols-3 text-center font-semibold text-base sm:text-xl mb-6">
 
-      <div></div>
+            <div></div>
 
-      <div className="flex flex-col justify-center items-center leading-tight">
-        <span>With</span>
-        <Image src={logo} alt="Logo" className="h-5 w-auto mt-1" />
-      </div>
+                <div className="flex flex-col justify-center items-center leading-tight">
+              <span>With Online</span>
+              <span>Mocks</span>
+            </div>
 
-      <div className="flex flex-col justify-center items-center leading-tight">
-        <span>Without Online</span>
-        <span>Practice</span>
-      </div>
+            <div className="flex flex-col justify-center items-center leading-tight">
+              <span>With Offline</span>
+              <span>Practice</span>
+            </div>
 
-    </div>
+          </div>
+          <div className="grid grid-cols-3 sm:grid-cols-3 text-center font-semibold mb-6">
 
-    {/* Table Rows */}
-    <div className="space-y-6">
+            <div></div>
 
-      {IMPACT_ROW("Confident & Prepared", "70%", "30%")}
-      <div className="h-[1px] bg-[#F3C969]"></div>
+            <div className="flex justify-center items-center">
+              <RightIcon />
+            </div>
 
-      {IMPACT_ROW("Struggle with Time", "15%", "35%")}
-      <div className="h-[1px] bg-[#F3C969]"></div>
-
-      {IMPACT_ROW("High Anxiety", "15%", "35%")}
-
-    </div>
-
-  </div>
-</section>
-
-
-      <section className="mt-8 px-5 lg:px-30 mb-8">
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-center">
-
-          <div className="self-start -mt-2">
-            <ArrowLeft />
+            <div className="flex justify-center items-center">
+              <WrongIcon />
+            </div>
           </div>
 
-          <p className="text-lg sm:text-2xl lg:text-3xl font-bold text-center leading-snug max-w-2xl">
-            Exams are not just a test of knowledge, but of <br />
-            preparation — <span className="text-[#FF5635]">practice today to conquer tomorrow.</span>
-          </p>
+          {/* Table Rows */}
+          <div className="space-y-6">
 
-          <div className="self-end -mb-2">
-            <ArrowRight />
+            {IMPACT_ROW("Confident & Prepared", "70%", "30%")}
+            <div className="h-[1px] bg-[#F3C969]"></div>
+
+            {IMPACT_ROW("Struggle with Time", "15%", "35%")}
+            <div className="h-[1px] bg-[#F3C969]"></div>
+
+            {IMPACT_ROW("High Anxiety", "15%", "35%")}
+
           </div>
 
         </div>
       </section>
 
 
+      <section className="mt-12 px-5 lg:px-30 mb-8">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-10 text-center">
 
-      <section className="mt-12 bg-[#0b0f1a] text-white rounded-t-2xl p-4 sm:p-8">
+          <div className="self-start -mt-2">
+            <ArrowLeft />
+          </div>
+
+          <p className="text-lg sm:text-2xl lg:text-3xl font-bold text-center leading-snug max-w-4xl">
+            Exams are not just a test of knowledge, but of preparation — <span className="text-[#FF5635]">practice today to conquer tomorrow.</span>
+          </p>
+
+          <div className="self-end -mb-2">
+            <ArrowRight />
+          </div>
+;
+        </div>
+      </section>
+
+
+
+      <section className="mt-12 bg-[#0b0f1a] text-white  p-4 sm:p-8">
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
           <div className="text-center lg:text-left">
-            <h4 className="text-xl sm:text-2xl lg:text-3xl font-bold">Ready to Transform Your <br></br> <span className="text-[#FF5635]">Exam Preparation?</span></h4>
+            <h4 className="text-xl sm:text-2xl lg:text-3xl font-bold">Elevate Your Exam Preparation to <br></br> <span className="text-[#FF5635]"> the Next Level</span></h4>
 
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-3">
-            <button className="px-4 sm:px-6 lg:px-8 py-2 sm:py-3 bg-[#FF5635] rounded-md font-semibold text-sm sm:text-base">Start Your First Free Mock Test</button>
-
-            <a className="text-base sm:text-lg text-white hover:underline">or Explore all Exams</a>
+          <div className="flex flex-col sm:flex-col items-center gap-3">
+            <h3 className="text-lg sm:text-sm lg:text-m">Follow us on</h3>
+            <SocialMedia />
           </div>
         </div>
       </section>
@@ -162,11 +190,11 @@ export default function HomePage() {
 
 function HeroSection({ logoSrc }: { logoSrc: any }) {
   const router = useRouter();
-  const handlenavigate=(link:any)=>{
+  const handlenavigate = (link: any) => {
     router.push(link);
   }
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 items-center bg-[#FEFAF6] px-5 lg:px-30 py-8 lg:py-12">
+    <div className="grid grid-cols-1 lg:grid-cols-12 items-center bg-[#F8F7F3] px-5 lg:px-30 py-8 lg:py-12 lg:pb-25 ">
 
       <div className="lg:col-span-7">
         <h2 className="text-2xl lg:text-5xl font-extrabold leading-tight">
@@ -198,7 +226,7 @@ function HeroSection({ logoSrc }: { logoSrc: any }) {
             Start Free Mock Test
           </button>
 
-          <button onClick={()=>handlenavigate("/Exam/Mocks")} className="cursor-pointer px-6 sm:px-10 py-2 sm:py-3 border border-[#FF5635] text-[#FF5635] rounded-[4px] font-semibold transition-transform duration-200 hover:scale-105 text-sm sm:text-base lg:text-base">
+          <button onClick={() => handlenavigate("/Exam/Mocks")} className="cursor-pointer px-6 sm:px-10 py-2 sm:py-3 border border-[#FF5635] text-[#FF5635] rounded-[4px] font-semibold transition-transform duration-200 hover:scale-105 text-sm sm:text-base lg:text-base">
             View All Exam
           </button>
         </div>
@@ -225,7 +253,7 @@ function ExamsSection() {
   const exams = ['IPMAT Indore', 'IPMAT Rohtak', 'JIPMAT', 'IIM B-(BBA-DBE)', 'NPAT', 'SET', 'CHRIST', 'ST.XAVIER\'s'];
   return (
     <section className="mt-10 px-5 lg:px-30">
-     
+
 
       <h4 className="mt-6 text-center text-xl lg:text-4xl font-semibold">Exams we help you prepare for</h4>
 
@@ -261,7 +289,7 @@ function ExamsSection() {
 
 function FEATURE_CARD(title: string, text: string, logo: any) {
   return (
-    <article className="flex flex-col sm:flex-row justify-between items-center bg-[#F8F7F3] p-4 sm:p-7 rounded-xl gap-4">
+    <article className="flex flex-col sm:flex-row justify-between  bg-[#F8F7F3] p-4 sm:p-7 rounded-xl gap-4">
 
       <div className="flex-1">
         <h5 className="font-semibold text-lg lg:text-2xl text-[#FF5635]">{title}</h5>

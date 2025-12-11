@@ -28,7 +28,7 @@ const HeaderSection: React.FC<Props> = ({
               onClick={() => handleSection(t)}
               className={`cursor-pointer px-5 py-2 rounded-sm border transition-all text-sm whitespace-nowrap ${
                 t.sectionId === selectedSection?.sectionId
-                  ? "bg-[#FF5635] text-white border-[#FF5635]"
+                  ? "bg-[#007bff] text-white "
                   : "bg-[#fff] text-[#1E1E1E] border-gray-300"
               }`}
             >

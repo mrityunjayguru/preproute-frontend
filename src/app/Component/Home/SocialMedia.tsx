@@ -4,43 +4,21 @@ function SocialMedia() {
   return (
     <div className="icon-bar">
 
-      {/* WhatsApp App */}
+      {/* WhatsApp App
       <a 
         href="whatsapp://send?phone=918888888888" 
         className="whatsapp"
       >
         <i className="fa fa-whatsapp"></i>
-      </a>
+      </a> */}
 
-      {/* Facebook App */}
-      <a 
-        href="fb://profile/your-profile-id"
-        className="facebook"
-      >
-        <i className="fa fa-facebook"></i>
-      </a>
 
-      {/* Twitter App */}
-      <a 
-        href="twitter://user?screen_name=yourUsername"
-        className="twitter"
-      >
-        <i className="fa fa-twitter"></i>
-      </a>
-
-      {/* Gmail */}
-      <a 
-        href="mailto:youremail@gmail.com"
-        className="google"
-        target="_blank"
-      >
-        <i className="fa fa-google"></i>
-      </a>
-
+  
       {/* LinkedIn App */}
       <a 
-        href="linkedin://in/yourUsername"
+        href="https://www.linkedin.com/company/thepreproute/?viewAsMember=true"
         className="linkedin"
+        target='_blank'
       >
         <i className="fa fa-linkedin"></i>
       </a>
