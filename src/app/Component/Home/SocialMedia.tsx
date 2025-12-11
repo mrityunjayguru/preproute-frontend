@@ -1,4 +1,7 @@
-import React from 'react'
+"use client";
+import React from "react";
+import Image from "next/image";
+import whatsappIcon from "../../../assets/images/whatsapp.svg";
 
 function SocialMedia() {
   return (

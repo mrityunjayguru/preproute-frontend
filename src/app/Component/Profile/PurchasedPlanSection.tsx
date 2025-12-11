@@ -27,7 +27,6 @@ interface Props {
 }
 
 export default function PurchasedPlanSection({ user }: Props) {
-  console.log(user,"useruseruseruseruser")
   return (
     <>
       {/* 📘 Purchased Plan Details */}
@@ -57,7 +56,7 @@ export default function PurchasedPlanSection({ user }: Props) {
           {/* 📚 Purchased Exams List */}
           <div className="mt-5">
             <h3 className="text-lg font-semibold text-[#FF5635] mb-2">
-              <strong>Validity</strong> <span>Till Exam</span>
+              Valid Up To Exam Day
             </h3>
 
             {/* {user?.PurchasedExams?.length ? (

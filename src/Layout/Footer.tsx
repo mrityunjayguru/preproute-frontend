@@ -32,7 +32,7 @@ export const Footer=()=>{
         <div className="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
           <div className="mb-2 sm:mb-0">
             
-           <span>copyright symbol 2025</span>  A product of <a href="#" className="text-red-500">Brillovate Pvt. Ltd.</a> All rights reserved.
+           <span>© 2025</span>  A product of <a href="#" className="text-red-500">Brillovate Pvt. Ltd.</a> All rights reserved.
           </div>
           <div className="flex space-x-4">
             <a onClick={()=>handlenaviagte("Privacy")}  className="hover:underline cursor-pointer">Privacy</a>

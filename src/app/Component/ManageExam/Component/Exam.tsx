@@ -18,6 +18,9 @@ import ExamHeader from "./ExamHeader";
 import Popup from "./Report";
 import InstructionPaeg from "./InstructionPaeg";
 import { questionPaper } from "@/api/endPoints";
+import TabSwitchWarning from "./TabSwitchWarning";
+import SectionRestrictionPopup from "./Popup/SectionRestrictionPopup";
+import SubmitExamPopup from "./Popup/SubmitExamPopup";
 
 interface SectionDetail {
   _id: string;
@@ -34,6 +37,7 @@ interface Section {
 export default function ExamUI() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
+const [showSubmitPopup, setShowSubmitPopup] = useState(false);
 
   const examData = useSelector((state: any) => state.examType?.examDetail);
   
@@ -133,7 +137,7 @@ setIsTimeUp(true)
         setTotalNoOfQuestions(nextSection.noOfQuestions);
         fetchQuestion(1, nextSection.sectionId);
       }
-      handleSubmit()
+      handleSubmitFullExam()
       return;
     }
 
@@ -296,19 +300,40 @@ setIsTimeUp(true)
     setNumericalValue("")
   };
 
-const handleSubmit = async () => {
-  // const confirmSubmit = window.confirm("Are you sure you want to finish this exam?");
-  // if (!confirmSubmit) return; 
+const handleSubmit = async (confirm?: boolean) => {
+  
+  // Step 1 → If confirm is undefined → means user clicked submit button.
+    setShowSubmitPopup(true);
+  
 
+  if (confirm === false) {
+    setShowSubmitPopup(false);
+    return;
+  }
+
+  // Step 3 → User clicked "Yes, Submit"
   try {
+    // await updateSectionTime(null, selectedSection?.sectionId);
+    // await dispatch(userExamResult(examData));
+    // router.push("result");
+  } catch (err) {
+    console.error("Error submitting exam:", err);
+  }
+};
+
+const handleSubmitExamPopup=(val:any)=>{
+  handleSubmitFullExam()
+}
+
+const handleSubmitFullExam=async()=>{
+   try {
     await updateSectionTime(null, selectedSection?.sectionId);
     await dispatch(userExamResult(examData));
     router.push("result");
   } catch (err) {
     console.error("Error submitting exam:", err);
   }
-};
- 
+}
 
   const getQuestionByNumberId = async (number: number) => {
     setCurrentQuestionIndex(number);
@@ -365,8 +390,13 @@ if(question?.userAttempted){
 
   // 🧭 Handle manual section change
   const handleSection = async (section: Section) => {
-    if (!switchable)
-      return alert("Switching sections is not allowed until completion");
+    console.log(section,"sectionsection")
+    if (!switchable){
+  setSectionShowPopup(true)
+
+      return 
+    }
+  
 
     const prevSectionId = selectedSection?.sectionId;
     const newSectionId = section.sectionId;
@@ -409,9 +439,60 @@ const submitReport=async(val:any)=>{
 
   if (!examData?.length)
     return <div className="p-8 text-center">No exam data found.</div>;
+ const [showWarning, setShowWarning] = useState(false);
 
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        // User switched/minimized tab
+        localStorage.setItem("tabSwitch", "true");
+      } else {
+        // When user comes back
+        if (localStorage.getItem("tabSwitch") === "true") {
+          setShowWarning(true);
+          localStorage.removeItem("tabSwitch");
+        }
+      }
+    };
+
+    const handleBlur = () => {
+      localStorage.setItem("tabSwitch", "true");
+    };
+
+    const handleFocus = () => {
+      if (localStorage.getItem("tabSwitch") === "true") {
+        setShowWarning(true);
+        localStorage.removeItem("tabSwitch");
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("blur", handleBlur);
+    window.addEventListener("focus", handleFocus);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("blur", handleBlur);
+      window.removeEventListener("focus", handleFocus);
+    };
+  }, []);
+const [sectionShowPopup, setSectionShowPopup] = useState(false);
+// alert(examData[0]?.exam?.examname)
   return (
     <>
+     {showSubmitPopup && (
+      <SubmitExamPopup
+        onClose={() => setShowSubmitPopup(false)}
+        onConfirm={handleSubmitExamPopup}
+      />
+    )}
+     {sectionShowPopup && (
+        <SectionRestrictionPopup  examname={examData[0]?.exam?.examname} onClose={() => setSectionShowPopup(false)} />
+      )}
+    {showWarning && (
+        <TabSwitchWarning onClose={() => setShowWarning(false)} />
+      )}
+
       <Popup
         title="Submit Report"
         isOpen={showPopup}

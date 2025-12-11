@@ -91,7 +91,7 @@ export default function HomePage() {
         </div>
 
         <div className="mt-12 flex justify-center">
-          <button className="px-10 py-3 bg-[#FF5635] text-white text-lg lg:text-2xl font-semibold rounded-[4px]">Enroll Now</button>
+          <button onClick={()=>router.push("/PlanandPricing")} className="cursor-pointer px-10 py-3 bg-[#FF5635] text-white text-lg lg:text-2xl font-semibold rounded-[4px]">Enroll Now</button>
         </div>
       </section> */}
       <section className="mt-10 px-5 lg:px-30">
@@ -189,9 +189,24 @@ export default function HomePage() {
 }
 
 function HeroSection({ logoSrc }: { logoSrc: any }) {
+  const dispatch=useDispatch<AppDispatch>()
+    const examTypeData = useSelector(
+      (state: any) => state.examType.examType
+    ) || [];
   const router = useRouter();
   const handlenavigate = (link: any) => {
     router.push(link);
+  }
+  // console.log(examTypeData,"examTypeDataexamTypeData")
+
+  const handleIPmatExam=()=>{
+let mockExam=examTypeData.find((item:any)=>item.examType==="Mocks");
+
+  dispatch(handleSelectedExamType(mockExam));
+        const payload: any = null;
+        dispatch(resetQuestionByExamID(payload));
+        dispatch(resetQuestion(payload));
+   router.push("/Exam/Mocks?isMock=true");
   }
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 items-center bg-[#F8F7F3] px-5 lg:px-30 py-8 lg:py-12 lg:pb-25 ">
@@ -222,7 +237,7 @@ function HeroSection({ logoSrc }: { logoSrc: any }) {
         </ul>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <button className="px-6 cursor-pointer sm:px-8 lg:px-8 py-2 sm:py-3 bg-[#FF5635] text-white rounded-[4px] shadow-md font-semibold transition-transform duration-200 hover:scale-105 text-sm sm:text-base lg:text-base">
+          <button onClick={handleIPmatExam} className="px-6 cursor-pointer sm:px-8 lg:px-8 py-2 sm:py-3 bg-[#FF5635] text-white rounded-[4px] shadow-md font-semibold transition-transform duration-200 hover:scale-105 text-sm sm:text-base lg:text-base">
             Start Free Mock Test
           </button>
 
