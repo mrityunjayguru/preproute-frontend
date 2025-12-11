@@ -24,7 +24,7 @@ export const handleLogin = createAsyncThunk<boolean, Payload>(
       if (response.status === 200) {
         const userData = response.data.user; // adjust according to your API response
         thunkAPI.dispatch(setAuth(userData));
-        GetMessage("success", "Login successful");
+        // GetMessage("success", "Login successful");
         localStorage.setItem("token", userData.token);
         return true;
       }
@@ -54,7 +54,7 @@ export const googlelogin = createAsyncThunk<boolean, Payload>(
       if (response.status === 200) {
         const userData = response.data.user; // adjust according to your API response
         thunkAPI.dispatch(setAuth(userData));
-        GetMessage("success", "Login successful");
+        // GetMessage("success", "Login successful");
         localStorage.setItem("token", userData.token);
         return true;
       }

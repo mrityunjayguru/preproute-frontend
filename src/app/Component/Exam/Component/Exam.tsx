@@ -130,7 +130,6 @@ console.log(examlength,"examlengthexamlength")
 export default function MergedExamPage() {
    const searchParams = useSearchParams();
   const isMock:any = searchParams.get("isMock") === "true";
-console.log(isMock,"isMockisMockisMock")
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const examById = useSelector((s:any) => s.exam?.examById) || [];
@@ -283,8 +282,6 @@ console.log(ipmatIndoreExam,"ipmatIndoreExamipmatIndoreExam")
                       value: exam,
                     })
                   }
-
-
                 >
                   View {selectedExamType?.examType} Tests
                 </Button>
@@ -324,7 +321,7 @@ console.log(ipmatIndoreExam,"ipmatIndoreExamipmatIndoreExam")
         className="flex flex-col justify-between p-3 rounded-xl bg-gray-200 border border-gray-300 opacity-60"
       >
         <div className="flex justify-between items-center">
-          <p className="text-[16px] text-gray-500">Comming Soon {selectedExamType?.examType} {examlength+idx+1}  </p>
+          <p className="text-[14px] text-gray-500"> {selectedExamType?.examType} {examlength+idx+1}  </p>
           <span className="text-gray-500">
             <svg
               width="22"
@@ -342,6 +339,8 @@ console.log(ipmatIndoreExam,"ipmatIndoreExamipmatIndoreExam")
             </svg>
           </span>
         </div>
+          <p className="text-[14px] text-gray-500">Comming Soon</p>
+
 
         <Button
           disabled

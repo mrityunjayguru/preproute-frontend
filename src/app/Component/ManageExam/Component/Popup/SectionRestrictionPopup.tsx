@@ -12,7 +12,7 @@ export default function SectionRestrictionPopup({ onClose, examname }: Props) {
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-xl">
         
-        <div className="border-2 border-[#2EA8FF] rounded-lg p-4 text-left space-y-2">
+        <div className="border-2  rounded-lg p-4 text-left space-y-2">
           
           <p className="text-[#FF5635] font-semibold">
             {examname} doesn’t let you jump sections or submit early—

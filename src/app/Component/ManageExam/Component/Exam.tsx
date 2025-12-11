@@ -325,15 +325,20 @@ const handleSubmitExamPopup=(val:any)=>{
   handleSubmitFullExam()
 }
 
-const handleSubmitFullExam=async()=>{
-   try {
+
+const handleSubmitFullExam = async () => {
+  try {
     await updateSectionTime(null, selectedSection?.sectionId);
     await dispatch(userExamResult(examData));
-    router.push("result");
+    window.open("", "_self");
+    window.close();
+    window.open("/Exam/result", "_blank");
   } catch (err) {
     console.error("Error submitting exam:", err);
   }
-}
+};
+
+
 
   const getQuestionByNumberId = async (number: number) => {
     setCurrentQuestionIndex(number);
