@@ -315,8 +315,8 @@ div[class*="badge"] {
 
 .icon-bar {
   position: fixed;
-  top: 50%;
   right: 0;
+  bottom: 0;
   transform: translateY(-50%);
 }
 
@@ -363,6 +363,7 @@ div[class*="badge"] {
  .whatsapp {
   background: #25D366;
   color: white;
+  border-radius: 50%;
 }
 
 .instagram {

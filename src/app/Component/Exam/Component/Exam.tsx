@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Select from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
@@ -41,7 +41,11 @@ const LockIcon = (props:any) => (
 
 
 const MockExamCard = ({ exam, handleExam,index }) => {
-  console.log(exam,"examexamexamexam")
+  console.log(exam?.exam?.Mocks,"examexamexamexam")
+  const examById = useSelector((s:any) => s.exam?.examById) || [];
+const examlength:any=examById.length;
+console.log(examlength,"examlengthexamlength")
+
   const user = useSelector((s:any) => s.Auth?.loginUser);
   const hasPurchase = user?.PurchaseDetail?.length > 0;
   const isMock1 = ["mock 1", "mocks 1"].includes(exam?.questionPapername?.toLowerCase());
@@ -124,14 +128,18 @@ const MockExamCard = ({ exam, handleExam,index }) => {
 
 
 export default function MergedExamPage() {
+   const searchParams = useSearchParams();
+  const isMock:any = searchParams.get("isMock") === "true";
+console.log(isMock,"isMockisMockisMock")
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-
-  const examdata = useSelector((s:any) => s.exam?.exam) || [];
   const examById = useSelector((s:any) => s.exam?.examById) || [];
+const examlength:any=examById.length;
   const selectedExamType = useSelector((s:any) => s.examType?.selectedExamType);
   const loginUser = useSelector((s:any) => s.Auth?.loginUser);
   const [selectedExam, setSelectedExam] = useState<any>(null);
+  const examdata = useSelector((s:any) => s.exam?.exam) || [];
+
   useEffect(() => {
     const payload:any={
       userId:loginUser?._id
@@ -170,6 +178,22 @@ dispatch(handleSetSelectedExam(option.value));
     dispatch(getCommonQuestionBeExamId(payload));
   };
 
+  const handleSelectExamDynamic=(val:any)=>{
+      if (!val) return;
+dispatch(handleSetSelectedExam(val));
+    const exam = val;
+    setSelectedExam(exam);
+
+    const payload:any = {
+      examid: exam?._id,
+      examTypeId: selectedExamType?._id,
+      isPublished: true,
+      uid: loginUser?._id,
+    };
+
+    dispatch(getCommonQuestionBeExamId(payload));
+  }
+
   const handleExam = async (examData:any,type:any) => {
 
     if (!localStorage.getItem("token")) return router.push("/Auth/signin");
@@ -197,6 +221,19 @@ dispatch(handleSetSelectedExam(option.value));
     label: ex.examname,
     value: ex,
   }));
+useEffect(() => {
+  if (isMock) {
+    // Find only IPMAT Indore
+    const ipmatIndoreExam = examdata.find(
+      (ex: any) => ex.examname=== "IPMAT-INDORE"
+    );
+console.log(ipmatIndoreExam,"ipmatIndoreExamipmatIndoreExam")
+    if (ipmatIndoreExam) {
+      handleSelectExamDynamic(ipmatIndoreExam);  // Pass only one exam
+    }
+  }
+}, [isMock, examdata]);
+
   return (
     <div className="min-h-[79vh] font-sans bg-white px-6 lg:px-10 py-6">
       <header className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8 py-4">
@@ -279,6 +316,43 @@ dispatch(handleSetSelectedExam(option.value));
             {examById.map((exam:any,i:any) => (
               <MockExamCard key={exam._id} exam={exam} handleExam={handleExam} index={i} />
             ))}
+            {examById.length < (examById[0]?.exam?.Mocks || 0) &&
+  [...Array((examById[0]?.exam?.Mocks || 0) - examById.length)].map(
+    (_, idx) => (
+      <Card
+        key={`locked-${idx}`}
+        className="flex flex-col justify-between p-3 rounded-xl bg-gray-200 border border-gray-300 opacity-60"
+      >
+        <div className="flex justify-between items-center">
+          <p className="text-[16px] text-gray-500">Comming Soon {selectedExamType?.examType} {examlength+idx+1}  </p>
+          <span className="text-gray-500">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24" 
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-5 h-5 text-gray-500"
+            >
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+          </span>
+        </div>
+
+        <Button
+          disabled
+          className="w-full bg-gray-400 text-white cursor-not-allowed mt-4"
+        >
+          Locked
+        </Button>
+      </Card>
+    )
+  )}
+
           </div>
         </main>
       )}

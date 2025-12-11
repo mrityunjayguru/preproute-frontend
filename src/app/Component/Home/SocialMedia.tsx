@@ -6,62 +6,62 @@ function SocialMedia() {
 
       {/* WhatsApp App */}
       <a 
-        href="whatsapp://send?phone=918888888888" 
+        href="whatsapp://send?phone=916364150065" 
         className="whatsapp"
       >
         <i className="fa fa-whatsapp"></i>
       </a>
 
       {/* Facebook App */}
-      <a 
+      {/* <a 
         href="fb://profile/your-profile-id"
         className="facebook"
       >
         <i className="fa fa-facebook"></i>
-      </a>
+      </a> */}
 
       {/* Twitter App */}
-      <a 
+      {/* <a 
         href="twitter://user?screen_name=yourUsername"
         className="twitter"
       >
         <i className="fa fa-twitter"></i>
-      </a>
+      </a> */}
 
       {/* Gmail */}
-      <a 
+      {/* <a 
         href="mailto:youremail@gmail.com"
         className="google"
         target="_blank"
       >
         <i className="fa fa-google"></i>
-      </a>
+      </a> */}
 
       {/* LinkedIn App */}
-      <a 
+      {/* <a 
         href="linkedin://in/yourUsername"
         className="linkedin"
       >
         <i className="fa fa-linkedin"></i>
-      </a>
+      </a> */}
 
       {/* YouTube */}
-      <a 
+      {/* <a 
         href="https://youtube.com/@thepreproute?si=V1do8AhktReWX9ZQ"
         className="youtube"
         target="_blank"
       >
         <i className="fa fa-youtube"></i>
-      </a>
+      </a> */}
 
       {/* ✅ Instagram App */}
-      <a
+      {/* <a
         href="https://www.instagram.com/preproute?igsh=ZjhtNjM5YnM3enYy"
         className="instagram"
         target='blank'
       >
         <i className="fa fa-instagram"></i>
-      </a>
+      </a> */}
 
     </div>
   );
