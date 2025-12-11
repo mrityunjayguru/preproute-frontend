@@ -118,7 +118,7 @@ export default function UpdateProfile() {
               name="username"
               value={formData.username}
               onChange={handleInput}
-              className="mt-1 w-full px-4 py-3 border rounded-xl bg-white shadow-sm focus:ring-orange-400 focus:border-orange-400"
+              className="mt-1 w-full px-4 py-3 border rounded-xl  shadow-sm focus:ring-orange-400 focus:border-orange-400"
               placeholder="Enter your name"
             />
           </div>
@@ -140,9 +140,10 @@ export default function UpdateProfile() {
             <input
               type="text"
               name="phone"
+              disabled
               value={formData.phone}
               onChange={handleInput}
-              className="mt-1 w-full px-4 py-3 border rounded-xl bg-white shadow-sm focus:ring-orange-400 focus:border-orange-400"
+              className="mt-1 w-full px-4 py-3 border rounded-xl bg-gray-100 shadow-sm focus:ring-orange-400 focus:border-orange-400"
               placeholder="Enter phone number"
             />
           </div>

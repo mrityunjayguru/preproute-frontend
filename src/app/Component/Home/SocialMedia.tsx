@@ -1,68 +1,22 @@
-import React from 'react'
+"use client";
+import React from "react";
+import Image from "next/image";
+import whatsappIcon from "../../../assets/images/whatsapp.svg";
 
 function SocialMedia() {
   return (
-    <div className="icon-bar">
-
-      {/* WhatsApp App */}
+    <div className="fixed bottom-5 right-5 z-[9999]">
       <a 
-        href="whatsapp://send?phone=916364150065" 
-        className="whatsapp"
+        href="https://wa.me/916364150065"
+        target="_blank"
+        className="block bg-[#25D366] p-3 rounded-full shadow-lg hover:scale-105 transition-transform"
       >
-        <i className="fa fa-whatsapp"></i>
+        <Image
+          src={whatsappIcon}
+          alt="WhatsApp"
+          className="h-10 w-10 object-contain"
+        />
       </a>
-
-      {/* Facebook App */}
-      {/* <a 
-        href="fb://profile/your-profile-id"
-        className="facebook"
-      >
-        <i className="fa fa-facebook"></i>
-      </a> */}
-
-      {/* Twitter App */}
-      {/* <a 
-        href="twitter://user?screen_name=yourUsername"
-        className="twitter"
-      >
-        <i className="fa fa-twitter"></i>
-      </a> */}
-
-      {/* Gmail */}
-      {/* <a 
-        href="mailto:youremail@gmail.com"
-        className="google"
-        target="_blank"
-      >
-        <i className="fa fa-google"></i>
-      </a> */}
-
-      {/* LinkedIn App */}
-      {/* <a 
-        href="linkedin://in/yourUsername"
-        className="linkedin"
-      >
-        <i className="fa fa-linkedin"></i>
-      </a> */}
-
-      {/* YouTube */}
-      {/* <a 
-        href="https://youtube.com/@thepreproute?si=V1do8AhktReWX9ZQ"
-        className="youtube"
-        target="_blank"
-      >
-        <i className="fa fa-youtube"></i>
-      </a> */}
-
-      {/* ✅ Instagram App */}
-      {/* <a
-        href="https://www.instagram.com/preproute?igsh=ZjhtNjM5YnM3enYy"
-        className="instagram"
-        target='blank'
-      >
-        <i className="fa fa-instagram"></i>
-      </a> */}
-
     </div>
   );
 }

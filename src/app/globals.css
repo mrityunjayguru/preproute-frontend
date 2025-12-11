@@ -315,7 +315,7 @@ div[class*="badge"] {
 
 .icon-bar {
   position: fixed;
-  right: 0;
+  right: -10;
   bottom: 0;
   transform: translateY(-50%);
 }
@@ -332,7 +332,7 @@ div[class*="badge"] {
 
 /* Style the social media icons with color, if you want */
 .icon-bar a:hover {
-  background-color: #000;
+  /* background-color: #000; */
 }
 
 .facebook {
@@ -363,7 +363,6 @@ div[class*="badge"] {
  .whatsapp {
   background: #25D366;
   color: white;
-  border-radius: 50%;
 }
 
 .instagram {

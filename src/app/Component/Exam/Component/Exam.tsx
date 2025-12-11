@@ -269,7 +269,7 @@ console.log(ipmatIndoreExam,"ipmatIndoreExamipmatIndoreExam")
 
       {!examById.length && (
         <div className="text-center mt-6">
-          <h2 className="text-3xl font-semibold text-gray-700 mb-4"> Exams</h2>
+          <h2 className="text-5xl font-semibold text-[#e34d2e] mb-4">{selectedExamType?.examType} Exams</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mt-6">
             {examdata.map((exam:any) => (
               <Card key={exam._id} className="p-5 rounded-xl bg-[#FAFAF9] hover:shadow-lg hover:scale-[1.01] cursor-pointer">
