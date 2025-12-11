@@ -17,6 +17,7 @@ import featureImage from '../../../assets/images/image.png';
 import logo from '../../../assets/images/logo.svg';
 import { ArrowLeft, ArrowRight, BulletIcon, RightIcon, WrongIcon } from "@/Common/svgIcon";
 import SocialMedia from "./SocialMedia";
+import WhatsAppSocialApp from "./WhatsAppSocialApp";
 
 
 export default function HomePage() {
@@ -37,8 +38,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-white text-[#0F1724] antialiased">
-
-
+    <WhatsAppSocialApp/>
 
 <div className="relative pb-[180px] sm:pb-[260px] lg:pb-[420px]">
   <HeroSection logoSrc={heroImage} />

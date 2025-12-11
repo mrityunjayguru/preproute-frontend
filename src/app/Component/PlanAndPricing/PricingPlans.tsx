@@ -65,7 +65,6 @@ export default function PricingPlans() {
         description: plan.title,
         order_id: order.id,
         handler: function () {
-          alert("Payment Successful!");
           router.push("/Profile");
         },
         prefill: {
