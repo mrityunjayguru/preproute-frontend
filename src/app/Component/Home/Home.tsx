@@ -102,7 +102,10 @@ export default function HomePage() {
           Data from 50,000+ students shows how mock tests transform exam performance
         </p>
 
-        <div className="mt-6 bg-[#F7ECFF] rounded-3xl px-4 sm:px-10 lg:px-30 py-6 lg:py-10">
+<div className="mt-6 rounded-3xl px-4 sm:px-10 lg:px-30 py-6 lg:py-10 
+                bg-gradient-to-b from-[#E4FBF8] to-white border border-gray-100">
+  {/* content */}
+
 
           {/* Table Header */}
           <div className="grid grid-cols-3 text-center font-semibold text-base sm:text-xl mb-6">
