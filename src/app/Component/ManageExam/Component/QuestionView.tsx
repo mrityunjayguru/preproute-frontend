@@ -23,7 +23,7 @@ const QuestionView: React.FC<Props> = ({
  
   return (
     <div className="bg-white p-4 rounded-lg flex-1">
-      <p className="text-sm font-bold bg-[#F7F7F5] p-2 rounded mb-2">
+      <p className="text-sm font-bold bg-[#007bff] p-2 text-white rounded mb-2">
         {examName} – {paperName}
       </p>
 

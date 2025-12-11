@@ -10,10 +10,20 @@ import InstructionPopup from "./InstructionPopup";
 
 function ExamHeader() {
   const [isOpen, setIsOpen] = useState(false);
- const [openPopup, setOpenPopup] = useState(false);
-  const toggleCalculator = () => {
-    setIsOpen((prev) => !prev);
-  };
+const [calcPosition, setCalcPosition] = useState({ x: 0, y: 0 });
+const [openPopup, setOpenPopup] = useState(false);
+
+  const toggleCalculator = (e:any) => {
+  const rect = e.target.getBoundingClientRect();
+
+  setCalcPosition({
+    x: rect.left + rect.width / 2 - 150, // center the calculator horizontally
+    y: rect.bottom + 5, // a little offset so it doesn't overlap the button
+  });
+
+  setIsOpen((prev) => !prev);
+};
+
 
   return (
     <div>
@@ -40,11 +50,9 @@ function ExamHeader() {
 {/* <DraggableWrapper> */}
 
       {isOpen && (
-        <div
-          className="fixed top-0 right-4 z-50 bg-white p-2 shadow-lg rounded-lg"
-        >
-          <CalculatorApp onClose={() => setIsOpen(false)}  />
-        </div>
+    
+          <CalculatorApp onClose={() => setIsOpen(false)} initialPosition={calcPosition} />
+   
       )}
       {/* </DraggableWrapper> */}
     </div>

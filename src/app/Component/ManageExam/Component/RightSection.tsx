@@ -59,7 +59,7 @@ const RightSection: React.FC<Props> = ({
           if (currentStatus[idx] === "answered") bgColor = statusColors.answered;
           else if (currentStatus[idx] === "review") {
             bgColor = statusColors.review;
-            shapeStyle = circleShape;
+            shapeStyle = pentagonShape;
           } else if (idx === currentQuestionIndex) bgColor = statusColors.visited;
           else if (currentStatus[idx] === "visited") bgColor = statusColors.visited;
 
