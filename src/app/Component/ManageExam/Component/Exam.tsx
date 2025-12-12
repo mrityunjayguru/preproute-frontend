@@ -66,8 +66,22 @@ const [showPopup, setShowPopup] = useState(false);
   const exam = examData?.[0]?.exam || {};
   const examSections: Section[] = exam?.sections || [];
   // alert(JSON.stringify(givenExam))
-  const currentStatus =
-    givenExam[currentSectionId?.sectionId || "no-section"] || {};
+   useEffect(()=>{
+if(!givenExam){
+    dispatch(handleGivenExam(sectionQuestionStatus))
+}
+  },[givenExam])
+ const activeSectionId =
+  currentSectionId?.sectionId || selectedSection?.sectionId;
+
+let currentStatus = {};
+
+if (givenExam) {
+  currentStatus = givenExam[activeSectionId] || {};
+} else {
+  currentStatus = sectionQuestionStatus[activeSectionId] || {};
+}
+
   const [questionStartTime, setQuestionStartTime] = useState<number | null>(
     null
   )
@@ -78,6 +92,7 @@ const [showPopup, setShowPopup] = useState(false);
     const istDate = new Date(date.getTime() + utcOffsetInMinutes * 60000);
     return istDate;
   };
+ 
   // ---------------- Setup Exam ----------------
  // ---------------- Setup Exam ----------------
  useEffect(()=>{
@@ -120,14 +135,17 @@ useEffect(() => {
   // ⬇️ Load First Question Logic
 if (examInfo.isSection && examSections.length) {
   const firstSection:any = examSections[0];
-
   // STEP 1: Set section only once (when NOT already selected)
-  if (!currentSectionId?.sectionId) {
+  if (currentSectionId==null) {
+
     setSelectedSection(firstSection);
 
     // setRedux
-    dispatch(setCurrentSection(firstSection.sectionId));
-
+    // dispatch(setCurrentSection(firstSection.sectionId));
+ fetchQuestion(
+      0,
+      firstSection.sectionId
+    );
     // default question index 0
     // dispatch(setcurrentse(0));
     setCurrentQuestionIndex(0);
