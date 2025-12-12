@@ -5,7 +5,10 @@ import {
   setexamById,
   setSelectedExam,
   setSelectedExamDetail,
-  SelectedExam
+  SelectedExam,
+  setGivenExam,
+  setQuestion,
+  seSection
 } from "../../store/seatUpexam/exam";
 import APIName, { exam } from "../endPoints";
 import { examRepo } from "./ExamRepo";
@@ -316,6 +319,67 @@ export const handleSetSelectedExam = createAsyncThunk<boolean, Payload>(
   }
 );
 
+
+
+export const handleGivenExam = createAsyncThunk<boolean, Payload>(
+  exam.get,
+  async (payload, thunkAPI) => {
+    try {
+
+        thunkAPI.dispatch(setGivenExam(payload));
+        return true;
+    } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
+
+export const setCurrentQuestion = createAsyncThunk<boolean, Payload>(
+  exam.get,
+  async (payload, thunkAPI) => {
+    try {
+        thunkAPI.dispatch(setQuestion(payload));
+        return true;
+    } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
+
+export const setCurrentSection = createAsyncThunk<boolean, Payload>(
+  exam.get,
+  async (payload, thunkAPI) => {
+    try {
+
+        thunkAPI.dispatch(seSection(payload));
+        return true;
+    } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
+ 
  
 
 

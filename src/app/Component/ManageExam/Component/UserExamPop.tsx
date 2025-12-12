@@ -1,17 +1,22 @@
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { handleGivenExam, setCurrentSection } from "@/api/Exam";
 
 interface UserExamPopProps {
   text?: string | number;
 }
 const UserExamPop: React.FC<UserExamPopProps> = ({ text }) => {
     const router = useRouter();
-  
+  const dispatch=useDispatch<AppDispatch>()
   const handleButtonClick = () => {
   if (!localStorage.getItem("token")) return router.push("/Auth/signin");
     const url = "/Exam/InstructionPaeg"; // your exam page
-
+    const payload:any=null
+  dispatch(handleGivenExam(payload))
+dispatch(setCurrentSection(payload))
     // open fullscreen popup
     const features = `
       fullscreen=yes,

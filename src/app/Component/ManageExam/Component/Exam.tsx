@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { AppDispatch } from "@/store/store";
 import { BlockMath } from "react-katex";
-import { createUserExam } from "@/api/Exam";
+import { createUserExam, handleGivenExam, setCurrentSection } from "@/api/Exam";
 import { clearQuestionResponce, userExamResult, userQuestiongetQuestionById } from "@/api/Question";
 
 import HeaderSection from "./HeaderSection";
@@ -45,7 +45,7 @@ const [showSubmitPopup, setShowSubmitPopup] = useState(false);
     (state: any) => state.question?.singleQuestion
   );
   const userLogin = useSelector((state: any) => state.Auth?.loginUser);
-
+  const givenExam = useSelector((state: any) => state.exam?.givenExam);
   const [isSection, setIsSection] = useState(false);
   const [switchable, setSwitchable] = useState(false);
   const [selectedSection, setSelectedSection] = useState<Section | null>(null);
@@ -56,6 +56,7 @@ const [showSubmitPopup, setShowSubmitPopup] = useState(false);
   const [numericalValue, setNumericalValue] = useState("");
   const [mcqSelected, setMcqSelected] = useState<string | null>(null);
   const [loder,setloder]=useState<boolean>(false)
+  const currentSectionId = useSelector(state => state.exam.currentSectionId);
   const [sectionQuestionStatus, setSectionQuestionStatus] = useState<
     Record<string, Record<number, string>>
   >({});
@@ -64,8 +65,9 @@ const [showSubmitPopup, setShowSubmitPopup] = useState(false);
 const [showPopup, setShowPopup] = useState(false);
   const exam = examData?.[0]?.exam || {};
   const examSections: Section[] = exam?.sections || [];
+  // alert(JSON.stringify(givenExam))
   const currentStatus =
-    sectionQuestionStatus[selectedSection?.sectionId || "no-section"] || {};
+    givenExam[currentSectionId?.sectionId || "no-section"] || {};
   const [questionStartTime, setQuestionStartTime] = useState<number | null>(
     null
   )
@@ -77,47 +79,104 @@ const [showPopup, setShowPopup] = useState(false);
     return istDate;
   };
   // ---------------- Setup Exam ----------------
-  useEffect(() => {
-    if (!examData?.length) return;
-    const examInfo = examData[0].exam;
+ // ---------------- Setup Exam ----------------
+ useEffect(()=>{
+  if(selectedSection?.sectionId){
+  const payload:any={
+    sectionId:selectedSection?.sectionId,
+    currentQuestionIndex:currentQuestionIndex
+  }
+dispatch(setCurrentSection(payload))
+  }
 
-    setIsSection(examInfo.isSection);
-    setSwitchable(examInfo?.switchable);
-    if(examInfo?.switchable==true){
-   setTimeLeft(examInfo.fullExamduration*60 )
-    }else{
-    const totalDuration = examInfo.isSection
-      ? examInfo.sections[0].duration
-      : Number(examInfo.fullExamduration || 0);
+ },[selectedSection,currentQuestionIndex])
+useEffect(() => {
+  if (!examData?.length) return;
 
-    setTimeLeft(totalDuration * 60); // seconds
-    }
-    // Calculate exam duration
+  const examInfo = examData[0].exam;
 
+  setIsSection(examInfo.isSection);
+  setSwitchable(examInfo?.switchable);
 
-    // Load first question
-    if (examInfo.isSection && examSections.length) {
-      const firstSection = examSections[0];
-      setSelectedSection(firstSection);
+  // ⏳ GET SAVED TIME FROM LOCAL STORAGE
+  const savedTime = localStorage.getItem("exam_timeLeft");
 
-      setTotalNoOfQuestions(firstSection.noOfQuestions);
-      fetchQuestion(1, firstSection.sectionId);
-      const payload: any = {
-        questionPaperId: examData?.[0]?._id,
-        sectionWise: [
-          {
-            sectionId: firstSection.sectionId,
-            startTime: getISTDate(),
-          },
-        ],
-      };
-
-      dispatch(updaquesPaperTime(payload));
+  if (savedTime) {
+    // ⬇️ Restore timer from last saved state
+    setTimeLeft(Number(savedTime));
+  } else {
+    // ⬇️ Fresh exam start
+    if (examInfo.switchable === true) {
+      setTimeLeft(examInfo.fullExamduration * 60);
     } else {
-      setTotalNoOfQuestions(Number(examInfo.noOfQuestions) || 0);
-      fetchQuestion(1);
+      const totalDuration = examInfo.isSection
+        ? examInfo.sections[0].duration
+        : Number(examInfo.fullExamduration || 0);
+
+      setTimeLeft(totalDuration * 60);
     }
-  }, [examData]);
+  }
+
+  // ⬇️ Load First Question Logic
+if (examInfo.isSection && examSections.length) {
+  const firstSection:any = examSections[0];
+
+  // STEP 1: Set section only once (when NOT already selected)
+  if (!currentSectionId?.sectionId) {
+    setSelectedSection(firstSection);
+
+    // setRedux
+    dispatch(setCurrentSection(firstSection.sectionId));
+
+    // default question index 0
+    // dispatch(setcurrentse(0));
+    setCurrentQuestionIndex(0);
+  }
+
+  // STEP 2: Set total questions based on ACTIVE section
+  const activeSectionId =
+    currentSectionId?.sectionId || firstSection.sectionId;
+
+  const activeSection = examSections.find(
+    (s) => s.sectionId === activeSectionId
+  );
+
+  setTotalNoOfQuestions(activeSection?.noOfQuestions || 0);
+
+  // STEP 3: Fetch ONLY if we have section + question index
+  if (currentSectionId?.sectionId) {
+    setCurrentQuestionIndex(currentSectionId?.currentQuestionIndex )
+    fetchQuestion(
+      currentSectionId.currentQuestionIndex || 0,
+      currentSectionId.sectionId
+    );
+  }
+
+  // STEP 4: Store start time ONLY once (not every render)
+  if (!localStorage.getItem("sectionStartTime_" + firstSection.sectionId)) {
+    const payload:any = {
+      questionPaperId: examData?.[0]?._id,
+      sectionWise: [
+        {
+          sectionId: firstSection.sectionId,
+          startTime: getISTDate(),
+        },
+      ],
+    };
+
+    dispatch(updaquesPaperTime(payload));
+    localStorage.setItem(
+      "sectionStartTime_" + firstSection.sectionId,
+      "1"
+    );
+  }
+}
+else {
+    setTotalNoOfQuestions(Number(examInfo.noOfQuestions) || 0);
+    fetchQuestion(1);
+  }
+}, [examData]);
+
 
   // ---------------- Timer Countdown ----------------
   useEffect(() => {
@@ -149,14 +208,19 @@ setIsTimeUp(true)
   }, [timeLeft]);
 
   useEffect(() => {
-    console.log(isTimeUp, "isTimeUpisTimeUp");
+
   }, [isTimeUp]);
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
+// useEffect(()=>{
+//   if(currentSectionId?.sectionId){
+//   setSelectedSection(currentSectionId)
 
+//   }
+// },[currentSectionId])
   // ---------------- Sync Question ----------------
   useEffect(() => {
     if (!singleQuestion?.[0]) return;
@@ -183,13 +247,21 @@ setIsTimeUp(true)
     if (/[0-9]/.test(key)) return setNumericalValue((prev) => prev + key);
   }, []);
 
-  const updateStatus = (status: string) => {
+  const updateStatus = (status: string) => { 
     const sectionKey = isSection ? selectedSection?.sectionId : "no-section";
     if (!sectionKey) return;
     setSectionQuestionStatus((prev) => ({
       ...prev,
       [sectionKey]: { ...prev[sectionKey], [currentQuestionIndex]: status },
     }));
+     const payload:any = {
+    sectionId: sectionKey,
+    questionIndex: currentQuestionIndex,
+    status: status,
+  };
+
+  // 🔹 Dispatch Redux Action
+    dispatch(handleGivenExam(payload))
   };
   const handleNextQuestion = async () => {
     // alert(mcqSelected)
@@ -202,6 +274,7 @@ setIsTimeUp(true)
         setCurrentQuestionIndex((p) => p + 1);
         fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
       } else if (isSection && currentSectionIndex + 1 < examSections.length) {
+       
         const nextSection: any = examSections[currentSectionIndex + 1];
         // console.log(nextSection,"nextSectionnextSection")
         if(switchable==false){
@@ -339,6 +412,32 @@ const handleSubmitFullExam = async () => {
 };
 
 
+ useEffect(() => {
+    window.history.pushState(null, "", window.location.href);
+
+    const handleBack = () => {
+      router.replace("/dashboard"); // force redirect
+    };
+
+    window.addEventListener("popstate", handleBack);
+
+    return () => {
+      window.removeEventListener("popstate", handleBack);
+    };
+  }, []);
+  useEffect(() => {
+    history.pushState(null, "", location.href);
+
+    const preventBack = () => {
+      history.pushState(null, "", location.href);
+    };
+
+    window.addEventListener("popstate", preventBack);
+
+    return () => {
+      window.removeEventListener("popstate", preventBack);
+    };
+  }, []);
 
   const getQuestionByNumberId = async (number: number) => {
     setCurrentQuestionIndex(number);
@@ -395,10 +494,8 @@ if(question?.userAttempted){
 
   // 🧭 Handle manual section change
   const handleSection = async (section: Section) => {
-    console.log(section,"sectionsection")
     if (!switchable){
   setSectionShowPopup(true)
-
       return 
     }
   
@@ -513,7 +610,7 @@ const [sectionShowPopup, setSectionShowPopup] = useState(false);
         <HeaderSection
           isSection={isSection}
           examSections={examSections}
-          selectedSection={selectedSection}
+          selectedSection={currentSectionId}
           handleSection={handleSection}
           timeLeft={timeLeft}
           formatTime={formatTime}

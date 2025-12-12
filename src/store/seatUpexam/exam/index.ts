@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { isNull } from "util";
 
 // Define the shape of your state
 interface UserDataState {
@@ -8,7 +9,10 @@ singleexam:any;
 selectedexam:any;
 selectedExamDetail:any;
 examById:any;
-examHeader:any
+examHeader:any;
+givenExam:any;
+currentSectionId:any;
+currentQuestionIndex:any
 }
 
 // Initial state for the slice
@@ -19,7 +23,10 @@ const initialState: UserDataState = {
   selectedexam:null,
   selectedExamDetail:null,
   examById:null,
-  examHeader:null
+  examHeader:null,
+  givenExam:null,
+  currentSectionId:null,
+  currentQuestionIndex:null
 };
 
 // Create the user data slice
@@ -48,11 +55,35 @@ export const examSlicc = createSlice({
     SelectedExam: (state, action: PayloadAction<any>) => {
       state.examHeader = action.payload; // Set login user data
     },
+    seSection: (state, action: PayloadAction<any>) => {
+      state.currentSectionId = action.payload; // Set login user data
+    },
+    setQuestion: (state, action: PayloadAction<any>) => {
+      state.currentQuestionIndex = action.payload; // Set login user data
+    },
+setGivenExam: (state, action: PayloadAction<any>) => {
+  if(action.payload==null){
+    state.givenExam=null
+  }
+  const { sectionId, questionIndex, status } = action.payload;
+
+  if (!state.givenExam) {
+    state.givenExam = {};
+  }
+
+  if (!state.givenExam[sectionId]) {
+    state.givenExam[sectionId] = {};
+  }
+
+  state.givenExam[sectionId][questionIndex] = status;
+},
+
+
   },
 });
 
 // Export actions
-export const {SelectedExam,setexam,setUpdateexam,setexamById,setSingleexam,setSelectedExam,setSelectedExamDetail} = examSlicc.actions;
+export const {setGivenExam,seSection,setQuestion,SelectedExam,setexam,setUpdateexam,setexamById,setSingleexam,setSelectedExam,setSelectedExamDetail} = examSlicc.actions;
 
 // Export reducer
 export default examSlicc.reducer;

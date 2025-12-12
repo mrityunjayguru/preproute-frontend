@@ -13,7 +13,9 @@ import { CutOffIcons } from "@/Common/svgIcon";
 import {
   getCommonexam,
   getCommonQuestionBeExamId,
+  handleGivenExam,
   handleSetSelectedExam,
+  setCurrentSection,
 } from "@/api/Exam";
 import { getUserQuestionData } from "@/api/QuestionPaper";
 import { QuestionPaperResult } from "@/api/Users";
@@ -41,10 +43,10 @@ const LockIcon = (props:any) => (
 
 
 const MockExamCard = ({ exam, handleExam,index }) => {
-  console.log(exam?.exam?.Mocks,"examexamexamexam")
+
   const examById = useSelector((s:any) => s.exam?.examById) || [];
 const examlength:any=examById.length;
-console.log(examlength,"examlengthexamlength")
+
 
   const user = useSelector((s:any) => s.Auth?.loginUser);
   const hasPurchase = user?.PurchaseDetail?.length > 0;
@@ -196,7 +198,9 @@ dispatch(handleSetSelectedExam(val));
   const handleExam = async (examData:any,type:any) => {
 
     if (!localStorage.getItem("token")) return router.push("/Auth/signin");
-
+    const payload:any=null
+  dispatch(handleGivenExam(payload))
+dispatch(setCurrentSection(payload))
     if (!examData?.hasGivenExam || type=="start") {
       const payload:any={
           examTypeId: examData?.examTypeId,
