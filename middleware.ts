@@ -7,7 +7,7 @@ export function middleware(req: NextRequest) {
   // BLOCK ROUTE
   if (pathname.startsWith("/Exam/userExam")) {
     const url = req.nextUrl.clone();
-    url.pathname = "/not-allowed"; // your page
+    // url.pathname = "/not-allowed"; // your page
     return NextResponse.redirect(url);
   }
 
