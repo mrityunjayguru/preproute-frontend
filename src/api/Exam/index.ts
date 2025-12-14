@@ -8,7 +8,8 @@ import {
   SelectedExam,
   setGivenExam,
   setQuestion,
-  seSection
+  seSection,
+  setExamProgress
 } from "../../store/seatUpexam/exam";
 import APIName, { exam } from "../endPoints";
 import { examRepo } from "./ExamRepo";
@@ -380,6 +381,33 @@ export const setCurrentSection = createAsyncThunk<boolean, Payload>(
   }
 );
  
+
+
+export const ManageExamProgress = createAsyncThunk<boolean, Payload>(
+  exam.get,
+  async (payload, thunkAPI) => {
+    try {
+
+         const data = await examRepo.ManageExamProgress(payload);
+         console.log(data.data.data,"examProgressexamProgressdata")
+      if (data.status === 201) {
+      thunkAPI.dispatch(setExamProgress(data.data.data));
+
+        return data.data.data;
+      }
+        return true;
+    } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        // GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
  
 
 

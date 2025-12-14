@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { AppDispatch } from "@/store/store";
 import { BlockMath } from "react-katex";
-import { createUserExam, handleGivenExam, setCurrentSection } from "@/api/Exam";
+import { createUserExam, handleGivenExam, ManageExamProgress, setCurrentSection } from "@/api/Exam";
 import { clearQuestionResponce, userExamResult, userQuestiongetQuestionById } from "@/api/Question";
 
 import HeaderSection from "./HeaderSection";
@@ -44,6 +44,7 @@ const [showSubmitPopup, setShowSubmitPopup] = useState(false);
   const singleQuestion = useSelector(
     (state: any) => state.question?.singleQuestion
   );
+  const examProgress=useSelector((state:any)=>state.exam?.examProgress)
   const userLogin = useSelector((state: any) => state.Auth?.loginUser);
   const givenExam = useSelector((state: any) => state.exam?.givenExam);
   const [isSection, setIsSection] = useState(false);
@@ -66,26 +67,35 @@ const [showPopup, setShowPopup] = useState(false);
   const exam = examData?.[0]?.exam || {};
   const examSections: Section[] = exam?.sections || [];
   // alert(JSON.stringify(givenExam))
-   useEffect(()=>{
-if(!givenExam){
-    dispatch(handleGivenExam(sectionQuestionStatus))
-}
-  },[givenExam])
- const activeSectionId =
-  currentSectionId?.sectionId || selectedSection?.sectionId;
+//    useEffect(()=>{
+// if(!givenExam){
+//     dispatch(handleGivenExam(sectionQuestionStatus))
+// }
+//   },[givenExam])
+// useEffect(()=>{
+// if(examProgress){
+//   console.log(examProgress?.currentSection,"examProgress?.currentSectionexamProgress?.currentSection")
+//   setSelectedSection(examProgress?.currentSection)
+//   console.log(selectedSection,"lllllllllllllllllllllllll")
+// }
+// },[examProgress])
+// console.log(examProgress,"examProgressexamProgress")
+ const activeSectionId:any =
+  examProgress?.currentSection?.sectionId || selectedSection?.sectionId;
 
 let currentStatus = {};
 
-if (givenExam) {
-  currentStatus = givenExam[activeSectionId] || {};
+if (examProgress?.givenExam) {
+  currentStatus = examProgress?.givenExam[activeSectionId] || {};
 } else {
-  currentStatus = sectionQuestionStatus[activeSectionId] || {};
+  currentStatus = sectionQuestionStatus[selectedSection?.sectionId] || {};
 }
 
   const [questionStartTime, setQuestionStartTime] = useState<number | null>(
     null
   )
 
+ 
   const getISTDate = () => {
     const date = new Date();
     const utcOffsetInMinutes = 5 * 60 + 30; // IST is UTC + 5:30
@@ -95,16 +105,15 @@ if (givenExam) {
  
   // ---------------- Setup Exam ----------------
  // ---------------- Setup Exam ----------------
- useEffect(()=>{
-  if(selectedSection?.sectionId){
-  const payload:any={
-    sectionId:selectedSection?.sectionId,
-    currentQuestionIndex:currentQuestionIndex
-  }
-dispatch(setCurrentSection(payload))
-  }
-
- },[selectedSection,currentQuestionIndex])
+//  useEffect(()=>{
+//   if(selectedSection?.sectionId){
+//   const payload:any={
+//     sectionId:selectedSection?.sectionId,
+//     currentQuestionIndex:currentQuestionIndex
+//   }
+// dispatch(setCurrentSection(payload))
+//   }
+//  },[selectedSection,currentQuestionIndex])
 useEffect(() => {
   if (!examData?.length) return;
 
@@ -136,7 +145,6 @@ useEffect(() => {
 if (examInfo.isSection && examSections.length) {
   const firstSection:any = examSections[0];
   // STEP 1: Set section only once (when NOT already selected)
-  if (currentSectionId==null) {
 
     setSelectedSection(firstSection);
 
@@ -149,7 +157,6 @@ if (examInfo.isSection && examSections.length) {
     // default question index 0
     // dispatch(setcurrentse(0));
     setCurrentQuestionIndex(0);
-  }
 
   // STEP 2: Set total questions based on ACTIVE section
   const activeSectionId =
@@ -162,13 +169,13 @@ if (examInfo.isSection && examSections.length) {
   setTotalNoOfQuestions(activeSection?.noOfQuestions || 0);
 
   // STEP 3: Fetch ONLY if we have section + question index
-  if (currentSectionId?.sectionId) {
-    setCurrentQuestionIndex(currentSectionId?.currentQuestionIndex )
-    fetchQuestion(
-      currentSectionId.currentQuestionIndex || 0,
-      currentSectionId.sectionId
-    );
-  }
+  // if (currentSectionId?.sectionId) {
+  //   setCurrentQuestionIndex(currentSectionId?.currentQuestionIndex )
+  //   fetchQuestion(
+  //     currentSectionId.currentQuestionIndex || 0,
+  //     currentSectionId.sectionId
+  //   );
+  // }
 
   // STEP 4: Store start time ONLY once (not every render)
   if (!localStorage.getItem("sectionStartTime_" + firstSection.sectionId)) {
@@ -272,23 +279,14 @@ setIsTimeUp(true)
       ...prev,
       [sectionKey]: { ...prev[sectionKey], [currentQuestionIndex]: status },
     }));
-     const payload:any = {
-    sectionId: sectionKey,
-    questionIndex: currentQuestionIndex,
-    status: status,
-  };
-
   // 🔹 Dispatch Redux Action
-    dispatch(handleGivenExam(payload))
+    // dispatch(handleGivenExam(payload))
   };
   const handleNextQuestion = async () => {
-    // alert(mcqSelected)
     setloder(true)
   if (!question || (!mcqSelected && !numericalValue)){
       updateStatus("visited");
       if (currentQuestionIndex + 1 < totalNoOfQuestions) {
-         console.log("true")
-       
         setCurrentQuestionIndex((p) => p + 1);
         fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
       } else if (isSection && currentSectionIndex + 1 < examSections.length) {
@@ -544,6 +542,55 @@ const submitReport=async(val:any)=>{
   await dispatch(createReport(payload))
     setShowPopup(false);
 }
+useEffect(() => {
+  if (!userLogin || !examData?.length ) return;
+  const payload:any = {
+    userId: userLogin?._id,
+    examId: examData?.[0]?.exam?._id,
+    questionPaperId: examData?.[0]?._id,
+
+    currentSection: {
+      sectionId: selectedSection?.sectionId,
+      sectionName: selectedSection?.sectionDetail?.section,
+      duration: selectedSection?.duration,
+      noofQuestion:selectedSection?.noOfQuestions
+    },
+    currentQuestionNoIndex: currentQuestionIndex,
+    givenExam:  sectionQuestionStatus,
+    status: "in-progress",
+  };
+
+  dispatch(ManageExamProgress(payload));
+}, [
+  sectionQuestionStatus
+]);
+useEffect(() => {
+  if (!userLogin || !examData?.length) return;
+
+  const fetchProgress = async () => {
+    const payload: any = {
+      userId: userLogin?._id,
+      examId: examData?.[0]?.exam?._id,
+      questionPaperId: examData?.[0]?._id,
+      status: "Find", // 👈 important flag
+    };
+
+    const response:any = await dispatch(ManageExamProgress(payload));
+    if(response?.payload?.givenExam)
+    {
+      setSectionQuestionStatus(response?.payload?.givenExam)
+      setSelectedSection(response?.payload.currentSection)
+      setCurrentQuestionIndex(response?.payload.currentQuestionNoIndex)
+    fetchQuestion(response?.payload.currentQuestionNoIndex, response?.payload.currentSection.sectionId);
+    setTotalNoOfQuestions(response?.payload.currentSection.noofQuestion)
+
+
+    }
+      
+  };
+
+  fetchProgress();
+}, [userLogin, examData]);
   const CurrentInput = useMemo(() => {
     if (!question) return null;
     return question.answerType === "Numeric" ? (
@@ -628,7 +675,7 @@ const [sectionShowPopup, setSectionShowPopup] = useState(false);
         <HeaderSection
           isSection={isSection}
           examSections={examSections}
-          selectedSection={currentSectionId}
+          selectedSection={examProgress?.currentSection}
           handleSection={handleSection}
           timeLeft={timeLeft}
           formatTime={formatTime}
@@ -639,7 +686,7 @@ const [sectionShowPopup, setSectionShowPopup] = useState(false);
             question={question}
             examName={examData[0]?.exam?.examname}
             paperName={examData[0]?.questionPaper}
-            currentQuestionIndex={currentQuestionIndex}
+            currentQuestionIndex={examProgress?.currentQuestionNoIndex || currentQuestionIndex }
             CurrentInput={CurrentInput}
           />
 
@@ -650,7 +697,7 @@ const [sectionShowPopup, setSectionShowPopup] = useState(false);
             currentQuestionIndex={currentQuestionIndex}
             getQuestionByNumberId={getQuestionByNumberId}
             isSection={isSection}
-            selectedSection={selectedSection}
+            selectedSection={examProgress}
             isTimeUp={isTimeUp}
           />
         </div>

@@ -48,7 +48,7 @@ const RightSection: React.FC<Props> = ({
 
       {/* Question Palette */}
       <h3 className="text-sm font-bold text-gray-500 mb-2">
-        Question Palette {isSection ? `(${selectedSection?.sectionDetail?.section})` : ""}
+        Question Palette {isSection ? `(${selectedSection?.currentSection?.sectionName})` : ""}
       </h3>
 
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">

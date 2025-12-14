@@ -17,6 +17,7 @@ interface examRepo {
   handleUpdateStaus: (payload: any) => Promise<AxiosResponse>;
   getCommonQuestionBeExamId: (payload: any) => Promise<AxiosResponse>;
   getCommonexam: (payload: any) => Promise<AxiosResponse>;
+  ManageExamProgress: (payload: any) => Promise<AxiosResponse>;
 }
 
 export const examRepo: examRepo = {
@@ -52,6 +53,10 @@ export const examRepo: examRepo = {
   },
   getCommonexam(payload) {
     return Repository.post(questionPaper.getCommonexam, payload, {
+    });
+  },
+   ManageExamProgress(payload) {
+    return Repository.post(questionPaper.ManageExamProgress, payload, {
     });
   },
 };

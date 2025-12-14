@@ -80,6 +80,7 @@ export const questionPaper={
   update:"setUpexam/questionpaper/update",
   getCommonQuestionBeExamId:"unauth/QuestionByExamId",
   getCommonexam:"unauth/commonExam",
+  ManageExamProgress:"user/examProgress"
 
 }
 export const Dashboard={
