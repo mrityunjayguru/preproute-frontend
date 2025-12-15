@@ -1,5 +1,8 @@
 import { svgIcon1, svgIcon2, svgIcon3, svgIcon4 } from "@/Common/svgIcon";
 import React from "react";
+import ExamSectionGraph from "../Graph/ExamSectionGraph";
+import TimeAnalysis from "../Graph/TimeAnalysis/TimeAnalysis";
+import MarksDistributionChart from "../Graph/MarksDistributionChart";
 
 /**
  * Updated BriefTab component styled to match the provided UI image.
@@ -83,6 +86,27 @@ const BriefTab = ({ data }) => {
         {/* If needed later */}
         {/* <SmallStat label="Average Time/Ques" value="1 min 26 sec" /> */}
       </div>
+   <div className="bg-gray-50 min-h-screen p-6 mt-5">
+  <div className="max-w-7xl mx-auto space-y-8">
+
+    {/* Exam Section Graph */}
+    <div className="bg-white rounded-2xl shadow-sm p-6">
+      <ExamSectionGraph />
+    </div>
+
+    {/* Time Analysis */}
+    <div className="bg-white rounded-2xl shadow-sm p-6">
+      <TimeAnalysis />
+    </div>
+
+    {/* Marks Distribution */}
+    <div className="bg-white rounded-2xl shadow-sm p-6">
+      <MarksDistributionChart />
+    </div>
+
+  </div>
+</div>
+
     </div>
   );
 };
