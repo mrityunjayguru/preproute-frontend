@@ -83,7 +83,7 @@ export default function MarksDistributionChart() {
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-semibold text-lg">Exam</h2>
-
+{/* 
         <div className="flex gap-2 bg-gray-100 rounded-lg p-1">
           {["Exam", "SA", "MCQ", "VA"].map((tab, i) => (
             <button
@@ -97,7 +97,7 @@ export default function MarksDistributionChart() {
               {tab}
             </button>
           ))}
-        </div>
+        </div> */}
       </div>
 
       {/* Chart */}
