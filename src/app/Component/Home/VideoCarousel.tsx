@@ -56,7 +56,7 @@ export default function YouTubeCarousel() {
           }
 
           .youtube-swiper .swiper-pagination-bullet-active {
-            background: #22c55e !important;
+            background: #FF5635 !important;
             width: 24px !important;
             border-radius: 9999px !important;
           }
