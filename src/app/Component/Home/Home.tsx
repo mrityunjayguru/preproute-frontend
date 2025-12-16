@@ -18,6 +18,7 @@ import logo from '../../../assets/images/logo.svg';
 import { ArrowLeft, ArrowRight, BulletIcon, RightIcon, WrongIcon } from "@/Common/svgIcon";
 import SocialMedia from "./SocialMedia";
 import WhatsAppSocialApp from "./WhatsAppSocialApp";
+import YouTubeCarousel from "./VideoCarousel";
 
 
 export default function HomePage() {
@@ -40,21 +41,9 @@ export default function HomePage() {
     <main className="min-h-screen bg-white text-[#0F1724] antialiased">
     <WhatsAppSocialApp/>
 
-<div className="relative pb-[180px] sm:pb-[260px] lg:pb-[420px]">
+<div className="relative ">
   <HeroSection logoSrc={heroImage} />
 
-  <div
-    className="absolute left-1/2 -translate-x-1/2 bottom-4
-               w-[90%] sm:w-[70%] lg:w-[55%] aspect-video rounded-xl overflow-hidden shadow-xl"
-  >
-    <iframe
-      className="w-full h-full"
-      src="https://www.youtube.com/embed/3fZxrn-A7HQ?si=O02DRFYEGUWYi8hk"
-      title="YouTube video player"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-    />
-  </div>
 </div>
 
 
@@ -151,7 +140,9 @@ export default function HomePage() {
 
         </div>
       </section>
-
+<div>
+  <YouTubeCarousel/>
+</div>
 
       <section className="mt-12 px-5 lg:px-30 mb-8">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-10 text-center">
@@ -167,9 +158,10 @@ export default function HomePage() {
           <div className="self-end -mb-2">
             <ArrowRight />
           </div>
-;
         </div>
       </section>
+
+
 
 
 

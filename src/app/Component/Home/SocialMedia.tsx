@@ -43,7 +43,14 @@ function SocialMedia() {
       >
         <i className="fa fa-instagram"></i>
       </a>
-
+ <a
+        href="https://t.me/thepreproute"   
+        className="telegram"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <i className="fa fa-telegram"></i>
+      </a>
     </div>
   );
 }
