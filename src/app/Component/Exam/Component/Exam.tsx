@@ -115,8 +115,7 @@ const MockExamCard = ({ exam, handleExam, index }) => {
                 className="flex-1 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium cursor-pointer"
                 onClick={() => handleExam(exam, "start")}
               >
-                {/* <UserExamPop text="Start" /> */}
-                Start
+                <UserExamPop text="Start" />
               </Button>
             )}
           </div>
