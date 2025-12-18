@@ -126,7 +126,7 @@ useEffect(() => {
 
   // ⏳ GET SAVED TIME FROM LOCAL STORAGE
   const savedTime = localStorage.getItem("exam_timeLeft");
-   const remainingtime=examProgress.remainingTime
+   const remainingtime=examProgress?.remainingTime || 100
  
   if (remainingtime) {
     // ⬇️ Restore timer from last saved state
