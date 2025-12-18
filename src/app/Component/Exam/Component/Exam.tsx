@@ -204,7 +204,7 @@ export default function MergedExamPage() {
     const payload: any = null;
     dispatch(handleGivenExam(payload));
     dispatch(setCurrentSection(payload));
-    if (!examData?.hasGivenExam || type == "Resume") {
+    if (!examData?.hasGivenExam || type == "Resume" || type == "start") {
       localStorage.setItem("exam_permission","true")
       const payload: any = {
         examTypeId: examData?.examTypeId,
