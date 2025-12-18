@@ -24,7 +24,7 @@ export default function PricingPlans() {
   // Fetch plan pricing
   const getData = async () => {
     const payload:any={
-
+uid:user?._id
     }
     await dispatch(getPlanandPricing(payload));
   };
@@ -99,7 +99,7 @@ export default function PricingPlans() {
         </h2>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-2 gap-10 max-w-6xl w-full">
+        <div className="grid md:grid-cols-3 gap-5 max-w-7xl w-full">
 
           {/* Loop Cards */}
           {palnAndpricing.map((plan: any, index: number) => (
@@ -169,14 +169,15 @@ export default function PricingPlans() {
                 </div>
 
                 {/* Button */}
-                <div className="text-center mt-5">
+                {plan?.alreadyPurchased==false?( <div className="text-center mt-5">
                   <button
                     onClick={() => handleCreatePayment(plan)}
                     className="px-6 py-2 bg-[#FF5635] hover:bg-[#e14c2f] text-white rounded-lg font-semibold transition"
                   >
                     Enroll Now
                   </button>
-                </div>
+                </div>):(null)}
+               
               </div>
             </div>
           ))}

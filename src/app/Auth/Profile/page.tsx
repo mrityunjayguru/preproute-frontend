@@ -46,9 +46,9 @@ export default function Page() {
 
     try {
       const response: any = await dispatch(updateUserInfo(payload));
-
-
       if (response?.payload === true) {
+console.log(response,"responseresponse")
+
         router.push("/home");
         await dispatch(updateUserProfile)
       } else {
@@ -105,7 +105,7 @@ export default function Page() {
   ];
 
   return (
-    <div className="flex flex-col items-center p-6 space-y-4">
+    <div className="flex flex-col justify-center min-h-screen items-center p-6 space-y-4">
       {/* Step Content */}
       <div className="w-full max-w-2xl p-6 bg-white rounded-xl shadow-md transition-all duration-300">
         {steps[currentStep]}

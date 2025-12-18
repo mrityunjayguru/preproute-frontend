@@ -79,7 +79,7 @@ const MockExamCard = ({ exam, handleExam, index }) => {
           <Button
             variant="outline"
             onClick={() => handleExam(exam)}
-            className="w-full border-[#1b1a19] text-[#FF5635] font-medium"
+            className="w-full border-[#1b1a19] text-[#FF5635] font-medium cursor-pointer"
           >
             View Analytics
           </Button>
@@ -113,7 +113,8 @@ const MockExamCard = ({ exam, handleExam, index }) => {
                 className="flex-1 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
                 onClick={() => handleExam(exam, "start")}
               >
-                <UserExamPop text="Start" />
+                start
+                {/* <UserExamPop text="Start" /> */}
               </Button>
             )}
           </div>
@@ -204,6 +205,7 @@ export default function MergedExamPage() {
     dispatch(handleGivenExam(payload));
     dispatch(setCurrentSection(payload));
     if (!examData?.hasGivenExam || type == "Resume") {
+      localStorage.setItem("exam_permission","true")
       const payload: any = {
         examTypeId: examData?.examTypeId,
         questionPaperId: examData?._id,
@@ -213,7 +215,7 @@ export default function MergedExamPage() {
         records: examData,
       };
       dispatch(getUserQuestionData(payload));
-      router.push("/Exam/userExam");
+      // router.push("/Exam/userExam");
 
     } else {
       const payload: any = { questionPaperID: examData?._id };
@@ -232,7 +234,6 @@ export default function MergedExamPage() {
       const ipmatIndoreExam = examdata.find(
         (ex: any) => ex.examname === "IPMAT-INDORE"
       );
-      console.log(ipmatIndoreExam, "ipmatIndoreExamipmatIndoreExam");
       if (ipmatIndoreExam) {
         handleSelectExamDynamic(ipmatIndoreExam); // Pass only one exam
       }

@@ -326,7 +326,6 @@ export const handleGivenExam = createAsyncThunk<boolean, Payload>(
   exam.get,
   async (payload, thunkAPI) => {
     try {
-
         thunkAPI.dispatch(setGivenExam(payload));
         return true;
     } catch (err: any) {
@@ -334,8 +333,6 @@ export const handleGivenExam = createAsyncThunk<boolean, Payload>(
         localStorage.removeItem("token");
         GetMessage("warning", "Unauthorized");
         // window.location.href = "/signin";
-      } else {
-        GetMessage("warning", "something went wrong");
       }
     }
     return false;
@@ -373,9 +370,7 @@ export const setCurrentSection = createAsyncThunk<boolean, Payload>(
         localStorage.removeItem("token");
         GetMessage("warning", "Unauthorized");
         // window.location.href = "/signin";
-      } else {
-        GetMessage("warning", "something went wrong");
-      }
+      } 
     }
     return false;
   }

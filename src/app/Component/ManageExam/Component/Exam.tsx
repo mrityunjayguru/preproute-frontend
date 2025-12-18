@@ -21,6 +21,7 @@ import { questionPaper } from "@/api/endPoints";
 import TabSwitchWarning from "./TabSwitchWarning";
 import SectionRestrictionPopup from "./Popup/SectionRestrictionPopup";
 import SubmitExamPopup from "./Popup/SubmitExamPopup";
+import { routeSlicc } from "@/store/PlanRoute/Route";
 
 interface SectionDetail {
   _id: string;
@@ -262,7 +263,8 @@ setIsTimeUp(true)
   // ---------------- Handlers ----------------
   const fetchQuestion = async (questionNo: number, sectionId?: string) => {
     const payload: any = { questionNo, questionPaperId: examData?.[0]?._id };
-    if (isSection) payload.section = sectionId;
+ 
+   payload.section = sectionId;
     await dispatch(userQuestiongetQuestionById(payload));
   };
 
@@ -379,7 +381,7 @@ setIsTimeUp(true)
 
   const handleClearResponse =async () => {
     const payload:any={
-      questionPaperId:question?._id
+      questionPaperId:singleQuestion[0]
     }
     await dispatch(clearQuestionResponce(payload))
      setMcqSelected("")
@@ -579,9 +581,16 @@ useEffect(() => {
     if(response?.payload?.givenExam)
     {
       setSectionQuestionStatus(response?.payload?.givenExam)
-      setSelectedSection(response?.payload.currentSection)
+      if(response?.payload.currentSection.sectionId){
+        examSections.map((val)=>{
+          if(val.sectionId==response?.payload?.currentSection?.sectionId){
+      setSelectedSection(val)
+
+          }
+        })
+      }
       setCurrentQuestionIndex(response?.payload.currentQuestionNoIndex)
-    fetchQuestion(response?.payload.currentQuestionNoIndex, response?.payload.currentSection.sectionId);
+    fetchQuestion(response?.payload.currentQuestionNoIndex+1, response?.payload.currentSection.sectionId);
     setTotalNoOfQuestions(response?.payload.currentSection.noofQuestion)
 
 
@@ -591,6 +600,21 @@ useEffect(() => {
 
   fetchProgress();
 }, [userLogin, examData]);
+  useEffect(() => {
+    const permission = localStorage.getItem("exam_permission");
+
+    // ❌ Block direct access
+    if (!permission) {
+      router.replace("/home"); // or instruction page
+    }
+
+    // ✅ Cleanup only when leaving exam
+    // return () => {
+    //   localStorage.removeItem("exam_permission");
+    // };
+  }, [router]);
+
+
   const CurrentInput = useMemo(() => {
     if (!question) return null;
     return question.answerType === "Numeric" ? (
@@ -675,7 +699,7 @@ const [sectionShowPopup, setSectionShowPopup] = useState(false);
         <HeaderSection
           isSection={isSection}
           examSections={examSections}
-          selectedSection={examProgress?.currentSection}
+          selectedSection={selectedSection}
           handleSection={handleSection}
           timeLeft={timeLeft}
           formatTime={formatTime}

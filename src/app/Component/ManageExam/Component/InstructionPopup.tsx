@@ -18,7 +18,7 @@ export default function InstructionPopup({ isOpen, onClose }: InstructionPopupPr
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-2xl font-bold text-gray-600 hover:text-black"
+          className="absolute top-4  right-1 text-3xl cursor-pointer font-bold text-gray-600 hover:text-black"
         >
           ×
         </button>

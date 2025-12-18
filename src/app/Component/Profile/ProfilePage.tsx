@@ -109,9 +109,9 @@ getuserData()
             {user?.username || "User Name"}
           </h1>
           <p className="text-gray-500">{user?.email || "user@example.com"}</p>
-          <div className="mt-2 inline-block bg-orange-100 text-orange-600 px-4 py-1 rounded-full text-sm font-medium">
+          {/* <div className="mt-2 inline-block bg-orange-100 text-orange-600 px-4 py-1 rounded-full text-sm font-medium">
             {user?.role || "Student"}
-          </div>
+          </div> */}
 
           {/* 💡 Info Cards */}
           <div className="mt-10 grid grid-cols-2 gap-6 text-left">
@@ -129,12 +129,12 @@ getuserData()
               </p>
             </div>
 
-            <div className="p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300">
+            {/* <div className="p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300">
               <p className="text-gray-500 text-sm mb-1">Role</p>
               <p className="text-gray-800 font-medium">
                 {user?.role || "N/A"}
               </p>
-            </div>
+            </div> */}
 
             <div className="p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300">
               <p className="text-gray-500 text-sm mb-1">Phone</p>

@@ -85,7 +85,6 @@ const QuestionWiseRightSection: React.FC<Props> = ({
   // ✅ Filter only selected section
   const selectedSectionKey =
     selectedSection?.sectionId;
-console.log(groupedData,"selectedSectionselectedSection")
 
   const selectedSectionQuestions =
     groupedData[selectedSectionKey] || [];

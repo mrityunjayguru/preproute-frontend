@@ -165,9 +165,7 @@ export const QuestionPaperResult = createAsyncThunk<boolean, Payload>(
     const data = await UserRepo.QuestionPaperResult(payload);
 if(data.status==200){
       // thunkAPI.dispatch(setAttemptedExam(data.data.data));
-              thunkAPI.dispatch(setResult(data.data));
-      
-
+ thunkAPI.dispatch(setResult(data.data));
 }
       // Return success flag
       return true;
