@@ -415,6 +415,7 @@ const handleSubmit = async (confirm?: boolean) => {
 };
 
 const handleSubmitExamPopup=(val:any)=>{
+      setShowSubmitPopup(false);
   handleSubmitFullExam()
 }
 
@@ -471,7 +472,6 @@ if(question?.userAttempted){
 }else{
     setMcqSelected("")
     setNumericalValue("")
-
     updateStatus("visited");
 }
   },[question])
@@ -571,7 +571,6 @@ remainingTime:localStorage.getItem("exam_timeLeft"),
 ]);
 useEffect(() => {
   if (!userLogin || !examData?.length) return;
-
   const fetchProgress = async () => {
     const payload: any = {
       userId: userLogin?._id,

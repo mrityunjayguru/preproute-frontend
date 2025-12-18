@@ -15,7 +15,7 @@ const GetMessage = (type: any, messga: string) => {
     icon: type,
     title: messga,
     showConfirmButton: false,
-    timer: 2000,
+    timer: 3000,
   });
 };
 export const createUser= createAsyncThunk<boolean, Payload>(
@@ -130,6 +130,9 @@ export const updaquesPaperTime = createAsyncThunk<boolean, Payload>(
       // Return success flag
       return true;
     } catch (err: any) {
+      if(err.status==409){
+        GetMessage("warning", "Exam already submitted. You cannot submit again.");
+      }
       console.error("Error in updaquesPaperTime:", err);
       // Properly reject the thunk if something fails
       return thunkAPI.rejectWithValue(false) as any;
