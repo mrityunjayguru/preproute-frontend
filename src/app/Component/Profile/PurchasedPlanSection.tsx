@@ -1,25 +1,25 @@
 import React from "react";
-
 interface Exam {
   _id: string;
   examname: string;
   fullExamduration: number;
-  sections?: any[];
 }
 
-interface PlanDetails {
+interface Plan {
   title: string;
-  price: number;
+  price: string;
 }
 
 interface PurchaseDetail {
+  orderId: string;
+  amount: number;
   updatedAt: string;
+  plan: Plan;
+  exams: Exam[];
 }
 
 interface UserData {
-  PlanDetails?: PlanDetails;
-  PurchaseDetail?: PurchaseDetail;
-  PurchasedExams?: Exam[];
+  purchaseDetails?: PurchaseDetail[];
 }
 
 interface Props {
@@ -27,41 +27,43 @@ interface Props {
 }
 
 export default function PurchasedPlanSection({ user }: Props) {
+  if (!user?.purchaseDetails?.length) return null;
+
   return (
     <>
-      {/* 📘 Purchased Plan Details */}
-      {user?.PlanDetails && (
-        <div className="mt-10 p-5 bg-white rounded-2xl border border-orange-200 shadow-sm">
+      {user.purchaseDetails.map((purchase, index) => (
+        <div
+          key={purchase.orderId}
+          className="mt-10 p-5 bg-white rounded-2xl border border-orange-200 shadow-sm"
+        >
           <h2 className="text-xl font-semibold text-[#FF5635] mb-3">
-             Purchased Plan
+            Purchased Plan #{index + 1}
           </h2>
 
           <div className="space-y-2 text-gray-700">
             <p>
-              <strong>Plan Title:</strong> {user.PlanDetails?.title}
+              <strong>Plan Title:</strong> {purchase.plan?.title}
             </p>
 
             <p>
-              <strong>Price:</strong> ₹{user.PlanDetails?.price}
+              <strong>Price:</strong> ₹{purchase.plan?.price}
             </p>
 
             <p>
               <strong>Purchased On:</strong>{" "}
-              {user?.PurchaseDetail?.updatedAt
-                ? new Date(user.PurchaseDetail.updatedAt).toLocaleDateString()
-                : "N/A"}
+              {new Date(purchase.updatedAt).toLocaleDateString()}
             </p>
           </div>
 
-          {/* 📚 Purchased Exams List */}
-          <div className="mt-5">
-            <h3 className="text-lg font-semibold text-[#FF5635] mb-2">
-              Valid Up To Exam Day
-            </h3>
+          {/* 📚 Purchased Exams */}
+          {purchase.exams?.length > 0 && (
+            <div className="mt-5">
+              <h3 className="text-lg font-semibold text-[#FF5635] mb-2">
+                Valid Up To Exam Day
+              </h3>
 
-            {/* {user?.PurchasedExams?.length ? (
-              <ul className="space-y-3">
-                {user.PurchasedExams.map((exam: Exam) => (
+              {/* <ul className="space-y-3">
+                {purchase.exams.map((exam) => (
                   <li
                     key={exam._id}
                     className="p-4 bg-orange-50 rounded-xl border border-orange-100"
@@ -69,16 +71,16 @@ export default function PurchasedPlanSection({ user }: Props) {
                     <p className="text-lg font-medium text-gray-800">
                       {exam.examname}
                     </p>
-
+                    <p className="text-sm text-gray-500">
+                      Duration: {exam.fullExamduration} mins
+                    </p>
                   </li>
                 ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500 text-sm">No exams purchased yet.</p>
-            )} */}
-          </div>
+              </ul> */}
+            </div>
+          )}
         </div>
-      )}
+      ))}
     </>
   );
 }

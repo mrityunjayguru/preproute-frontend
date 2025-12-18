@@ -20,6 +20,7 @@ import {
 import { getUserQuestionData } from "@/api/QuestionPaper";
 import { QuestionPaperResult } from "@/api/Users";
 import UserExamPop from "../../ManageExam/Component/UserExamPop";
+import { allowExamAccess, allowResultAccess } from "./allowResultAccess";
 
 const LockIcon = (props: any) => (
   <svg
@@ -87,33 +88,35 @@ const MockExamCard = ({ exam, handleExam, index }) => {
           index === 0 ||
           selectedExamType?.examType === "Past Year " ? (
           // ---------------------- FREE / ALLOWED ACCESS ------------------------
-          <div className="flex w-full gap-2">
+          <div className="flex w-full gap-1">
             {exam?.userSummary?.target == 0 ? (
               <>
                 {/* RESUME BUTTON */}
-                <Button
-                  className="flex-1 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
+               <div className="w-full flex gap-1">
+                 <Button
+                  className="w-24 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
                   onClick={() => handleExam(exam,"Resume")}
                 >
                   <UserExamPop text="Resume" />
                 </Button>
 
                 {/* USER POP BUTTON */}
-                {/* <Button
-                  className="flex-1 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
+                <Button
+                  className="w-24 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
                   onClick={() => handleExam(exam, "start")}
                 >
                   <UserExamPop text="Start" />
-                  start
-                </Button> */}
+                </Button>
+               </div>
               </>
             ) : (
               // ONLY START BUTTON
               <Button
-                className="flex-1 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
+                className="flex-1 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium cursor-pointer"
                 onClick={() => handleExam(exam, "start")}
               >
-                <UserExamPop text="Start" />
+                {/* <UserExamPop text="Start" /> */}
+                Start
               </Button>
             )}
           </div>
@@ -199,6 +202,7 @@ export default function MergedExamPage() {
   };
 
   const handleExam = async (examData: any, type: any) => {
+
     if (!localStorage.getItem("token")) return router.push("/Auth/signin");
     const payload: any = null;
     dispatch(handleGivenExam(payload));

@@ -68,7 +68,7 @@ export const examSlicc = createSlice({
     },
 setGivenExam: (state, action: PayloadAction<any>) => {
   if(action.payload==null){
-    state.givenExam=null
+    state.examProgress=null
   }
   const { sectionId, questionIndex, status } = action.payload;
 

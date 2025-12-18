@@ -384,7 +384,6 @@ export const ManageExamProgress = createAsyncThunk<boolean, Payload>(
     try {
 
          const data = await examRepo.ManageExamProgress(payload);
-         console.log(data.data.data,"examProgressexamProgressdata")
       if (data.status === 201) {
       thunkAPI.dispatch(setExamProgress(data.data.data));
 

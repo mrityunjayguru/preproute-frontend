@@ -22,6 +22,7 @@ import TabSwitchWarning from "./TabSwitchWarning";
 import SectionRestrictionPopup from "./Popup/SectionRestrictionPopup";
 import SubmitExamPopup from "./Popup/SubmitExamPopup";
 import { routeSlicc } from "@/store/PlanRoute/Route";
+import { allowResultAccess, removeResultAccess } from "../../Exam/Component/allowResultAccess";
 
 interface SectionDetail {
   _id: string;
@@ -125,10 +126,11 @@ useEffect(() => {
 
   // ⏳ GET SAVED TIME FROM LOCAL STORAGE
   const savedTime = localStorage.getItem("exam_timeLeft");
-
-  if (savedTime) {
+   const remainingtime=examProgress.remainingTime
+ 
+  if (remainingtime) {
     // ⬇️ Restore timer from last saved state
-    setTimeLeft(Number(savedTime));
+    setTimeLeft(Number(remainingtime));
   } else {
     // ⬇️ Fresh exam start
     if (examInfo.switchable === true) {
@@ -214,7 +216,7 @@ setIsTimeUp(true)
         // ✅ Update backend with section timing
         updateSectionTime(prevSectionId, nextSection.sectionId);
 
-        // Switch section
+      
         setSelectedSection(nextSection);
         setTimeLeft(nextSection.duration * 60);
         setCurrentSectionIndex((p) => p + 1);
@@ -550,7 +552,7 @@ useEffect(() => {
     userId: userLogin?._id,
     examId: examData?.[0]?.exam?._id,
     questionPaperId: examData?.[0]?._id,
-
+remainingTime:localStorage.getItem("exam_timeLeft"),
     currentSection: {
       sectionId: selectedSection?.sectionId,
       sectionName: selectedSection?.sectionDetail?.section,
@@ -559,6 +561,7 @@ useEffect(() => {
     },
     currentQuestionNoIndex: currentQuestionIndex,
     givenExam:  sectionQuestionStatus,
+
     status: "in-progress",
   };
 
@@ -590,6 +593,7 @@ useEffect(() => {
         })
       }
       setCurrentQuestionIndex(response?.payload.currentQuestionNoIndex)
+      setTimeLeft(response?.payload?.remainingTime)
     fetchQuestion(response?.payload.currentQuestionNoIndex+1, response?.payload.currentSection.sectionId);
     setTotalNoOfQuestions(response?.payload.currentSection.noofQuestion)
 
@@ -597,22 +601,16 @@ useEffect(() => {
     }
       
   };
-
   fetchProgress();
 }, [userLogin, examData]);
-  useEffect(() => {
-    const permission = localStorage.getItem("exam_permission");
+//  useEffect(() => {
+//     const removeAccess = async () => {
+//      let res= await removeResultAccess();
+   
 
-    // ❌ Block direct access
-    if (!permission) {
-      router.replace("/home"); // or instruction page
-    }
-
-    // ✅ Cleanup only when leaving exam
-    // return () => {
-    //   localStorage.removeItem("exam_permission");
-    // };
-  }, [router]);
+//     };
+//     removeAccess();
+//   }, []);
 
 
   const CurrentInput = useMemo(() => {

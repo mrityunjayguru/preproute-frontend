@@ -79,7 +79,6 @@ dispatch(setCurrentSection(payload))
         popup.onbeforeunload = (e) => {
           // e.preventDefault();
           // e.returnValue = "";
-          localStorage.removeItem("exam_permission");
         };
       };
     }

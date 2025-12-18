@@ -169,15 +169,21 @@ uid:user?._id
                 </div>
 
                 {/* Button */}
-                {plan?.alreadyPurchased==false?( <div className="text-center mt-5">
-                  <button
-                    onClick={() => handleCreatePayment(plan)}
-                    className="px-6 py-2 bg-[#FF5635] hover:bg-[#e14c2f] text-white rounded-lg font-semibold transition"
-                  >
-                    Enroll Now
-                  </button>
-                </div>):(null)}
-               
+              {plan?.alreadyPurchased ? (
+  <p className="text-center mt-5 font-semibold text-green-600">
+    Already Purchased
+  </p>
+) : (
+  <div className="text-center mt-5">
+    <button
+      onClick={() => handleCreatePayment(plan)}
+      className="px-6 py-2 bg-[#FF5635] hover:bg-[#e14c2f] text-white rounded-lg font-semibold transition"
+    >
+      Enroll Now
+    </button>
+  </div>
+)}
+
               </div>
             </div>
           ))}
