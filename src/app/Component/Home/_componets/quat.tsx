@@ -7,7 +7,7 @@ type Props = {};
 
 const Quat = (props: Props) => {
   return (
-    <section className="mt-12 mb-8 px-4 sm:px-6 lg:px-8" >
+    <section className="mt-12 mb-8 p-4 sm:p-6 lg:p-8 bg-[#F9FAFC]" >
       <div className="flex flex-col sm:flex-row items-center justify-center gap-10 text-center">
         <motion.div
           initial={{ opacity: 0, x: -30, rotate: -90 }}

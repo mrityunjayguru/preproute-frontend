@@ -131,7 +131,7 @@ const MokupTabs = (props: Props) => {
               >
                 <TabsTrigger
                   value={item.value}
-                  className="rounded-full font-medium cursor-pointer text-[#009DFF] px-10 py-5 text-[21px] data-[state=active]:bg-orange-500 data-[state=active]:text-white transition-all"
+                  className="rounded-full font-medium cursor-pointer text-[#009DFF] px-10 text-[21px] data-[state=active]:bg-orange-500 data-[state=active]:text-white transition-all"
                 >
                   {item.label}
                 </TabsTrigger>
