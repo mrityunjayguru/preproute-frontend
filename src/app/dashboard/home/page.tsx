@@ -3,7 +3,6 @@ import DashboardHome from '../component/home/DashboardHome';
 function page() {
   return (
     <div>
-      
       <DashboardHome/>
     </div>
   )

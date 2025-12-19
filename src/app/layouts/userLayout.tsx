@@ -8,14 +8,25 @@ import { usePathname } from "next/navigation";
 export default function UserLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
-  // Check if current route is the exam page
-  const isExamPage = pathname === "/Exam/userExam" ||pathname ===  "/Exam/InstructionPaeg" ;
+  // Hide header on exam flows and Auth pages; footer always shown per request
+  const isExamPage =
+    pathname === "/Exam/userExam" || pathname === "/Exam/InstructionPaeg";
+  const isAuthPage = pathname?.startsWith("/Auth");
+  const hideChrome = isExamPage || isAuthPage;
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {!isExamPage && <UserHeader />}
-      <main className="flex-1">{children}</main>
-      {!isExamPage && <UserFooter />}
+    <div className="flex flex-col min-h-screen overflow-hidden">
+      {!hideChrome && <UserHeader />}
+      <main
+        className={
+          hideChrome
+            ? "flex-1 min-h-screen overflow-hidden"
+            : "flex-1 min-h-screen"
+        }
+      >
+        {children}
+      </main>
+      {!hideChrome && <UserFooter />}
     </div>
   );
 }

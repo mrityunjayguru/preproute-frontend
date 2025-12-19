@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import whatsappIcon from "../../../assets/images/whatsapp.svg";
+import whatsappIcon from "@/assets/images/whatsapp.svg"
 
 function WhatsAppSocialApp() {
   return (
