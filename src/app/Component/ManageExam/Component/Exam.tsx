@@ -123,14 +123,10 @@ useEffect(() => {
 
   setIsSection(examInfo.isSection);
   setSwitchable(examInfo?.switchable);
-
-  // ⏳ GET SAVED TIME FROM LOCAL STORAGE
-  const savedTime = localStorage.getItem("exam_timeLeft");
-   const remainingtime=examProgress?.remainingTime || 100
- 
-  if (remainingtime) {
+      const savedTime =  localStorage.getItem(`exam_timeLeft_${examData?.[0]?._id}`);
+  if (savedTime) {
     // ⬇️ Restore timer from last saved state
-    setTimeLeft(Number(remainingtime));
+    setTimeLeft(Number(savedTime));
   } else {
     // ⬇️ Fresh exam start
     if (examInfo.switchable === true) {
@@ -227,10 +223,12 @@ setIsTimeUp(true)
       handleSubmitFullExam()
       return;
     }
+const examId = examData?.[0]?._id;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev <= 1 ? 0 : prev - 1));
       localStorage.setItem("exam_timeLeft", timeLeft.toString());
+       localStorage.setItem(`exam_timeLeft_${examData?.[0]?._id}`, String(timeLeft.toString()));
     }, 1000);
     return () => clearInterval(timer);
   }, [timeLeft]);
@@ -592,7 +590,7 @@ useEffect(() => {
         })
       }
       setCurrentQuestionIndex(response?.payload.currentQuestionNoIndex)
-      setTimeLeft(response?.payload?.remainingTime)
+      // setTimeLeft(response?.payload?.remainingTime)
     fetchQuestion(response?.payload.currentQuestionNoIndex+1, response?.payload.currentSection.sectionId);
     setTotalNoOfQuestions(response?.payload.currentSection.noofQuestion)
 

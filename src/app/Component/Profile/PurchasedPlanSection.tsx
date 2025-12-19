@@ -1,4 +1,12 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
+import dynamic from "next/dynamic";
+import InvoicePDF from "./InvoicePDF.client";
+
+/* 🔹 Disable SSR */
+
+
 interface Exam {
   _id: string;
   examname: string;
@@ -27,6 +35,9 @@ interface Props {
 }
 
 export default function PurchasedPlanSection({ user }: Props) {
+  const [selectedInvoice, setSelectedInvoice] =
+    useState<PurchaseDetail | null>(null);
+
   if (!user?.purchaseDetails?.length) return null;
 
   return (
@@ -55,29 +66,16 @@ export default function PurchasedPlanSection({ user }: Props) {
             </p>
           </div>
 
-          {/* 📚 Purchased Exams */}
-          {purchase.exams?.length > 0 && (
-            <div className="mt-5">
-              <h3 className="text-lg font-semibold text-[#FF5635] mb-2">
-                Valid Up To Exam Day
-              </h3>
+          {/* 🔹 Show PDF button for selected invoice */}
+          <button
+            onClick={() => setSelectedInvoice(purchase)}
+            className="mt-4 bg-orange-500 text-white px-4 py-2 rounded text-sm"
+          >
+            Generate Invoice
+          </button>
 
-              {/* <ul className="space-y-3">
-                {purchase.exams.map((exam) => (
-                  <li
-                    key={exam._id}
-                    className="p-4 bg-orange-50 rounded-xl border border-orange-100"
-                  >
-                    <p className="text-lg font-medium text-gray-800">
-                      {exam.examname}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Duration: {exam.fullExamduration} mins
-                    </p>
-                  </li>
-                ))}
-              </ul> */}
-            </div>
+          {selectedInvoice?.orderId === purchase.orderId && (
+            <InvoicePDF invoice={selectedInvoice} />
           )}
         </div>
       ))}

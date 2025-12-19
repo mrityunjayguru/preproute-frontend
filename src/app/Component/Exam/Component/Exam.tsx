@@ -94,28 +94,31 @@ const MockExamCard = ({ exam, handleExam, index }) => {
                 {/* RESUME BUTTON */}
                <div className="w-full flex gap-1">
                  <Button
-                  className="w-24 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
+                  className="w-24 cursor-pointer bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
                   onClick={() => handleExam(exam,"Resume")}
                 >
-                  <UserExamPop text="Resume" />
+                  {/* <UserExamPop text="Resume" /> */}
+                  Resume
                 </Button>
 
                 {/* USER POP BUTTON */}
                 <Button
-                  className="w-24 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
+                  className="w-24 cursor-pointer bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
                   onClick={() => handleExam(exam, "start")}
                 >
-                  <UserExamPop text="Start" />
+                  {/* <UserExamPop text="Start" /> */}
+                  Start
                 </Button>
                </div>
               </>
             ) : (
               // ONLY START BUTTON
               <Button
-                className="flex-1 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium cursor-pointer"
+                className="flex-1  bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium cursor-pointer"
                 onClick={() => handleExam(exam, "start")}
               >
-                <UserExamPop text="Start" />
+                {/* <UserExamPop text="Start" /> */}
+                Start
               </Button>
             )}
           </div>
@@ -216,8 +219,13 @@ export default function MergedExamPage() {
         questionPapername: examData?.questionPapername,
         records: examData,
       };
-      dispatch(getUserQuestionData(payload));
-      // router.push("/Exam/userExam");
+      
+      let responce:any=await dispatch(getUserQuestionData(payload));
+      
+      if(type=="start"){
+        localStorage.removeItem(`exam_timeLeft_${responce?.payload[0]._id}`)
+      }
+      router.push("/Exam/Instruction");
 
     } else {
       const payload: any = { questionPaperID: examData?._id };

@@ -13,7 +13,7 @@ export default function UserLayout({ children }: { children: ReactNode }) {
 
   const isExamPage =
     pathname === "/Exam/userExam" ||
-    pathname === "/Exam/InstructionPaeg";
+    pathname === "/Exam/Instruction";
 
   const isProfilePage = pathname === "/Auth/Profile";
 

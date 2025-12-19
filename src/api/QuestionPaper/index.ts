@@ -143,7 +143,7 @@ export const getUserQuestionData = createAsyncThunk<boolean, Payload>(
        const data = await examTypeRepo.getUserQuestionData(payload);
       if (data.status === 200) {
              thunkAPI.dispatch(setExamBeExamTypeId(data.data.data));
-     return true
+     return data.data.data
       }
     } catch (err:any) {
       if(err.status==401){
