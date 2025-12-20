@@ -122,6 +122,19 @@
   }
 }
 
+/* Font Family Utilities */
+.font-poppins {
+  font-family: var(--font-poppins), sans-serif;
+}
+
+.font-dm-sans {
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+.font-artegra {
+  font-family: var(--font-artegra), sans-serif;
+}
+
 .text5858{
   color: #585859;
 }

@@ -23,12 +23,12 @@ const ExamsSection = (props: Props) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-lg sm:text-xl md:text-2xl lg:text-[26px] font-semibold text-[#FF5635]"
+          className="text-lg font-poppins sm:text-xl md:text-2xl lg:text-[26px] font-medium text-[#FF5635]"
         >
           Exams we help you prepare for
         </motion.h4>
 
-        <div className="mt-6 sm:mt-8 flex flex-col items-center gap-8 sm:gap-4">
+        <div className="mt-6 sm:mt-8 font-poppins flex flex-col items-center gap-8 sm:gap-4">
           {/* First row */}
           <div className="flex flex-wrap justify-center gap-5 sm:gap-4">
             {exams.slice(0, 4).map((t, index) => (
@@ -71,7 +71,7 @@ const ExamsSection = (props: Props) => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="mt-6 sm:mt-8 text-xs sm:text-sm md:text-base lg:text-lg font-medium text-[#111827]"
+          className="mt-6 font-dm-sans sm:mt-8 text-xs sm:text-sm md:text-base lg:text-lg font-medium text-[#111827]"
         >
           and more,{" "}
           <span className="font-medium  text-[#FF5635]">coming soon...</span>

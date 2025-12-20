@@ -23,7 +23,7 @@ export default function Step2({
       firstName,
       lastName,
       username,
-      step:"2"
+      step: "2"
     });
     nextStep();
   };
@@ -45,9 +45,9 @@ export default function Step2({
           <div className="w-full max-w-sm mx-auto z-20">
             <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
               <div className="flex items-center mb-4">
-                  <span className="p-2  rounded-full mr-3">
-                                 <MailIcons/>
-                     </span>
+                <span className="p-2  rounded-full mr-3">
+                  <MailIcons />
+                </span>
                 <h2 className="text-xl font-semibold text-[#1A1D1F]">Register</h2>
               </div>
               <p className="text-sm font-Artegra">
@@ -92,10 +92,10 @@ export default function Step2({
                 </div>
 
                 <div className="flex justify-between w-[50%] gap-2  mt-4">
-                  <Button onClick={prevStep} variant="gray">
+                  <Button onClick={prevStep} variant="default">
                     Back
                   </Button>
-                  <Button onClick={handleNext} variant="orange">
+                  <Button onClick={handleNext} variant="default">
                     Next
                   </Button>
                 </div>

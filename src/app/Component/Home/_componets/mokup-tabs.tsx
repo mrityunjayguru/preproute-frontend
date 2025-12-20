@@ -120,7 +120,7 @@ const MokupTabs = (props: Props) => {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <TabsList className="mx-auto  hidden w-fit gap-2 my-4 rounded-full bg-[#F0F9FF] lg:flex">
+          <TabsList className="mx-auto font-dm-sans hidden w-fit gap-2 my-4 rounded-full bg-[#F0F9FF] lg:flex">
             {FEATURES.map((item, index) => (
               <motion.div
                 key={item.value}
@@ -131,7 +131,7 @@ const MokupTabs = (props: Props) => {
               >
                 <TabsTrigger
                   value={item.value}
-                  className="rounded-full font-medium cursor-pointer text-[#009DFF] px-10 text-[21px] data-[state=active]:bg-orange-500 data-[state=active]:text-white transition-all"
+                  className="rounded-full font-medium cursor-pointer text-[#009DFF] px-10 text-[18px] data-[state=active]:bg-orange-500 data-[state=active]:text-white transition-all"
                 >
                   {item.label}
                 </TabsTrigger>
@@ -141,7 +141,7 @@ const MokupTabs = (props: Props) => {
         </motion.div>
 
         {/* Mobile Dropdown */}
-        <div className="mx-auto my-4 w-full max-w-md lg:hidden">
+        <div className="mx-auto font-dm-sans my-4 w-full max-w-md lg:hidden">
           <Select value={value} onValueChange={setValue}>
             <SelectTrigger className="w-full border-[#FF5635] text-[#FF5635] data-[state=open]:ring-2 data-[state=open]:ring-orange-500">
               <SelectValue placeholder="Select feature" />
@@ -167,16 +167,15 @@ const MokupTabs = (props: Props) => {
         <h3
           className="
       mx-auto
-      
+      font-dm-sans
       text-center
       text-xs
       sm:text-sm
       md:text-base
       lg:text-lg
       xl:text-xl
-      font-medium
       text-[#333333]
-      leading-relaxed
+      leading-tight
     "
         >
           Take mock tests in a realistic exam setup that prepares you for the

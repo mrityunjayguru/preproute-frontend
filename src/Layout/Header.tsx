@@ -27,7 +27,7 @@ import { getCommonExamType, handleSelectedExamType } from "@/api/ExamType";
 import { handleLogout } from "@/api/Auth/SchoolAuth";
 import { resetQuestionByExamID } from "@/api/Exam";
 import { resetQuestion } from "@/api/Question";
-import { ChevronDownIcon, MenuIcon } from "lucide-react";
+import { ChevronDownIcon, LayoutDashboard, LogOut, MenuIcon, User, UserRound } from "lucide-react";
 
 // const artegra = localFont({
 //   src: "../assets/fonts/artegra-soft-medium.woff",
@@ -78,7 +78,7 @@ export const Header: React.FC = () => {
   ];
 
   return (
-    <header className={`sticky  top-0 z-20 w-full bg-white font-DM_Sans`}>
+    <header className={`sticky font-dm-sans  top-0 z-20 w-full bg-white font-DM_Sans`}>
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 lg:py-5">
         {/* Left: Logo */}
         <div className="flex items-center gap-12">
@@ -215,20 +215,23 @@ export const Header: React.FC = () => {
                   onClick={() => router.push("/dashboard/home")}
                   className="border-[#FF5635] text-[#FF5635] cursor-pointer hover:bg-[#FFF1EC] px-4"
                 >
+                  <LayoutDashboard/>
                   Dashboard
                 </Button>
               )}
               <Button
                 variant="outline"
                 onClick={() => router.push("/Profile")}
-                className="border-[#FF5635] text-[#FF5635] cursor-pointer hover:bg-[#FFF1EC] px-4"
+                className="border-[#FF5635] rounded-full text-[#FF5635] cursor-pointer hover:text-[#e44c2f] px-4"
               >
+                <UserRound/>
                 Profile
               </Button>
               <Button
                 onClick={handleLogoutClick}
-                className="bg-[#FF5635] hover:bg-[#e44c2f] cursor-pointer px-5 py-2 text-white"
+                className="bg-[#FF5635] rounded-full hover:bg-[#e44c2f] cursor-pointer px-5 py-2 text-white"
               >
+                <LogOut/>
                 Logout
               </Button>
             </>
@@ -342,6 +345,7 @@ export const Header: React.FC = () => {
                         }}
                         className="w-full border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC]"
                       >
+                        <LayoutDashboard/>
                         Dashboard
                       </Button>
                     )}
@@ -353,6 +357,7 @@ export const Header: React.FC = () => {
                       }}
                       className="w-full border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC]"
                     >
+                      <UserRound/>
                       Profile
                     </Button>
                     <Button

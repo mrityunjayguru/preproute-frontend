@@ -84,7 +84,7 @@ export default function RegisterPage() {
     console.log("Google login failed");
   };
   return (
-    <div className="flex flex-col text-gray-800 min-h-screen flex items-center justify-center bg-neutral-50">
+    <div className="flex flex-col text-gray-800 min-h-screen items-center justify-center bg-neutral-50">
       <div className="w-full max-w-sm mx-auto z-20">
         <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
           <div className="flex items-center mb-4">

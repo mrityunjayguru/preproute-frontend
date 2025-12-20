@@ -3,35 +3,25 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { resetQuestionByExamID } from "@/api/Exam";
 import { handleSelectedExamType } from "@/api/ExamType";
 import { resetQuestion } from "@/api/Question";
-import { motion } from "framer-motion";
-import feature1 from "../../../assets/images/features/feature-1.svg";
-import feature2 from "../../../assets/images/features/feature-2.svg";
-import feature3 from "../../../assets/images/features/feature-3.svg";
-import feature4 from "../../../assets/images/features/feature-4.svg";
-import featureImage from "../../../assets/images/image.png";
 
-import {
-  ArrowLeft,
-  ArrowRight,
-  BulletIcon,
-  RightIcon,
-  WrongIcon,
-} from "@/Common/svgIcon";
 import YouTubeCarousel from "./_componets/youtube-carousal";
 import MokupTabs from "./_componets/mokup-tabs";
 import ExamsSection from "./_componets/exam-section";
 import FeatureSection from "./_componets/feature-section";
 import HeroSection from "./_componets/hero-section";
-import heroImage from "@/assets/images/hero-image.svg";
 import PrepSection from "./_componets/prep-section";
 import Quat from "./_componets/quat";
 import SocialMedia from "./_componets/social-media";
 import WhatsAppSocialApp from "./_componets/whatsapp-socialmedia";
+
+import heroImage from "@/assets/mast-image.png";
 
 export default function HomePage() {
   const router = useRouter();
@@ -55,7 +45,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-white text-[#0F1724]">
       <WhatsAppSocialApp />
-      <div className="flex flex-col items-center justify-center px-6 sm:px-8 md:px-12 lg:px-28">
+      <div className="flex flex-col items-center  justify-center px-6 sm:px-8 md:px-12 lg:px-28">
         <HeroSection logoSrc={heroImage} />
       </div>
       <motion.div
@@ -113,7 +103,7 @@ export default function HomePage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.6 }}
-        className="mt-12 w-full bg-[#FF5635] text-white p-6 sm:p-10 lg:p-16"
+        className="w-full bg-[#FF5635] text-white p-6 sm:p-10 lg:p-16"
       >
         <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 px-4 sm:px-6 lg:px-8">
           <motion.div

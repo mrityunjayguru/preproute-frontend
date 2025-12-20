@@ -14,6 +14,8 @@ import LOGO from "@/assets/logo.svg";
 import IMG2 from "@/assets/vectors/auth-vectore/second.svg";
 import IMG1 from "@/assets/vectors/auth-vectore/first.svg";
 import { Footer as UserFooter } from "@/Layout/Footer";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
 const Signin = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -49,120 +51,183 @@ const Signin = () => {
     console.log("Google login failed");
   };
 
+  const containerVariants : any = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants : any = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  };
+
+  const floatingVariants : any = (delay: number) => ({
+    animate: {
+      y: [0, -15, 0],
+      transition: {
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: delay,
+      },
+    },
+  });
+
   return (
-    <section className="w-full min-h-screen bg-[#FAFAFA] flex flex-col justify-between items-center  overflow-hidden ">
-      {/* HEADER */}
+    <section className="w-full min-h-screen bg-[#FAFAFA] flex flex-col justify-between items-center overflow-hidden">
       <div className=""></div>
-      {/* MAIN */}
-      <main className="w-full flex flex-col items-center justify-center px-4 gap-6">
-        <div className="cursor-pointer" onClick={() => router.push("/home")}>
-          <Image src={LOGO} alt="Logo" className="h-8 w-auto object-contain" />
-        </div>
-        <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 items-center gap-8">
+
+      <motion.main
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+        className="w-full flex flex-col items-center justify-center px-4 gap-6"
+      >
+        <motion.div
+          variants={itemVariants}
+          className="cursor-pointer"
+          onClick={() => router.push("/home")}
+        >
+          <Image src={LOGO} alt="Logo" className="h-9 w-auto object-contain" />
+        </motion.div>
+
+        <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 items-center gap-8 px-4">
           {/* LEFT ILLUSTRATION */}
-          <div className="hidden lg:flex justify-center">
-            <Image src={IMG1} alt="Student thinking" width={300} height={300} />
-          </div>
+          <motion.div
+            variants={itemVariants}
+            className="hidden lg:flex justify-center"
+          >
+            <motion.div variants={floatingVariants(0)} animate="animate">
+              <Image src={IMG1} alt="Student thinking" width={320} height={320} className="drop-shadow-xl" />
+            </motion.div>
+          </motion.div>
 
           {/* LOGIN CARD */}
-          <div className="flex justify-center">
-            <div className="w-full max-w-md bg-white rounded-2xl shadow-md border p-6 sm:p-8">
+          <motion.div
+            variants={itemVariants}
+            className="flex justify-center"
+          >
+            <div className="w-full max-w-md bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 p-6 sm:p-10">
               {/* TITLE */}
-              <div className="flex items-center gap-2 mb-2">
-                <LogIn className="text-[#FF5635]" />
-                <h2 className="text-lg font-semibold">Login</h2>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex items-center gap-2 mb-2"
+              >
+                <LogIn className="text-[#FF5635]" size={22} />
+                <h2 className="text-xl font-medium font-poppins text-[#1A1D1F]">Login</h2>
+              </motion.div>
 
-              <p className="text-sm text-gray-500 mb-6 text-wrap">
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-sm text-[#6F767E] mb-8 font-dm-sans"
+              >
                 Welcome Back, Enter your details to sign in to your account
-              </p>
+              </motion.p>
 
               {/* FORM */}
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-5 font-dm-sans">
                 {/* EMAIL */}
-                <div className="space-y-1">
-                  <label className="text-xs text-gray-600">Account Name</label>
+                <motion.div variants={itemVariants} className="space-y-1.5">
+                  <label className="text-xs font-medium text-gray-700">Account Name</label>
                   <Input
                     type="email"
-                    placeholder="Enter your email "
+                    placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="rounded-none"
+                    className="h-11 rounded-[4px] border-[#E6E6E6] focus:border-[#FF5635] transition-all"
                   />
-                </div>
+                </motion.div>
 
                 {/* PASSWORD */}
-                <div className="space-y-1">
-                  <label className="text-xs text-gray-600">Password</label>
+                <motion.div variants={itemVariants} className="space-y-1.5">
+                  <label className="text-xs font-medium text-gray-700">Password</label>
                   <div className="relative">
                     <Input
                       type={showPassword ? "text" : "password"}
                       placeholder="Password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pr-10 rounded-none"
+                      className="h-11 pr-10 rounded-[4px] border-[#E6E6E6] focus:border-[#FF5635] transition-all"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                     >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* REMEMBER + FORGOT */}
-                <div className="flex items-center justify-between text-xs text-gray-500">
-                  <label className="flex items-center gap-2">
-                    <input type="checkbox" />
-                    Remember
+                <motion.div variants={itemVariants} className="flex items-center justify-between text-xs text-gray-500">
+                  <label className="flex items-center gap-2 cursor-pointer group">
+                    <input type="checkbox" className="w-4 h-4 rounded-sm border-gray-300 text-[#FF5635] focus:ring-[#FF5635]" />
+                    <span className="group-hover:text-gray-700 transition-colors">Remember</span>
                   </label>
-                  <span className="text-[#FF5635] cursor-pointer hover:underline">
+                  <span className="text-[#FF5635] font-medium cursor-pointer hover:underline">
                     Forgot password?
                   </span>
-                </div>
+                </motion.div>
 
                 {/* SUBMIT */}
-                <Button
-                  type="submit"
-                  className="w-full rounded-none bg-[#FF5635] hover:bg-[#ff6b4a]"
-                >
-                  Sign In
-                </Button>
+                <motion.div variants={itemVariants} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
+                  <Button
+                    type="submit"
+                    className="w-full h-11 rounded-[4px] bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins shadow-sm shadow-[#FF5635]/20 transition-all font-medium"
+                  >
+                    Sign In
+                  </Button>
+                </motion.div>
 
                 {/* SIGN UP */}
-                <p className="text-xs text-center text-gray-500">
-                  Don&apos;t have an account yet?{" "}
-                  <span className="text-[#FF5635] cursor-pointer hover:underline">
-                    Sign Up
-                  </span>
-                </p>
+                <motion.div variants={itemVariants}>
+                  <Link href={"/Auth/register"}>
+                    <p className="text-sm text-center text-gray-500 font-dm-sans">
+                      Don&apos;t have an account yet?{" "}
+                      <span className="text-[#FF5635] font-medium cursor-pointer hover:underline">
+                        Sign Up
+                      </span>
+                    </p>
+                  </Link>
+                </motion.div>
 
                 {/* DIVIDER */}
-                <div className="flex items-center gap-3 my-2">
+                <motion.div variants={itemVariants} className="flex items-center gap-3 my-4 font-dm-sans text-gray-300">
                   <div className="flex-1 h-px bg-gray-200" />
-                  <span className="text-xs text-gray-400">or</span>
+                  <span className="text-xs text-gray-400 font-medium uppercase tracking-wider">or</span>
                   <div className="flex-1 h-px bg-gray-200" />
-                </div>
+                </motion.div>
 
                 {/* GOOGLE LOGIN */}
-                <div className="my-5">
+                <motion.div variants={itemVariants} className="flex justify-center font-poppins">
                   <GoogleLogin
                     onSuccess={handleGoogleSuccess}
                     onError={handleGoogleError}
                   />
-                </div>
+                </motion.div>
               </form>
             </div>
-          </div>
+          </motion.div>
 
           {/* RIGHT ILLUSTRATION */}
-          <div className="hidden lg:flex justify-center">
-            <Image src={IMG2} alt="Student confused" width={300} height={300} />
-          </div>
+          <motion.div
+            variants={itemVariants}
+            className="hidden lg:flex justify-center"
+          >
+            <motion.div variants={floatingVariants(0.5)} animate="animate">
+              <Image src={IMG2} alt="Student confused" width={320} height={320} className="drop-shadow-xl" />
+            </motion.div>
+          </motion.div>
         </div>
-      </main>
+      </motion.main>
       <UserFooter />
     </section>
   );

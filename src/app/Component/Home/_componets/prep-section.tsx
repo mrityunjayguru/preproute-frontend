@@ -11,7 +11,7 @@ const PrepSection = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
-        className="text-center text-lg sm:text-2xl lg:text-3xl font-semibold text-[#FF5635]"
+        className="text-center text-lg sm:text-2xl lg:text-3xl font-medium text-[#FF5635] font-poppins"
       >
         The Impact of Online Practice
       </motion.h3>
@@ -21,7 +21,7 @@ const PrepSection = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="mt-2 text-center text-xs sm:text-sm lg:text-base text-[#5F6A7E] max-w-2xl mx-auto"
+        className="mt-2 text-center text-xs sm:text-sm lg:text-base text-[#5F6A7E] max-w-2xl mx-auto font-inter"
       >
         Data from 50,000+ students shows how mock tests transform exam
         performance
@@ -33,7 +33,7 @@ const PrepSection = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className=" font-sans relative mt-8 rounded-[24px] sm:rounded-[32px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 overflow-hidden"
+        className=" font-dm-sans relative mt-8 rounded-[24px] sm:rounded-[32px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 overflow-hidden"
       >
         {/* Middle Highlight (desktop only) */}
         <div className="hidden sm:block pointer-events-none top-0 absolute inset-y-6 left-1/2 -translate-x-1/2 w-[30%] h-full bg-gradient-to-b from-[#ffffff] to-[#FFECDF]  opacity-80" />
@@ -47,7 +47,7 @@ const PrepSection = () => {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="hidden sm:grid grid-cols-3  text-sm sm:text-base font-medium text-center"
           >
-            <div className=" text-[#333333]">Exam Preparation Mode</div>
+            <div className=" text-[#333333]"></div>
 
             <div className="flex flex-col items-center gap-2 text-[#FF5635]">
               <RightIcon />
