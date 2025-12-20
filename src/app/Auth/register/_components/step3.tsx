@@ -3,47 +3,49 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { RegisterFormData } from "../register-page";
-import { BookOpen } from "lucide-react";
+import { ClipboardEdit } from "lucide-react";
 import { MailIcons } from "@/Common/svgIcon";
 
-interface Step2Props {
+interface Step3Props {
     formData: RegisterFormData;
     updateFormData: (data: Partial<RegisterFormData>) => void;
     nextStep: () => void;
 }
 
-const STREAMS = [
-    "Commerce (Maths)",
-    "Commerce (Non Maths)",
-    "Physics + Chemistry + Maths",
-    "Physics + Chemistry + Biology",
-    "Physics + Chemistry + Maths + Bio",
-    "Humanities",
+const YEARS = [
+    "2026",
+    "2027",
+    "2028",
+    "2029",
+    "2030",
+    "2031",
 ];
 
-const Step2: React.FC<Step2Props> = ({
+const Step3: React.FC<Step3Props> = ({
     formData,
     updateFormData,
     nextStep,
 }) => {
-    const [selectedStream, setSelectedStream] = useState<string | null>(
-        formData.stream || null
+    const [selectedYear, setSelectedYear] = useState<string | null>(
+        formData.examYear || null
     );
 
     useEffect(() => {
-        if (formData.stream) {
-            setSelectedStream(formData.stream);
+        if (formData.examYear) {
+            setSelectedYear(formData.examYear);
         }
     }, [formData]);
 
     const handleNext = () => {
-        if (!selectedStream) return;
+        if (!selectedYear) return;
 
         updateFormData({
-            stream: selectedStream,
-            currentStep: 2,
+            examYear: selectedYear,
+            currentStep: 3,
         });
 
+        // Normally here you'd call nextStep or handle form submission
+        // Since it's the last step for now, maybe it goes to a success page
         nextStep();
     };
 
@@ -57,23 +59,23 @@ const Step2: React.FC<Step2Props> = ({
                         <MailIcons />
                     </div>
                     <h2 className="text-xl sm:text-2xl font-poppins font-medium text-[#1A1D1F]">
-                        Stream
+                        Exam Attempt Year
                     </h2>
                 </div>
 
                 <p className="text-sm text-[#6F767E] mb-6 font-dm-sans">
-                    Which stream are you pursuing in your education?
+                    Choose the year you intend to appear for the examination.
                 </p>
 
                 {/* Options */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {STREAMS.map((stream) => {
-                        const isSelected = selectedStream === stream;
+                    {YEARS.map((year) => {
+                        const isSelected = selectedYear === year;
 
                         return (
                             <div
-                                key={stream}
-                                onClick={() => setSelectedStream(stream)}
+                                key={year}
+                                onClick={() => setSelectedYear(year)}
                                 className={`flex items-center justify-between px-4 h-[47px] border rounded-[2px] cursor-pointer transition-all duration-200
                                   ${isSelected
                                         ? "border-[#FF5635] bg-[#FFF4F1] shadow-sm"
@@ -82,7 +84,7 @@ const Step2: React.FC<Step2Props> = ({
                                 `}
                             >
                                 <span className={`text-sm font-dm-sans ${isSelected ? "text-[#FF5635] font-medium" : "text-[#1A1D1F]"}`}>
-                                    {stream}
+                                    {year}
                                 </span>
 
                                 <div
@@ -103,9 +105,9 @@ const Step2: React.FC<Step2Props> = ({
                 </div>
 
                 {/* Button */}
-                <div className="mt-8 flex justify-center">
+                <div className="mt-8 flex items-center justify-center">
                     <Button
-                        disabled={!selectedStream}
+                        disabled={!selectedYear}
                         onClick={handleNext}
                         className="h-[43px] w-full max-w-[320px] bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins rounded-[2px] shadow-sm shadow-[#FF5635]/20 transition-all active:scale-95 cursor-pointer"
                     >
@@ -117,4 +119,4 @@ const Step2: React.FC<Step2Props> = ({
     );
 };
 
-export default Step2;
+export default Step3;

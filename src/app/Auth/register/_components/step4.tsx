@@ -3,45 +3,55 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { RegisterFormData } from "../register-page";
-import { BookOpen } from "lucide-react";
+import { ClipboardEdit, Check } from "lucide-react";
 import { MailIcons } from "@/Common/svgIcon";
 
-interface Step2Props {
+interface Step4Props {
     formData: RegisterFormData;
     updateFormData: (data: Partial<RegisterFormData>) => void;
     nextStep: () => void;
 }
 
-const STREAMS = [
-    "Commerce (Maths)",
-    "Commerce (Non Maths)",
-    "Physics + Chemistry + Maths",
-    "Physics + Chemistry + Biology",
-    "Physics + Chemistry + Maths + Bio",
-    "Humanities",
+const EXAMS = [
+    "IPMAT - Indore",
+    "IPMAT - Rohtak",
+    "JIPMAT",
+    "IIM-B DBE",
+    "NPAT",
+    "SET",
+    "Christ",
+    "St.Xavier's",
 ];
 
-const Step2: React.FC<Step2Props> = ({
+const Step4: React.FC<Step4Props> = ({
     formData,
     updateFormData,
     nextStep,
 }) => {
-    const [selectedStream, setSelectedStream] = useState<string | null>(
-        formData.stream || null
+    const [selectedExams, setSelectedExams] = useState<string[]>(
+        formData.targetExams || []
     );
 
     useEffect(() => {
-        if (formData.stream) {
-            setSelectedStream(formData.stream);
+        if (formData.targetExams) {
+            setSelectedExams(formData.targetExams);
         }
     }, [formData]);
 
+    const toggleExam = (exam: string) => {
+        setSelectedExams((prev) =>
+            prev.includes(exam)
+                ? prev.filter((e) => e !== exam)
+                : [...prev, exam]
+        );
+    };
+
     const handleNext = () => {
-        if (!selectedStream) return;
+        if (selectedExams.length === 0) return;
 
         updateFormData({
-            stream: selectedStream,
-            currentStep: 2,
+            targetExams: selectedExams,
+            currentStep: 4,
         });
 
         nextStep();
@@ -57,23 +67,23 @@ const Step2: React.FC<Step2Props> = ({
                         <MailIcons />
                     </div>
                     <h2 className="text-xl sm:text-2xl font-poppins font-medium text-[#1A1D1F]">
-                        Stream
+                        Your Target Exam
                     </h2>
                 </div>
 
                 <p className="text-sm text-[#6F767E] mb-6 font-dm-sans">
-                    Which stream are you pursuing in your education?
+                    Please choose the examination you intend to appear for.
                 </p>
 
-                {/* Options */}
+                {/* Options Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {STREAMS.map((stream) => {
-                        const isSelected = selectedStream === stream;
+                    {EXAMS.map((exam) => {
+                        const isSelected = selectedExams.includes(exam);
 
                         return (
                             <div
-                                key={stream}
-                                onClick={() => setSelectedStream(stream)}
+                                key={exam}
+                                onClick={() => toggleExam(exam)}
                                 className={`flex items-center justify-between px-4 h-[47px] border rounded-[2px] cursor-pointer transition-all duration-200
                                   ${isSelected
                                         ? "border-[#FF5635] bg-[#FFF4F1] shadow-sm"
@@ -82,19 +92,19 @@ const Step2: React.FC<Step2Props> = ({
                                 `}
                             >
                                 <span className={`text-sm font-dm-sans ${isSelected ? "text-[#FF5635] font-medium" : "text-[#1A1D1F]"}`}>
-                                    {stream}
+                                    {exam}
                                 </span>
 
                                 <div
-                                    className={`h-4 w-4 rounded-full border flex items-center justify-center transition-colors
+                                    className={`h-5 w-5 rounded-sm border flex items-center justify-center transition-colors
                                     ${isSelected
-                                            ? "border-[#FF5635]"
-                                            : "border-[#C7C7C7]"
+                                            ? "border-[#FF5635] bg-[#FF5635]"
+                                            : "border-[#E6E6E6] bg-white"
                                         }
                                   `}
                                 >
                                     {isSelected && (
-                                        <div className="h-2.5 w-2.5 rounded-full bg-[#FF5635]" />
+                                        <Check size={14} className="text-white" strokeWidth={3} />
                                     )}
                                 </div>
                             </div>
@@ -105,7 +115,7 @@ const Step2: React.FC<Step2Props> = ({
                 {/* Button */}
                 <div className="mt-8 flex justify-center">
                     <Button
-                        disabled={!selectedStream}
+                        disabled={selectedExams.length === 0}
                         onClick={handleNext}
                         className="h-[43px] w-full max-w-[320px] bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins rounded-[2px] shadow-sm shadow-[#FF5635]/20 transition-all active:scale-95 cursor-pointer"
                     >
@@ -117,4 +127,4 @@ const Step2: React.FC<Step2Props> = ({
     );
 };
 
-export default Step2;
+export default Step4;

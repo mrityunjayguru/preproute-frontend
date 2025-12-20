@@ -3,77 +3,91 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { RegisterFormData } from "../register-page";
-import { BookOpen } from "lucide-react";
+import { ClipboardEdit, Check } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { MailIcons } from "@/Common/svgIcon";
 
-interface Step2Props {
+interface Step6Props {
     formData: RegisterFormData;
     updateFormData: (data: Partial<RegisterFormData>) => void;
     nextStep: () => void;
 }
 
-const STREAMS = [
-    "Commerce (Maths)",
-    "Commerce (Non Maths)",
-    "Physics + Chemistry + Maths",
-    "Physics + Chemistry + Biology",
-    "Physics + Chemistry + Maths + Bio",
-    "Humanities",
+const SOURCES = [
+    "YouTube",
+    "Ads (YouTube)",
+    "Friend / Family",
+    "Instagram",
+    "Google",
+    "Reddit",
+    "Seniors",
+    "Other",
 ];
 
-const Step2: React.FC<Step2Props> = ({
+const Step6: React.FC<Step6Props> = ({
     formData,
     updateFormData,
     nextStep,
 }) => {
-    const [selectedStream, setSelectedStream] = useState<string | null>(
-        formData.stream || null
+    const router = useRouter()
+    const [selectedSources, setSelectedSources] = useState<string[]>(
+        formData.heardFrom || []
     );
 
     useEffect(() => {
-        if (formData.stream) {
-            setSelectedStream(formData.stream);
+        if (formData.heardFrom) {
+            setSelectedSources(formData.heardFrom);
         }
     }, [formData]);
 
-    const handleNext = () => {
-        if (!selectedStream) return;
+    const toggleSource = (source: string) => {
+        setSelectedSources((prev) =>
+            prev.includes(source)
+                ? prev.filter((s) => s !== source)
+                : [...prev, source]
+        );
+    };
+
+    const handleSubmit = () => {
+        if (selectedSources.length === 0) return;
 
         updateFormData({
-            stream: selectedStream,
-            currentStep: 2,
+            heardFrom: selectedSources,
+            currentStep: 6,
         });
 
+        // Final submission logic would go here
+        console.log("Form Submitted:", { ...formData, heardFrom: selectedSources });
+        router.push("/home");
         nextStep();
     };
 
     return (
         <div className="w-full flex justify-center px-4">
             <div className="w-full max-w-[720px] bg-white rounded-2xl shadow-md border border-[#F0F0F0] px-6 sm:px-10 py-8">
-
                 {/* Header */}
                 <div className="flex items-center mb-2">
                     <div className="p-2 rounded-full text-[#FF5635]">
                         <MailIcons />
                     </div>
                     <h2 className="text-xl sm:text-2xl font-poppins font-medium text-[#1A1D1F]">
-                        Stream
+                        How Did You Hear About Us?
                     </h2>
                 </div>
 
                 <p className="text-sm text-[#6F767E] mb-6 font-dm-sans">
-                    Which stream are you pursuing in your education?
+                    Let us know how you discovered our platform.
                 </p>
 
-                {/* Options */}
+                {/* Options Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {STREAMS.map((stream) => {
-                        const isSelected = selectedStream === stream;
+                    {SOURCES.map((source) => {
+                        const isSelected = selectedSources.includes(source);
 
                         return (
                             <div
-                                key={stream}
-                                onClick={() => setSelectedStream(stream)}
+                                key={source}
+                                onClick={() => toggleSource(source)}
                                 className={`flex items-center justify-between px-4 h-[47px] border rounded-[2px] cursor-pointer transition-all duration-200
                                   ${isSelected
                                         ? "border-[#FF5635] bg-[#FFF4F1] shadow-sm"
@@ -82,19 +96,19 @@ const Step2: React.FC<Step2Props> = ({
                                 `}
                             >
                                 <span className={`text-sm font-dm-sans ${isSelected ? "text-[#FF5635] font-medium" : "text-[#1A1D1F]"}`}>
-                                    {stream}
+                                    {source}
                                 </span>
 
                                 <div
-                                    className={`h-4 w-4 rounded-full border flex items-center justify-center transition-colors
+                                    className={`h-5 w-5 rounded-sm border flex items-center justify-center transition-colors
                                     ${isSelected
-                                            ? "border-[#FF5635]"
-                                            : "border-[#C7C7C7]"
+                                            ? "border-[#FF5635] bg-[#FF5635]"
+                                            : "border-[#E6E6E6] bg-white"
                                         }
                                   `}
                                 >
                                     {isSelected && (
-                                        <div className="h-2.5 w-2.5 rounded-full bg-[#FF5635]" />
+                                        <Check size={14} className="text-white" strokeWidth={3} />
                                     )}
                                 </div>
                             </div>
@@ -102,14 +116,14 @@ const Step2: React.FC<Step2Props> = ({
                     })}
                 </div>
 
-                {/* Button */}
+                {/* Submit Button */}
                 <div className="mt-8 flex justify-center">
                     <Button
-                        disabled={!selectedStream}
-                        onClick={handleNext}
+                        disabled={selectedSources.length === 0}
+                        onClick={handleSubmit}
                         className="h-[43px] w-full max-w-[320px] bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins rounded-[2px] shadow-sm shadow-[#FF5635]/20 transition-all active:scale-95 cursor-pointer"
                     >
-                        Next
+                        Submit
                     </Button>
                 </div>
             </div>
@@ -117,4 +131,4 @@ const Step2: React.FC<Step2Props> = ({
     );
 };
 
-export default Step2;
+export default Step6;

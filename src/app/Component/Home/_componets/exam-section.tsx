@@ -28,7 +28,7 @@ const ExamsSection = (props: Props) => {
           Exams we help you prepare for
         </motion.h4>
 
-        <div className="mt-6 sm:mt-8 font-poppins flex flex-col items-center gap-8 sm:gap-4">
+        <div className="mt-6 sm:mt-8 font-poppins flex flex-col items-center gap-5 sm:gap-4">
           {/* First row */}
           <div className="flex flex-wrap justify-center gap-5 sm:gap-4">
             {exams.slice(0, 4).map((t, index) => (
@@ -48,7 +48,7 @@ const ExamsSection = (props: Props) => {
           </div>
 
           {/* Second row */}
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+          <div className="flex flex-wrap justify-center gap-5 sm:gap-4">
             {exams.slice(4, 8).map((t, index) => (
               <motion.span
                 key={t}

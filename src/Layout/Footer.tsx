@@ -33,7 +33,7 @@ export const Footer = () => {
           <div className="mb-2 sm:mb-0">
             A product of{" "}
             <a href="#" className="text-red-500">
-              Brillovate Pvt. Ltd.
+               ⓒ Brillovate Pvt. Ltd.
             </a>{" "}
             All rights reserved.
           </div>

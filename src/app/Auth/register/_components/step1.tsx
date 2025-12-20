@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RegisterFormData } from "../register-page";
 import { MailIcons } from "@/Common/svgIcon";
-import { motion } from "framer-motion";
 
 interface Step1Props {
   formData: RegisterFormData;
@@ -82,57 +81,28 @@ const Step1: React.FC<Step1Props> = ({ formData, updateFormData, nextStep }) => 
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
-    visible: { opacity: 1, y: 0 }
-  };
-
   return (
     <div className="w-full flex justify-center px-4">
       <div className="w-full max-w-[720px] bg-white rounded-2xl shadow-md border border-[#F0F0F0] px-6 sm:px-10 py-8">
 
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center mb-2"
-        >
+        <div className="flex items-center mb-2">
           <div className="p-2 rounded-full">
             <MailIcons />
           </div>
           <h2 className="text-xl sm:text-2xl font-poppins font-medium text-[#1A1D1F]">
             Register
           </h2>
-        </motion.div>
+        </div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="text-sm text-[#6F767E] mb-6 font-dm-sans"
-        >
+        <p className="text-sm text-[#6F767E] mb-6 font-dm-sans">
           Sign up, dive in, and ace it with mock exams &amp; past papers!
-        </motion.p>
+        </p>
 
         {/* Form */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
           {/* First Name */}
-          <motion.div variants={itemVariants}>
+          <div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
               First Name<span className="text-[#FF5635]">*</span>
             </Label>
@@ -140,14 +110,14 @@ const Step1: React.FC<Step1Props> = ({ formData, updateFormData, nextStep }) => 
               placeholder="Enter your First Name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              className={`mt-1 h-11 font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all
+              className={`mt-1 h-[43px] font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all
                 ${errors.firstName ? 'border-red-500' : ''}`}
             />
             {errors.firstName && <span className="text-xs text-red-500 mt-1">{errors.firstName}</span>}
-          </motion.div>
+          </div>
 
           {/* Last Name */}
-          <motion.div variants={itemVariants}>
+          <div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
               Last Name<span className="text-[#FF5635]">*</span>
             </Label>
@@ -155,14 +125,14 @@ const Step1: React.FC<Step1Props> = ({ formData, updateFormData, nextStep }) => 
               placeholder="Enter your Last Name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className={`mt-1 h-11 font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all
+              className={`mt-1 h-[43px] font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all
                 ${errors.lastName ? 'border-red-500' : ''}`}
             />
             {errors.lastName && <span className="text-xs text-red-500 mt-1">{errors.lastName}</span>}
-          </motion.div>
+          </div>
 
           {/* Email */}
-          <motion.div variants={itemVariants}>
+          <div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
               Email<span className="text-[#FF5635]">*</span>
             </Label>
@@ -170,14 +140,14 @@ const Step1: React.FC<Step1Props> = ({ formData, updateFormData, nextStep }) => 
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={`mt-1 h-11 font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all
+              className={`mt-1 h-[43px] font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all
                 ${errors.email ? 'border-red-500' : ''}`}
             />
             {errors.email && <span className="text-xs text-red-500 mt-1">{errors.email}</span>}
-          </motion.div>
+          </div>
 
           {/* Nickname */}
-          <motion.div variants={itemVariants}>
+          <div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
               Nickname<span className="text-[#FF5635]">*</span>
             </Label>
@@ -185,14 +155,14 @@ const Step1: React.FC<Step1Props> = ({ formData, updateFormData, nextStep }) => 
               placeholder="Enter Nickname"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
-              className={`mt-1 h-11 font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all
+              className={`mt-1 h-[43px] font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all
                 ${errors.nickname ? 'border-red-500' : ''}`}
             />
             {errors.nickname && <span className="text-xs text-red-500 mt-1">{errors.nickname}</span>}
-          </motion.div>
+          </div>
 
           {/* Phone */}
-          <motion.div variants={itemVariants}>
+          <div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
               Phone<span className="text-[#FF5635]">*</span>
             </Label>
@@ -200,14 +170,14 @@ const Step1: React.FC<Step1Props> = ({ formData, updateFormData, nextStep }) => 
               placeholder="Student Mobile No."
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className={`mt-1 h-11 font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all
+              className={`mt-1 h-[43px] font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all
                 ${errors.phone ? 'border-red-500' : ''}`}
             />
             {errors.phone && <span className="text-xs text-red-500 mt-1">{errors.phone}</span>}
-          </motion.div>
+          </div>
 
           {/* Parent Phone */}
-          <motion.div variants={itemVariants}>
+          <div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
               Parent Phone{" "}
               <span className="text-xs text-[#FF5635]">(Optional)</span>
@@ -216,39 +186,24 @@ const Step1: React.FC<Step1Props> = ({ formData, updateFormData, nextStep }) => 
               placeholder="Parent Mobile No."
               value={parentPhone}
               onChange={(e) => setParentPhone(e.target.value)}
-              className="mt-1 h-11 font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all"
+              className="mt-1 h-[43px] font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all"
             />
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
         {/* Button */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="mt-8 flex justify-center"
-        >
+        <div className="mt-8 flex justify-center">
           <Button
+            disabled={!firstName || !lastName || !email || !nickname || !phone}
             onClick={handleNext}
-            asChild
-            className="h-11 w-full max-w-xs bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins rounded-[2px] shadow-sm transform transition-all active:scale-95"
+            className="h-[43px] w-full max-w-xs bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins rounded-[2px] shadow-sm transform transition-all active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Next
-            </motion.button>
+            Next
           </Button>
-        </motion.div>
+        </div>
 
         {/* Login */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
-          className="text-center text-sm text-[#6F767E] mt-6 font-dm-sans"
-        >
+        <p className="text-center text-sm text-[#6F767E] mt-6 font-dm-sans">
           Already Signed Up?{" "}
           <span
             onClick={() => router.push("/Auth/signin")}
@@ -256,7 +211,7 @@ const Step1: React.FC<Step1Props> = ({ formData, updateFormData, nextStep }) => 
           >
             Login
           </span>
-        </motion.p>
+        </p>
       </div>
     </div>
   );
