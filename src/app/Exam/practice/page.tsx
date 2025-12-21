@@ -1,11 +1,11 @@
-import TopPratices from '@/app/Component/Exam/Component/TopPratices'
+import TopPratices from '@/app/Component/Exam/_component/TopPratices'
 import React from 'react'
 
 function page() {
   return (
     <div>
-      <TopPratices/>
-      
+      <TopPratices />
+
     </div>
   )
 }

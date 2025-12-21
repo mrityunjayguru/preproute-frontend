@@ -1,13 +1,11 @@
 import React from 'react'
-import TopPratices from './Component/TopPratices'
-import MergedExamPage from './Component/Exam'
+// import TopPratices from './_component/TopPratices'
+import MergedExamPage from './_component/Exam'
 
 
 function Exam() {
   return (
-    <div className='container mx-auto'>
-
-      
+    <div className='mx-auto'>
       <MergedExamPage/>
     </div>
   )

@@ -44,7 +44,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-white text-[#0F1724]">
+    <main className=" bg-white text-[#0F1724]">
       <WhatsAppSocialApp />
       <div className="flex flex-col items-center  justify-center px-6 sm:px-8 md:px-12 lg:px-28">
         <HeroSection logoSrc={heroImage} />
@@ -106,7 +106,7 @@ export default function HomePage() {
         transition={{ duration: 0.6 }}
         className="w-full bg-[#FF5635] text-white p-6 sm:p-10 lg:p-16"
       >
-        <div className="mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 px-4 px-6 sm:px-8 md:px-12 lg:px-28">
+        <div className="mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 lg:gap-8 px-6 sm:px-8 md:px-12 lg:px-28">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}

@@ -15,13 +15,13 @@ export default function UserLayout({ children }: { children: ReactNode }) {
   const hideChrome = isExamPage || isAuthPage;
 
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden">
+    <div className="flex flex-col ">
       {!hideChrome && <UserHeader />}
       <main
         className={
           hideChrome
-            ? "flex-1 min-h-screen overflow-hidden"
-            : "flex-1 min-h-screen"
+            ? "flex-1 overflow-hidden"
+            : "flex-1 "
         }
       >
         {children}
