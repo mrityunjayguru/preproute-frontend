@@ -13,7 +13,7 @@ export const ExamsSection = () => {
   ];
 
   return (
-    <section className="flex flex-col items-center text-center px-4 sm:px-6 lg:px-16 py-12">
+    <section className="flex flex-col items-center text-center px-4 sm:px-6 lg:px-16 py-16">
       {/* Heading */}
       <h1 className="text-[#000000] max-w-3xl text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-10">
         Prepare for the most competitive higher education entrance exams, including:

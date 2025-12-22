@@ -1,8 +1,33 @@
-import Image from 'next/image'
+import Image from "next/image";
 import { motion } from "framer-motion";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
+import { AppDispatch } from "@/store/store";
+
+import { resetQuestionByExamID } from "@/api/Exam";
+import { handleSelectedExamType } from "@/api/ExamType";
+import { resetQuestion } from "@/api/Question";
 
 const HeroSection = ({ logoSrc }: { logoSrc: any }) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const examTypeData =
+    useSelector((state: any) => state.examType.examType) || [];
+  const router = useRouter();
+  const handlenavigate = (link: any) => {
+    router.push(link);
+  };
+  // console.log(examTypeData,"examTypeDataexamTypeData")
+
+  const handleIPmatExam = () => {
+    let mockExam = examTypeData.find((item: any) => item.examType === "Mocks");
+
+    dispatch(handleSelectedExamType(mockExam));
+    const payload: any = null;
+    dispatch(resetQuestionByExamID(payload));
+    dispatch(resetQuestion(payload));
+    router.push("/Exam/Mocks?isMock=true");
+  };
   return (
     <>
       <section className="w-full flex items-center flex-col justify-center">
@@ -12,7 +37,7 @@ const HeroSection = ({ logoSrc }: { logoSrc: any }) => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
-            className="text-center pt-6 sm:pt-8 md:pt-8 lg:pt-8"
+            className="text-center pt-6 sm:pt-8 md:pt-8 lg:pt-14"
           >
             <h1 className="text-2xl font-poppins sm:text-3xl md:text-3xl lg:text-4xl xl:text-[42px] font-medium tracking-tight leading-tight">
               Your Gateway to{" "}
@@ -20,9 +45,9 @@ const HeroSection = ({ logoSrc }: { logoSrc: any }) => {
             </h1>
 
             <p className=" font-dm-sans text-[#333333] font-sans text-xs sm:text-sm md:text-base lg:text-[18px] leading-relaxed font-normal max-w-6xl mx-auto">
-              Practice entrance exams online in real exam-like conditions. Access
-              mock tests, past year papers, and exclusive exams designed by
-              professors from top institutes.
+              Practice entrance exams online in real exam-like conditions.
+              Access mock tests, past year papers, and exclusive exams designed
+              by professors from top institutes.
             </p>
           </motion.div>
 
@@ -30,7 +55,7 @@ const HeroSection = ({ logoSrc }: { logoSrc: any }) => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="mt-6 sm:mt-8 md:mt-8 lg:mt-6 flex justify-center -mb-8 sm:-mb-10 md:-mb-10 lg:-mb-12 xl:-mb-10 relative z-10"
+            className="mt-6 sm:mt-8 md:mt-8 lg:mt-10 flex justify-center -mb-8 sm:-mb-10 md:-mb-10 lg:-mb-12 xl:-mb-10 relative z-10"
           >
             <Image
               src={logoSrc}
@@ -38,19 +63,31 @@ const HeroSection = ({ logoSrc }: { logoSrc: any }) => {
               width={1100}
               height={520}
               priority
-              className="w-full max-w-sm sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-4xl h-auto object-contain"
+              className="w-full max-w-sm sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-5xl h-auto object-contain"
             />
           </motion.div>
         </div>
-
-
+        <div className="mt-24 flex flex-wrap gap-3 ">
+          <button
+            onClick={handleIPmatExam}
+            className="px-6 cursor-pointer sm:px-8 lg:px-8 py-2 sm:py-3 bg-[#FF5635] text-white rounded-[4px] shadow-md font-semibold transition-transform duration-200 hover:scale-105 text-sm sm:text-base lg:text-base"
+          >
+            Start Free Mock Test
+          </button>
+          <button
+            onClick={() => handlenavigate("/Exam/Mocks")}
+            className="cursor-pointer px-6 sm:px-10 py-2 sm:py-3 border border-[#FF5635] text-[#FF5635] rounded-[4px] font-semibold transition-transform duration-200 hover:scale-105 text-sm sm:text-base lg:text-base"
+          >
+            View All Exam
+          </button>
+        </div>
         {/* SECTION 2: Tagline Text */}
-        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 mt-14 sm:mt-16 md:mt-20 lg:mt-18 xl:mt-18">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 mt-14 sm:mt-16 md:mt-20 lg:mt-14 xl:mt-14">
           <motion.h3
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-black font-semibold leading-relaxed max-w-4xl mx-auto px-2"
+            className="text-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-black font-medium leading-relaxed max-w-4xl mx-auto px-2"
           >
             Not just another question bank. A complete exam preparation
             ecosystem designed to make you exam-ready.
@@ -58,7 +95,7 @@ const HeroSection = ({ logoSrc }: { logoSrc: any }) => {
         </div>
       </section>
     </>
-  )
-}
+  );
+};
 
-export default HeroSection
+export default HeroSection;

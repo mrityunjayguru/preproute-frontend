@@ -8,7 +8,7 @@ function page() {
     <div>
       <GoogleOAuthProvider clientId="363773266637-7ttqp94hll57lr31791sfte7bkg91fqv.apps.googleusercontent.com">
         {/* <RegisterPage /> */}
-        <Register/>
+        <Register />
       </GoogleOAuthProvider>
     </div>
   );

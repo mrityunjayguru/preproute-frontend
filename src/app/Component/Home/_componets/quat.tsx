@@ -7,7 +7,7 @@ type Props = {};
 
 const Quat = (props: Props) => {
   return (
-    <section className="mt-12 p-4 sm:p-6 lg:p-8 bg-[#F9FAFC]" >
+    <section className="mt-12 p-4 sm:p-6 lg:p-16 bg-[#F9FAFC]" >
       <div className="flex flex-col sm:flex-row items-center justify-center gap-10 text-center">
         <motion.div
           initial={{ opacity: 0, x: -30, rotate: -90 }}
@@ -24,7 +24,7 @@ const Quat = (props: Props) => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-lg sm:text-2xl lg:text-3xl font-bold text-center leading-snug max-w-4xl"
+          className="text-lg sm:text-2xl lg:text-3xl font-medium text-center leading-snug max-w-4xl"
         >
           Exams are not just a test of knowledge, but of preparation —{" "}
           <span className="text-[#FF5635]">

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
+import Image from "next/image";
 
 /* ================= SWIPER CSS ================= */
 import "swiper/css";
@@ -22,28 +23,32 @@ export default function YouTubeCarousel() {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
   const swiperRef = useRef<any>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
-  /* ================= AUTOPLAY VISIBILITY CONTROL ================= */
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!swiperRef.current) return;
-
-        if (entry.isIntersecting) {
-          swiperRef.current.autoplay.start();
-        } else {
-          swiperRef.current.autoplay.stop();
-        }
-      },
-      { threshold: 0.4 }
-    );
-
-    observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, []);
+  // ================= AUTOSWIPE / AUTOPLAY (DISABLED) =================
+  // The following code used IntersectionObserver + Swiper autoplay.
+  // Kept here as a reference, but commented to fully disable auto swipe.
+  //
+  // const containerRef = useRef<HTMLDivElement>(null);
+  //
+  // useEffect(() => {
+  //   if (!containerRef.current) return;
+  //
+  //   const observer = new IntersectionObserver(
+  //     ([entry]) => {
+  //       if (!swiperRef.current) return;
+  //
+  //       if (entry.isIntersecting) {
+  //         swiperRef.current.autoplay.start();
+  //       } else {
+  //         swiperRef.current.autoplay.stop();
+  //       }
+  //     },
+  //     { threshold: 0.4 }
+  //   );
+  //
+  //   observer.observe(containerRef.current);
+  //   return () => observer.disconnect();
+  // }, []);
 
   return (
     <>
@@ -53,8 +58,7 @@ export default function YouTubeCarousel() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6 }}
-        ref={containerRef}
-        className="w-full flex justify-center py-12 px-4 sm:px-6 lg:px-8"
+        className="w-full flex justify-center py-12 px-4 sm:px-6 lg:px-8 overflow-x-hidden"
       >
         {/* Swiper custom styles */}
         <style>{`
@@ -92,22 +96,25 @@ export default function YouTubeCarousel() {
             border-radius: 9999px !important;
           }
         `}</style>
-
-        <div className="max-w-6xl w-full">
+<div className="w-full max-w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-16">
+  <div className="container">
           <Swiper
             className="youtube-swiper"
-            modules={[Navigation, Pagination, Autoplay]}
+            modules={[Navigation, Pagination]}
             onSwiper={(swiper) => (swiperRef.current = swiper)}
             slidesPerView={3}
             spaceBetween={24}
             centeredSlides
             loop
             pagination={{ clickable: true }}
-            autoplay={{
-              delay: 3500,
-              disableOnInteraction: false,
-              pauseOnMouseEnter: true,
-            }}
+            // ================= AUTOSWIPE / AUTOPLAY (DISABLED) =================
+            // To re-enable auto swipe, uncomment this block and add Autoplay to modules.
+            //
+            // autoplay={{
+            //   delay: 3500,
+            //   disableOnInteraction: false,
+            //   pauseOnMouseEnter: true,
+            // }}
             breakpoints={{
               0: { slidesPerView: 1 },
               640: { slidesPerView: 2 },
@@ -123,10 +130,10 @@ export default function YouTubeCarousel() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                   whileHover={{ scale: 1.05 }}
-                  className="relative bg-white rounded-xl shadow-lg overflow-hidden 
+                  className="relative bg-white rounded-[24px] shadow-lg overflow-hidden 
                              w-full  cursor-pointer group"
                   onClick={() => {
-                    swiperRef.current?.autoplay.stop();
+                    // swiperRef.current?.autoplay.stop(); // autoswipe disabled
                     setActiveVideo(id);
                   }}
                 >
@@ -151,6 +158,7 @@ export default function YouTubeCarousel() {
               </SwiperSlide>
             ))}
           </Swiper>
+          </div>
         </div>
       </motion.div>
 
@@ -168,7 +176,7 @@ export default function YouTubeCarousel() {
               className="absolute top-3 right-3 text-white text-2xl z-10"
               onClick={() => {
                 setActiveVideo(null);
-                swiperRef.current?.autoplay.start();
+                // swiperRef.current?.autoplay.start(); // autoswipe disabled
               }}
             >
               ✕

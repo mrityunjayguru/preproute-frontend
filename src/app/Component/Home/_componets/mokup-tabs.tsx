@@ -52,7 +52,7 @@ const FEATURES = [
 const MokupTabs = (props: Props) => {
   const [value, setValue] = React.useState("exam");
   return (
-    <section className="w-full py-10">
+    <section className="w-full py-10 overflow-x-hidden">
       <Tabs value={value} onValueChange={setValue} className="w-full">
         {/* Desktop/Laptop Tabs */}
 
@@ -85,7 +85,7 @@ const MokupTabs = (props: Props) => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.4 }}
-                  className="absolute top-[12%] left-[14%] w-[70%] h-[60%]"
+                  className="absolute top-[15%] left-[14%] w-[70%] h-[60%]"
                 >
                   <Image
                     src={item.screen}
@@ -100,7 +100,7 @@ const MokupTabs = (props: Props) => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.4, delay: 0.1 }}
-                  className="absolute hidden md:block bottom-[6%] left-[-4%] md:w-[150px] lg:w-[220px] sm:w-[260px]"
+                  className="absolute hidden md:block bottom-[5.5%] left-3 md:w-[150px] lg:w-[220px] sm:w-[260px]"
                 >
                   <Image
                     src={item.vector}
@@ -120,7 +120,7 @@ const MokupTabs = (props: Props) => {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <TabsList className="mx-auto font-dm-sans hidden w-fit gap-2 my-4 rounded-full bg-[#F0F9FF] lg:flex">
+          <TabsList className="mx-auto font-dm-sans hidden w-fit gap-2 my-4 rounded-full bg-[#F0F9FF] lg:flex mt-10">
             {FEATURES.map((item, index) => (
               <motion.div
                 key={item.value}
@@ -131,7 +131,7 @@ const MokupTabs = (props: Props) => {
               >
                 <TabsTrigger
                   value={item.value}
-                  className="rounded-full font-medium cursor-pointer text-[#009DFF] px-10 text-[18px] data-[state=active]:bg-orange-500 data-[state=active]:text-white transition-all"
+                  className="rounded-full font-normal  cursor-pointer text-[#009DFF] px-10 text-[18px] data-[state=active]:font-medium data-[state=active]:bg-orange-500 data-[state=active]:text-white transition-all"
                 >
                   {item.label}
                 </TabsTrigger>

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const PrepSection = () => {
   return (
-    <section className="w-full py-12 sm:py-16 lg:py-20 px-6 sm:px-8 md:px-12 lg:px-28">
+    <section className="w-full py-12 sm:py-16 lg:py-20 px-6 sm:px-8 md:px-12 lg:px-28 overflow-x-hidden">
       {/* Heading */}
       <motion.h3
         initial={{ opacity: 0, y: 20 }}

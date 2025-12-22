@@ -78,8 +78,8 @@ export const Header: React.FC = () => {
   ];
 
   return (
-    <header className={`sticky font-dm-sans  top-0 z-20 w-full bg-white font-DM_Sans`}>
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 lg:py-5">
+    <header className={`sticky font-dm-sans  top-0 z-20 w-full bg-white font-DM_Sans sm:px-6 md:px-8 lg:px-10 xl:px-12`}>
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4  py-4 lg:py-5">
         {/* Left: Logo */}
         <div className="flex items-center gap-12">
           <div className="cursor-pointer" onClick={() => router.push("/home")}>
@@ -200,7 +200,7 @@ export const Header: React.FC = () => {
           {!token && (
             <Link
               href="/Auth/register"
-              className="text-sm font-semibold text-[#FF5635] transition-colors cursor-pointer hover:text-[#e44c2f]"
+              className="text-sm font-normal text-[#FF5635] transition-colors cursor-pointer hover:text-[#e44c2f]"
             >
               Register
             </Link>

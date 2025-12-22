@@ -16,7 +16,7 @@ const ExamsSection = (props: Props) => {
   ];
 
   return (
-    <section className="w-full py-[3rem] lg:py-[4rem]">
+    <section className="w-full py-[2rem] lg:py-[3rem] mt-10">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
         <motion.h4
           initial={{ opacity: 0, y: 20 }}

@@ -1,10 +1,29 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { questionIcon } from "@/Common/svgIcon";
 import Image from "next/image";
 import logo from "@/assets/logo.svg";
 import { Footer } from "@/Layout/Footer";
+
+import NOTVISITED from "@/assets/vectors/instruction/not-visted.svg";
+import NOTANSWERED from "@/assets/vectors/instruction/not-answred.svg";
+import ANSWERED from "@/assets/vectors/instruction/answred.svg";
+import REVIEW from "@/assets/vectors/instruction/review.svg";
+import NOTREVIEW from "@/assets/vectors/instruction/not-review.svg";
+
+
+// Status Icon Components
+const NotVisitedIcon = () => <Image src={NOTVISITED} alt="notvisted" />;
+
+const NotAnsweredIcon = () => <Image src={NOTANSWERED} alt="notvisted" />;
+
+const AnsweredIcon = () => <Image src={ANSWERED} alt="answered" />;
+
+const NotAnsweredMarkedIcon = () => <Image src={REVIEW} alt="answered" />;
+
+const AnsweredMarkedIcon = () => (
+  <Image src={NOTREVIEW } alt="answered" />
+);
 
 export default function InstructionsPage() {
   const router = useRouter();
@@ -45,7 +64,7 @@ export default function InstructionsPage() {
           <Button
             onClick={handleExam}
             className="bg-[#FF5635] font-poppins hover:bg-[#e34d2e] text-white 
-                       px-8 sm:px-12 py-8 font-thin text-sm md:text-xl cursor-pointer 
+                       px-8 sm:px-12 py-6 font-thin text-sm md:text-xl cursor-pointer 
                        rounded-full  self-start sm:self-auto"
           >
             Start Exam
@@ -60,37 +79,65 @@ export default function InstructionsPage() {
 
           <ol className="list-decimal font-dm-sans ml-4 space-y-1 text-xs sm:text-sm md:text-sm text-gray-700">
             <li>
-              Your clock will be set at the server. The countdown timer at the top right corner of the screen will display the remaining time available for you to complete the examination. When the timer reaches zero, the examination will end by itself. You need not terminate the examination or submit your paper.
+              Your clock will be set at the server. The countdown timer at the
+              top right corner of the screen will display the remaining time
+              available for you to complete the examination. When the timer
+              reaches zero, the examination will end by itself. You need not
+              terminate the examination or submit your paper.
             </li>
             <li>
-              The Question Palette displayed on the right side of screen will show the status of each question using one of the following symbols:
-
+              The Question Palette displayed on the right side of screen will
+              show the status of each question using one of the following
+              symbols:
             </li>
           </ol>
 
           {/* STATUS LEGEND */}
           <div className="grid font-dm-sans grid-cols-1 sm:grid-cols-2 lg:grid-rows-3 gap-3 mt-2">
-            {[
-              ["#D9D9D9", "You have not visited the question yet."],
-              ["#ED3324", "You have not answered the question."],
-              ["#4FA77E", "You have answered the question."],
-              ["#9555E1", "You have NOT answered but marked for review."],
-              ["#870051", "Answered & Marked for Review will be evaluated."],
-            ].map(([color, text], i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-1"
-              >
-                <span style={{ color }}>{questionIcon}</span>
-                <p className="text-xs sm:text-sm md:text-sm text-gray-700">{text}</p>
-              </div>
-            ))}
+            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-1">
+              <NotVisitedIcon />
+              <p className="text-xs sm:text-sm md:text-sm text-gray-700">
+                You have not visited the question yet.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-1">
+            <NotAnsweredMarkedIcon />
+              <p className="text-xs sm:text-sm md:text-sm text-gray-700">
+                You have NOT answered the question, but have marked the question
+                for review.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-1">
+              
+              <NotAnsweredIcon />
+              <p className="text-xs sm:text-sm md:text-sm text-gray-700">
+                You have not answered the question.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-1">
+            
+              <AnsweredMarkedIcon />
+              <p className="text-xs sm:text-sm md:text-sm text-gray-700">
+                The question(s) "Answered and Marked for Review" will be
+                considered for evaluation.
+              </p>
+              
+            </div>
+            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-1">
+            <AnsweredIcon />
+              <p className="text-xs sm:text-sm md:text-sm text-gray-700">
+                You have answered the question.
+              </p>
+            </div>
           </div>
 
           <p className="mt-1 text-xs sm:text-sm md:text-sm text-gray-700 font-dm-sans max-w-7xl ">
-            The Marked for Review status for a question simply indicates that you would like to look at that question again.{" "}
+            The Marked for Review status for a question simply indicates that
+            you would like to look at that question again.{" "}
             <span className="text-[#FF5635] font-medium">
-              If a question is answered, but Marked for Review, then the answer will be considered for evaluation unless the status is modified by the candidate..
+              If a question is answered, but Marked for Review, then the answer
+              will be considered for evaluation unless the status is modified by
+              the candidate..
             </span>
           </p>
         </section>
@@ -103,10 +150,21 @@ export default function InstructionsPage() {
             To answer a question, do the following:
           </span>
           <ul className="list-disc ml-4 space-y-1 text-xs sm:text-sm md:text-sm text-gray-700 font-dm-sans">
-
-            <li>Click on the question number in the Question Palette at the right of your screen to go to that numbered question directly. Note that using this option does NOT save your answer to the current question.</li>
-            <li>Click on Save & Next to save your answer for the current question and then go to the next question.</li>
-            <li>Click on Mark for Review & Next to save your answer for the current question,mark it for review, and then go to the next question.</li>
+            <li>
+              Click on the question number in the Question Palette at the right
+              of your screen to go to that numbered question directly. Note that
+              using this option does NOT save your answer to the current
+              question.
+            </li>
+            <li>
+              Click on Save & Next to save your answer for the current question
+              and then go to the next question.
+            </li>
+            <li>
+              Click on Mark for Review & Next to save your answer for the
+              current question,mark it for review, and then go to the next
+              question.
+            </li>
           </ul>
 
           {/* ANSWERING */}
@@ -114,19 +172,44 @@ export default function InstructionsPage() {
           <h2 className="text-sm sm:text-base md:text-lg  text-black font-poppins">
             Answering a Question
           </h2>
-          <span className="font-dm-snas">Procedure for answering a multiple choice type question:</span>
+          <span className="font-dm-snas">
+            Procedure for answering a multiple choice type question:
+          </span>
           <ul className="list-disc ml-4 space-y-2 text-xs sm:text-sm md:text-sm text-gray-700 font-dm-sans">
             <li>
               <ul className="list-[lower-alpha] ml-5 mt-1 space-y-1 text-xs sm:text-xs md:text-sm">
-                <li>To select your answer, click on the button of one of the options.</li>
-                <li>To deselect your chosen answer, click on the bubble of the chosen option again or click on the Clear Response button.</li>
-                <li>To change your chosen answer, click on the bubble of another option.</li>
-                <li>To save your answer, you MUST click on the Save & Next button.</li>
-                <li>To mark the question for review, click on the Mark for Review & Next button.If an answer is selected for a question that is Marked for Review, that answer will be considered in the evaluation.</li>
+                <li>
+                  To select your answer, click on the button of one of the
+                  options.
+                </li>
+                <li>
+                  To deselect your chosen answer, click on the bubble of the
+                  chosen option again or click on the Clear Response button.
+                </li>
+                <li>
+                  To change your chosen answer, click on the bubble of another
+                  option.
+                </li>
+                <li>
+                  To save your answer, you MUST click on the Save & Next button.
+                </li>
+                <li>
+                  To mark the question for review, click on the Mark for Review
+                  & Next button.If an answer is selected for a question that is
+                  Marked for Review, that answer will be considered in the
+                  evaluation.
+                </li>
               </ul>
             </li>
-            <li>To change your answer to a question that has already been answered, first select that question for answering and then follow the procedure for answering that type of question.</li>
-            <li>Note that ONLY Questions for which answers are saved or marked for review after answering will be considered for evaluation.</li>
+            <li>
+              To change your answer to a question that has already been
+              answered, first select that question for answering and then follow
+              the procedure for answering that type of question.
+            </li>
+            <li>
+              Note that ONLY Questions for which answers are saved or marked for
+              review after answering will be considered for evaluation.
+            </li>
           </ul>
         </section>
 
@@ -136,13 +219,19 @@ export default function InstructionsPage() {
             Navigating through sections
           </h2>
           <ul className="list-disc ml-4 space-y-1  text-xs sm:text-sm md:text-sm text-gray-700 font-dm-sans">
-            <li>Sections in this question paper are displayed on the top bar of the screen.</li>
-            <li>Candidates can view the corresponding section summary as part of the legend that appears in every section above the question palette.</li>
+            <li>
+              Sections in this question paper are displayed on the top bar of
+              the screen.
+            </li>
+            <li>
+              Candidates can view the corresponding section summary as part of
+              the legend that appears in every section above the question
+              palette.
+            </li>
           </ul>
         </section>
       </div>
       <Footer />
-
     </div>
   );
 }
