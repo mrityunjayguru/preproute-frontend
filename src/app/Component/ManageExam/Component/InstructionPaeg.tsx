@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { questionIcon } from "@/Common/svgIcon";
@@ -46,7 +45,7 @@ export default function InstructionsPage() {
           <Button
             onClick={handleExam}
             className="bg-[#FF5635] font-poppins hover:bg-[#e34d2e] text-white 
-                       px-8 sm:px-12 py-5 font-thin text-sm md:text-xl cursor-pointer 
+                       px-8 sm:px-12 py-8 font-thin text-sm md:text-xl cursor-pointer 
                        rounded-full  self-start sm:self-auto"
           >
             Start Exam
@@ -61,10 +60,10 @@ export default function InstructionsPage() {
 
           <ol className="list-decimal font-dm-sans ml-4 space-y-1 text-xs sm:text-sm md:text-sm text-gray-700">
             <li>
-            Your clock will be set at the server. The countdown timer at the top right corner of the screen will display the remaining time available for you to complete the examination. When the timer reaches zero, the examination will end by itself. You need not terminate the examination or submit your paper.
+              Your clock will be set at the server. The countdown timer at the top right corner of the screen will display the remaining time available for you to complete the examination. When the timer reaches zero, the examination will end by itself. You need not terminate the examination or submit your paper.
             </li>
             <li>
-            The Question Palette displayed on the right side of screen will show the status of each question using one of the following symbols:
+              The Question Palette displayed on the right side of screen will show the status of each question using one of the following symbols:
 
             </li>
           </ol>
@@ -74,7 +73,7 @@ export default function InstructionsPage() {
             {[
               ["#D9D9D9", "You have not visited the question yet."],
               ["#ED3324", "You have not answered the question."],
-              ["#4FA77E", "You have answered the question."], 
+              ["#4FA77E", "You have answered the question."],
               ["#9555E1", "You have NOT answered but marked for review."],
               ["#870051", "Answered & Marked for Review will be evaluated."],
             ].map(([color, text], i) => (
@@ -89,29 +88,29 @@ export default function InstructionsPage() {
           </div>
 
           <p className="mt-1 text-xs sm:text-sm md:text-sm text-gray-700 font-dm-sans max-w-7xl ">
-          The Marked for Review status for a question simply indicates that you would like to look at that question again.{" "}
+            The Marked for Review status for a question simply indicates that you would like to look at that question again.{" "}
             <span className="text-[#FF5635] font-medium">
-            If a question is answered, but Marked for Review, then the answer will be considered for evaluation unless the status is modified by the candidate..
+              If a question is answered, but Marked for Review, then the answer will be considered for evaluation unless the status is modified by the candidate..
             </span>
           </p>
         </section>
         <section className="">
-        {/* NAVIGATION */}
+          {/* NAVIGATION */}
           <h2 className="text-sm sm:text-base md:text-md  text-black font-poppins">
             Navigating to a Question
           </h2>
-         <span className="font-dm-snas">
-         To answer a question, do the following:
-          </span> 
+          <span className="font-dm-snas">
+            To answer a question, do the following:
+          </span>
           <ul className="list-disc ml-4 space-y-1 text-xs sm:text-sm md:text-sm text-gray-700 font-dm-sans">
-            
+
             <li>Click on the question number in the Question Palette at the right of your screen to go to that numbered question directly. Note that using this option does NOT save your answer to the current question.</li>
             <li>Click on Save & Next to save your answer for the current question and then go to the next question.</li>
             <li>Click on Mark for Review & Next to save your answer for the current question,mark it for review, and then go to the next question.</li>
           </ul>
 
-        {/* ANSWERING */}
-        
+          {/* ANSWERING */}
+
           <h2 className="text-sm sm:text-base md:text-lg  text-black font-poppins">
             Answering a Question
           </h2>
@@ -142,8 +141,8 @@ export default function InstructionsPage() {
           </ul>
         </section>
       </div>
-    <Footer/>
-    
+      <Footer />
+
     </div>
   );
 }

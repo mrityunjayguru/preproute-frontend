@@ -25,25 +25,9 @@ import UserExamPop from "@/app/Component/ManageExam/Component/UserExamPop";
 import EXAMPREP from "@/assets/vectors/exam/Man_Working_From_Home.svg";
 import SocialMedia from "../../Home/_componets/social-media";
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
+import LOCK from "@/assets/vectors/lock.svg";
+import LOCK2 from "@/assets/vectors/lock-2.svg";
 
-const LockIcon = (props: any) => (
-  <svg
-    {...props}
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="w-4 h-4 text-gray-400"
-  >
-    <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
-    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-  </svg>
-);
 
 const MockExamCard = ({ exam, handleExam, index }: any) => {
   const examById = useSelector((s: any) => s.exam?.examById) || [];
@@ -51,11 +35,13 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
 
   const user = useSelector((s: any) => s.Auth?.loginUser);
   const hasPurchase = user?.PurchaseDetail?.length > 0;
+
   const isMock1 = ["mock 1", "mocks 1"].includes(
     exam?.questionPapername?.toLowerCase()
   );
+
   const isAttempted = exam?.hasGivenExam;
-  const isUnlocked = isMock1 || hasPurchase;
+
   const haaccessExam = useSelector((s: any) => s.exam?.examHeader);
   const selectedExamType = useSelector(
     (s: any) => s.examType?.selectedExamType
@@ -67,18 +53,21 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
     index === 0 ||
     selectedExamType?.examType === "Past Year"
   );
-  const isInProgress = exam?.userSummary?.target == 0 && !isAttempted;
-  const isCompleted = isAttempted && exam?.userSummary?.target == 100;
+
+  const isInProgress =
+    exam?.userSummary?.target === 0 && !isAttempted;
+
+  const isCompleted =
+    isAttempted && exam?.userSummary?.target === 100;
 
   return (
     <div
-      className={`rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] 
-          p-4 sm:p-5 lg:p-6 
-          flex flex-col transition-all`}
+      className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white 
+                 border border-[#E6F4FF] p-4 sm:p-5 lg:p-6 
+                 flex flex-col transition-all"
     >
-      {/* Top section with exam type, lock icon, and Free badge */}
+      {/* ---------------- TOP SECTION ---------------- */}
       <div className="relative mb-2">
-        {/* Small gray text at top */}
         <p className="text-[12px] sm:text-[13px] font-dm-sans font-medium">
           {exam?.exam?.examname ||
             selectedExam?.examname ||
@@ -86,94 +75,93 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
             "Exam"}
         </p>
 
-        {/* Lock icon in top right */}
+        {/* LOCK ICON */}
         {isLocked && (
           <div className="absolute top-0 right-0">
-            <LockIcon className="w-5 h-5 text-gray-500" />
+            <Image src={LOCK} alt="lock" />
           </div>
         )}
 
-        {/* Free badge in top right */}
+        {/* FREE BADGE */}
         {index === 0 && !isLocked && (
           <div className="absolute top-0 right-0">
-            <span className="bg-[#4FA77E] px-3 font-poppins py-1 rounded-md text-sm  text-white">
+            <span className="bg-[#4FA77E] px-3 py-1 rounded-md text-sm text-white">
               Free
             </span>
           </div>
         )}
       </div>
 
-      {/* Mock name */}
-      <h3 className="text-lg font-poppins sm:text-xl lg:text-2xl font-medium text-[#FF5635] mb-4 sm:mb-5 lg:mb-6">
+      {/* ---------------- MOCK NAME ---------------- */}
+      <h3 className="text-lg sm:text-xl lg:text-2xl 
+                     font-medium font-poppins text-[#FF5635] 
+                     mb-4 sm:mb-5 lg:mb-6">
         {exam?.questionPapername}
       </h3>
 
-      {/* <h3 className="text-[28px] text-[#FF5635] mb-6">Warm Up</h3> */}
-
-      {/* Buttons section */}
+      {/* ---------------- BUTTONS ---------------- */}
       <div className="mt-auto w-full font-poppins">
-        {isAttempted && exam?.userSummary?.target == 100 ? (
-          // ---------------------- VIEW ANALYTICS ------------------------
-          <Button
-            variant="outline"
-            onClick={() => handleExam(exam)}
-            className="md:w-fit border border-border text-[#FF5635] font-medium font-poppins"
-          >
-            Result and Analysis
-          </Button>
-        ) : haaccessExam?.hasAccess ||
-          index === 0 ||
-          selectedExamType?.examType === "Past Year " ? (
-          // ---------------------- FREE / ALLOWED ACCESS ------------------------
-          <div className="flex w-full gap-2">
-            {exam?.userSummary?.target == 0 ? (
-              <>
-                {/* RESUME BUTTON */}
-                <Button
-                  className="flex-1 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
-                  onClick={() => handleExam(exam, "Resume")}
-                >
-                  <UserExamPop text="Resume" />
-                </Button>
-
-                {/* USER POP BUTTON */}
-                {/* <Button
-                  className="flex-1 bg-[#FF5635] hover:bg-[#e34d2e] text-white font-medium"
-                  onClick={() => handleExam(exam, "start")}
-                >
-                  <UserExamPop text="Start" />
-                  start
-                </Button> */}
-              </>
-            ) : (
-              // ONLY START BUTTON
-              <Button
-                className="md:w-fit px-10 cursor-pointer
-                h-10 sm:h-11
-                rounded-[8px]
-                bg-[#FF5635] text-white
-                hover:bg-[#e34d2e]
-                transition-all"
-                onClick={() => handleExam(exam, "start")}
-              >
-                <UserExamPop text="Start" />
-              </Button>
-            )}
-          </div>
-        ) : (
-          // ---------------------- LOCKED ------------------------
+        {isLocked && (
           <Button
             disabled
-            className="md:w-fit px-10 
-                h-10 sm:h-11 bg-gray-300 text-gray-700 cursor-not-allowed"
+            className="px-10 h-11 rounded-[8px] bg-[#E3E5E9] text-[#ADB5CC] cursor-not-allowed"
           >
-            Locked
+            Start
           </Button>
+        )}
+        {!isLocked && (
+          <>
+            {/* COMPLETED → RESULT */}
+            {isCompleted && (
+              <Button
+                variant="outline"
+                onClick={() => handleExam(exam)}
+                className="border border-[#FF5635] text-[#FF5635] 
+                           hover:bg-[#FF5635] hover:text-white transition cursor-pointer"
+              >
+                Result and Analysis
+              </Button>
+            )}
+
+            {/* IN PROGRESS → RESUME + RESTART */}
+            {!isCompleted && isInProgress && (
+              <div className="flex gap-2">
+                <Button
+                  className="flex-1 bg-[#FF5635] text-white 
+                             hover:bg-black transition cursor-pointer"
+                  onClick={() => handleExam(exam, 'Resume')}
+                >
+                  Resume
+                </Button>
+
+                <Button
+                  className="flex-1 bg-black text-white 
+                             hover:bg-[#FF5635] transition cursor-pointer"
+                  onClick={() => handleExam(exam, 'Restart')}
+                >
+                  Restart
+                </Button>
+              </div>
+            )}
+
+            {/* NOT ATTEMPTED → START */}
+            {!isCompleted && !isInProgress && (
+              <Button
+                className="px-10 h-11 rounded-[8px] 
+                           bg-[#FF5635] text-white 
+                           hover:bg-black transition cursor-pointer"
+                onClick={() => handleExam(exam, 'start')}
+              >
+                Start
+              </Button>
+            )}
+          </>
         )}
       </div>
     </div>
   );
 };
+
 
 // perticuler Exam section
 export default function MergedExamPage() {
@@ -482,7 +470,8 @@ export default function MergedExamPage() {
 
                       {/* Lock icon in top right */}
                       <div className="absolute top-0 right-0">
-                        <LockIcon className="w-5 h-5 text-gray-500" />
+                        <Image src={LOCK2} alt="lock" />
+
                       </div>
                     </div>
 
@@ -496,16 +485,7 @@ export default function MergedExamPage() {
                       Coming Soon
                     </p>
 
-                    {/* Locked button */}
-                    <div className="mt-auto w-fit">
-                      <Button
-                        disabled
-                        className="font-poppins bg-[#E3E5E9] text-[#ADB5CC] cursor-not-allowed rounded-[8px] md:w-fit px-16
-                        h-10 sm:h-11"
-                      >
-                        Start
-                      </Button>
-                    </div>
+
                   </div>
                 ))}
             </div>
