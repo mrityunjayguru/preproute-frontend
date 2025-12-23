@@ -76,7 +76,7 @@
   --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
   --sidebar-border: oklch(0.928 0.006 264.531);
   --sidebar-ring: oklch(0.707 0.022 261.325);
-    --font-family-base: var(--font-artegra);
+  --font-family-base: var(--font-artegra);
 }
 
 .dark {
@@ -117,6 +117,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -135,13 +136,15 @@
   font-family: var(--font-artegra), sans-serif;
 }
 
-.text5858{
+.text5858 {
   color: #585859;
 }
-.textorange{
+
+.textorange {
   color: #FF5635;
 }
-.textblack{
+
+.textblack {
   color: #000000;
 }
 
@@ -149,7 +152,9 @@
   border-collapse: collapse !important;
   width: 100% !important;
 }
-.editor td, .editor th {
+
+.editor td,
+.editor th {
   border: 1px solid #aaa !important;
   padding: 6px !important;
 }
@@ -163,105 +168,117 @@
   opacity: 0;
 }
 
- .toolbar {
-          display: flex;
-          gap: 6px;
-          border: 1px solid #ddd;
-          background: #f9f9f9;
-          padding: 6px;
-          border-radius: 6px;
-          margin-bottom: 8px;
-        }
-        .toolbar button {
-          background: #fff;
-          border: 1px solid #ccc;
-          padding: 4px 8px;
-          border-radius: 4px;
-          cursor: pointer;
-        }
-        .toolbar button:hover {
-          background: #0070f3;
-          color: white;
-        }
-        .editor {
-          border: 1px solid #ccc;
-          min-height: 150px;
-          padding: 8px;
-          border-radius: 6px;
-          background: #fff;
-          overflow-x: auto;
-        }
-        .data-table {
-          border-collapse: collapse;
-          margin: 8px 0;
-          width: 100%;
-          border: 1px solid #aaa;
-          table-layout: fixed;
-        }
-        .data-table td,
-        .data-table th {
-          border: 1px solid #aaa;
-          padding: 6px;
-          min-width: 40px;
-          word-break: break-word;
-        }
-        .preview-box {
-          background: #fafafa;
-          padding: 10px;
-          border-radius: 6px;
-          border: 1px solid #ddd;
-          margin-top: 12px;
-        }
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 2000;
-        }
-        .modal {
-          background: white;
-          padding: 20px;
-          border-radius: 8px;
-          width: 400px;
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-        .modal textarea {
-          width: 100%;
-          padding: 6px;
-          margin-top: 6px;
-          border-radius: 4px;
-          border: 1px solid #ccc;
-        }
-        .modal button {
-          background: #0070f3;
-          color: white;
-          padding: 6px 10px;
-          border: none;
-          border-radius: 4px;
-          margin-top: 10px;
-          cursor: pointer;
-        }
-        .table-toolbar {
-          background: #fff;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-          padding: 4px;
-          display: flex;
-          gap: 4px;
-          z-index: 1000;
-        }
-        .table-toolbar button {
-          padding: 4px 6px;
-          cursor: pointer;
-        }
+.toolbar {
+  display: flex;
+  gap: 6px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  padding: 6px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
 
-        .image-wrapper:hover .resize-handle {
+.toolbar button {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.toolbar button:hover {
+  background: #0070f3;
+  color: white;
+}
+
+.editor {
+  border: 1px solid #ccc;
+  min-height: 150px;
+  padding: 8px;
+  border-radius: 6px;
+  background: #fff;
+  overflow-x: auto;
+}
+
+.data-table {
+  border-collapse: collapse;
+  margin: 8px 0;
+  width: 100%;
+  border: 1px solid #aaa;
+  table-layout: fixed;
+}
+
+.data-table td,
+.data-table th {
+  border: 1px solid #aaa;
+  padding: 6px;
+  min-width: 40px;
+  word-break: break-word;
+}
+
+.preview-box {
+  background: #fafafa;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  margin-top: 12px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal textarea {
+  width: 100%;
+  padding: 6px;
+  margin-top: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.modal button {
+  background: #0070f3;
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.table-toolbar {
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px;
+  display: flex;
+  gap: 4px;
+  z-index: 1000;
+}
+
+.table-toolbar button {
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+.image-wrapper:hover .resize-handle {
   background: #0056b3;
 }
 
@@ -303,31 +320,33 @@ div[class*="badge"] {
 }
 
 .nextjs-toast {
-    display: none!important;
-    position: fixed!important;
-    z-index: var(--top-z-index);
-    max-width: 420px!important;
-    box-shadow: 0px 16px 32px rgba(0, 0, 0, 0.25)!important;
+  display: none !important;
+  position: fixed !important;
+  z-index: var(--top-z-index);
+  max-width: 420px !important;
+  box-shadow: 0px 16px 32px rgba(0, 0, 0, 0.25) !important;
 }
 
-.css-1jqq78o-placeholder
-{
+.css-1jqq78o-placeholder {
   color: #000000;
   font-weight: 400;
 }
 
-.stickypositios{
-   position: sticky;
+.stickypositios {
+  position: sticky;
   top: 0;
   background: white;
   z-index: 10;
 }
 
 .icon-bar {
-  position: static;         /* let it sit naturally inside footer */
+  position: static;
+  /* let it sit naturally inside footer */
   display: flex;
-  flex-direction: row;      /* horizontal icons */
-  gap: 12px;                /* clean spacing */
+  flex-direction: row;
+  /* horizontal icons */
+  gap: 12px;
+  /* clean spacing */
   padding: 0;
   margin: 0;
 }
@@ -348,7 +367,7 @@ div[class*="badge"] {
   font-size: 25px;
   text-decoration: none;
   transition: 0.3s ease;
-  box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .icon-bar a:hover {
@@ -382,7 +401,7 @@ div[class*="badge"] {
   color: white;
 }
 
- .whatsapp {
+.whatsapp {
   background: #25D366;
   color: white;
 }
@@ -392,3 +411,19 @@ div[class*="badge"] {
   color: white;
 }
 
+/* Support Page Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}

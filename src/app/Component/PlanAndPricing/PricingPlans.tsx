@@ -152,43 +152,28 @@ export default function PricingPlans() {
                 /* -------- COMING SOON -------- */
                 if (ui.comingSoon) {
                   return (
-                    <motion.div
+                    <div
                       key={index}
-                      initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: index * 0.2 }}
                       className="bg-gray-100 rounded-[8px] flex flex-col min-h-[400px] sm:min-h-[450px] md:min-h-[500px]"
                     >
-                      <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4, delay: 0.2 }}
+                      <div
                         className="text-center p-4 sm:p-6 font-poppins"
                       >
                         <h3 className="text-lg sm:text-xl font-semibold text-gray-500">
                           {ui.title}
                         </h3>
-                        <motion.p
-                          initial={{ opacity: 0 }}
-                          whileInView={{ opacity: 1 }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.4, delay: 0.3 }}
+                        <p
+
                           className="text-xs sm:text-sm text-gray-500 mt-1"
                         >
                           Coming Soon
-                        </motion.p>
-                      </motion.div>
+                        </p>
+                      </div>
 
                       <div className="border-t border-gray-400 mx-4 sm:mx-6 my-3 sm:my-4" />
 
                       <div className="flex-1 flex items-center justify-center text-gray-400 relative px-4 sm:px-6 py-6 sm:py-8">
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 0.5, delay: 0.4 }}
+                        <div
                           className="relative w-full h-full max-w-[150px] sm:max-w-[180px] md:max-w-[200px] max-h-[150px] sm:max-h-[180px] md:max-h-[200px]"
                         >
                           <Image
@@ -197,14 +182,11 @@ export default function PricingPlans() {
                             fill
                             className="object-contain"
                           />
-                        </motion.div>
+                        </div>
                       </div>
 
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.4, delay: 0.5 }}
+                      <div
+
                         className="px-4 sm:px-6 pb-4 sm:pb-6"
                       >
                         <button
@@ -213,8 +195,8 @@ export default function PricingPlans() {
                         >
                           Coming Soon
                         </button>
-                      </motion.div>
-                    </motion.div>
+                      </div>
+                    </div>
                   );
                 }
 
@@ -223,12 +205,9 @@ export default function PricingPlans() {
                   index === 0 ? CORE_FEATURES : FULL_ACCESS_FEATURES;
 
                 return (
-                  <motion.div
+                  <div
                     key={index}
-                    initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.2 }}
+
                     className={`rounded-[8px]
                          border flex flex-col h-full transition-all
                         ${ui.isPopular
@@ -289,7 +268,7 @@ export default function PricingPlans() {
                         </button>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
@@ -298,19 +277,11 @@ export default function PricingPlans() {
           {/* SPACER */}
           <div className="h-0 md:h-[420px] lg:h-[520px]" />
         </div>
-        <motion.section
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
+        <section
           className="bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-8 sm:mt-12 md:mt-20 py-4 sm:py-5 lg:py-6 xl:py-8"
         >
           <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+            <div
               className="flex flex-col gap-2 items-center md:items-start text-center md:text-left"
             >
               {/* Logo */}
@@ -322,19 +293,15 @@ export default function PricingPlans() {
                   priority
                 />
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+            <div
               className="flex flex-col items-center md:items-start gap-2 sm:gap-3"
             >
               <SocialMedia />
-            </motion.div>
+            </div>
           </div>
-        </motion.section>
+        </section>
       </section>
     </>
   );

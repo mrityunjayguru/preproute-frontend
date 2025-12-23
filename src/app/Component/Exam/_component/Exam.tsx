@@ -494,19 +494,14 @@ export default function MergedExamPage() {
       </div>
 
       {/* Footer Section */}
-      <motion.section
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.6 }}
+      <section
         className=" bg-[#FF5635] text-white px-6 sm:px-10 lg:px-12 xl:px-16 mt-16 py-2 sm:py-5 lg:py-6 xl:py-8"
       >
         <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-8 px-6 sm:px-8 md:px-12 lg:px-28">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+          <div
+
+
+
             className="flex flex-col gap-2 items-center md:items-start text-center md:text-left"
           >
             {/* Logo */}
@@ -518,19 +513,18 @@ export default function MergedExamPage() {
                 priority
               />
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
+          <div
+
+
+
             className="flex flex-col items-center md:items-start gap-3"
           >
             <SocialMedia />
-          </motion.div>
+          </div>
         </div>
-      </motion.section>
+      </section>
     </div>
   );
 }

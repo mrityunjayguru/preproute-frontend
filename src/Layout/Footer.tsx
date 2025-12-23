@@ -4,6 +4,7 @@ import Popup from "@/app/Component/ManageExam/Component/Report";
 import { use, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export const Footer = () => {
   const dispatch = useDispatch();
@@ -13,7 +14,7 @@ export const Footer = () => {
     const payload: any = {
       title: val,
     };
-    await dispatch(createReport(payload));
+    await dispatch(createReport(payload) as any);
     setShowPopup(false);
   };
   const handlenaviagte = (route: any) => {
@@ -38,26 +39,26 @@ export const Footer = () => {
             All rights reserved.
           </div>
           <div className="flex space-x-4">
-            <a
-              onClick={() => handlenaviagte("Privacy")}
+            <Link
+              href={"/Privacy"}
               className="hover:underline cursor-pointer"
             >
               Privacy
-            </a>
+            </Link>
             {/* <a href="#" className="hover:underline">Refund Policy</a> */}
-            <a
-              onClick={() => handlenaviagte("Term&condition")}
+            <Link
+              href="/Term&condition"
               className="hover:underline cursor-pointer"
             >
               Terms of Use
-            </a>
-            <a
-              onClick={() => setShowPopup(true)}
-              href="#"
+            </Link>
+            <Link
+              // onClick={() => setShowPopup(true)}
+              href="/support"
               className="hover:underline"
             >
               Support
-            </a>
+            </Link>
           </div>
         </div>
       </footer>
