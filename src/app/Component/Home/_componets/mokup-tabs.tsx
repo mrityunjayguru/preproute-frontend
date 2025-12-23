@@ -52,7 +52,7 @@ const FEATURES = [
 const MokupTabs = (props: Props) => {
   const [value, setValue] = React.useState("exam");
   return (
-    <section className="w-full py-10 overflow-x-hidden">
+    <section className="w-full py-10">
       <Tabs value={value} onValueChange={setValue} className="w-full">
         {/* Desktop/Laptop Tabs */}
 

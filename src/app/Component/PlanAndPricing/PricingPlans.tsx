@@ -1,31 +1,76 @@
 "use client";
-import Image from "next/image";
 
 import React, { useEffect } from "react";
-import { Check, Clock } from "lucide-react";
+import Script from "next/script";
+import { Check, Dot } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+
 import { AppDispatch } from "@/store/store";
 import { createOrder } from "@/api/razorpay";
-import Script from "next/script";
-import { useRouter } from "next/navigation";
-import supper from "../../../assets/images/supper.png"; 
 import { getPlanandPricing } from "@/api/Plan&Pricing";
+import Image from "next/image";
+
+import CULT from "@/assets/vectors/pricing/CULT.svg";
+import SocialMedia from "../Home/_componets/social-media";
+
+import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
+
+/* ---------------- UI CONFIG ARRAY ---------------- */
+const PRICING_UI = [
+  {
+    isPopular: false,
+    comingSoon: false,
+    subtitle: "CORE",
+  },
+  {
+    isPopular: true,
+    comingSoon: false,
+    subtitle: "Full Access",
+    badge: "Popular Plan",
+  },
+  {
+    isPopular: false,
+    comingSoon: true,
+    title: "CUET",
+  },
+];
+
+const CORE_FEATURES = [
+  "Selected Colleges Access",
+  "Past Year Papers",
+  "Sectional Tests – QA, LRDI, VARC",
+  "Topic-wise Tests with Daily Practice",
+  "Level of Difficulty based Questions",
+  "Community Access",
+  "Bookmark Questions",
+  "Free Interview Preparation",
+];
+
+const FULL_ACCESS_FEATURES = [
+  "Full Access",
+  "Past Year Papers",
+  "Sectional Tests – QA, LRDI, VARC",
+  "Topic-wise Tests with Daily Practice",
+  "Level of Difficulty based Questions",
+  "Community Access",
+  "Bookmark Questions",
+  "Free Interview Preparation",
+];
 
 export default function PricingPlans() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
   const user = useSelector((state: any) => state?.Auth?.loginUser);
-
   const palnAndpricing = useSelector(
     (state: any) => state?.palnAndpricing?.plandetail || []
   );
 
-  // Fetch plan pricing
+  /* ---------------- FETCH DATA ---------------- */
   const getData = async () => {
-    const payload:any={
-
-    }
+    const payload: any = {};
     await dispatch(getPlanandPricing(payload));
   };
 
@@ -33,13 +78,14 @@ export default function PricingPlans() {
     getData();
   }, []);
 
-  // Razorpay Payment Handler
+  /* ---------------- PAYMENT HANDLER ---------------- */
   const handleCreatePayment = async (plan: any) => {
-    let token=localStorage.getItem("token");
-    if(!token){
+    let token = localStorage.getItem("token");
+    if (!token) {
       router.push("/Auth/signin");
-      return
+      return;
     }
+
     try {
       const payload: any = {
         amount: Number(plan.price) * 100,
@@ -49,24 +95,18 @@ export default function PricingPlans() {
       };
 
       const response: any = await dispatch(createOrder(payload));
-
-      if (!response?.payload?.success) {
-        alert("Unable to create order. Please try again.");
-        return;
-      }
+      if (!response?.payload?.success) return alert("Unable to create order.");
 
       const { order } = response.payload;
 
-      const options = {
+      const rzp = new (window as any).Razorpay({
         key: "rzp_test_RpR02SnjfQgbaE",
         amount: order.amount,
         currency: order.currency,
         name: "PreeRoute",
         description: plan.title,
         order_id: order.id,
-        handler: function () {
-          router.push("/Profile");
-        },
+        handler: () => router.push("/Profile"),
         prefill: {
           name: user?.username,
           email: user?.email,
@@ -76,131 +116,226 @@ export default function PricingPlans() {
           userId: user?._id,
           planId: plan._id,
         },
-        theme: {
-          color: "#ff5635",
-        },
-      };
+        theme: { color: "#ff5635" },
+      });
 
-      const rzp = new (window as any).Razorpay(options);
       rzp.open();
-    } catch (error) {
-      console.error("Payment Error:", error);
-      alert("Something went wrong with payment setup.");
+    } catch {
+      alert("Payment error");
     }
   };
 
+  /* ---------------- UI ---------------- */
   return (
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
 
-      <div className="min-h-screen bg-[#fff] py-12 px-4 flex flex-col items-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-black mb-8 text-center">
-          Pricing & Plans
-        </h2>
-
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-2 gap-10 max-w-6xl w-full">
-
-          {/* Loop Cards */}
-          {palnAndpricing.map((plan: any, index: number) => (
-            <div
-              key={index}
-              className="bg-white rounded-2xl shadow-lg border border-gray-300 overflow-hidden"
-            >
-              {/* Header */}
-              <div className="bg-[#FF5635] text-white px-6 py-5 relative flex justify-center items-center">
-                <h2 className="text-2xl font-bold">{plan.title}</h2>
-{/* {index===1 ?( <Image
-                  src={supper}
-                  alt="Best Seller"
-                  className="absolute right-5 w-20 h-20 object-contain"
-                />):(null)} */}
-               
-              </div>
-
-              {/* Exam Table */}
-              <div className="p-6">
-                <table className="w-full text-[15px]">
-                  <thead>
-                    <tr className="bg-gray-100 text-[#FF5635] font-semibold">
-                      <th className="p-3 text-left">Exam</th>
-                      <th className="p-3 text-right">Mocks</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    {plan.examDetails?.map((item: any, i: number) => (
-                      <tr key={i} className="border-b">
-                        <td className="p-3 text-[#FF5635] font-bold">
-                          {item.examname}
-                        </td>
-
-                        <td className="p-3 text-right text-[#FF5635] font-bold">
-                          {item.Mocks}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-
-                {/* Features */}
-                <ul className="mt-4 space-y-2 text-black">
-                  {[
-                    "Past Year Papers",
-                    "Sectional Tests - QA, LRDI, VARC",
-                    "Topic-wise Tests with Daily Practice",
-                    "Level of Difficulty based Questions",
-                    "Community Access",
-                    "Bookmark Questions",
-                    "Free Interview Preparation",
-                  ].map((feature, idx) => (
-                    <li key={idx} className="flex items-center gap-2">
-                      <Check className="text-[#FF5635] w-5 h-5" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Price */}
-                <div className="mt-6 bg-gray-100 p-4 rounded-xl text-center">
-                  <p className="text-lg font-semibold text-black">
-                    <span className="text-[#FF5635]">Price:</span> ₹{plan.price} 
-                  </p>
-                </div>
-
-                {/* Button */}
-                <div className="text-center mt-5">
-                  <button
-                    onClick={() => handleCreatePayment(plan)}
-                    className="px-6 py-2 bg-[#FF5635] hover:bg-[#e14c2f] text-white rounded-lg font-semibold transition"
-                  >
-                    Enroll Now
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {/* Coming Soon Card */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-300">
-            <div className="bg-[#FF5635] text-white text-center py-5 rounded-t-2xl">
-              <h3 className="text-2xl font-semibold">CUET</h3>
-            </div>
-
-            <div className="p-8 flex flex-col justify-center items-center text-center space-y-4">
-              <Clock className="text-[#FF5635] w-12 h-12" />
-              <h4 className="text-2xl font-semibold text-black">Coming Soon</h4>
-              {/* <p className="text-gray-600 max-w-md">
-                CUET preparation plan with full mock tests and daily practice
-                features will be launching soon.
-              </p> */}
-              <button className="px-6 py-2 bg-[#FF5635] text-white rounded-lg font-semibold mt-3 opacity-70 cursor-not-allowed">
-                Coming Soon
-              </button>
+      <section className="w-full bg-white">
+        <div className="relative mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
+          {/* HEADER */}
+          <div className="bg-[#F4FBFF]  rounded-[8px] py-8 sm:py-12 md:py-16 text-center">
+            <div className="flex flex-col justify-items-start">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium font-poppins text-[#FF5635] px-2">
+                Plans and Pricing
+              </h2>
+              <p className="text-gray-600 text-xs sm:text-sm md:text-base max-w-2xl mx-auto text-dm-sans mt-2 sm:mt-3 px-4">
+                Practice mock exams from multiple colleges and prepare with
+                confidence.
+              </p>
             </div>
           </div>
+
+          {/* CARDS */}
+          <div className="relative md:absolute md:left-1/2 md:-translate-x-1/2 md:top-[160px] lg:top-[180px] w-full max-w-6xl mx-auto mt-8 md:mt-0">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-16 px-2 sm:px-4">
+              {PRICING_UI.map((ui, index) => {
+                /* -------- COMING SOON -------- */
+                if (ui.comingSoon) {
+                  return (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.2 }}
+                      className="bg-gray-100 rounded-[8px] flex flex-col min-h-[400px] sm:min-h-[450px] md:min-h-[500px]"
+                    >
+                      <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: 0.2 }}
+                        className="text-center p-4 sm:p-6 font-poppins"
+                      >
+                        <h3 className="text-lg sm:text-xl font-semibold text-gray-500">
+                          {ui.title}
+                        </h3>
+                        <motion.p
+                          initial={{ opacity: 0 }}
+                          whileInView={{ opacity: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.4, delay: 0.3 }}
+                          className="text-xs sm:text-sm text-gray-500 mt-1"
+                        >
+                          Coming Soon
+                        </motion.p>
+                      </motion.div>
+
+                      <div className="border-t border-gray-400 mx-4 sm:mx-6 my-3 sm:my-4" />
+
+                      <div className="flex-1 flex items-center justify-center text-gray-400 relative px-4 sm:px-6 py-6 sm:py-8">
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 0.5, delay: 0.4 }}
+                          className="relative w-full h-full max-w-[150px] sm:max-w-[180px] md:max-w-[200px] max-h-[150px] sm:max-h-[180px] md:max-h-[200px]"
+                        >
+                          <Image
+                            src={CULT}
+                            alt="cult"
+                            fill
+                            className="object-contain"
+                          />
+                        </motion.div>
+                      </div>
+
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.4, delay: 0.5 }}
+                        className="px-4 sm:px-6 pb-4 sm:pb-6"
+                      >
+                        <button
+                          disabled
+                          className="w-full py-3 sm:py-3.5 rounded-[8px] bg-gray-400 text-white font-semibold cursor-not-allowed text-sm sm:text-base"
+                        >
+                          Coming Soon
+                        </button>
+                      </motion.div>
+                    </motion.div>
+                  );
+                }
+
+                const plan = palnAndpricing[index];
+                const features =
+                  index === 0 ? CORE_FEATURES : FULL_ACCESS_FEATURES;
+
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.2 }}
+                    className={`rounded-[8px]
+                         border flex flex-col h-full transition-all
+                        ${ui.isPopular
+                        ? "bg-gradient-to-t from-[#FFECDF] to-white border-[#FFECDF] md:scale-110 z-10"
+                        : "bg-gradient-to-t from-[#F0F9FF] to-white border-[#F0F9FF]"
+                      }`}
+                  >
+                    <div className="relative flex flex-col h-full">
+                      {/* BADGE */}
+                      {ui.isPopular && (
+                        <div className="w-full px-4 sm:px-5 pt-3 sm:pt-4">
+                          <span className="flex justify-center items-center px-3 sm:px-4 py-2 sm:py-3 bg-[#FFECDF] text-[#585859] text-xs font-medium font-dm-sans rounded-[8px] w-full">
+                            {ui.badge}
+                          </span>
+                        </div>
+                      )}
+
+                      {/* HEADER */}
+                      <div className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 flex justify-between items-start font-poppins">
+                        <div className="flex flex-col">
+                          <h3 className="text-base sm:text-lg font-medium text-[#FF5635]">
+                            {plan?.title}
+                          </h3>
+                          <p className="text-xs sm:text-sm font-medium text-[#ff5635] mt-1">
+                            {ui.subtitle}
+                          </p>
+                        </div>
+                        <div className="flex flex-col items-end text-right">
+                          <p className="text-xs sm:text-sm text-gray-500">Price :</p>
+                          <p className="text-lg sm:text-xl font-normal text-[#FF5635]">
+                            ₹{plan?.price}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-3 sm:my-4" />
+
+                      {/* FEATURES */}
+                      <ul className="px-4 sm:px-6 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
+                        {features.map((feature, i) => (
+                          <li
+                            key={i}
+                            className="flex items-start gap-1.5 sm:gap-2 leading-relaxed"
+                          >
+                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+                            <span className="flex-1">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-4 sm:my-6" />
+                      {/* BUTTON */}
+                      <div className="w-full px-4 sm:px-6 pb-4 sm:pb-6 mt-auto flex justify-center items-center">
+                        <button
+                          onClick={() => handleCreatePayment(plan)}
+                          className="w-full sm:w-fit py-3 sm:py-3.5 cursor-pointer px-8 sm:px-16 rounded-[8px] bg-[#FF5635] hover:bg-[#e14c2f] text-white font-poppins text-sm sm:text-base transition-colors"
+                        >
+                          Get Started
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* SPACER */}
+          <div className="h-0 md:h-[420px] lg:h-[520px]" />
         </div>
-      </div>
+        <motion.section
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-8 sm:mt-12 md:mt-20 py-4 sm:py-5 lg:py-6 xl:py-8"
+        >
+          <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex flex-col gap-2 items-center md:items-start text-center md:text-left"
+            >
+              {/* Logo */}
+              <div className="w-[100px] sm:w-[130px] md:w-[160px] lg:w-[200px]">
+                <Image
+                  src={FOOTERLOGO}
+                  alt="preproute-logo"
+                  className="w-full h-auto object-contain"
+                  priority
+                />
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex flex-col items-center md:items-start gap-2 sm:gap-3"
+            >
+              <SocialMedia />
+            </motion.div>
+          </div>
+        </motion.section>
+      </section>
     </>
   );
 }

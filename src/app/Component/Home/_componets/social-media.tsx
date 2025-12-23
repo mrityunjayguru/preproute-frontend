@@ -1,6 +1,12 @@
 "use client";
 
-import { Instagram, Youtube, Linkedin, Send } from "lucide-react";
+import { motion } from "framer-motion";
+
+import Instagram from "@/assets/vectors/footer/instagram.svg";
+import Youtube from "@/assets/vectors/footer/youtube.svg";
+import Linkedin from "@/assets/vectors/footer/linkedin.svg";
+import Telegram from "@/assets/vectors/footer/telegram.svg";
+import Image from "next/image";
 
 const socials = [
   {
@@ -21,35 +27,59 @@ const socials = [
   {
     label: "Telegram",
     href: "https://t.me/thepreproute",
-    icon: Send,
+    icon: Telegram,
   },
 ];
 
-function  SocialMedia() {
+const containerVariants : any = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants :any = {
+  hidden: { opacity: 0, y: 20, scale: 0.5 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 260,
+      damping: 20,
+    },
+  },
+};
+
+function SocialMedia() {
   return (
-    <div className="flex items-center gap-3">
+    <motion.div
+      className="flex items-center gap-3"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {socials.map(({ label, href, icon: Icon }) => (
-        <a
+        <motion.a
           key={label}
           href={href}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={label}
-          className="
-             rounded-full p-3
-            border-2 border-[#FF5635]
-            bg-[#ffffff]
-            flex items-center justify-center
-            text-[#FF5635]
-            transition-all
-            hover:bg-[#ffff] hover:text-[#FF5635]
-            focus:outline-none focus:ring-2 focus:ring-white/60
-          "
+          variants={itemVariants}
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          whileTap={{ scale: 0.9 }}
+          className="relative group"
         >
-          <Icon size={18} className="sm:w-5 sm:h-5 " />
-        </a>
+          <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <Image src={Icon} alt={label} width={40} height={40} className="relative z-10 drop-shadow-sm" />
+        </motion.a>
       ))}
-    </div>
+    </motion.div>
   );
 }
 

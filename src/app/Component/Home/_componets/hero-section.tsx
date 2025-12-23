@@ -21,7 +21,6 @@ const HeroSection = ({ logoSrc }: { logoSrc: any }) => {
 
   const handleIPmatExam = () => {
     let mockExam = examTypeData.find((item: any) => item.examType === "Mocks");
-
     dispatch(handleSelectedExamType(mockExam));
     const payload: any = null;
     dispatch(resetQuestionByExamID(payload));

@@ -130,7 +130,7 @@ const Signin = () => {
                 {/* SUBMIT */}
                 <Button
                   type="submit"
-                  className="w-full h-11 rounded-[4px] bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins shadow-sm shadow-[#FF5635]/20 transition-all font-medium"
+                  className="w-full cursor-pointer h-11 rounded-[4px] bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins shadow-sm shadow-[#FF5635]/20 transition-all font-medium"
                 >
                   Sign In
                 </Button>
