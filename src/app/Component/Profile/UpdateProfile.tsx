@@ -4,9 +4,16 @@ import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { updateUserInfo } from "@/api/Users";
 import { useRouter } from "next/navigation";
 import { FaRegUserCircle } from "react-icons/fa";
+import { Plus } from "lucide-react";
+import Image from "next/image";
+import USER from "@/assets/vectors/user-profile.svg";
+import SocialMedia from "../Home/_componets/social-media";
+import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 
 export default function UpdateProfile() {
   const dispatch = useDispatch<AppDispatch>();
@@ -15,9 +22,18 @@ export default function UpdateProfile() {
 
   const user = useSelector((state: any) => state?.Auth?.loginUser);
 
+  // Split username into first and last name if available
+  const nameParts = user?.username?.split(" ") || [];
+  const firstName = nameParts[0] || "";
+  const lastName = nameParts.slice(1).join(" ") || "";
+
   const [formData, setFormData] = useState({
-    username: user?.username || "",
+    firstName: firstName,
+    lastName: lastName,
+    nickname: user?.nickname || "",
+    email: user?.email || "",
     phone: user?.phone || "",
+    parentPhone: user?.parentPhone || "",
     password: "",
   });
 
@@ -50,7 +66,10 @@ export default function UpdateProfile() {
       setLoading(true);
 
       const payload: any = {
-        ...formData,
+        username: `${formData.firstName} ${formData.lastName}`.trim(),
+        phone: formData.phone,
+        nickname: formData.nickname,
+        parentPhone: formData.parentPhone,
         _id: user?._id,
       };
 
@@ -69,118 +88,218 @@ export default function UpdateProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 flex items-center justify-center px-4 py-10">
-      <div className="bg-white/80 backdrop-blur-xl border border-orange-100 shadow-2xl rounded-3xl p-10 max-w-xl w-full">
+    <div className="min-h-screen  flex items-center justify-between flex-col ">
+      <div></div>
+      <div className="bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] rounded-[8px] px-8 py-16 max-w-4xl w-full">
+        <div className="flex gap-8">
+          {/* Left Side - Profile Picture */}
+          <div className="flex-shrink-0">
+            <div className="relative">
+              <div
+                className="relative w-32 h-32 rounded-[8px]  overflow-hidden bg-gray-200 cursor-pointer group"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {imagePreview ? (
+                  <img
+                    src={imagePreview}
+                    className="w-full h-full object-cover"
+                    alt="profile"
+                  />
+                ) : (
+                  <>
+                    <Image
+                      src={USER}
+                      alt="user"
+                      className="w-16 h-16 p-8 text-gray-400"
+                    />
+                    <span className="absolute -right-1 w-5 h-5 bg-[#FF5635] text-white  rounded-full flex items-center justify-center">
+                      <Plus size={12} />
+                    </span>
+                  </>
+                )}
+              </div>
 
-        {/* Heading */}
-        <h1 className="text-3xl font-semibold text-center text-gray-800 mb-8">
-          Update Profile
-        </h1>
+              {/* Orange circle with plus sign */}
+              {/* <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute -right-4 bottom-2 w-5 h-5 bg-[#FF5635] text-white  rounded-full flex items-center justify-center"
+              >
+                <Plus className="w-5 h-5" />
+              </button> */}
 
-        {/* Profile Image */}
-        <div className="flex flex-col items-center mb-8">
-          <div
-            className="relative cursor-pointer group"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            {imagePreview ? (
-              <img
-                src={imagePreview}
-                className="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md"
-                alt="profile"
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageChange}
               />
-            ) : (
-              <FaRegUserCircle className="w-28 h-28 text-gray-400" />
-            )}
-
-            <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
-              <span className="text-white text-sm">Change</span>
             </div>
           </div>
 
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageChange}
-          />
-        </div>
+          {/* Right Side - Form Fields */}
+          <div className="flex-1">
+            <div className="grid grid-cols-2 gap-6">
+              {/* Left Column */}
+              <div className="space-y-5">
+                {/* First Name */}
+                <div>
+                  <Label
+                    htmlFor="firstName"
+                    className="text-sm font-normal font-poppins  text-gray-700 mb-1 block"
+                  >
+                    First Name
+                  </Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleInput}
+                    className="w-full rounded-[2px] font-dm-sans"
+                    placeholder="First Name"
+                  />
+                </div>
 
-        {/* Form */}
-        <div className="space-y-5">
+                {/* Email */}
+                <div>
+                  <Label
+                    htmlFor="email"
+                    className="text-sm font-normal font-poppins text-gray-700 mb-1 block"
+                  >
+                    Email
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    disabled
+                    className="w-full bg-gray-100 rounded-[2px] font-dm-sans"
+                  />
+                </div>
 
-          {/* Full Name */}
-          <div>
-            <label className="text-sm text-gray-500">Full Name</label>
-            <input
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleInput}
-              className="mt-1 w-full px-4 py-3 border rounded-xl  shadow-sm focus:ring-orange-400 focus:border-orange-400"
-              placeholder="Enter your name"
-            />
+                {/* Phone */}
+                <div>
+                  <Label
+                    htmlFor="phone"
+                    className="text-sm font-normal font-poppins text-gray-700 mb-1 block"
+                  >
+                    Phone
+                  </Label>
+                  <Input
+                    id="phone"
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInput}
+                    className="w-full rounded-[2px] font-dm-sans"
+                    placeholder="Phone"
+                  />
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div className="space-y-5">
+                {/* Last Name */}
+                <div>
+                  <Label
+                    htmlFor="lastName"
+                    className="text-sm font-normal font-poppins text-gray-700 mb-1 block"
+                  >
+                    Last Name
+                  </Label>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInput}
+                    className="w-full rounded-[2px] font-dm-sans"
+                    placeholder="Last Name"
+                  />
+                </div>
+
+                {/* Nickname */}
+                <div>
+                  <Label
+                    htmlFor="nickname"
+                    className="text-sm font-normal font-poppins text-gray-700 mb-1 block"
+                  >
+                    Nickname
+                  </Label>
+                  <Input
+                    id="nickname"
+                    type="text"
+                    name="nickname"
+                    value={formData.nickname}
+                    onChange={handleInput}
+                    className="w-full rounded-[2px] font-dm-sans"
+                    placeholder="Nickname"
+                  />
+                </div>
+
+                {/* Parent Phone */}
+                <div>
+                  <Label
+                    htmlFor="parentPhone"
+                    className="text-sm font-normal font-poppins text-gray-700 mb-1 block"
+                  >
+                    Parent Phone
+                  </Label>
+                  <Input
+                    id="parentPhone"
+                    type="text"
+                    name="parentPhone"
+                    value={formData.parentPhone}
+                    onChange={handleInput}
+                    className="w-full rounded-[2px] font-dm-sans"
+                    placeholder="Parent Phone"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="mt-8 flex items-center gap-4 justify-center">
+              <Button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="bg-orange-500 hover:bg-orange-600 cursor-pointer font-normal font-poppins text-white px-16 py-2 rounded-[2px]"
+              >
+                {loading ? "Saving..." : "Save Changes"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => router.push("/Profile")}
+                className=" text-orange-500 hover:bg-white cursor-pointer font-normal font-poppins  px-16 py-2 rounded-[2px] "
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
-
-          {/* Email (Read Only) */}
-          <div>
-            <label className="text-sm text-gray-500">Email</label>
-            <input
-              type="text"
-              value={user?.email}
-              disabled
-              className="mt-1 w-full px-4 py-3 border rounded-xl bg-gray-100 text-gray-500 cursor-not-allowed"
-            />
-          </div>
-
-          {/* Phone */}
-          <div>
-            <label className="text-sm text-gray-500">Phone</label>
-            <input
-              type="text"
-              name="phone"
-              disabled
-              value={formData.phone}
-              onChange={handleInput}
-              className="mt-1 w-full px-4 py-3 border rounded-xl bg-gray-100 shadow-sm focus:ring-orange-400 focus:border-orange-400"
-              placeholder="Enter phone number"
-            />
-          </div>
-
-          {/* Password */}
-          {/* <div>
-            <label className="text-sm text-gray-500">New Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInput}
-              className="mt-1 w-full px-4 py-3 border rounded-xl bg-white shadow-sm focus:ring-orange-400 focus:border-orange-400"
-              placeholder="Enter new password"
-            />
-          </div> */}
-        </div>
-
-        {/* Buttons */}
-        <div className="mt-8 flex justify-center gap-6">
-          <Button
-            variant="outline"
-            className="border-orange-500 text-orange-600 px-6 py-2 rounded-full"
-            onClick={() => router.push("/Profile")}
-          >
-            Cancel
-          </Button>
-
-          <Button
-            className="bg-[#FF5635] hover:bg-[#e34d2e] text-white px-6 py-2 rounded-full"
-            onClick={handleSubmit}
-            disabled={loading}
-          >
-            {loading ? "Saving..." : "Save Changes"}
-          </Button>
         </div>
       </div>
+      <section className="w-full bg-[#FF5635] text-white px-6 sm:px-10 lg:px-12 xl:px-16 mt-16 py-2 sm:py-5 lg:py-6 xl:py-8">
+        <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-8 px-6 sm:px-8 md:px-12 lg:px-28">
+          <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
+            {/* Logo */}
+            <div className="w-[130px] sm:w-[160px] lg:w-[200px]">
+              <Image
+                src={FOOTERLOGO}
+                alt="preproute-logo"
+                className="w-full h-auto object-contain"
+                priority
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center md:items-start gap-3">
+            <SocialMedia />
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
