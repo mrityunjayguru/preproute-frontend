@@ -28,7 +28,6 @@ import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import LOCK from "@/assets/vectors/lock.svg";
 import LOCK2 from "@/assets/vectors/lock-2.svg";
 
-
 const MockExamCard = ({ exam, handleExam, index }: any) => {
   const examById = useSelector((s: any) => s.exam?.examById) || [];
   const examlength: any = examById.length;
@@ -54,11 +53,9 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
     selectedExamType?.examType === "Past Year"
   );
 
-  const isInProgress =
-    exam?.userSummary?.target === 0 && !isAttempted;
+  const isInProgress = exam?.userSummary?.target === 0 && !isAttempted;
 
-  const isCompleted =
-    isAttempted && exam?.userSummary?.target === 100;
+  const isCompleted = isAttempted && exam?.userSummary?.target === 100;
 
   return (
     <div
@@ -93,9 +90,11 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
       </div>
 
       {/* ---------------- MOCK NAME ---------------- */}
-      <h3 className="text-lg sm:text-xl lg:text-2xl 
+      <h3
+        className="text-lg sm:text-xl lg:text-2xl 
                      font-medium font-poppins text-[#FF5635] 
-                     mb-4 sm:mb-5 lg:mb-6">
+                     mb-4 sm:mb-5 lg:mb-6"
+      >
         {exam?.questionPapername}
       </h3>
 
@@ -129,7 +128,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
                 <Button
                   className="flex-1 bg-[#FF5635] text-white 
                              hover:bg-black transition cursor-pointer"
-                  onClick={() => handleExam(exam, 'Resume')}
+                  onClick={() => handleExam(exam, "Resume")}
                 >
                   Resume
                 </Button>
@@ -137,7 +136,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
                 <Button
                   className="flex-1 bg-black text-white 
                              hover:bg-[#FF5635] transition cursor-pointer"
-                  onClick={() => handleExam(exam, 'Restart')}
+                  onClick={() => handleExam(exam, "Restart")}
                 >
                   Restart
                 </Button>
@@ -150,7 +149,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
                 className="px-10 h-11 rounded-[8px] 
                            bg-[#FF5635] text-white 
                            hover:bg-black transition cursor-pointer"
-                onClick={() => handleExam(exam, 'start')}
+                onClick={() => handleExam(exam, "start")}
               >
                 Start
               </Button>
@@ -161,7 +160,6 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
     </div>
   );
 };
-
 
 // perticuler Exam section
 export default function MergedExamPage() {
@@ -275,21 +273,7 @@ export default function MergedExamPage() {
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">
         {/* <header className="flex flex-col md:flex-row justify-between items-center gap-1 md:gap-8 pt-4"> */}
-        {/* {examById && examById.length > 0 ? (
-            <div className="max-w-[350px] w-full">
-              <Select
-                options={examOptions}
-                value={
-                  selectedExam
-                    ? { label: selectedExam.examname, value: selectedExam }
-                    : null
-                }
-                onChange={handleSelectExam}
-                placeholder="Select Exam"
-                isSearchable
-              />
-            </div>
-          ) : null} */}
+
         {/* Buttons */}
         {/* <div className="flex flex-wrap justify-center md:justify-end gap-3">
             <Button className="flex items-start gap-2 bg-[#FF5635] px-10 py-2 text-white rounded-lg shadow-md">
@@ -312,8 +296,9 @@ export default function MergedExamPage() {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             {/* ===== Banner ===== */}
-            <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-2 mb-12 flex flex-col md:flex-row items-center justify-between overflow-hidden">
+            <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10   flex flex-col md:flex-row items-center justify-between overflow-hidden">
               {/* Left Content */}
+
               <div className="z-10 max-w-xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#FF5635] font-poppins">
                   {selectedExamType?.examType} Exams
@@ -340,7 +325,38 @@ export default function MergedExamPage() {
                 />
               </motion.div>
             </div>
-
+            {/* <div className="max-w-7xl">
+              {examById ? (
+                <div className="flex items-center py-8 gap-4 w-full">
+                  <p className="text-[#727EA3] font-dm-sans">Change Collage </p>
+                  <Select
+                    options={examOptions}
+                    value={
+                      selectedExam
+                        ? { label: selectedExam.examname, value: selectedExam }
+                        : null
+                    }
+                    onChange={handleSelectExam}
+                    placeholder="Select Exam"
+                    isSearchable
+                    className="flex font-dn-sans"
+                    styles={{
+                      control: (base) => ({
+                        ...base,
+                        minWidth: "300px",
+                        width: "auto",
+                        background: "linear-gradient(to top, #F0F9FF, white)",
+                        borderRadius: "8px",
+                      }),
+                      input: (base) => ({
+                        ...base,
+                        color: "black",
+                      }),
+                    }}
+                  />
+                </div>
+              ) : null}
+            </div> */}
             {/* ===== Exam Cards Grid ===== */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mx-auto">
               {examdata.map((exam: any, index: number) => (
@@ -471,7 +487,6 @@ export default function MergedExamPage() {
                       {/* Lock icon in top right */}
                       <div className="absolute top-0 right-0">
                         <Image src={LOCK2} alt="lock" />
-
                       </div>
                     </div>
 
@@ -484,8 +499,6 @@ export default function MergedExamPage() {
                     <p className="text-sm text-gray-400 mb-4 font-poppins">
                       Coming Soon
                     </p>
-
-
                   </div>
                 ))}
             </div>
@@ -494,16 +507,9 @@ export default function MergedExamPage() {
       </div>
 
       {/* Footer Section */}
-      <section
-        className=" bg-[#FF5635] text-white px-6 sm:px-10 lg:px-12 xl:px-16 mt-16 py-2 sm:py-5 lg:py-6 xl:py-8"
-      >
+      <section className=" bg-[#FF5635] text-white px-6 sm:px-10 lg:px-12 xl:px-16 mt-16 py-2 sm:py-5 lg:py-6 xl:py-8">
         <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-8 px-6 sm:px-8 md:px-12 lg:px-28">
-          <div
-
-
-
-            className="flex flex-col gap-2 items-center md:items-start text-center md:text-left"
-          >
+          <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
             {/* Logo */}
             <div className="w-[130px] sm:w-[160px] lg:w-[200px]">
               <Image
@@ -515,12 +521,7 @@ export default function MergedExamPage() {
             </div>
           </div>
 
-          <div
-
-
-
-            className="flex flex-col items-center md:items-start gap-3"
-          >
+          <div className="flex flex-col items-center md:items-start gap-3">
             <SocialMedia />
           </div>
         </div>

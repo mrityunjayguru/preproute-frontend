@@ -57,7 +57,7 @@ const [showSubmitPopup, setShowSubmitPopup] = useState(false);
   const [numericalValue, setNumericalValue] = useState("");
   const [mcqSelected, setMcqSelected] = useState<string | null>(null);
   const [loder,setloder]=useState<boolean>(false)
-  const currentSectionId = useSelector(state => state.exam.currentSectionId);
+  const currentSectionId = useSelector((state : any) => state.exam.currentSectionId);
   const [sectionQuestionStatus, setSectionQuestionStatus] = useState<
     Record<string, Record<number, string>>
   >({});

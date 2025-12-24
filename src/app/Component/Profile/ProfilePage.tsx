@@ -11,10 +11,9 @@ import PurchasedPlanSection from "./PurchasedPlanSection";
 import { FaRegUserCircle } from "react-icons/fa";
 import { Download, Plus, User2 } from "lucide-react";
 import Image from "next/image";
-import USER from "@/assets/vectors/user-profile.svg"
-import FOOTERLOGO from "@/assets/vectors/footer-logo.svg"
+import USER from "@/assets/vectors/user-profile.svg";
+import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import SocialMedia from "../Home/_componets/social-media";
-
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -25,7 +24,9 @@ export default function ProfilePage() {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  const [profileImage, setProfileImage] = useState(user?.image || "/profile-avatar.png");
+  const [profileImage, setProfileImage] = useState(
+    user?.image || "/profile-avatar.png"
+  );
   const [uploading, setUploading] = useState(false);
 
   const handleLogout = () => {
@@ -40,18 +41,21 @@ export default function ProfilePage() {
     }
   }, [token, router]);
 
+  console.log(user);
   // 📤 Upload Profile Image
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     const payload: any = {
       image: file,
-      _id: user?._id
+      _id: user?._id,
     };
     try {
       setUploading(true);
-      await dispatch(updateUserInfo(payload))
+      await dispatch(updateUserInfo(payload));
     } catch (err) {
       console.error(err);
       alert("Error uploading image.");
@@ -60,23 +64,20 @@ export default function ProfilePage() {
     }
   };
   const getuserData = async () => {
-    const payload: any = { _id: user?._id }
-    dispatch(userProfileData(payload))
-  }
-
+    const payload: any = { _id: user?._id };
+    dispatch(userProfileData(payload));
+  };
 
   useEffect(() => {
-    getuserData()
-  }, [])
+    getuserData();
+  }, []);
 
   return (
     <div className="h-screen flex flex-col justify-between">
       <div>
         <div className="mx-auto space-y-6 px-6 sm:px-8 md:px-12 lg:px-28">
-
           {/* 🔹 PROFILE HEADER */}
           <div className="bg-[#F0F9FF] rounded-[8px] p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-
             {/* Left */}
             <div className="flex items-center gap-8">
               {/* Avatar */}
@@ -95,14 +96,16 @@ export default function ProfilePage() {
                   />
                 ) : (
                   <>
-                    <Image src={USER} alt="user" className="w-16 h-16 p-8 text-gray-400" />
+                    <Image
+                      src={USER}
+                      alt="user"
+                      className="w-16 h-16 p-8 text-gray-400"
+                    />
                     <span className="absolute -right-3 w-5 h-5 bg-[#FF5635] text-white  rounded-full flex items-center justify-center">
                       <Plus size={12} />
                     </span>
                   </>
                 )}
-
-
               </div>
 
               <input
@@ -145,7 +148,6 @@ export default function ProfilePage() {
 
           {/* 🔹 USER DETAILS */}
           <div className="bg-white rounded-xl p-8 font-poppins grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4 text-sm">
-
             <div className="flex border-b pb-2 gap-24">
               <span className="text-[#727EA3]">Parent Contact:</span>
               <span className="">{user?.parentPhone || "—"}</span>
@@ -153,7 +155,7 @@ export default function ProfilePage() {
 
             <div className="flex border-b pb-2 gap-24">
               <span className="text-[#727EA3]">Attempt Year:</span>
-              <span className="">2026</span>
+              <span className="">{user?.a}</span>
             </div>
 
             <div className="flex border-b pb-2 gap-24">
@@ -177,24 +179,25 @@ export default function ProfilePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
               {/* Free Plan */}
-              <div className="bg-gradient-to-t from-[#F0F9FF] to-white 
-                 border border-[#E6F4FF] rounded-xl p-6 ">
+              <div
+                className="bg-gradient-to-t from-[#F0F9FF] to-white 
+                 border border-[#E6F4FF] rounded-xl p-6 "
+              >
                 <h4 className="text-[#ff5635] font-poppins font-medium text-2xl">
                   Free Plan
                 </h4>
-                <p className="text-md text-[#ff5635] mb-4">
-                  Limited Access
-                </p>
+                <p className="text-md text-[#ff5635] mb-4">Limited Access</p>
 
                 <div className="text-[14px] space-y-1 font-poppins">
                   <p>
                     <span className="text-[#1A1D1F]">Created on:</span>{" "}
-                    20/11/2025
                   </p>
                   <p className="flex gap-2 items-center">
                     <h1 className="flex gap-1 flex-col">
                       <span className="text-[#1A1D1F]">Price</span>{" "}
-                      <span className="text-[#1A1D1F] text-[8px]">inclusive of all taxes</span>
+                      <span className="text-[#1A1D1F] text-[8px]">
+                        inclusive of all taxes
+                      </span>
                     </h1>
                     <span className="text-[#ff5635] font-medium">₹0</span>
                   </p>
@@ -202,22 +205,21 @@ export default function ProfilePage() {
               </div>
 
               {/* Paid Plan */}
-              {user?.PlanDetails && (
-                <div className="bg-gradient-to-t from-[#F0F9FF] to-white 
-                 border border-[#E6F4FF] rounded-xl p-6 ">
+              {user?.purchaseDetails?.map((item: any, index: number) => (
+                <div
+                  key={item?.orderId || index}
+                  className="bg-gradient-to-t from-[#F0F9FF] to-white 
+                    border border-[#E6F4FF] rounded-xl p-6 "
+                >
                   <div className="flex justify-between items-start">
                     <div>
-                      <h4 className="text-red-500 font-semibold text-lg">
-                        {user.PlanDetails?.title}
+                      <h4 className="text-[#ff5635] font-semibold text-2xl">
+                        {item?.plan?.title}
                       </h4>
-                      <p className="text-sm text-gray-500 mb-4">
-                        Full Access
-                      </p>
+                      <p className="text-md text-[#ff5635] mb-4">Full Access</p>
                     </div>
 
-                    <Button
-                      className=" text-white bg-black text-sm"
-                    >
+                    <Button className=" text-white bg-black text-sm">
                       <Download className="h-5 w-5" />
                       Download Invoice
                     </Button>
@@ -226,32 +228,37 @@ export default function ProfilePage() {
                   <div className="text-[14px] space-y-1 font-poppins">
                     <p>
                       <span className="text-[#1A1D1F]">Created on:</span>{" "}
-                      20/11/2025
+                      {item?.otherdetsil?.orderedAt
+                        ? new Date(
+                            item.otherdetsil.orderedAt
+                          ).toLocaleDateString()
+                        : item?.plan?.createdAt
+                        ? new Date(item.plan.createdAt).toLocaleDateString()
+                        : "—"}
                     </p>
                     <p className="flex gap-2 items-center">
                       <h1 className="flex gap-1 flex-col">
                         <span className="text-[#1A1D1F]">Price</span>{" "}
-                        <span className="text-[#1A1D1F] text-[8px]">inclusive of all taxes</span>
+                        <span className="text-[#1A1D1F] text-[8px]">
+                          inclusive of all taxes
+                        </span>
                       </h1>
-                      <span className="text-[#ff5635] font-medium">₹{user.PlanDetails?.price}</span>
+                      <span className="text-[#ff5635] font-medium">
+                        ₹{item?.amount || item?.plan?.price || "0"}
+                      </span>
                     </p>
                   </div>
                 </div>
-              )}
+              ))}
             </div>
           </div>
 
           {/* Keep your existing section */}
-
         </div>
       </div>
-      <section
-        className="w-full bg-[#FF5635] text-white px-6 sm:px-10 lg:px-12 xl:px-16 mt-16 py-2 sm:py-5 lg:py-6 xl:py-8"
-      >
+      <section className="w-full bg-[#FF5635] text-white px-6 sm:px-10 lg:px-12 xl:px-16 mt-16 py-2 sm:py-5 lg:py-6 xl:py-8">
         <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-8 px-6 sm:px-8 md:px-12 lg:px-28">
-          <div
-            className="flex flex-col gap-2 items-center md:items-start text-center md:text-left"
-          >
+          <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
             {/* Logo */}
             <div className="w-[130px] sm:w-[160px] lg:w-[200px]">
               <Image
@@ -263,14 +270,11 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div
-            className="flex flex-col items-center md:items-start gap-3"
-          >
+          <div className="flex flex-col items-center md:items-start gap-3">
             <SocialMedia />
           </div>
         </div>
       </section>
     </div>
   );
-
 }

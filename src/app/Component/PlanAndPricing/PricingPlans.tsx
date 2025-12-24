@@ -78,11 +78,28 @@ export default function PricingPlans() {
     getData();
   }, []);
 
+  /* ---------------- CHECK IF PLAN IS PURCHASED ---------------- */
+  const isPlanPurchased = (planId: string | undefined) => {
+    if (
+      !planId ||
+      !user?.purchaseDetails ||
+      !Array.isArray(user.purchaseDetails)
+    ) {
+      return false;
+    }
+    return user.purchaseDetails.some((item: any) => item?.plan?._id === planId);
+  };
+
   /* ---------------- PAYMENT HANDLER ---------------- */
   const handleCreatePayment = async (plan: any) => {
     let token = localStorage.getItem("token");
     if (!token) {
       router.push("/Auth/signin");
+      return;
+    }
+
+    // Prevent payment if plan is already purchased
+    if (isPlanPurchased(plan._id)) {
       return;
     }
 
@@ -156,16 +173,11 @@ export default function PricingPlans() {
                       key={index}
                       className="bg-gray-100 rounded-[8px] flex flex-col min-h-[400px] sm:min-h-[450px] md:min-h-[500px]"
                     >
-                      <div
-                        className="text-center p-4 sm:p-6 font-poppins"
-                      >
+                      <div className="text-center p-4 sm:p-6 font-poppins">
                         <h3 className="text-lg sm:text-xl font-semibold text-gray-500">
                           {ui.title}
                         </h3>
-                        <p
-
-                          className="text-xs sm:text-sm text-gray-500 mt-1"
-                        >
+                        <p className="text-xs sm:text-sm text-gray-500 mt-1">
                           Coming Soon
                         </p>
                       </div>
@@ -173,9 +185,7 @@ export default function PricingPlans() {
                       <div className="border-t border-gray-400 mx-4 sm:mx-6 my-3 sm:my-4" />
 
                       <div className="flex-1 flex items-center justify-center text-gray-400 relative px-4 sm:px-6 py-6 sm:py-8">
-                        <div
-                          className="relative w-full h-full max-w-[150px] sm:max-w-[180px] md:max-w-[200px] max-h-[150px] sm:max-h-[180px] md:max-h-[200px]"
-                        >
+                        <div className="relative w-full h-full max-w-[150px] sm:max-w-[180px] md:max-w-[200px] max-h-[150px] sm:max-h-[180px] md:max-h-[200px]">
                           <Image
                             src={CULT}
                             alt="cult"
@@ -185,10 +195,7 @@ export default function PricingPlans() {
                         </div>
                       </div>
 
-                      <div
-
-                        className="px-4 sm:px-6 pb-4 sm:pb-6"
-                      >
+                      <div className="px-4 sm:px-6 pb-4 sm:pb-6">
                         <button
                           disabled
                           className="w-full py-3 sm:py-3.5 rounded-[8px] bg-gray-400 text-white font-semibold cursor-not-allowed text-sm sm:text-base"
@@ -204,16 +211,21 @@ export default function PricingPlans() {
                 const features =
                   index === 0 ? CORE_FEATURES : FULL_ACCESS_FEATURES;
 
+                // Skip rendering if plan data is not available
+                if (!plan) {
+                  return null;
+                }
+
                 return (
                   <div
                     key={index}
-
                     className={`rounded-[8px]
                          border flex flex-col h-full transition-all
-                        ${ui.isPopular
-                        ? "bg-gradient-to-t from-[#FFECDF] to-white border-[#FFECDF] md:scale-110 z-10"
-                        : "bg-gradient-to-t from-[#F0F9FF] to-white border-[#F0F9FF]"
-                      }`}
+                        ${
+                          ui.isPopular
+                            ? "bg-gradient-to-t from-[#FFECDF] to-white border-[#FFECDF] md:scale-110 z-10"
+                            : "bg-gradient-to-t from-[#F0F9FF] to-white border-[#F0F9FF]"
+                        }`}
                   >
                     <div className="relative flex flex-col h-full">
                       {/* BADGE */}
@@ -236,7 +248,9 @@ export default function PricingPlans() {
                           </p>
                         </div>
                         <div className="flex flex-col items-end text-right">
-                          <p className="text-xs sm:text-sm text-gray-500">Price :</p>
+                          <p className="text-xs sm:text-sm text-gray-500">
+                            Price :
+                          </p>
                           <p className="text-lg sm:text-xl font-normal text-[#FF5635]">
                             ₹{plan?.price}
                           </p>
@@ -259,13 +273,25 @@ export default function PricingPlans() {
                       </ul>
                       <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-4 sm:my-6" />
                       {/* BUTTON */}
-                      <div className="w-full px-4 sm:px-6 pb-4 sm:pb-6 mt-auto flex justify-center items-center">
+                      <div className="w-full px-4 sm:px-6 pb-4 sm:pb-6 mt-auto flex justify-center items-center flex-col">
                         <button
                           onClick={() => handleCreatePayment(plan)}
-                          className="w-full sm:w-fit py-3 sm:py-3.5 cursor-pointer px-8 sm:px-16 rounded-[8px] bg-[#FF5635] hover:bg-[#e14c2f] text-white font-poppins text-sm sm:text-base transition-colors"
+                          disabled={isPlanPurchased(plan?._id)}
+                          className={`w-full sm:w-fit py-3 sm:py-3.5 px-8 sm:px-16 rounded-[8px] font-poppins text-sm sm:text-base transition-colors ${
+                            isPlanPurchased(plan?._id)
+                              ? "bg-gray-400 text-white cursor-not-allowed"
+                              : "bg-[#FF5635] hover:bg-[#e14c2f] text-white cursor-pointer"
+                          }`}
                         >
-                          Get Started
+                          {isPlanPurchased(plan?._id)
+                            ? "Get Started"
+                            : "Get Started"}
                         </button>
+                        <p className="text-sm py-3 text-[#ff5635] font-dm-sans">
+                          {isPlanPurchased(plan?._id)
+                            ? "Already Purchased"
+                            : ""}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -277,13 +303,9 @@ export default function PricingPlans() {
           {/* SPACER */}
           <div className="h-0 md:h-[420px] lg:h-[520px]" />
         </div>
-        <section
-          className="bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-8 sm:mt-12 md:mt-20 py-4 sm:py-5 lg:py-6 xl:py-8"
-        >
+        <section className="bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-8 sm:mt-12 md:mt-20 py-4 sm:py-5 lg:py-6 xl:py-8">
           <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
-            <div
-              className="flex flex-col gap-2 items-center md:items-start text-center md:text-left"
-            >
+            <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
               {/* Logo */}
               <div className="w-[100px] sm:w-[130px] md:w-[160px] lg:w-[200px]">
                 <Image
@@ -295,9 +317,7 @@ export default function PricingPlans() {
               </div>
             </div>
 
-            <div
-              className="flex flex-col items-center md:items-start gap-2 sm:gap-3"
-            >
+            <div className="flex flex-col items-center md:items-start gap-2 sm:gap-3">
               <SocialMedia />
             </div>
           </div>

@@ -32,21 +32,26 @@ function ExamHeader() {
       />
       <div className="w-full flex justify-between items-center px-20 ">
         <Image src={logo} alt="Logo" className="h-8 w-auto mt-3" />
-
         {/* RIGHT: Calculator Button */}
         <div className="flex gap-5 cursor-pointer">
-          <Button
+          <button
+            className="rounded-md bg-[#FF5635] text-lg font-semibold mt-5"
+            onClick={() => setOpenPopup(true)}
+          >
+            View Questions
+          </button>
+          <button
             className="rounded-md bg-[#FF5635] text-lg font-semibold mt-5"
             onClick={() => setOpenPopup(true)}
           >
             Instruction
-          </Button>
-          <Button
+          </button>
+          <button
             className="rounded-md bg-[#FF5635] text-lg font-semibold mt-5"
             onClick={toggleCalculator}
           >
             Calculator
-          </Button>
+          </button>
         </div>
       </div>
       {/* <DraggableWrapper> */}
