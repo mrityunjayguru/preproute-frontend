@@ -11,10 +11,9 @@ import PurchasedPlanSection from "./PurchasedPlanSection";
 import { FaRegUserCircle } from "react-icons/fa";
 import { Download, Plus, User2 } from "lucide-react";
 import Image from "next/image";
-import USER from "@/assets/vectors/user-profile.svg";
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import SocialMedia from "../Home/_componets/social-media";
-
+import USERDATA from "@/assets/vectors/user-profile.svg"
 export default function ProfilePage() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -85,19 +84,19 @@ export default function ProfilePage() {
                 className="relative cursor-pointer  bg-[#ffffff] rounded-[8px]"
                 onClick={() => fileInputRef.current?.click()}
               >
-                {user?.image ? (
+                {!user?.image ? (
                   <img
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user.image}`}
                     alt="Profile"
                     onError={(e) => {
                       e.currentTarget.src = "/default-user.png";
                     }}
-                    className=" object-cover w-16 h-16"
+                    className=" object-cover w-32 h-32 rounded-lg"
                   />
                 ) : (
                   <>
-                    <Image
-                      src={USER}
+                   <Image
+                      src={USERDATA}
                       alt="user"
                       className="w-16 h-16 p-8 text-gray-400"
                     />
