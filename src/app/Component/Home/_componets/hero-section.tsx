@@ -43,7 +43,7 @@ const HeroSection = ({ logoSrc }: { logoSrc: any }) => {
               <span className="text-[#FF5635]">Smarter Exam Prep</span>
             </h1>
 
-            <p className=" font-dm-sans text-[#333333] font-sans text-xs sm:text-sm md:text-base lg:text-[18px] leading-relaxed font-normal max-w-6xl mx-auto">
+            <p className=" font-dm-sans text-[#333333] font-dm-sans text-xs sm:text-sm md:text-base lg:text-[18px] leading-relaxed font-normal max-w-6xl mx-auto">
               Practice entrance exams online in real exam-like conditions.
               Access mock tests, past year papers, and exclusive exams designed
               by professors from top institutes.
@@ -86,7 +86,7 @@ const HeroSection = ({ logoSrc }: { logoSrc: any }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-black font-medium leading-relaxed max-w-4xl mx-auto px-2"
+            className="font-poppins text-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-black font-medium leading-relaxed max-w-4xl mx-auto px-2"
           >
             Not just another question bank. A complete exam preparation
             ecosystem designed to make you exam-ready.

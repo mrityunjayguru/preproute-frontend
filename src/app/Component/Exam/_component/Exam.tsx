@@ -326,37 +326,8 @@ export default function MergedExamPage() {
               </motion.div>
             </div>
             {/* <div className="max-w-7xl">
-              {examById ? (
-                <div className="flex items-center py-8 gap-4 w-full">
-                  <p className="text-[#727EA3] font-dm-sans">Change Collage </p>
-                  <Select
-                    options={examOptions}
-                    value={
-                      selectedExam
-                        ? { label: selectedExam.examname, value: selectedExam }
-                        : null
-                    }
-                    onChange={handleSelectExam}
-                    placeholder="Select Exam"
-                    isSearchable
-                    className="flex font-dn-sans"
-                    styles={{
-                      control: (base) => ({
-                        ...base,
-                        minWidth: "300px",
-                        width: "auto",
-                        background: "linear-gradient(to top, #F0F9FF, white)",
-                        borderRadius: "8px",
-                      }),
-                      input: (base) => ({
-                        ...base,
-                        color: "black",
-                      }),
-                    }}
-                  />
-                </div>
-              ) : null}
             </div> */}
+           
             {/* ===== Exam Cards Grid ===== */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mx-auto">
               {examdata.map((exam: any, index: number) => (
@@ -426,7 +397,7 @@ export default function MergedExamPage() {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             {/* ===== Banner ===== */}
-            <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-2 mb-12 flex flex-col md:flex-row items-center justify-between overflow-hidden">
+            <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-2  flex flex-col md:flex-row items-center justify-between overflow-hidden">
               <div className="z-10 max-w-xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl  font-medium text-[#FF5635] font-poppins">
                   <span className="text-black">
@@ -457,6 +428,37 @@ export default function MergedExamPage() {
                 />
               </motion.div>
             </div>
+
+            {examById ? (
+              <div className="flex items-center py-8 gap-4 w-full">
+                <p className="text-[#727EA3] font-dm-sans">Change Collage </p>
+                <Select
+                  options={examOptions}
+                  value={
+                    selectedExam
+                      ? { label: selectedExam.examname, value: selectedExam }
+                      : null
+                  }
+                  onChange={handleSelectExam}
+                  placeholder="Select Exam"
+                  isSearchable
+                  className="flex font-dn-sans"
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      minWidth: "300px",
+                      width: "auto",
+                      background: "linear-gradient(to top, #F0F9FF, white)",
+                      borderRadius: "8px",
+                    }),
+                    input: (base) => ({
+                      ...base,
+                      color: "black",
+                    }),
+                  }}
+                />
+              </div>
+            ) : null}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mx-auto">
               {examById.map((exam: any, i: any) => (

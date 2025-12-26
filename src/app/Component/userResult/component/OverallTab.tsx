@@ -1,9 +1,16 @@
 import React from "react";
-interface DifficultyWiseTabProps {
-  data: any; // Replace 'any' with the actual type of your data
+import BriefTab from "./BriefTab";
+
+interface OverallTabProps {
+  data: any;
 }
 
-const OverallTab = ({ data }:DifficultyWiseTabProps) => (
-  <div className="text-center text-gray-600">Overall performance summary coming soon...</div>
-);
+const OverallTab = ({ data }: OverallTabProps) => {
+  return (
+    <div className="w-full">
+      <BriefTab data={data} />
+    </div>
+  );
+};
+
 export default OverallTab;

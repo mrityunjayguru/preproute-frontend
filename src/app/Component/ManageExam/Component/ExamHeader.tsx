@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import CalculatorApp from "@/Common/CalculatorApp";
 import { Button } from "@/components/ui/button";
-import logo from "../../../../assets/images/logo.svg";
+import logo from "@/assets/vectors/perticulerExam/logo.svg";
 import Image from "next/image";
 import DraggableWrapper from "@/Common/dfdf";
 import InstructionPopup from "./InstructionPopup";
@@ -30,24 +30,24 @@ function ExamHeader() {
         isOpen={openPopup}
         onClose={() => setOpenPopup(false)}
       />
-      <div className="w-full flex justify-between items-center px-20 ">
-        <Image src={logo} alt="Logo" className="h-8 w-auto mt-3" />
+      <div className="w-full bg-black flex justify-between items-center px-6 sm:px-8 md:px-12 lg:px-28 py-2">
+        <Image src={logo} alt="Logo" className="w-auto " />
         {/* RIGHT: Calculator Button */}
-        <div className="flex gap-5 cursor-pointer">
+        <div className="flex font-poppins gap-5 cursor-pointer">
           <button
-            className="rounded-md bg-[#FF5635] text-lg font-semibold mt-5"
+            className="cursor-pointer font-normal text-white"
             onClick={() => setOpenPopup(true)}
           >
             View Questions
           </button>
           <button
-            className="rounded-md bg-[#FF5635] text-lg font-semibold mt-5"
+            className=" cursor-pointer font-normal text-white hover:"
             onClick={() => setOpenPopup(true)}
           >
             Instruction
           </button>
           <button
-            className="rounded-md bg-[#FF5635] text-lg font-semibold mt-5"
+            className="cursor-pointer font-normal text-white"
             onClick={toggleCalculator}
           >
             Calculator

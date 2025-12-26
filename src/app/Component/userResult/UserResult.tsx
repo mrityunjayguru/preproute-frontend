@@ -23,15 +23,17 @@ function UserResult() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 px-30 py-10">
-
+    <div className="min-h-screen bg-gray-50 px-8 py-10">
       {/* Top Heading */}
-      <h1 className="text-3xl font-bold text-[#FF5635] mb-3">
-        Performance Analytics
-      </h1>
-  <h1 className="text-xl mb-6">
-       Understand where you stand: your insights, your test performance, and your preparation trends.
-      </h1>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-[#FF5635] mb-2">
+          Performance Analytics
+        </h1>
+        <p className="text-xl text-gray-700">
+          Understand your strengths and improve where it matters.
+        </p>
+      </div>
+      
       {/* Summary Tabs */}
       <SummaryTabs 
         data={examResult} 

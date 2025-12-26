@@ -8,7 +8,7 @@ import MarksDistributionChart from "../Graph/MarksDistributionChart";
  * Updated BriefTab component styled to match the provided UI image.
  */
 
-const StatCard = ({ icon, value, label, color }) => (
+const StatCard = ({ icon, value, label, color } : any) => (
   <div className="border-[#FF5635] border-x border-y mt-10 rounded-2xl p-2 px-4   grid grid-cols-2 gap-2 bg-[#F8F7F3]">
 
        <div className="flex flex-col">
@@ -25,88 +25,32 @@ const StatCard = ({ icon, value, label, color }) => (
 );
 
 
-const SmallStat = ({ label, value }) => (
+const SmallStat = ({ label, value } : any) => (
   <div className="px-4 py-6 rounded-xl bg-[#F8F7F3]">
     <p className="font-semibold text-[#B3B3B5] text-lg">{label}</p>
     <p className="text-gray-900 mt-1 text-xl font-semibold">{value}</p>
   </div>
 );
 
-const BriefTab = ({ data }) => {
+const BriefTab = ({ data }: any) => {
   return (
     <div className="w-full">
-      {/* Top Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-        <StatCard
-          icon= {svgIcon1}
-          value={data.totalMarks || 0}
-          label="Score"
-          color="text-yellow-500"
-        />
+      <div className="space-y-6">
+        {/* Exam Section Graph */}
+        <div className="bg-white rounded-2xl shadow-sm p-6">
+          <ExamSectionGraph />
+        </div>
 
-        <StatCard
-          icon= {svgIcon2}
-          value={data.accuracy || "0%"}
-          label="Accuracy"
-          color="text-green-500"
-        />
+        {/* Time Analysis */}
+        <div className="bg-white rounded-2xl shadow-sm p-6">
+          <TimeAnalysis />
+        </div>
 
-        <StatCard
-          icon= {svgIcon3}
-          value={data.percentage || "0%"}
-          label="Percentage"
-          color="text-orange-500"
-        />
-
-        <StatCard
-          icon= {svgIcon4}
-          value={`${data.percentile || 0}%ile`}
-          label="Percentile"
-          color="text-blue-500"
-        />
+        {/* Marks Distribution */}
+        <div className="bg-white rounded-2xl shadow-sm p-6">
+          <MarksDistributionChart />
+        </div>
       </div>
-
-      {/* Bottom Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        <SmallStat
-          label="Attempted"
-          value={`${data.attempted || 0} out of ${data.totalQuestions || 0}`}
-        />
-
-        <SmallStat
-          label="Correct"
-          value={`${data.correct || 0} out of ${data.attempted || 0}`}
-        />
-
-        <SmallStat
-          label="Incorrect"
-          value={`${data.wrong || 0} out of ${data.attempted || 0}`}
-        />
-
-        {/* If needed later */}
-        {/* <SmallStat label="Average Time/Ques" value="1 min 26 sec" /> */}
-      </div>
-   <div className="bg-gray-50 min-h-screen p-6 mt-5">
-  <div className="max-w-7xl mx-auto space-y-8">
-
-    {/* Exam Section Graph */}
-    <div className="bg-white rounded-2xl shadow-sm p-6">
-      <ExamSectionGraph />
-    </div>
-
-    {/* Time Analysis */}
-    <div className="bg-white rounded-2xl shadow-sm p-6">
-      <TimeAnalysis />
-    </div>
-
-    {/* Marks Distribution */}
-    <div className="bg-white rounded-2xl shadow-sm p-6">
-      <MarksDistributionChart />
-    </div>
-
-  </div>
-</div>
-
     </div>
   );
 };

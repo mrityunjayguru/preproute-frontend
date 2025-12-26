@@ -4,6 +4,7 @@ import { BlockMath } from "react-katex";
 import "katex/dist/katex.min.css";
 import { Input } from "react-select/animated";
 import RenderPreview from "@/Common/CommonLatex";
+import QuestionHeader from "./QuestionHeader";
 
 interface Props {
   question: any;
@@ -20,51 +21,50 @@ const QuestionView: React.FC<Props> = ({
   currentQuestionIndex,
   CurrentInput,
 }) => {
- 
   return (
-    <div className="bg-white p-4 rounded-lg flex-1">
-      <p className="text-sm font-bold bg-[#007bff] p-2 text-white rounded mb-2">
-        {examName} – {paperName}
-      </p>
+    <div className="bg-white rounded-lg flex-1">
+      {question && (
+        <QuestionHeader
+          question={question}
+          currentQuestionIndex={currentQuestionIndex}
+        />
+      )}
 
-      <p className="font-bold text-lg mb-4">
-        Question: {currentQuestionIndex + 1}
-      </p>
+      <div
+        className={`w-full px-6 sm:px-8 md:px-12 lg:px-28 mt-3 font-poppins ${
+          question?.questionPessage === "Pass"
+            ? "flex gap-2 items-start "
+            : "flex flex-col"
+        }`}
+      >
+        {/* 🟩 Question Preview Section */}
+        <div
+          className={`${
+            question?.questionPessage === "Pass"
+              ? "w-1/2 overflow-y-auto border border-border h-[calc(100vh-280px)] p-3 rounded-lg"
+              : "w-full"
+          } question-preview leading-relaxed space-y-2`}
+        >
+          <RenderPreview content={question?.questionText} />
+        </div>
 
-<div
-  className={`w-full ${
-    question?.questionPessage === "Pass"
-      ? "flex gap-2 items-start"
-      : "flex flex-col"
-  }`}
->
-  {/* 🟩 Question Preview Section */}
-  <div
-    className={`${
-      question?.questionPessage === "Pass" ? "w-[65%]" : "w-full"
-    } question-preview leading-relaxed space-y-2`}
-  >
-      <RenderPreview content={question?.questionText} />
+        {/* 🟦 Current Input Section */}
+        <div
+          className={`${ 
+            question?.questionPessage === "Pass"
+              ? " border-gray-300 w-1/2 h-[calc(100vh-280px)] overflow-y-auto"
+              : "w-full max-h-[calc(100vh-280px)] overflow-y-auto"
+          } font-poppins`}
+        >
+          {question?.questionPessage === "Pass" ? (
+            <div className="pb-3 mb-3 px-2 font-poppins">
+              <p className="py-1">{question?.passage}</p>
+            </div>
+          ) : null}
 
-  </div>
-
-  {/* 🟦 Current Input Section */}
-<div
-  className={`${
-    question?.questionPessage === "Pass" ? "w-[35%] border-gray-300" : "w-full"
-  }`}
->
-  {question?.questionPessage === "Pass" ? (
-    <div className="pb-3 mb-3 border-b border-gray-300">
-      <p className="py-1">{question?.passage}</p>
-    </div>
-  ) : null}
-
-  {CurrentInput}
-</div>
-
-</div>
-
+          {CurrentInput}
+        </div>
+      </div>
     </div>
   );
 };
