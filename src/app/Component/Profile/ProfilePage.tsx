@@ -87,7 +87,7 @@ export default function ProfilePage() {
                 className="relative cursor-pointer  bg-[#ffffff] rounded-[8px]"
                 onClick={() => fileInputRef.current?.click()}
               >
-                {!user?.image ? (
+                {user?.image ? (
                   <img
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user.image}`}
                     alt="Profile"
