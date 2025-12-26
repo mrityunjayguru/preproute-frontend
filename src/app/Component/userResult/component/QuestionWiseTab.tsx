@@ -84,6 +84,7 @@ const getISTDate=() =>{
       fetchQuestion(1, firstSection._id);
       const payload:any={
         questionPaperId: examResult?.questionPaperID,
+        result:false,
         sectionWise:[{
           sectionId:firstSection.sectionId,
           startTime:getISTDate()
