@@ -14,12 +14,15 @@ import Image from "next/image";
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import SocialMedia from "../Home/_componets/social-media";
 import USERDATA from "@/assets/vectors/user-profile.svg"
+
+
 export default function ProfilePage() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const user = useSelector((state: any) => state?.Auth?.loginUser);
+  console.log(user)
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
@@ -98,9 +101,9 @@ export default function ProfilePage() {
                    <Image
                       src={USERDATA}
                       alt="user"
-                      className="w-16 h-16 p-8 text-gray-400"
+                      className="w-32 h-32 p-8 text-gray-400"
                     />
-                    <span className="absolute -right-3 w-5 h-5 bg-[#FF5635] text-white  rounded-full flex items-center justify-center">
+                    <span className="absolute bottom-1 -right-3 w-5 h-5 bg-[#FF5635] text-white  rounded-full flex items-center justify-center">
                       <Plus size={12} />
                     </span>
                   </>
@@ -118,9 +121,9 @@ export default function ProfilePage() {
               {/* Info */}
               <div className="flex flex-col font-poppins">
                 <p className="text-xs text-[#1A1D1F]">Greetings,</p>
-                <h2 className="text-md font-semibold text-[#1A1D1F]">
+                <span className="text-md font-semibold text-[#1A1D1F]">
                   {user?.username || "User Name"}!
-                </h2>
+                </span>
                 <p className="text-xs text-[#727EA3]">Nikname :</p>
                 <p className="text-xs text-[#FF5635]">
                   {user?.email} {user?.phone && `| +91 ${user.phone}`}
