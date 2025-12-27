@@ -191,6 +191,12 @@ export const Header: React.FC = () => {
                 >
                   <Link href="/instructions">Instructions</Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem
+                  asChild
+                  className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
+                >
+                  <Link href="/blog">Blogs</Link>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </nav>
