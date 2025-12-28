@@ -22,53 +22,49 @@ interface TopicWiseTabProps {
 const DifficultyWiseTab: React.FC<TopicWiseTabProps> = ({ data }) => {
   const typeWise = data?.typeWise || [];
 
-  if (!typeWise.length) {
-    return (
-      <div className="text-center text-gray-600">
-      </div>
-    );
-  }
-
   return (
-    <div className="overflow-x-auto mt-4">
-      <table className="min-w-full border border-gray-200 rounded-lg">
-        <thead className="bg-gray-100">
-          <tr className="text-sm text-gray-700 text-center">
-            <th className="px-4 py-2 border">Difficulty</th>
-            <th className="px-4 py-2 border">Total Qs</th>
-            <th className="px-4 py-2 border">Attempted</th>
-            <th className="px-4 py-2 border">Correct</th>
-            <th className="px-4 py-2 border">Wrong</th>
-            <th className="px-4 py-2 border">Not Attempted</th>
-            <th className="px-4 py-2 border">Accuracy</th>
-            <th className="px-4 py-2 border">Total Marks</th>
-            <th className="px-4 py-2 border">Neg. Marks</th>
-            <th className="px-4 py-2 border">Possible Marks</th>
-            <th className="px-4 py-2 border">Percentage</th>
+    <div className="overflow-x-auto border border-[#E6F4FF] rounded-[8px]">
+        {!data ? (
+        <p className="text-center text-gray-500">No topic data found.</p>
+      ) : (
+      <table className="min-w-full bg-gradient-to-t from-[#F0F9FF] to-white text-sm text-left">
+        <thead className="bg-[#005EB6] text-white">
+           <tr className="font-poppins  font-medium text-sm">
+            <th className="p-2">Difficulty</th>
+            <th className="p-2">Total Qs</th>
+            <th className="p-2">Attempted</th>
+            <th className="p-2">Correct</th>
+            <th className="p-2">Wrong</th>
+            <th className="p-2">Not Attempted</th>
+            <th className="p-2">Accuracy</th>
+            <th className="p-2">Total Marks</th>
+          <th className="p-2">Neg. Marks</th>
+           <th className="p-2">Possible Marks</th>
+            <th className="p-2">Percentage</th>
           </tr>
         </thead>
         <tbody>
           {typeWise.map((item, idx) => (
             <tr
               key={idx}
-              className="text-center text-gray-800 text-sm hover:bg-gray-50"
+             className="border-t border-[#C8DCFE] font-poppins font-normal"
             >
-              <td className="px-4 py-2 border font-medium">
+              <td className="px-4 py-2 font-medium">
                 {item.questionType}
               </td>
-              <td className="px-4 py-2 border">{item.totalQuestions}</td>
-              <td className="px-4 py-2 border">{item.attempted}</td>
-              <td className="px-4 py-2 border text-green-600">
+              <td className="p-2">{item.totalQuestions}</td>
+              <td className="p-2">{item.attempted}</td>
+              <td className="p-2 text-green-600">
                 {item.correct}
               </td>
-              <td className="px-4 py-2 border text-red-500">{item.wrong}</td>
-              <td className="px-4 py-2 border">{item.notAttempted}</td>
-              <td className="px-4 py-2 border">{item.accuracy}</td>
-              <td className="px-4 py-2 border">{item.totalMarks}</td>
-              <td className="px-4 py-2 border">{item.totalNegative}</td>
-              <td className="px-4 py-2 border">{item.totalPossibleMarks}</td>
+              <td className="p-2 text-red-500">{item.wrong}</td>
+              <td className="p-2">{item.notAttempted}</td>
+              <td className="p-2">{item.accuracy}</td>
+              <td className="p-2">{item.totalMarks}</td>
+              <td className="p-2">{item.totalNegative}</td>
+              <td className="p-2">{item.totalPossibleMarks}</td>
               <td
-                className={`px-4 py-2 border ${
+                className={`p-2 ${
                   parseFloat(item.percentage) >= 0
                     ? "text-green-600"
                     : "text-red-500"
@@ -80,6 +76,7 @@ const DifficultyWiseTab: React.FC<TopicWiseTabProps> = ({ data }) => {
           ))}
         </tbody>
       </table>
+      )}
     </div>
   );
 };

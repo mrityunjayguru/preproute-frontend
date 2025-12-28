@@ -14,7 +14,7 @@ const TabSwitchWarning: React.FC<Props> = ({
 }) => {
   return (
     <div className="fixed font-poppins inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-[9999] p-4">
-      <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-fit text-center">
+      <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-[400px] text-center">
 
         {/* Image */}
         <Image
@@ -24,21 +24,20 @@ const TabSwitchWarning: React.FC<Props> = ({
         />
 
         {/* Title */}
-        <h2 className="text-[#FF5B45] text-xl font-medium mb-2">
-          Heroes don’t switch 
-          
-          tabs mid-battle.
+        <h2 className="text-[#FF5B45] text-2xl font-medium mb-2 font-poppins">
+         Superheroes never switch 
+tabs mid-battle.
         </h2>
 
         {/* Subtitle */}
-        <p className="text-gray-800 mb-6 text-sm">
+        <p className="text-gray-900 mb-6 text-md font-dm-sans">
           The answer lies in your knowledge,<br /> not in another tab.
         </p>
 
         {/* Button */}
         <button
           onClick={onClose}
-          className="w-full py-3 bg-[#ff5b45] text-white rounded-[8px] text-lg font-medium hover:bg-[#ff5b43] cursor-pointer transition"
+          className="w-fit py-3 px-14 bg-[#050914] text-white rounded-[10px] text-lg font-medium hover:bg-[#ff5b43] cursor-pointer transition"
         >
           OK
         </button>

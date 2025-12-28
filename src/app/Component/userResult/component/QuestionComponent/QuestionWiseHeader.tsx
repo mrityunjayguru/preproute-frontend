@@ -23,18 +23,18 @@ const QuestionWiseHeader: React.FC<Props> = ({
   data,
 }) => {
   return (
-    <div className="flex flex-wrap items-center justify-between bg-white p-3 border-b shadow-sm">
+    <div className="flex flex-wrap items-center justify-between bg-white ">
       {/* ---- Section Tabs ---- */}
       {isSection && (
-        <div className="flex flex-wrap gap-1 overflow-x-auto">
+        <div className="flex flex-wrap gap-3 overflow-x-auto">
           {examSections.map((t) => (
             <button
               key={t.sectionId}
               onClick={() => handleSection(t)}
-              className={`cursor-pointer px-5 py-2 rounded-sm border transition-all text-sm whitespace-nowrap ${
+              className={`cursor-pointer px-10 py-2 rounded-[8px] transition-all text-md font-medium whitespace-nowrap font-dm-sans ${
                 t.sectionId === selectedSection?.sectionId
-                  ? "bg-[#FF5635] text-white border-[#FF5635]"
-                  : "bg-white text-[#1E1E1E] border-gray-300 hover:bg-gray-100"
+                  ? "bg-[#005EB6] text-white "
+                  : "bg-[#5291D2] text-white hover:bg-[#4a85f6]"
               }`}
             >
               {t.section || "Section"}
@@ -43,9 +43,8 @@ const QuestionWiseHeader: React.FC<Props> = ({
         </div>
       )}
 
-      {/* ---- Result Summary ---- */}
-      <div className="flex items-center gap-6 text-sm text-gray-700">
-        {/* Exam End Time */}
+      {/* Result Summary - Hidden to match screenshot */}
+      {/* <div className="flex items-center gap-6 text-sm text-gray-700">
         {data?.fullExamEndTime && (
           <div className="flex items-center gap-2">
             <Clock className="w-4 h-4 text-gray-500" />
@@ -53,24 +52,21 @@ const QuestionWiseHeader: React.FC<Props> = ({
           </div>
         )}
 
-        {/* Correct */}
         <div className="flex items-center gap-1 text-green-600 font-medium">
           <CheckCircle2 className="w-4 h-4" />
           <span>{data?.correct ?? 0}</span>
         </div>
 
-        {/* Wrong */}
         <div className="flex items-center gap-1 text-red-500 font-medium">
           <XCircle className="w-4 h-4" />
           <span>{data?.wrong ?? 0}</span>
         </div>
 
-        {/* Total Marks */}
         <div className="flex items-center gap-1 text-yellow-600 font-medium">
           <Trophy className="w-4 h-4" />
           <span>{data?.totalMarks ?? 0}</span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
