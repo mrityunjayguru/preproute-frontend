@@ -34,7 +34,7 @@ const SubjectTabs: React.FC<Props> = ({
   return (
     <>
       {isSection && examSections.length > 0 && (
-        <div className="flex gap-2 items-center font-dm-sans px-6 sm:px-8 md:px-12 lg:px-28 pb-3 mt-3">
+        <div className="flex gap-2 items-center overflow-x-auto no-scrollbar font-dm-sans px-4 sm:px-8 md:px-12 lg:px-28 pb-3 mt-3">
           {examSections.map((t) => (
             <button
               key={t.sectionId}

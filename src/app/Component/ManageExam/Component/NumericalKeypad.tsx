@@ -14,7 +14,7 @@ export const NumericalKeypad: React.FC<NumericalKeypadProps> = ({ value, onKeyPr
   ];
 
   return (
-    <div className=" mt-3 ">
+    <div className="mt-3 ">
       <div className="w-fit">
         <input
           type="text"

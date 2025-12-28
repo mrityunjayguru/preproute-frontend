@@ -58,7 +58,7 @@ const RightSection: React.FC<Props> = ({
     : null;
 
   return (
-    <aside className="lg:w-1/5 max-h-[calc(100vh-100px)] w-full  font-semibold  flex-shrink-0 mr-4">
+    <aside className="lg:w-1/5 max-h-[calc(100vh-100px)] w-full  font-semibold  flex-shrink-0 mr-0 lg:mr-4 mt-6 lg:mt-0">
       <div className="bg-[#F9FAFC] rounded-[8px] border border-[#E6F4FF]">
         {userLogin ? (
           <>
@@ -71,7 +71,7 @@ const RightSection: React.FC<Props> = ({
                     alt={userLogin?.username || "User"}
                     width={120}
                     height={120}
-                    className="w-full h-full object-cover"
+                    className="w-16 h-16 lg:w-full lg:h-full object-cover"
                     onError={() => setImageError(true)}
                   />
                 ) : (
@@ -80,11 +80,11 @@ const RightSection: React.FC<Props> = ({
                     alt="User Profile"
                     width={120}
                     height={120}
-                    className="w-full h-full object-contain"
+                    className="w-16 h-16 lg:w-full lg:h-full object-contain"
                   />
                 )}
               </div>
-              <div className="flex flex-col text-2xl font-poppins">
+              <div className="flex flex-col text-lg lg:text-2xl font-poppins">
                 <span className="font-medium text-gray-900 leading-tight">
                   {nameParts.first}
                 </span>
@@ -114,7 +114,7 @@ const RightSection: React.FC<Props> = ({
 
         {/* Question Grid - Scrollable */}
         <div className="overflow-y-auto h-[40vh]">
-          <div className="grid grid-cols-5 gap-2  overflow-y-auto px-3 py-2">
+          <div className="grid grid-cols-5  overflow-y-auto px-3 py-2">
             {Array.from({ length: totalNoOfQuestions }, (_, idx) => {
               const status = currentStatus[idx];
               const isAnswered =
@@ -142,19 +142,19 @@ const RightSection: React.FC<Props> = ({
                 <button
                   key={idx}
                   onClick={() => getQuestionByNumberId(idx)}
-                  className="cursor-pointer w-10 h-10 font-bold flex items-center justify-center relative transition-all hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="cursor-pointer  font-bold flex items-center justify-center relative transition-all hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={isTimeUp}
                 >
                   <div className="relative w-full h-full flex items-center justify-center">
                     <Image
                       src={iconSrc}
                       alt={`Question ${idx + 1}`}
-                      width={40}
-                      height={40}
+                      width={20}
+                      height={20}
                       className="w-full h-full object-contain"
                     />
                     <span
-                      className="absolute inset-0 flex items-center justify-center text-sm font-bold z-10 pointer-events-none"
+                      className="absolute inset-0 flex items-center justify-center text-sm font-medium z-10 pointer-events-none font-poppins"
                       style={{
                         color: iconSrc === NOTVISITED ? "#000000" : "#FFFFFF",
                       }}
