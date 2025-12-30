@@ -53,10 +53,12 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
     selectedExamType?.examType === "Past Year"
   );
 
-  const isInProgress = exam?.userSummary?.target === 0 && !isAttempted;
+  const isInProgress = exam?.userSummary?.target === 0 && isAttempted;
 
   const isCompleted = isAttempted && exam?.userSummary?.target === 100;
-
+console.log(isInProgress,"isInProgressisInProgress")
+console.log(isCompleted,"isCompletedisCompletedisCompleted")
+console.log(isAttempted,"isAttemptedisAttemptedisAttempted")
   return (
     <div
       className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white 
@@ -268,7 +270,7 @@ export default function MergedExamPage() {
       }
     }
   }, [isMock, examdata]);
-
+console.log(examById,"examByIdexamByIdexamById")
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">
@@ -467,9 +469,9 @@ export default function MergedExamPage() {
                   index={i}
                 />
               ))}
-              {examById.length < (examById[0]?.exam?.Mocks || 0) &&
+              {examById.length < (examById[0]?.exam?.Mocks || 24) &&
                 [
-                  ...Array((examById[0]?.exam?.Mocks || 0) - examById.length),
+                  ...Array((examById[0]?.exam?.Mocks || 24) - examById.length),
                 ].map((_, idx) => (
                   <div
                     key={`locked-${idx}`}
