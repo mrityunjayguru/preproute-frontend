@@ -19,6 +19,7 @@ import {
   setUpdateSubTopic, // 👈 update API call
   handlesetUpdatesubTopic, // 👈 to clear redux after update
 } from "@/api/subTopic";
+import { Label } from "@/components/ui/label";
 
 const SubTopicForm = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -79,7 +80,7 @@ const SubTopicForm = () => {
     setSubtopicInput("");
     setSelectedTopic("");
     setEditingId(null);
-    const data:any=null
+    const data: any = null;
     dispatch(handlesetUpdatesubTopic(data));
 
     // Refresh list
@@ -87,20 +88,16 @@ const SubTopicForm = () => {
   };
 
   return (
-    <div className="bg-[#F7F7F5] p-6 rounded-lg shadow-md mb-6">
-      <h2 className="text-xl font-semibold mb-4">
-        {editingId ? "Update Sub-Topic" : "Create Sub-Topic"}
-      </h2>
-
+    <div className="p-6 mb-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
         {/* Select Topic */}
         <div className="flex flex-col space-y-2">
           <label className="text-sm font-medium">Choose Topic</label>
           <Select value={selectedTopic} onValueChange={setSelectedTopic}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal">
               <SelectValue placeholder="Select Topic" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent position="popper">
               <SelectGroup>
                 {topics.map((topic: any) => (
                   <SelectItem key={topic._id} value={topic._id}>
@@ -114,19 +111,24 @@ const SubTopicForm = () => {
 
         {/* Enter Subtopic */}
         <div className="flex flex-col space-y-2">
-          <label className="text-sm font-medium">Enter Sub-Topic</label>
+          <Label className="mb-4 block font-dm-sans text-md">
+            Enter Sub-Topic
+          </Label>
           <Input
             type="text"
             placeholder="E.g. Algebra Basics"
             value={subtopicInput}
             onChange={(e) => setSubtopicInput(e.target.value)}
-            className="w-full"
+            className="w-full max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal"
           />
         </div>
 
         {/* Submit Button */}
-        <div className="col-span-2 flex justify-end mt-4">
-          <Button onClick={handleSubmit} variant="orange">
+        <div className="flex items-end">
+          <Button
+            onClick={handleSubmit}
+            className="h-10 bg-[#FF5635] text-white px-10 font-normal font-poppins cursor-pointer"
+          >
             {editingId ? "Update" : "Submit"}
           </Button>
         </div>

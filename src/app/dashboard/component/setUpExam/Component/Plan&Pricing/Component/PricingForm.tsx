@@ -30,19 +30,19 @@ const PricingForm = () => {
   const [editingId, seteditingId] = useState<string | null>(null);
 
   // Fetch Topics
-//   const fetchTopics = async () => {
-//     const payload: any = {};
-//     await dispatch(getTopic(payload));
-//   };
+  //   const fetchTopics = async () => {
+  //     const payload: any = {};
+  //     await dispatch(getTopic(payload));
+  //   };
 
-//   const fetchSubTopics = async () => {
-//     const payload: any = {};
-//     await dispatch(getsubTopic(payload));
-//   };
+  //   const fetchSubTopics = async () => {
+  //     const payload: any = {};
+  //     await dispatch(getsubTopic(payload));
+  //   };
 
-//   useEffect(() => {
-//     fetchTopics();
-//   }, []);
+  //   useEffect(() => {
+  //     fetchTopics();
+  //   }, []);
 
   const getData = async () => {
     const payload: any = {};
@@ -63,7 +63,7 @@ const PricingForm = () => {
 
   // Submit
   const handleSubmit = async () => {
-    const examIdArray = selected.map((item: any) => item.value); 
+    const examIdArray = selected.map((item: any) => item.value);
     // 👉 Converts react-select value objects into plain ObjectId array
 
     const payload: any = {
@@ -90,53 +90,66 @@ const PricingForm = () => {
   }));
 
   return (
-    <div className="bg-[#F7F7F5] p-6 rounded-lg shadow-md mb-6">
-      <h2 className="text-xl font-semibold mb-4">
-        {editingId ? "Update Sub-Topic" : "Create Plan"}
-      </h2>
+    <div className=" px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mb-8">
+      <div className="bg-[#F0F9FF] rounded-lg px-8 py-6 text-start font-poppins font-medium">
+        <h1 className="text-[#FF5635] text-2xl  font-poppins">
+          Create Plans{" "}
+          <span className="text-black text-lg">
+            <span className="text-[#005EB6]"> | </span>
+            Pricing Plans
+          </span>
+        </h1>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
-        
+      <div className="grid grid-cols-1 md:grid-cols-3 justify-start gap-y-6 max-w-4xl gap-4 mt-10">
         {/* Select Exam */}
         <div className="flex flex-col space-y-2">
-          <label className="text-sm font-medium">Choose Exam</label>
+          <label className="font-dm-sans text-md font-medium">
+            Choose Exam
+          </label>
 
           <Select
             isMulti
             options={options}
             value={selected}
             onChange={(val: any) => setSelected(val)} // ⭐ stores full react-select objects
-            className="w-full"
           />
         </div>
 
         {/* Enter Title */}
         <div className="flex flex-col space-y-2">
-          <label className="text-sm font-medium">Enter Title</label>
+          <label className="font-dm-sans text-md font-medium">
+            Enter Title
+          </label>
           <Input
             type="text"
             placeholder="Enter title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full"
+            className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none"
           />
         </div>
 
         {/* Enter Price */}
         <div className="flex flex-col space-y-2">
-          <label className="text-sm font-medium">Enter Price</label>
+          <label className="font-dm-sans text-md font-medium">
+            Enter Price
+          </label>
           <Input
             type="number"
             placeholder="Enter Price"
             value={price || ""}
             onChange={(e) => setPrice(e.target.value)}
-            className="w-full"
+            className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none"
           />
         </div>
 
         {/* Submit Button */}
-        <div className="col-span-2 flex justify-end mt-4">
-          <Button onClick={handleSubmit} variant="orange">
+        <div className="col-span-2 flex mt-4">
+          <Button
+            onClick={handleSubmit}
+            className="h-10 bg-[#FF5635] text-white px-10 font-normal font-poppins cursor-pointer w-fit rounded-[4px]"
+          >
             {editingId ? "Update" : "Submit"}
           </Button>
         </div>

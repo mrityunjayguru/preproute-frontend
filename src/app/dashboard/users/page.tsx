@@ -3,7 +3,7 @@ import User from '../component/Users/User'
 
 function page() {
   return (
-    <div className='mt-20 h-[80vh]'>
+    <div className=''>
       <User/>
     </div>
   )

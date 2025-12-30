@@ -49,8 +49,9 @@ const UserForm: React.FC = () => {
   useEffect(() => {
     const loadUserData = async () => {
       if (updateUser && updateUser._id) {
-        const decryptedPass =
-          updateUser.password ? await decrypt(updateUser.password) : "";
+        const decryptedPass = updateUser.password
+          ? await decrypt(updateUser.password)
+          : "";
 
         setFormData({
           name: updateUser.username || "",
@@ -101,74 +102,75 @@ const UserForm: React.FC = () => {
   };
 
   return (
-    <div className="p-6 rounded-lg mb-6">
-      <h2 className="text-xl font-semibold mb-4">
-        {editingId ? "Update User" : "Create User"}
-      </h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+    <div className=" px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2  gap-y-6 max-w-xl gap-4">
         {/* Name */}
-        <div>
-          <Label>Name</Label>
+        <div className="flex flex-col gap-2">
+          <Label className="font-dm-sans text-md font-medium">Name</Label>
           <Input
             name="name"
             type="text"
-            placeholder="Enter Name"
+            placeholder="Enter Full Name"
             value={formData.name}
             onChange={handleChange}
+            className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none"
           />
         </div>
 
         {/* Email */}
-        <div>
-          <Label>Email</Label>
+        <div className="flex flex-col gap-2">
+          <Label className="font-dm-sans text-md font-medium">Email</Label>
           <Input
             name="email"
             type="email"
-            placeholder="Enter Email"
+            placeholder="Enter User Email"
             value={formData.email}
             onChange={handleChange}
+            className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none"
           />
         </div>
 
         {/* Phone */}
-        <div>
-          <Label>Phone</Label>
+        <div className="flex flex-col gap-2">
+          <Label className="font-dm-sans text-md font-medium">Phone</Label>
           <Input
             name="phone"
             type="text"
-            placeholder="Enter Phone"
+            placeholder="Enter Mobile Number"
             value={formData.phone}
             onChange={handleChange}
+            className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none"
           />
         </div>
 
         {/* Password */}
-        <div className="relative">
-          <Label>Password</Label>
-          <Input
-            name="password"
-            type={showPassword ? "text" : "password"}
-            placeholder="Enter Password"
-            value={formData.password}
-            onChange={handleChange}
-            className="pr-10"
-          />
-          <button
-            type="button"
-            className="absolute right-3  top-6 text-gray-500 hover:text-gray-700"
-            onClick={() => setShowPassword((prev) => !prev)}
-          >
-            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-          </button>
+        <div className="flex flex-col gap-2 relative">
+          <Label className="font-dm-sans text-md font-medium">Password</Label>
+          <div className="relative">
+            <Input
+              name="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter Password"
+              value={formData.password}
+              onChange={handleChange}
+              className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none pr-10"
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
+              onClick={() => setShowPassword((prev) => !prev)}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
         </div>
 
         {/* Submit */}
-        <div className="flex items-end w-full md:col-span-2">
+        <div className="flex items-center w-full md:col-span-2 mt-2">
           <Button
             onClick={handleAddOrUpdate}
-            variant="orange"
-            className="w-full h-10"
+    
+            className="h-10 bg-[#FF5635] text-white px-10 font-normal font-poppins cursor-pointer w-fit rounded-[4px]"
           >
             {editingId ? "Update" : "Submit"}
           </Button>

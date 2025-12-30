@@ -10,7 +10,7 @@ import {
   getTopic,
   handlesetUpdateTopc,
   handleUpdateData,
-   // 👈 make sure this action exists
+  // 👈 make sure this action exists
 } from "@/api/Topic";
 
 const TopicForm = () => {
@@ -57,7 +57,7 @@ const TopicForm = () => {
       // Create new topic
       await dispatch(createTopic(payload));
     }
-const data:any=null
+    const data: any = null;
     // Reset Redux edit state and refetch
     dispatch(handlesetUpdateTopc(data));
     await fetchData();
@@ -67,30 +67,24 @@ const data:any=null
   };
 
   return (
-    <div className="bg-[#F7F7F5] p-6 rounded-lg mb-6 w-full">
-      <h2 className="text-xl font-semibold mb-4">
-        {editingId ? "Update Topic" : "Create Topic"}
-      </h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-        {/* Topic Name */}
-        <div className="w-full">
-          <Label className="mb-2 block">Enter Topic</Label>
+    <div className="p-6 mb-6">
+      <div className="flex justify-center gap-3 flex-col">
+        <div className="flex-1">
+          <Label className="mb-4 block font-dm-sans text-md">Enter Topic</Label>
           <Input
             type="text"
-            placeholder="Enter Topic"
+            placeholder="Enter Topic"                       
             value={topicName}
             onChange={(e) => setTopicName(e.target.value)}
-            className="w-full"
+            className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none "
           />
         </div>
 
         {/* Submit Button */}
-        <div className="flex items-end w-full">
+        <div className="flex items-end">
           <Button
             onClick={handleAddOrUpdate}
-            variant="orange"
-            className="w-full h-10"
+            className="h-10 bg-[#FF5635] text-white px-10 font-normal font-poppins cursor-pointer"
           >
             {editingId ? "Update" : "Submit"}
           </Button>

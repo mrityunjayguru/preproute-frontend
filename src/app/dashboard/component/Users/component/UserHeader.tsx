@@ -1,25 +1,22 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import UserForm from "./UserForm";
 
 const UserHeader: React.FC = () => {
-  const router = useRouter();
-
-  const handleCreateClick = () => {
-    router.push("users/create");
-  };
-
   return (
-    <div className="flex items-center justify-between bg-[#F7F7F5] px-6 py-4 rounded-md shadow-md mb-6">
-      <h1 className="text-xl font-semibold text-gray-800">User Management</h1>
-      <Button
-        variant="orange"
-        onClick={handleCreateClick}
-        className="px-6 py-2 font-medium"
-      >
-        + Create User
-      </Button>
+     <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mb-8">
+      <div className="flex flex-col gap-6">
+        <div className="bg-[#F0F9FF] rounded-lg px-8 py-6 text-start font-poppins font-medium">
+          <h1 className="text-[#FF5635] text-2xl f font-poppins">
+            Exam Setup{" "}
+            <span className="text-black text-lg">
+              <span className="text-[#005EB6]"> | </span>
+              Create Oprator
+            </span>
+          </h1>
+        </div>
+        <UserForm />
+      </div>
     </div>
   );
 };

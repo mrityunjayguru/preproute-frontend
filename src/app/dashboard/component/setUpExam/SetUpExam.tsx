@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import React, { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 
 interface Section {
   name: string;
@@ -17,33 +17,33 @@ interface Section {
 }
 
 const SetUpExam = () => {
-  const [sectionName, setSectionName] = useState('');
+  const [sectionName, setSectionName] = useState("");
   const [sections, setSections] = useState<Section[]>([
-    { name: 'MCQ', createdOn: '30 Sep 2025 00:55 AM' },
-    { name: 'LR', createdOn: '29 Sep 2025 08:35 PM' },
-    { name: 'VR', createdOn: '29 Sep 2025 08:30 PM' },
+    { name: "MCQ", createdOn: "30 Sep 2025 00:55 AM" },
+    { name: "LR", createdOn: "29 Sep 2025 08:35 PM" },
+    { name: "VR", createdOn: "29 Sep 2025 08:30 PM" },
   ]);
 
   const handleAddSection = () => {
     if (sectionName.trim()) {
       const newSection: Section = {
         name: sectionName.trim(),
-        createdOn: new Date().toLocaleString('en-US', {
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
+        createdOn: new Date().toLocaleString("en-US", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
           hour12: true,
         }),
       };
       setSections([...sections, newSection]);
-      setSectionName(''); // Clear the input
+      setSectionName(""); // Clear the input
     }
   };
 
   return (
-    <div className="flex-1 p-8 bg-gray-50">
+    <div className="flex-1">
       <div className="bg-white p-6 rounded-lg shadow-md mb-6">
         <h2 className="text-xl font-semibold mb-4">Create Sections</h2>
         <div className="flex space-x-2">
@@ -54,7 +54,10 @@ const SetUpExam = () => {
             onChange={(e) => setSectionName(e.target.value)}
             className="flex-1"
           />
-          <Button onClick={handleAddSection} className="bg-orange-500 hover:bg-orange-600">
+          <Button
+            onClick={handleAddSection}
+            className="bg-orange-500 hover:bg-orange-600"
+          >
             Submit
           </Button>
         </div>
@@ -79,6 +82,7 @@ const SetUpExam = () => {
           </TableBody>
         </Table>
       </div>
+      
     </div>
   );
 };
