@@ -1,6 +1,6 @@
 "use client";
 
-import { handleRegister } from "@/api/Auth/SchoolAuth";
+import { handleRegister } from "@/api/Auth/UserAuth";
 import { LeftLoginIcon, MailIcons, RightLoginIcon } from "@/Common/svgIcon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

@@ -9,6 +9,13 @@ import axios from "axios";
 import { updateUserInfo, userProfileData } from "@/api/Users";
 import PurchasedPlanSection from "./PurchasedPlanSection";
 import { FaRegUserCircle } from "react-icons/fa";
+import { Download, Plus, User2 } from "lucide-react";
+import Image from "next/image";
+import USER from "@/assets/vectors/user-profile.svg";
+import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
+import SocialMedia from "../Home/_componets/social-media";
+import InvoicePrint from "./InvoicePDF.client";
+
 export default function ProfilePage() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -18,7 +25,9 @@ export default function ProfilePage() {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
-  const [profileImage, setProfileImage] = useState(user?.image || "/profile-avatar.png");
+  const [profileImage, setProfileImage] = useState(
+    user?.image || "/profile-avatar.png"
+  );
   const [uploading, setUploading] = useState(false);
 
   const handleLogout = () => {
@@ -33,18 +42,21 @@ export default function ProfilePage() {
     }
   }, [token, router]);
 
+  console.log(user);
   // 📤 Upload Profile Image
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const payload:any={
-      image:file,
-      _id:user?._id
+    const payload: any = {
+      image: file,
+      _id: user?._id,
     };
     try {
       setUploading(true);
-   await dispatch(updateUserInfo(payload))
+      await dispatch(updateUserInfo(payload));
     } catch (err) {
       console.error(err);
       alert("Error uploading image.");
@@ -52,116 +64,220 @@ export default function ProfilePage() {
       setUploading(false);
     }
   };
-  const getuserData=async()=>{
-    const payload:any={_id:user?._id}
-    dispatch(userProfileData(payload))
-  }
+  const getuserData = async () => {
+    const payload: any = { _id: user?._id };
+    dispatch(userProfileData(payload));
+  };
 
-
- useEffect(()=>{
-getuserData()
-  },[])
+  useEffect(() => {
+    getuserData();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 flex items-center justify-center px-4 py-10">
-      <div className="relative bg-white/80 backdrop-blur-xl shadow-2xl rounded-3xl max-w-2xl w-full overflow-hidden border border-orange-100">
-        {/* 🌈 Banner */}
-        <div className="h-32 bg-gradient-to-r bg-[#FF5635] relative">
-          <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
-            {/* 📸 Profile Image Upload */}
-            <div
-              className="relative cursor-pointer group"
-              onClick={() => fileInputRef.current?.click()}
-            >
-     {user?.image ? (
-  <img
-    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user.image}`}
-    alt="Profile"
-    onError={(e) => {
-      e.currentTarget.src = "/default-user.png";
-    }}
-    className="w-28 h-28 rounded-full border-4 border-white shadow-md object-cover"
-  />
-) : (
-  <FaRegUserCircle className="w-28 h-28 text-gray-400" />
-)}
+    <div className="h-screen flex flex-col justify-between">
+      <div>
+        <div className="mx-auto space-y-6 px-6 sm:px-8 md:px-12 lg:px-28">
+          {/* 🔹 PROFILE HEADER */}
+          <div className="bg-[#F0F9FF] rounded-[8px] p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            {/* Left */}
+            <div className="flex items-center gap-8">
+              {/* Avatar */}
+              <div
+                className="relative cursor-pointer  bg-[#ffffff] rounded-[8px]"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {user?.image ? (
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${user.image}`}
+                    alt="Profile"
+                    onError={(e) => {
+                      e.currentTarget.src = "/default-user.png";
+                    }}
+                    className=" object-cover w-16 h-16"
+                  />
+                ) : (
+                  <>
+                    <Image
+                      src={USER}
+                      alt="user"
+                      className="w-16 h-16 p-8 text-gray-400"
+                    />
+                    <span className="absolute -right-3 w-5 h-5 bg-[#FF5635] text-white  rounded-full flex items-center justify-center">
+                      <Plus size={12} />
+                    </span>
+                  </>
+                )}
+              </div>
 
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
 
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <span className="text-white text-sm font-medium">
-                  {uploading ? "Uploading..." : "Change"}
-                </span>
+              {/* Info */}
+              <div className="flex flex-col font-poppins">
+                <p className="text-xs text-[#1A1D1F]">Greetings,</p>
+                <h2 className="text-md font-semibold text-[#1A1D1F]">
+                  {user?.username || "User Name"}!
+                </h2>
+                <p className="text-xs text-[#727EA3]">Nikname :{user?.nickname}</p>
+                <p className="text-xs text-[#FF5635]">
+                  {user?.email} {user?.phone && `| +91 ${user.phone}`}
+                </p>
               </div>
             </div>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImageUpload}
-            />
-          </div>
-        </div>
 
-        {/* 🧑 Info Section */}
-        <div className="mt-16 px-8 pb-10 text-center">
-          <h1 className="text-3xl font-semibold text-gray-800">
-            {user?.username || "User Name"}
-          </h1>
-          <p className="text-gray-500">{user?.email || "user@example.com"}</p>
-          {/* <div className="mt-2 inline-block bg-orange-100 text-orange-600 px-4 py-1 rounded-full text-sm font-medium">
-            {user?.role || "Student"}
-          </div> */}
-
-          {/* 💡 Info Cards */}
-          <div className="mt-10 grid grid-cols-2 gap-6 text-left">
-            <div className="p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300">
-              <p className="text-gray-500 text-sm mb-1">Full Name</p>
-              <p className="text-gray-800 font-medium">
-                {user?.username || "N/A"}
-              </p>
-            </div>
-
-            <div className="p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300">
-              <p className="text-gray-500 text-sm mb-1">Email</p>
-              <p className="text-gray-800 font-medium">
-                {user?.email || "N/A"}
-              </p>
-            </div>
-
-            {/* <div className="p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300">
-              <p className="text-gray-500 text-sm mb-1">Role</p>
-              <p className="text-gray-800 font-medium">
-                {user?.role || "N/A"}
-              </p>
-            </div> */}
-
-            <div className="p-4 bg-white rounded-xl shadow-sm hover:shadow-md border border-gray-100 transition-all duration-300">
-              <p className="text-gray-500 text-sm mb-1">Phone</p>
-              <p className="text-gray-800 font-medium">
-                {user?.phone || "Not Provided"}
-              </p>
+            {/* Right */}
+            <div className="flex gap-3">
+              <Button
+                className="bg-black rounded-[8px] font-poppins font-thin cursor-pointer text-white hover:bg-[#ff5635] hover:text-white"
+                onClick={() => router.push("/Profile/edit")}
+              >
+                Edit Details
+              </Button>
+              <Button
+                className="bg-[#FF5635] rounded-[8px] hover:bg-black font-thin font-poppins cursor-pointer text-white hover:text-white"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
             </div>
           </div>
-<PurchasedPlanSection user={user}/>
-          {/* ⚙️ Buttons */}
-          <div className="mt-10 flex justify-center gap-6">
-            <Button
-              variant="outline"
-              className="border-orange-500 text-orange-600  px-6 py-2 rounded-full"
-              onClick={() => router.push("/Profile/edit")}
-            >
-              Edit Profile
-            </Button>
-            <Button
-              onClick={handleLogout}
-              className=" bg-[#e34d2e]   text-white px-6 py-2 rounded-full "
-            >
-              Logout
-            </Button>
+
+          {/* 🔹 USER DETAILS */}
+          <div className="bg-white rounded-xl p-8 font-poppins grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4 text-sm">
+            <div className="flex border-b pb-2 gap-24">
+              <span className="text-[#727EA3]">Parent Contact:</span>
+              <span className="">{user?.parentPhone || "—"}</span>
+            </div>
+
+            <div className="flex border-b pb-2 gap-24">
+              <span className="text-[#727EA3]">Attempt Year:</span>
+              <span className="">{user?.profile?.year}</span>
+            </div>
+
+            <div className="flex border-b pb-2 gap-24">
+              <span className="text-[#727EA3]">Stream:</span>
+              <span className="">{user?.profile?.stream}</span>
+            </div>
+
+            <div className="flex border-b pb-2 gap-24">
+              <span className="text-[#727EA3]">Preparing For:</span>
+              <span className=" text-right">
+                {user?.profile?.stream}
+              </span>
+            </div>
           </div>
+
+          {/* 🔹 ACTIVE SUBSCRIPTION */}
+          <div>
+            <h3 className="text-xl font-poppins font-normal text-gray-800 mb-4 ml-4">
+              Active Subscription
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
+              {/* Free Plan */}
+              <div
+                className="bg-gradient-to-t from-[#F0F9FF] to-white 
+                 border border-[#E6F4FF] rounded-xl p-6 "
+              >
+                <h4 className="text-[#ff5635] font-poppins font-medium text-2xl">
+                  Free Plan
+                </h4>
+                <p className="text-md text-[#ff5635] mb-4">Limited Access</p>
+
+                <div className="text-[14px] space-y-1 font-poppins">
+                  <p>
+                    <span className="text-[#1A1D1F]">Created on:</span>{" "}
+                  </p>
+                  <p className="flex gap-2 items-center">
+                    <h1 className="flex gap-1 flex-col">
+                      <span className="text-[#1A1D1F]">Price</span>{" "}
+                      <span className="text-[#1A1D1F] text-[8px]">
+                        inclusive of all taxes
+                      </span>
+                    </h1>
+                    <span className="text-[#ff5635] font-medium">₹0</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Paid Plan */}
+              {user?.purchaseDetails?.map((item: any, index: number) => (
+                <div
+                  key={item?.orderId || index}
+                  className="bg-gradient-to-t from-[#F0F9FF] to-white 
+                    border border-[#E6F4FF] rounded-xl p-6 "
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="text-[#ff5635] font-semibold text-2xl">
+                        {item?.plan?.title}
+                      </h4>
+                      <p className="text-md text-[#ff5635] mb-4">Full Access</p>
+                    </div>
+
+                    <Button className=" text-white bg-black text-sm">
+                      <Download className="h-5 w-5" />
+                      <InvoicePrint invoice={item} />
+                      {/* Download Invoice */}
+                    </Button>
+                  </div>
+
+                  <div className="text-[14px] space-y-1 font-poppins">
+                    <p>
+                      <span className="text-[#1A1D1F]">Created on:</span>{" "}
+                      {item?.otherdetsil?.orderedAt
+                        ? new Date(
+                            item.otherdetsil.orderedAt
+                          ).toLocaleDateString()
+                        : item?.plan?.createdAt
+                        ? new Date(item.plan.createdAt).toLocaleDateString()
+                        : "—"}
+                    </p>
+                    <p className="flex gap-2 items-center">
+                      <h1 className="flex gap-1 flex-col">
+                        <span className="text-[#1A1D1F]">Price</span>{" "}
+                        <span className="text-[#1A1D1F] text-[8px]">
+                          inclusive of all taxes
+                        </span>
+                      </h1>
+                      <span className="text-[#ff5635] font-medium">
+                        ₹{item?.amount || item?.plan?.price || "0"}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Keep your existing section */}
         </div>
       </div>
+      <section className="w-full bg-[#FF5635] text-white px-6 sm:px-10 lg:px-12 xl:px-16 mt-16 py-2 sm:py-5 lg:py-6 xl:py-8">
+        <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-8 px-6 sm:px-8 md:px-12 lg:px-28">
+          <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
+            {/* Logo */}
+            <div className="w-[130px] sm:w-[160px] lg:w-[200px]">
+              <Image
+                src={FOOTERLOGO}
+                alt="preproute-logo"
+                className="w-full h-auto object-contain"
+                priority
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col items-center md:items-start gap-3">
+            <SocialMedia />
+          </div>
+        </div>
+      </section>
     </div>
-  );
+  )
+
 }

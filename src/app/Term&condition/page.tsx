@@ -1,128 +1,259 @@
-// app/privacy/page.tsx
+"use client"
 import React from "react";
+import SocialMedia from "../Component/Home/_componets/social-media";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import FOOTERLOGO from "@/assets/vectors/footer-logo.svg"
 
-export const metadata = {
-  title: "Privacy Policy - PreeRoute",
-  description: "Privacy policy for PreeRoute — how we collect, use and protect your data.",
-};
-
-export default function page(): JSX.Element {
+export default function Page() {
   return (
-    <main className="min-h-screen px-4 py-12 bg-white text-slate-800">
-      <div className="max-w-4xl mx-auto">
-        <header className="mb-8">
-          <h1 className="text-4xl font-extrabold mb-2">Privacy Policy</h1>
-          <p className="text-sm text-slate-600">
-            Last updated: <strong>{new Date().toLocaleDateString()}</strong>
+    <main className="min-h-screen bg-white ">
+      <div className=" mx-auto  py-12 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+        {/* Header Section with Light Blue Background */}
+        <div className="bg-[#E8F4F8] rounded-lg px-8 py-10 mb-8 text-center">
+          <h1 className="text-[#FF5635] text-3xl md:text-4xl font-semibold font-poppins mb-2">
+            Terms of Use
+          </h1>
+          <p className="text-sm text-gray-700 font-dm-sans">
+            Effective Date: 01 October 2025
           </p>
-        </header>
+        </div>
+        <div className="max-w-4xl mx-auto px-6 py-2">
+          {/* Introduction */}
+          <div className="mb-8">
+            <p className="text-sm text-gray-800 leading-relaxed font-dm-sans">
+              These Terms of Use ("Terms") govern your access to and use of the ThePrepRoute mobile application, website, and related services ("Service"). By using ThePrepRoute, you agree to follow these Terms. If you do not agree, please stop using the Service.
+            </p>
+          </div>
 
-        <section className="mb-8 p-6 border rounded-lg bg-slate-50">
-          <h2 className="text-2xl font-semibold mb-3">Introduction</h2>
-          <p className="leading-relaxed text-slate-700">
-            Welcome to <strong>PreeRoute</strong>. This Privacy Policy explains how we collect,
-            use, disclose, and safeguard your information when you use our website and services.
-            Please read it carefully. By using our services you agree to the collection and use
-            of information in accordance with this policy.
-          </p>
-        </section>
+          {/* Main Content */}
+          <div className="space-y-6">
+            {/* Section 1 */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3 font-poppins">
+                1. Eligibility
+              </h2>
+              <p className="text-sm text-gray-800 font-dm-sans">
+                You must be at least 13 years old to use ThePrepRoute. If you are under 18, you must use the Service under parental/guardian supervision.
+              </p>
+            </div>
 
-        <nav className="mb-8">
-          <h3 className="text-lg font-semibold mb-2">Contents</h3>
-          <ul className="space-y-1 text-slate-600">
-            <li><a href="#data-we-collect" className="underline">Data we collect</a></li>
-            <li><a href="#how-we-use-data" className="underline">How we use data</a></li>
-            <li><a href="#cookies" className="underline">Cookies & similar technologies</a></li>
-            <li><a href="#third-parties" className="underline">Third-party services</a></li>
-            <li><a href="#security" className="underline">Security</a></li>
-            <li><a href="#children" className="underline">Children's privacy</a></li>
-            <li><a href="#changes" className="underline">Changes to this policy</a></li>
-            <li><a href="#contact" className="underline">Contact us</a></li>
-          </ul>
-        </nav>
+            {/* Section 2 */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3 font-poppins">
+                2. Account Registration
+              </h2>
+              <p className="text-sm text-gray-800 mb-2 font-dm-sans">
+                To access certain features, you must create an account. You agree to:
+              </p>
+              <ul className="list-disc pl-6 space-y-1">
+                <li className="text-sm text-gray-800 font-dm-sans">Provide accurate and complete information</li>
+                <li className="text-sm text-gray-800 font-dm-sans">Keep your login credentials confidential</li>
+                <li className="text-sm text-gray-800 font-dm-sans">Be responsible for all activity under your account</li>
+              </ul>
+              <p className="text-sm text-gray-800 mt-2 font-dm-sans">
+                We may suspend or terminate accounts with false information or misuse.
+              </p>
+            </div>
 
-        <section id="data-we-collect" className="mb-6">
-          <h3 className="text-xl font-semibold mb-2">Data we collect</h3>
-          <p className="leading-relaxed text-slate-700 mb-2">
-            We may collect the following categories of information:
-          </p>
-          <ul className="list-disc pl-6 text-slate-700 space-y-1">
-            <li><strong>Personal Information:</strong> name, email, phone number, billing details (when you purchase a plan).</li>
-            <li><strong>Account Data:</strong> username, profile preferences, subscription status, exam results.</li>
-            <li><strong>Usage Data:</strong> pages visited, actions taken, time spent, device and browser information, IP address.</li>
-            <li><strong>Payment Data:</strong> order IDs and minimal payment metadata (we do not store full card details — payments are processed by payment providers).</li>
-          </ul>
-        </section>
+            {/* Section 3 */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3 font-poppins">
+                3. Use of the Service
+              </h2>
+              <p className="text-sm text-gray-800 mb-2 font-dm-sans">
+                You agree to use ThePrepRoute only for lawful purposes. You must not:
+              </p>
+              <ul className="list-disc pl-6 space-y-1">
+                <li className="text-sm text-gray-800 font-dm-sans">Attempt to hack, reverse-engineer, or disrupt the Service</li>
+                <li className="text-sm text-gray-800 font-dm-sans">Share, sell, or misuse exam content, mock tests, or analytics</li>
+                <li className="text-sm text-gray-800 font-dm-sans">Use automated tools to access or interact with the platform</li>
+                <li className="text-sm text-gray-800 font-dm-sans">Upload harmful or misleading content</li>
+              </ul>
+              <p className="text-sm text-gray-800 mt-2 font-dm-sans">
+                We reserve the right to restrict access if any misuse is detected.
+              </p>
+            </div>
 
-        <section id="how-we-use-data" className="mb-6">
-          <h3 className="text-xl font-semibold mb-2">How we use data</h3>
-          <ul className="list-disc pl-6 text-slate-700 space-y-1">
-            <li>To provide and maintain the service, including account management and content delivery.</li>
-            <li>To process payments and manage subscriptions.</li>
-            <li>To communicate with you (notifications, support, marketing where you consent).</li>
-            <li>To analyze usage and improve our product and features.</li>
-            <li>To detect, prevent and address technical or security issues.</li>
-          </ul>
-        </section>
+            {/* Section 4 */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3 font-poppins">
+                4. Mock Exams & Performance Analytics
+              </h2>
+              <p className="text-sm text-gray-800 mb-2 font-dm-sans">
+                ThePrepRoute provides mock tests, performance insights, and college-based exam simulations. These tools are for practice and learning purposes only.
+              </p>
+              <p className="text-sm text-gray-800 font-dm-sans font-semibold">
+                ThePrepRoute does not guarantee exam results or admissions.
+              </p>
+            </div>
 
-        <section id="cookies" className="mb-6">
-          <h3 className="text-xl font-semibold mb-2">Cookies & similar technologies</h3>
-          <p className="leading-relaxed text-slate-700">
-            We use cookies, local storage and similar technologies to personalize your experience,
-            remember preferences, and for analytics. You can control cookies via your browser
-            settings — note this may impact site functionality.
-          </p>
-        </section>
+            {/* Section 5 */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3 font-poppins">
+                5. Purchases & Payments
+              </h2>
+              <p className="text-sm text-gray-800 mb-2 font-dm-sans">
+                If you buy any plan or service:
+              </p>
+              <ul className="list-disc pl-6 space-y-1">
+                <li className="text-sm text-gray-800 font-dm-sans">All prices are displayed within the app</li>
+                <li className="text-sm text-gray-800 font-dm-sans">Payments are processed through secure third-party gateways</li>
+                <li className="text-sm text-gray-800 font-dm-sans">Purchases may be non-refundable unless required by law</li>
+                <li className="text-sm text-gray-800 font-dm-sans">Plan benefits may vary depending on product type (limited colleges, full access, mock sets, etc.)</li>
+              </ul>
+            </div>
 
-        <section id="third-parties" className="mb-6">
-          <h3 className="text-xl font-semibold mb-2">Third-party services</h3>
-          <p className="leading-relaxed text-slate-700 mb-2">
-            We may share information with third-party providers who perform services on our behalf,
-            such as payment processors (e.g., Razorpay), analytics, email delivery, and hosting.
-            These providers have their own privacy practices — please review them before using the services.
-          </p>
-        </section>
+            {/* Section 6 */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3 font-poppins">
+                6. Content Ownership
+              </h2>
+              <p className="text-sm text-gray-800 mb-2 font-dm-sans">
+                All content, including questions, analytics, text, graphics, and trademarks, is owned by ThePrepRoute or its content partners.
+              </p>
+              <p className="text-sm text-gray-800 font-dm-sans">
+                Users are not allowed to copy, distribute, or sell any ThePrepRoute content without written permission.
+              </p>
+            </div>
 
-        <section id="security" className="mb-6">
-          <h3 className="text-xl font-semibold mb-2">Security</h3>
-          <p className="leading-relaxed text-slate-700">
-            We take reasonable measures to protect your information. However, no method of transmission
-            or storage is 100% secure. If you suspect a security breach, contact us immediately.
-          </p>
-        </section>
+            {/* Section 7 */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3 font-poppins">
+                7. User Content
+              </h2>
+              <p className="text-sm text-gray-800 mb-2 font-dm-sans">
+                If you submit feedback, queries, or other content:
+              </p>
+              <ul className="list-disc pl-6 space-y-1">
+                <li className="text-sm text-gray-800 font-dm-sans">You grant ThePrepRoute permission to use it to improve the Service</li>
+                <li className="text-sm text-gray-800 font-dm-sans">You confirm that the content does not violate any law or third-party rights</li>
+              </ul>
+            </div>
 
-        <section id="children" className="mb-6">
-          <h3 className="text-xl font-semibold mb-2">Children's privacy</h3>
-          <p className="leading-relaxed text-slate-700">
-            Our services are not directed to children under 13. We do not knowingly collect personal
-            information from children. If you believe we have collected such data, please contact us
-            so we can delete it.
-          </p>
-        </section>
+            {/* Section 8 */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3 font-poppins">
+                8. Privacy
+              </h2>
+              <p className="text-sm text-gray-800 font-dm-sans">
+                Your use of the Service is also governed by our Privacy Policy, which explains how we collect and use your information.
+              </p>
+            </div>
 
-        <section id="changes" className="mb-6">
-          <h3 className="text-xl font-semibold mb-2">Changes to this policy</h3>
-          <p className="leading-relaxed text-slate-700">
-            We may update this policy from time to time. When changes are significant, we will provide
-            a prominent notice. Continued use after changes means you accept the updated policy.
-          </p>
-        </section>
+            {/* Section 9 */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3 font-poppins">
+                9. Service Availability
+              </h2>
+              <p className="text-sm text-gray-800 mb-2 font-dm-sans">
+                We aim to provide uninterrupted access, but:
+              </p>
+              <ul className="list-disc pl-6 space-y-1">
+                <li className="text-sm text-gray-800 font-dm-sans">The Service may be unavailable during maintenance</li>
+                <li className="text-sm text-gray-800 font-dm-sans">Technical issues may occur occasionally</li>
+                <li className="text-sm text-gray-800 font-dm-sans">We are not liable for delays, errors, or data loss beyond our control</li>
+              </ul>
+            </div>
 
-        <section id="contact" className="mb-12">
-          <h3 className="text-xl font-semibold mb-2">Contact us</h3>
-          <p className="leading-relaxed text-slate-700 mb-3">
-            If you have any questions about this Privacy Policy, contact us at:
-          </p>
-          <p className="text-slate-800 font-medium">support@yourdomain.com</p>
-          <p className="text-sm text-slate-600 mt-2">
-            Replace the email above with your support/contact email.
-          </p>
-        </section>
+            {/* Section 10 */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3 font-poppins">
+                10. Termination
+              </h2>
+              <p className="text-sm text-gray-800 mb-2 font-dm-sans">
+                We may suspend or terminate your access if:
+              </p>
+              <ul className="list-disc pl-6 space-y-1">
+                <li className="text-sm text-gray-800 font-dm-sans">You violate these Terms</li>
+                <li className="text-sm text-gray-800 font-dm-sans">Your actions harm the Service or other users</li>
+                <li className="text-sm text-gray-800 font-dm-sans">We discontinue or modify the platform</li>
+              </ul>
+              <p className="text-sm text-gray-800 mt-2 font-dm-sans">
+                You may also delete your account at any time through the app.
+              </p>
+            </div>
 
-        <footer className="py-6 text-center text-sm text-slate-500 border-t">
-          © {new Date().getFullYear()} PreeRoute. All rights reserved.
-        </footer>
+            {/* Section 11 */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3 font-poppins">
+                11. Limitation of Liability
+              </h2>
+              <p className="text-sm text-gray-800 mb-2 font-dm-sans">
+                ThePrepRoute is not responsible for:
+              </p>
+              <ul className="list-disc pl-6 space-y-1">
+                <li className="text-sm text-gray-800 font-dm-sans">Exam outcomes, college admissions, or academic performance</li>
+                <li className="text-sm text-gray-800 font-dm-sans">Losses caused by user errors, network issues, or device problems</li>
+                <li className="text-sm text-gray-800 font-dm-sans">Any indirect, incidental, or consequential damages</li>
+              </ul>
+              <p className="text-sm text-gray-800 mt-2 font-dm-sans font-semibold">
+                Your use of the Service is at your own responsibility.
+              </p>
+            </div>
+
+            {/* Section 12 */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3 font-poppins">
+                12. Changes to These Terms
+              </h2>
+              <p className="text-sm text-gray-800 mb-2 font-dm-sans">
+                We may update these Terms whenever necessary.
+              </p>
+              <p className="text-sm text-gray-800 font-dm-sans">
+                The updated version will carry a new Effective Date. Continued use of the Service means you accept the modified Terms.
+              </p>
+            </div>
+
+            {/* Section 13 */}
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 mb-3 font-poppins">
+                13. Contact Us
+              </h2>
+              <p className="text-sm text-gray-800 mb-2 font-dm-sans">
+                For any queries related to these Terms:
+              </p>
+              <p className="text-sm text-gray-800 font-dm-sans font-semibold">
+                ThePrepRoute Support Team
+              </p>
+              <p className="text-sm text-gray-800 font-dm-sans">
+                Email:{" "}
+                <a href="mailto:support@ThePrepRoute.com" className="text-[#FF5635] font-semibold hover:underline">
+                  support@ThePrepRoute.com
+                </a>
+              </p>
+              <p className="text-sm text-gray-800 font-dm-sans">
+                Through the ThePrepRoute App → Support Section
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
+      <section
+        className="bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-8 sm:mt-12 md:mt-20 py-4 sm:py-5 lg:py-6 xl:py-8"
+      >
+        <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
+          <div
+            className="flex flex-col gap-2 items-center md:items-start text-center md:text-left"
+          >
+            {/* Logo */}
+            <div className="w-[100px] sm:w-[130px] md:w-[160px] lg:w-[200px]">
+              <Image
+                src={FOOTERLOGO}
+                alt="preproute-logo"
+                className="w-full h-auto object-contain"
+                priority
+              />
+            </div>
+          </div>
+
+          <div
+            className="flex flex-col items-center md:items-start gap-2 sm:gap-3"
+          >
+            <SocialMedia />
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

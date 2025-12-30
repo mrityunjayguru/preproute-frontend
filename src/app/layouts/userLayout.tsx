@@ -11,30 +11,25 @@ export default function UserLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
 
+  // Hide header on exam flows and Auth pages; footer always shown per request
   const isExamPage =
-    pathname === "/Exam/userExam" ||
-    pathname === "/Exam/Instruction";
-
-  const isProfilePage = pathname === "/Auth/Profile";
-
-  // 🔥 HIDE NAVBAR & FOOTER CONDITIONS
-  const hideNavbar =
-    isExamPage ||
-    isProfilePage ||
-    (userLogin && userLogin.isProfile === false);
-
-  // 🔐 Force profile completion
-  useEffect(() => {
-    if (userLogin && userLogin.isProfile === false && !isProfilePage) {
-      router.replace("/Auth/Profile");
-    }
-  }, [userLogin, isProfilePage, router]);
+    pathname === "/Exam/userExam" || pathname === "/Exam/InstructionPaeg";
+  const isAuthPage = pathname?.startsWith("/Auth");
+  const hideChrome = isExamPage || isAuthPage;
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {!hideNavbar && <UserHeader />}
-      <main className="flex-1">{children}</main>
-      {!hideNavbar && <UserFooter />}
+    <div className="flex flex-col ">
+      {!hideChrome && <UserHeader />}
+      <main
+        className={
+          hideChrome
+            ? "flex-1 overflow-hidden"
+            : "flex-1 "
+        }
+      >
+        {children}
+      </main>
+      {!hideChrome && <UserFooter />}
     </div>
   );
 }

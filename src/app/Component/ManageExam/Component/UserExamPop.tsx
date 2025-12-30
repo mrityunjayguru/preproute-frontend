@@ -85,8 +85,8 @@ dispatch(setCurrentSection(payload))
   };
 
   return (
-    <button className="cursor-pointer" onClick={handleButtonClick}>
-      {text} Mock
+    <button className="text-[14px] sm:text-[15px] lg:text-[16px]" onClick={handleButtonClick}>
+      {text}
     </button>
   );
 };

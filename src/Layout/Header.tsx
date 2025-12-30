@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -6,325 +8,384 @@ import { useRouter } from "next/navigation";
 import { AppDispatch } from "@/store/store";
 import localFont from "next/font/local";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 import logo from "../assets/images/logo.svg";
-import {
-  getCommonExamType,
-  handleSelectedExamType,
-} from "@/api/ExamType";
-import { handleLogout } from "@/api/Auth/SchoolAuth";
+import { getCommonExamType, handleSelectedExamType } from "@/api/ExamType";
+import { handleLogout } from "@/api/Auth/UserAuth";
 import { resetQuestionByExamID } from "@/api/Exam";
 import { resetQuestion } from "@/api/Question";
+import { ChevronDownIcon, LayoutDashboard, LogOut, MenuIcon, User, UserRound } from "lucide-react";
 
-// Local Font
-const artegra = localFont({
-  src: "../assets/fonts/artegra-soft-medium.woff",
-});
+// const artegra = localFont({
+//   src: "../assets/fonts/artegra-soft-medium.woff",
+// });
 
 export const Header: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [examMenuOpen, setExamMenuOpen] = useState(false);
+  const [resourcesMenuOpen, setResourcesMenuOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedExam, setSelectedExam] = useState("Practice");
 
-  const token = localStorage.getItem("token");
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
-  const examTypeData = useSelector(
-    (state: any) => state.examType.examType
-  ) || [];
+  const examTypeData =
+    useSelector((state: any) => state.examType.examType) || [];
 
   useEffect(() => {
-    const payload: any = {
-      userId:userLogin?._id
-    }
-    ;
+    const payload: any = { userId: userLogin?._id };
     dispatch(getCommonExamType(payload));
-  }, [dispatch]);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (!target.closest(".exam-dropdown")) {
-        setIsDropdownOpen(false);
-      }
-    };
-    document.addEventListener("click", handleClickOutside);
-    return () =>
-      document.removeEventListener("click", handleClickOutside);
-  }, []);
+  }, [dispatch, userLogin?._id]);
 
   const handleExamClick = (exam: any) => {
-    // setSelectedExam(exam.examType);
     dispatch(handleSelectedExamType(exam));
-    setIsDropdownOpen(false);
-        const payload: any = null;
-        dispatch(resetQuestionByExamID(payload));
-        dispatch(resetQuestion(payload));
+    setSelectedExam(exam.examType);
+    setExamMenuOpen(false);
+    const payload: any = null;
+    dispatch(resetQuestionByExamID(payload));
+    dispatch(resetQuestion(payload));
     router.push("/Exam/Mocks");
   };
 
   const handleLogoutClick = async () => {
-    const payload:any=null
-    await  dispatch(handleLogout(payload));
+    const payload: any = null;
+    await dispatch(handleLogout(payload));
     localStorage.removeItem("token");
     router.push("/home");
     window.location.reload();
   };
 
-  // Navigation links
   const navLinks = [
-    { label: "Pricing / Plans", href: "/PlanandPricing" },
+    { label: "Features", href: "/home#features" },
+    { label: "Pricing", href: "/PlanandPricing" },
     { label: "Community", href: "/Community" },
   ];
 
   return (
- <header className={ `sticky top-0 bg-[#F8F7F3] z-10 w-full py-8 px-4 lg:px-30  flex justify-between items-center ${artegra.className}`}>
-
-      {/* Logo + Desktop Nav */}
-      <div className="flex items-center gap-20">
-        <div
-          className="flex items-center cursor-pointer"
-          onClick={() => router.push("/home")}
-        >
-          <Image
-            src={logo}
-            alt="Logo"
-            className="h-8 w-auto object-contain"
-          />
-        </div>
-
-        {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-8 font-semibold text-black">
-          {/* Exam Dropdown */}
-          <div className="relative exam-dropdown">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="flex items-center gap-1 hover:text-[#FF5635] transition-colors duration-200"
-            >
-              {selectedExam}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                color="currentColor"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className={`transition-transform duration-200 ${
-                  isDropdownOpen ? "rotate-180" : "rotate-0"
-                }`}
-              >
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </button>
-
-            {isDropdownOpen && (
-              <div className="absolute top-full left-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-md py-2 z-10">
-                {examTypeData.length > 0 ? (
-                  examTypeData.map((exam: any) => (
-                    <div
-                      key={exam._id}
-                      onClick={() => handleExamClick(exam)}
-                      className="px-4 py-2 text-sm text-black hover:bg-orange-50 hover:text-orange-600 cursor-pointer"
-                    >
-                      {exam.examType}
-                    </div>
-                  ))
-                ) : (
-                  <div className="px-4 py-2 text-sm text-gray-500">
-                    No exams available
-                  </div>
-                )}
-              </div>
-            )}
+    <header className={`sticky font-dm-sans  top-0 z-20 w-full bg-white font-DM_Sans sm:px-6 md:px-8 lg:px-10 xl:px-12`}>
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4  py-4 lg:py-5">
+        {/* Left: Logo */}
+        <div className="flex items-center gap-12">
+          <div className="cursor-pointer" onClick={() => router.push("/home")}>
+            <Image
+              src={logo}
+              alt="Logo"
+              className="h-8 w-auto object-contain"
+            />
           </div>
+          {/* Center: Desktop nav */}
+          <nav className="hidden items-center gap-6 text-sm font-normal text-black lg:flex xl:gap-8">
+            {/* Practice dropdown (exams) */}
+            <DropdownMenu open={examMenuOpen} onOpenChange={setExamMenuOpen}>
+              <DropdownMenuTrigger
+                onMouseEnter={() => setExamMenuOpen(true)}
+                onMouseLeave={() => setExamMenuOpen(false)}
+                className="flex items-center gap-1 cursor-pointer outline-none transition-colors hover:text-[#FF5635]"
+              >
+                Practice
+                <span
+                  className={`transition-transform ${
+                    examMenuOpen ? "rotate-180" : ""
+                  }`}
+                >
+                  <ChevronDownIcon className="size-4 text-[#FF5635]" />
+                </span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="start"
+                className="w-56"
+                onMouseEnter={() => setExamMenuOpen(true)}
+                onMouseLeave={() => setExamMenuOpen(false)}
+              >
+                {examTypeData.length > 0 ? (
+                  <>
+                    {examTypeData.map((exam: any) => (
+                      <DropdownMenuItem
+                        key={exam._id}
+                        onSelect={(e) => {
+                          e.preventDefault();
+                          handleExamClick(exam);
+                        }}
+                        className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
+                      >
+                        {exam.examType}
+                      </DropdownMenuItem>
+                    ))}
 
-          {/* Static Links */}
-          {navLinks.map((link) => (
+                    {/* Static coming soon item */}
+                    <DropdownMenuItem
+                      disabled
+                      className="mt-1 border-t border-gray-100 cursor-default text-xs text-gray-400 hover:bg-transparent hover:text-gray-400"
+                    >
+                      Coming soon
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <DropdownMenuItem disabled>
+                    No exams available
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="transition-colors hover:text-[#FF5635]"
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            {/* Resources dropdown - matching Practice dropdown */}
+            <DropdownMenu
+              open={resourcesMenuOpen}
+              onOpenChange={setResourcesMenuOpen}
+            >
+              <DropdownMenuTrigger
+                onMouseEnter={() => setResourcesMenuOpen(true)}
+                onMouseLeave={() => setResourcesMenuOpen(false)}
+                className="flex items-center gap-1 cursor-pointer outline-none transition-colors hover:text-[#FF5635]"
+              >
+                Resources
+                <span
+                  className={`transition-transform ${
+                    resourcesMenuOpen ? "rotate-180" : ""
+                  }`}
+                >
+                  <ChevronDownIcon className="size-4 text-[#FF5635]" />
+                </span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="start"
+                className="w-48"
+                onMouseEnter={() => setResourcesMenuOpen(true)}
+                onMouseLeave={() => setResourcesMenuOpen(false)}
+              >
+                <DropdownMenuItem
+                  asChild
+                  className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
+                >
+                  <Link href="/resources">Resources Home</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  asChild
+                  className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
+                >
+                  <Link href="/instructions">Instructions</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </nav>
+        </div>
+        {/* Right: Auth */}
+        <div className="hidden items-center gap-3 lg:flex xl:gap-4">
+          {!token && (
             <Link
-              key={link.href}
-              href={link.href}
-              className="hover:text-orange-600 transition-colors duration-200 font-semibold"
+              href="/Auth/register"
+              className="text-sm font-normal text-[#FF5635] transition-colors cursor-pointer hover:text-[#e44c2f]"
             >
-              {link.label}
+              Register
             </Link>
-          ))}
-
-          {token && (
-            <Link
-              href="/analytics"
-              className="hover:text-orange-600 transition-colors duration-200"
-            >
-              Analytics
-            </Link>
-          )}
-
-            <Link
-              href="/resources"
-              className="hover:text-orange-600 transition-colors duration-200"
-            >
-              Resources
-            </Link>
-        </nav>
-      </div>
-
-      {/* Auth Buttons */}
-      <div className="hidden lg:flex items-center gap-3">
-        {(userLogin?.role === "Admin" || userLogin?.role === "Expert") &&
-          token && (
-            <Button
-              variant="orange"
-              onClick={() => router.push("/dashboard/home")}
-            >
-              Dashboard
-            </Button>
           )}
 
           {token ? (
             <>
+              {(userLogin?.role === "Admin" ||
+                userLogin?.role === "Expert") && (
+                <Button
+                  variant="outline"
+                  onClick={() => router.push("/dashboard/home")}
+                  className="border-[#FF5635] text-[#FF5635] cursor-pointer hover:bg-[#FFF1EC] px-4"
+                >
+                  <LayoutDashboard/>
+                  Dashboard
+                </Button>
+              )}
               <Button
                 variant="outline"
                 onClick={() => router.push("/Profile")}
-                className="border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC] text-[14px] px-5 py-3 rounded-[4px] font-semibold"
+                className="border-[#FF5635] rounded-full text-[#FF5635] cursor-pointer hover:text-[#e44c2f] px-4"
               >
+                <UserRound/>
                 Profile
               </Button>
-
               <Button
                 onClick={handleLogoutClick}
-                className="bg-[#FF5635] hover:bg-[#FF5635] text-white text-[14px] px-5 py-3 rounded-[4px] shadow-md"
+                className="bg-[#FF5635] rounded-full hover:bg-[#e44c2f] cursor-pointer px-5 py-2 text-white"
               >
+                <LogOut/>
                 Logout
               </Button>
             </>
           ) : (
             <Button
               onClick={() => router.push("/Auth/signin")}
-              className="cursor-pointer bg-[#FF5635] hover:bg-[#FF5635] text-white text-[16px] px-5 py-5 rounded-[4px] shadow-md"
+              className="rounded-full bg-[#FF5635] px-6 py-2 cursor-pointer text-white shadow-sm transition hover:bg-[#e44c2f]"
             >
               Login
             </Button>
           )}
+        </div>
 
-      </div>
-
-      {/* Mobile Menu Button */}
-      <div className="lg:hidden">
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="text-black hover:text-orange-600"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="26"
-            height="26"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+        {/* Mobile: Sheet Menu */}
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="lg:hidden">
+              <MenuIcon className="h-6 w-6" />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            className="w-[300px] sm:w-[350px] overflow-y-auto"
           >
-            {isMobileMenuOpen ? (
-              <line x1="18" y1="6" x2="6" y2="18" />
-            ) : (
-              <>
-                <line x1="4" y1="6" x2="20" y2="6" />
-                <line x1="4" y1="12" x2="20" y2="12" />
-                <line x1="4" y1="18" x2="20" y2="18" />
-              </>
-            )}
-          </svg>
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden w-full bg-white border-t border-gray-100 shadow-md mt-2">
-          <div className="flex flex-col items-start px-6 py-4 space-y-3 font-medium text-black">
-            {/* Exam Dropdown */}
-            <div className="relative exam-dropdown w-full">
-              <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center justify-between w-full"
-              >
-                {selectedExam}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className={`transition-transform duration-200 ${
-                    isDropdownOpen ? "rotate-180" : "rotate-0"
-                  }`}
-                >
-                  <path d="m6 9 6 6 6-6" />
-                </svg>
-              </button>
-
-              {isDropdownOpen && (
-                <div className="mt-2 w-full bg-white border border-gray-200 rounded-md shadow-md">
-                  {examTypeData.map((exam: any) => (
-                    <div
-                      key={exam._id}
-                      onClick={() => handleExamClick(exam)}
-                      className="px-4 py-2 text-sm text-black hover:bg-orange-50 hover:text-orange-600 cursor-pointer"
-                    >
-                      {exam.examType}
+            <div className="flex flex-col gap-6 py-6">
+              {/* Navigation Section */}
+              <div className="space-y-3">
+                {/* Practice Exams */}
+                {examTypeData.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="text-sm font-semibold text-black px-2">
+                      Practice Exams
                     </div>
+                    <div className="space-y-1">
+                      {examTypeData.map((exam: any) => (
+                        <button
+                          key={exam._id}
+                          onClick={() => {
+                            handleExamClick(exam);
+                            setMobileOpen(false);
+                          }}
+                          className="w-full text-left px-4 py-2.5 text-sm text-gray-700 rounded-lg transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
+                        >
+                          {exam.examType}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Main Links */}
+                <div className="space-y-1">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-4 py-2.5 text-sm font-medium text-gray-700 rounded-lg transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
+                    >
+                      {link.label}
+                    </Link>
                   ))}
                 </div>
-              )}
+
+                {/* Resources */}
+                <div className="space-y-2">
+                  <div className="text-sm font-semibold text-black px-2">
+                    Resources
+                  </div>
+                  <div className="space-y-1">
+                    <Link
+                      href="/resources"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-4 py-2.5 text-sm text-gray-700 rounded-lg transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
+                    >
+                      Resources Home
+                    </Link>
+                    <Link
+                      href="/instructions"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-4 py-2.5 text-sm text-gray-700 rounded-lg transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
+                    >
+                      Instructions
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Auth Section */}
+              <div className="flex space-y-3 pt-4 border-t">
+                {!token && (
+                  <Link
+                    href="/Auth/register"
+                    onClick={() => setMobileOpen(false)}
+                    className="block px-4 py-2.5 text-sm font-medium text-[#FF5635] rounded-lg transition-colors hover:bg-orange-50"
+                  >
+                    Register
+                  </Link>
+                )}
+
+                {token ? (
+                  <div className="flex space-y-2">
+                    {(userLogin?.role === "Admin" ||
+                      userLogin?.role === "Expert") && (
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          router.push("/dashboard/home");
+                          setMobileOpen(false);
+                        }}
+                        className="w-full border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC]"
+                      >
+                        <LayoutDashboard/>
+                        Dashboard
+                      </Button>
+                    )}
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        router.push("/Profile");
+                        setMobileOpen(false);
+                      }}
+                      className="w-full border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC]"
+                    >
+                      <UserRound/>
+                      Profile
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        handleLogoutClick();
+                        setMobileOpen(false);
+                      }}
+                      className="w-full bg-[#FF5635] hover:bg-[#e44c2f] text-white"
+                    >
+                      Logout
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      router.push("/Auth/signin");
+                      setMobileOpen(false);
+                    }}
+                    className="w-fit rounded-full bg-[#FF5635] text-white shadow-sm transition hover:bg-[#e44c2f]"
+                  >
+                    Login
+                  </Button>
+                )}
+              </div>
             </div>
-
-            {/* Mobile Links */}
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="hover:text-orange-600 w-full"
-              >
-                {link.label}
-              </Link>
-            ))}
-
-            {token && (
-              <button
-                onClick={() => router.push("/Profile")}
-                className="hover:text-orange-600 w-full text-left"
-              >
-                Profile
-              </button>
-            )}
-
-            {token ? (
-              <button
-                onClick={handleLogoutClick}
-                className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-6 rounded-half w-full"
-              >
-                Logout
-              </button>
-            ) : (
-              <button
-                onClick={() => router.push("/Auth/signin")}
-                className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-6 rounded-half w-full"
-              >
-                Login
-              </button>
-            )}
-          </div>
-        </div>
-      )}
+          </SheetContent>
+        </Sheet>
+      </div>
     </header>
   );
 };

@@ -9,6 +9,7 @@ const UserAuth={
   subject:"codemaster",
   yearMaster:"yearsmaster",
   register:"Auth/signUp",
+  checkUser:"Auth/checUser",
   AdminLogin:"Auth/adminLogin",
   exam:"statusmaster",
 }

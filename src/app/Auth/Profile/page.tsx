@@ -47,8 +47,6 @@ export default function Page() {
     try {
       const response: any = await dispatch(updateUserInfo(payload));
       if (response?.payload === true) {
-console.log(response,"responseresponse")
-
         router.push("/home");
         await dispatch(updateUserProfile)
       } else {

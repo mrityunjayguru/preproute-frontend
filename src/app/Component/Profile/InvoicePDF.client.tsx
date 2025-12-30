@@ -12,7 +12,6 @@ interface InvoiceProps {
 export default function InvoicePrint({ invoice }: InvoiceProps) {
   const [isDownloading, setIsDownloading] = useState(false);
   const user = useSelector((state: any) => state?.Auth?.loginUser);
-
   const handleDownloadPDF = () => {
     setIsDownloading(true);
 
@@ -71,7 +70,7 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
       doc.setFontSize(10);
       doc.text(`Invoice No: ${invoice?.otherdetsil?.invoiceNo || "N/A"}`, pageWidth - 14, 62, { align: "right" });
       doc.text(`Order ID: ${invoice?.otherdetsil?.receipt}`, pageWidth - 14, 67, { align: "right" });
-      doc.text(`Date: ${new Date(invoice?.updatedAt).toLocaleDateString("en-IN")}`, pageWidth - 14, 72, { align: "right" });
+      doc.text(`Date: ${new Date(invoice?.otherdetsil?.updatedAt).toLocaleDateString("en-IN")}`, pageWidth - 14, 72, { align: "right" });
 
       // --- 3. ITEMS TABLE ---
       autoTable(doc, {
@@ -132,15 +131,7 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
     <button
       onClick={handleDownloadPDF}
       disabled={isDownloading}
-      className="flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-bold transition-all shadow-lg active:scale-95"
     >
-      <svg className={`w-5 h-5 ${isDownloading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        {isDownloading ? (
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-        ) : (
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-        )}
-      </svg>
       {isDownloading ? "Processing..." : "Download Invoice"}
     </button>
   );

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { AppDispatch } from "@/store/store";
-import { handleRegister } from "@/api/Auth/SchoolAuth";
+import { handleRegister } from "@/api/Auth/UserAuth";
 import { LeftLoginIcon, MailIcons, RightLoginIcon } from "@/Common/svgIcon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

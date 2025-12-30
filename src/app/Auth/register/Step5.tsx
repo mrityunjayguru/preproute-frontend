@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { PencilLine } from "lucide-react"; 
 import { LeftLoginIcon, MailIcons, RightLoginIcon } from "@/Common/svgIcon";
 import { useDispatch, useSelector } from "react-redux";
-import { handleRegister } from "@/api/Auth/SchoolAuth";
+import { handleRegister } from "@/api/Auth/UserAuth";
 import { AppDispatch } from "@/store/store";
 
 export default function Step5({ nextStep, prevStep, updateForm, formData }: any) {

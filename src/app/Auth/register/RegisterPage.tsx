@@ -1,6 +1,10 @@
 "use client";
 
-import { googlelogin, handleRegister, userRegister } from "@/api/Auth/SchoolAuth";
+import {
+  googlelogin,
+  handleRegister,
+  userRegister,
+} from "@/api/Auth/UserAuth";
 import { LeftLoginIcon, MailIcons, RightLoginIcon } from "@/Common/svgIcon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,7 +49,7 @@ export default function RegisterPage() {
     try {
       setLoading(true);
 
-      const payload:any = {
+      const payload: any = {
         username: name,
         email,
         phone,
@@ -57,7 +61,7 @@ export default function RegisterPage() {
       if (response?.payload === true || response?.payload?.success === true) {
         // alert("Registration successful!");
         router.push("/Auth/signin");
-      } 
+      }
     } catch (err) {
       console.error(err);
       alert("Something went wrong! Check console for details.");
@@ -67,20 +71,20 @@ export default function RegisterPage() {
   };
   const handleGoogleSuccess = async (credentialResponse: any) => {
     // credentialResponse.credential contains the JWT token from Google
-    const token:any = credentialResponse?.credential;
+    const token: any = credentialResponse?.credential;
     if (token) {
-      const payload:any={ token:token }
-    let responce:any=  await dispatch(googlelogin(payload));
-        if(responce.payload==true){
-    router.push(`/home`);
-    }
+      const payload: any = { token: token };
+      let responce: any = await dispatch(googlelogin(payload));
+      if (responce.payload == true) {
+        router.push(`/home`);
+      }
     }
   };
   const handleGoogleError = () => {
     console.log("Google login failed");
   };
   return (
-    <div className="flex flex-col text-gray-800 min-h-screen flex items-center justify-center bg-neutral-50">
+    <div className="flex flex-col text-gray-800 min-h-screen items-center justify-center bg-neutral-50">
       <div className="w-full max-w-sm mx-auto z-20">
         <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
           <div className="flex items-center mb-4">
@@ -152,16 +156,14 @@ export default function RegisterPage() {
               Login
             </a>
           </div>
-            <div className="flex justify-center my-1">
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleError}
-          />
+          <div className="flex justify-center my-1">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={handleGoogleError}
+            />
+          </div>
         </div>
-        </div>
-        
       </div>
-     
     </div>
   );
 }

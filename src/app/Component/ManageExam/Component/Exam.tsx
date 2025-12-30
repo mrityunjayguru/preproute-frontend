@@ -22,7 +22,7 @@ import TabSwitchWarning from "./TabSwitchWarning";
 import SectionRestrictionPopup from "./Popup/SectionRestrictionPopup";
 import SubmitExamPopup from "./Popup/SubmitExamPopup";
 import { routeSlicc } from "@/store/PlanRoute/Route";
-import { allowResultAccess, removeResultAccess } from "../../Exam/Component/allowResultAccess";
+// import { allowResultAccess, removeResultAccess } from "../../Exam/Component/allowResultAccess";
 
 interface SectionDetail {
   _id: string;
@@ -59,7 +59,7 @@ const [showSubmitPopup, setShowSubmitPopup] = useState(false);
   const [numericalValue, setNumericalValue] = useState("");
   const [mcqSelected, setMcqSelected] = useState<string | null>(null);
   const [loder,setloder]=useState<boolean>(false)
-  const currentSectionId = useSelector(state => state.exam.currentSectionId);
+  const currentSectionId = useSelector((state : any) => state.exam.currentSectionId);
   const [sectionQuestionStatus, setSectionQuestionStatus] = useState<
     Record<string, Record<number, string>>
   >({});
