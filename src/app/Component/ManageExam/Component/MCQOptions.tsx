@@ -1,3 +1,4 @@
+import { Dot } from "lucide-react";
 import React from "react";
 
 interface Option {
@@ -62,32 +63,32 @@ export const MCQOptions: React.FC<MCQOptionsProps> = ({
         // 🔵 Circle color
         const circleClass = isSubmitted
           ? isCorrect
-            ? "border-green-500 text-green-600"
+            ? "border border-green-500 text-green-600"
             : isUserSelected && !isCorrect
-            ? "border-red-500 text-red-600"
-            : "border-gray-300 text-gray-500"
+            ? "border border-red-500 text-red-600"
+            : "border border-gray-300 text-gray-500"
           : selected === opt._id
-          ? "border-blue-500 text-blue-600"
-          : "border-gray-300 text-gray-500";
+          ? "border border-blue-500 text-blue-600"
+          : "border border-gray-300 text-gray-500";
 
         return (
           <div
             key={opt._id}
             onClick={handleClick}
-            className={`flex items-center p-3 border rounded-lg transition select-none ${bgClass} ${
+            className={`flex items-center p-3 font-poppins rounded-lg transition select-none ${bgClass} ${
               disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
             }`}
           >
             {/* Option Label (A, B, C...) */}
             <span
-              className={`w-6 h-6 flex items-center justify-center mr-3 border-2 rounded-full font-bold ${circleClass}`}
+              className={`w-4 h-4 flex items-center justify-center mr-3 border-2 rounded-full font-bold ${circleClass}`}
             >
-              {String.fromCharCode(65 + idx)}
+              <Dot className="h-5 w-5"/>
             </span>
 
             {/* Option Text */}
             <span
-              className="text-gray-800"
+              className="text-gray-900"
               dangerouslySetInnerHTML={{ __html: opt.text }}
             />
           </div>

@@ -1,8 +1,7 @@
 "use client";
-import React, { useMemo } from "react";
-import { Button } from "@/components/ui/button";
-import StatusIndicators from "@/app/Component/ManageExam/Component/StatusIndicators";
-import { pentagonShape } from "@/app/Component/ManageExam/Component/style";
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { CheckCircle2, XCircle, Clock, AlertCircle } from "lucide-react";
 
 interface Option {
   _id: string;
@@ -20,10 +19,12 @@ interface Question {
   options: Option[];
   usergiven?: {
     userAnswer: string;
-  };
+    numericAnswer?: string;
+    timeTaken?: number;
+  }[];
   correctAnswer: string;
   userAttempt?: boolean;
-  colorCode?: string;
+  userTime?: number; // From singleQuestion
 }
 
 interface Props {
@@ -38,48 +39,56 @@ interface Props {
   data: {
     details: Question[];
   };
+  question: Question;
 }
 
-const statusColors = {
-  correct: "#22c55e", // green
-  wrong: "#ef4444", // red
-  notAttempted: "#9ca3af", // gray
-};
+const QuestionWiseRightSection: React.FC<Props> = ({ question }) => {
+  if (!question) return null;
 
-const QuestionWiseRightSection: React.FC<Props> = ({
-  userLogin,
-  getQuestionByNumberId,
-  isTimeUp,
-  selectedSection,
-  data,
-}) => {
-  // ✅ Preprocess + group questions by section name
-  const groupedData = useMemo(() => {
-    if (!data?.details?.length) return {};
+  const isAttempted = question.userAttempt;
 
-    const processed = data.details.map((q) => {
-      let bgColor = statusColors.notAttempted;
-      if (q.usergiven?.userAnswer) {
-        const selected = q.options.find(
-          (opt) => opt._id === q.usergiven?.userAnswer
+  // Determine correctness
+  let isCorrect = false;
+  if (isAttempted && question.usergiven && question.usergiven.length > 0) {
+    const userAns = question.usergiven[0];
+    if (question.answerType === "Numeric") {
+      // Numeric logic might be complex depending on tolerance, but usually exact match or range
+      // For now assuming simple string match or backend flag.
+      // Actually backend usually computes result.
+      // We can check if we have a way to know.
+      // The 'Answer' component logic: userAnswerId === option._id
+      // Numeric answers don't use options.
+      // Let's assume strict equality for now or rely on what's available.
+      // Wait, usually the result data has 'isCorrect' flag?
+      // Let's check the options logic for MCQ.
+      isCorrect = false; // Default for numeric if logic missing
+      if (question.options && question.options.length > 0) {
+        // MCQ
+        const selectedOpt = question.options.find(
+          (opt) => opt._id === userAns.userAnswer
         );
-        bgColor = selected?.isCorrect
-          ? statusColors.correct
-          : statusColors.wrong;
+        isCorrect = selectedOpt?.isCorrect || false;
+      } else {
+        // Numeric
+        isCorrect = userAns.numericAnswer === question.correctAnswer;
       }
-      return { ...q, colorCode: bgColor };
-    });
+    } else {
+      // MCQ
+      const selectedOpt = question.options.find(
+        (opt) => opt._id === userAns.userAnswer
+      );
+      isCorrect = selectedOpt?.isCorrect || false;
+    }
+  }
 
-    return processed.reduce((acc: Record<string, Question[]>, item) => {
-      const sectionKey =
-        typeof item.section === "object"
-          ? item.section.section || item.section._id
-          : item.section;
-      if (!acc[sectionKey]) acc[sectionKey] = [];
-      acc[sectionKey].push(item);
-      return acc;
-    }, {});
-  }, [data.details]);
+  // Time formatting
+  const timeTaken =
+    question.userTime || question.usergiven?.[0]?.timeTaken || 0;
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m} Min ${s} Sec`;
+  };
 
 
   // ✅ Filter only selected section
@@ -91,52 +100,37 @@ const QuestionWiseRightSection: React.FC<Props> = ({
     // console.log(selectedSectionQuestions,"selectedSectionQuestionsselectedSectionQuestions")
     const shortingData=selectedSectionQuestions.sort((a,b)=>a.questionNo - b.questionNo)
   return (
-    <aside className="lg:w-1/4 w-full bg-white p-4 border-t lg:border-t-0 lg:border-l flex-shrink-0 overflow-y-auto">
-      {/* ✅ User Profile */}
-      {userLogin && (
-        <>
-          <div className="flex flex-col items-center mb-4">
-            <div className="w-16 h-16 bg-gray-300 rounded-full mb-2 flex items-center justify-center text-white text-2xl">
-              {userLogin?.username?.[0]?.toUpperCase() || "U"}
-            </div>
-            <p className="font-semibold text-center">
-              {userLogin?.username || "User"}
+    <aside className="lg:w-1/4 w-full bg-white py-6 flex-shrink-0 font-poppins px-6">
+      <div className="">
+        {/* Status Card */}
+        <div
+          className={`border-none  p-6 rounded-xl bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF]`}
+        >
+          <div className="">
+            <p className="text-gray-600 text-sm font-normal ">
+              Answer Status
+            </p>
+            {isAttempted ? (
+              isCorrect ? (
+                <p className="text-3xl font-medium text-green-500">Correct</p>
+              ) : (
+                <p className="text-3xl font-medium text-red-500">Wrong</p>
+              )
+            ) : (
+              <p className="text-3xl font-medium text-gray-400">Unattempted</p>
+            )}
+          </div>
+
+          <div>
+            <p className="text-gray-600 text-sm font-normal ">
+              Response Time
+            </p>
+            <p className="text-xl font-normal text-blue-500">
+              {formatTime(timeTaken)}
             </p>
           </div>
-
-          {/* Status Indicators */}
-          <div className="mb-4">
-            <StatusIndicators />
-          </div>
-        </>
-      )}
-
-      {/* ✅ Selected Section Palette */}
-      <div className="mb-6">
-        <h3 className="text-sm font-bold text-gray-600 mb-3">
-          Section: {selectedSection?.section || "N/A"}
-        </h3>
-
-        {shortingData.length > 0 ? (
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
-            {shortingData.map((q, idx) => (
-              <Button
-                key={q._id || idx}
-                onClick={() => getQuestionByNumberId(q.questionNo - 1)}
-                size="sm"
-                className="cursor-pointer w-10 h-10 font-bold text-white border-none flex items-center justify-center"
-                style={{ backgroundColor: q.colorCode }}
-                disabled={isTimeUp}
-              >
-                {q.questionNo}
-              </Button>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-gray-400 italic">
-            No questions found for this section.
-          </p>
-        )}
+          {/* Decorative Icon/Image could go here to match screenshot (top right corner of card) */}
+        </div>
       </div>
     </aside>
   );

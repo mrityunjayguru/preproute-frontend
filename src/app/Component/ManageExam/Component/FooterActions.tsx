@@ -11,67 +11,77 @@ interface Props {
   handleSubmit: () => void;
   ReportQuestion: () => void;
   isTimeUp: boolean;
-  loder:boolean
+  loder: boolean;
 }
 
-const 
-FooterActions: React.FC<Props> = ({
+const FooterActions: React.FC<Props> = ({
   handleMarkForReview,
   handleClearResponse,
   handlePreviousQuestion,
   handleNextQuestion,
   handleSubmit,
-  ReportQuestion,
   isTimeUp,
-  loder
-}
-) => (
-  <footer className="bg-white p-4  flex flex-wrap gap-2 justify-between sticky bottom-0">
-    <div className="flex gap-2 flex-wrap">
-      <Button variant="outline" size="sm" 
-  
-      onClick={handleMarkForReview} disabled={isTimeUp}>
-        Mark for Review & Next
-      </Button>
-      <Button variant="outline" size="sm" onClick={handleClearResponse} disabled={isTimeUp}>
-        Clear Response
-      </Button>
-      {/* <Button variant="outline" size="sm" onClick={ReportQuestion} >
-        Report
-      </Button> */}
+  loder,
+}) => {
+  return (
+    <div className="w-full bg-white px-6 sm:px-8 md:px-12 lg:px-28 py-3">
+      <div className=" flex flex-wrap items-center justify-between gap-3">
+        {/* LEFT ACTIONS */}
+        <div className="flex gap-2 flex-wrap">
+          <Button
+            onClick={handleMarkForReview}
+            disabled={isTimeUp}
+            className="py-2 px-6 cursor-pointer font-normal text-gray-900  font-poppins bg-gradient-to-t from-[#FFECDF] to-white border border-[#E6F4FF] "
+          >
+            Mark for Review & Next
+          </Button>
+
+          <Button
+            onClick={handleClearResponse}
+            disabled={isTimeUp}
+            className="py-2 cursor-pointer px-6 font-normal text-gray-900 font-poppins bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF]  "
+          >
+            Clear Response
+          </Button>
+        </div>
+
+        {/* CENTER ACTIONS */}
+        <div className="flex gap-3 flex-wrap font-poppins font-medium">
+          <Button
+            
+            onClick={handlePreviousQuestion}
+            disabled={isTimeUp}
+            className={`disabled:bg-[#5291D2] rounded-[4px] cursor-pointer py-4  px-10  bg-[#005EB6] hover:bg-[#0069d9] text-white flex items-center gap-2`}
+          >
+            Previous
+          </Button>
+
+          <Button
+            onClick={handleNextQuestion}
+            disabled={isTimeUp || loder}
+            className={`disabled:bg-[#5291D2] rounded-[4px]  cursor-pointer py-4  px-10  bg-[#005EB6] hover:bg-[#0069d9] text-white flex items-center gap-2`}
+          >
+            {loder ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              "Save & Next"
+            )}
+          </Button>
+        </div>
+
+        {/* RIGHT ACTION */}
+        <Button
+          onClick={handleSubmit}
+          className=" py-6 px-12 font-normal text-md cursor-pointer font-poppins bg-[#00ACEF] hover:bg-[#0095cc] text-white rounded-[4px]"
+        >
+          Submit Exam
+        </Button>
+      </div>
     </div>
-    <div className="flex gap-4 flex-wrap ">
-      <Button variant="secondary" onClick={handlePreviousQuestion} disabled={isTimeUp}
-      className="bg-white text-black  border border-gray-200 text-lg font-semibold p-5"
-      >
-        Previous
-      </Button>
-     <Button
-        onClick={handleNextQuestion}
-        disabled={isTimeUp || loder}
-        className="flex items-center gap-4 p-5 text-lg font-semibold bg-[#007bff]"
-      >
-        {loder ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Saving...
-          </>
-        ) : (
-          "Save & Next"
-        )}
-      </Button>
-    </div>
-    <Button
-      onClick={handleSubmit}
-      variant="destructive"
-      size="lg"
-      className="  px-15 py-2 bg-[#FF5635]   "
-    ><div
-    className="font-semibold text-xl "
-    >Submit</div>
-    
-    </Button>
-  </footer>
-);
+  );
+};
 
 export default FooterActions;

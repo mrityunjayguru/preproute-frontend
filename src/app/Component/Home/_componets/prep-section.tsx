@@ -55,7 +55,7 @@ const PrepSection = () => {
             </div>
 
             <div className="flex flex-col items-center gap-2 text-[#202842]">
-              <WrongIcon />
+              {/* <WrongIcon /> */}
               With Offline Practice
             </div>
           </motion.div>

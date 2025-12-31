@@ -6,25 +6,26 @@ interface TimeWiseTabProps {
   timewiseData?: any[]; // past stored topic data (optional)
 }
 
-const TimeWiseTab: React.FC<TimeWiseTabProps> = ({ data, timewiseData = [] }) => {
+const TimeWiseTab: React.FC<TimeWiseTabProps> = ({
+  data,
+  timewiseData = [],
+}) => {
   const topicData = useSelector((state: any) => state?.topic?.topic);
 
   const getTopicName = (topicId: string) => {
-    const topic = topicData.find((t:any) => t._id === topicId);
+    const topic = topicData.find((t: any) => t._id === topicId);
     return topic ? topic.topic : "Unknown Topic";
   };
 
- 
-
   // 🔹 Render table
   return (
-    <div className="overflow-x-auto mt-4">
-      {data?.typeWiseTime.length === 0 ? (
-        <p className="text-center text-gray-500"></p>
+    <div className="overflow-x-auto overflow-y-auto border border-[#E6F4FF] rounded-[8px]">
+      {!data ? (
+        <p className="text-center text-gray-500">No topic data found.</p>
       ) : (
-        <table className="min-w-full border border-gray-200 text-sm text-left">
-          <thead className="bg-gray-100 text-gray-700">
-            <tr>
+        <table className="min-w-full bg-gradient-to-t from-[#F0F9FF] to-white text-sm text-left">
+          <thead className="bg-[#005EB6] text-white">
+            <tr className="font-poppins  font-medium text-sm">
               <th className="p-2">Topic Name</th>
               <th className="p-2">Total</th>
               <th className="p-2">Attempted</th>
@@ -39,8 +40,13 @@ const TimeWiseTab: React.FC<TimeWiseTabProps> = ({ data, timewiseData = [] }) =>
           </thead>
           <tbody>
             {data?.typeWiseTime.map((t: any) => (
-              <tr key={t.topicId} className="border-t hover:bg-gray-50 transition">
-                <td className="p-2 font-semibold text-blue-700">{getTopicName(t.topicId)}</td>
+              <tr
+                key={t.topicId}
+                className="border-t hover:bg-gray-50 transition"
+              >
+                <td className="p-2 font-semibold text-[#005EB6]">
+                  {getTopicName(t.topicId)}
+                </td>
                 <td className="p-2">{t.total}</td>
                 <td className="p-2">{t.attempted}</td>
                 <td className="p-2 text-green-600">{t.correct}</td>

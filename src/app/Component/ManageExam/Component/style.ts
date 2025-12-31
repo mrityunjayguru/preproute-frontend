@@ -10,5 +10,5 @@ export const pentagonShape = {
 };
 
 export const circleShape = {
-  borderRadius: "40%",
+  borderRadius: "50%",
 };

@@ -14,6 +14,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UserProfileDropdown } from "@/components/UserProfileDropdown";
 import {
   Sheet,
   SheetContent,
@@ -27,7 +28,11 @@ import { getCommonExamType, handleSelectedExamType } from "@/api/ExamType";
 import { handleLogout } from "@/api/Auth/UserAuth";
 import { resetQuestionByExamID } from "@/api/Exam";
 import { resetQuestion } from "@/api/Question";
-import { ChevronDownIcon, LayoutDashboard, LogOut, MenuIcon, User, UserRound } from "lucide-react";
+import {
+  ChevronDownIcon,
+  LayoutDashboard,
+  MenuIcon,
+} from "lucide-react";
 
 // const artegra = localFont({
 //   src: "../assets/fonts/artegra-soft-medium.woff",
@@ -78,7 +83,9 @@ export const Header: React.FC = () => {
   ];
 
   return (
-    <header className={`sticky font-dm-sans  top-0 z-20 w-full bg-white font-DM_Sans sm:px-6 md:px-8 lg:px-10 xl:px-12`}>
+    <header
+      className={`sticky font-dm-sans  top-0 z-20 w-full bg-white font-DM_Sans sm:px-6 md:px-8 lg:px-10 xl:px-12`}
+    >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4  py-4 lg:py-5">
         {/* Left: Logo */}
         <div className="flex items-center gap-12">
@@ -185,63 +192,59 @@ export const Header: React.FC = () => {
                 >
                   <Link href="/resources">Resources Home</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem
+                {/* <DropdownMenuItem
                   asChild
                   className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
                 >
                   <Link href="/instructions">Instructions</Link>
+                </DropdownMenuItem> */}
+                <DropdownMenuItem
+                  asChild
+                  className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
+                >
+                  <Link href="/blog">Blogs</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </nav>
         </div>
         {/* Right: Auth */}
-        <div className="hidden items-center gap-3 lg:flex xl:gap-4">
+        <div className="flex items-center gap-3 xl:gap-4">
           {!token && (
-            <Link
-              href="/Auth/register"
-              className="text-sm font-normal text-[#FF5635] transition-colors cursor-pointer hover:text-[#e44c2f]"
-            >
-              Register
-            </Link>
+            <div className="hidden items-center gap-3 lg:flex">
+              <Link
+                href="/Auth/register"
+                className="text-sm font-normal text-[#FF5635] transition-colors cursor-pointer hover:text-[#e44c2f]"
+              >
+                Register
+              </Link>
+              <Button
+                onClick={() => router.push("/Auth/signin")}
+                className="rounded-full bg-[#FF5635] px-6 py-2 cursor-pointer text-white shadow-sm transition hover:bg-[#e44c2f]"
+              >
+                Login
+              </Button>
+            </div>
           )}
 
-          {token ? (
+          {token && (
             <>
               {(userLogin?.role === "Admin" ||
                 userLogin?.role === "Expert") && (
                 <Button
                   variant="outline"
                   onClick={() => router.push("/dashboard/home")}
-                  className="border-[#FF5635] text-[#FF5635] cursor-pointer hover:bg-[#FFF1EC] px-4"
+                  className="hidden lg:flex border-[#FF5635] text-[#FF5635] cursor-pointer hover:bg-[#FFF1EC] px-4"
                 >
-                  <LayoutDashboard/>
+                  <LayoutDashboard className="mr-2 h-4 w-4" />
                   Dashboard
                 </Button>
               )}
-              <Button
-                variant="outline"
-                onClick={() => router.push("/Profile")}
-                className="border-[#FF5635] rounded-full text-[#FF5635] cursor-pointer hover:text-[#e44c2f] px-4"
-              >
-                <UserRound/>
-                Profile
-              </Button>
-              <Button
-                onClick={handleLogoutClick}
-                className="bg-[#FF5635] rounded-full hover:bg-[#e44c2f] cursor-pointer px-5 py-2 text-white"
-              >
-                <LogOut/>
-                Logout
-              </Button>
+              <UserProfileDropdown
+                user={userLogin}
+                onLogout={handleLogoutClick}
+              />
             </>
-          ) : (
-            <Button
-              onClick={() => router.push("/Auth/signin")}
-              className="rounded-full bg-[#FF5635] px-6 py-2 cursor-pointer text-white shadow-sm transition hover:bg-[#e44c2f]"
-            >
-              Login
-            </Button>
           )}
         </div>
 
@@ -345,30 +348,10 @@ export const Header: React.FC = () => {
                         }}
                         className="w-full border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC]"
                       >
-                        <LayoutDashboard/>
+                        <LayoutDashboard />
                         Dashboard
                       </Button>
                     )}
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        router.push("/Profile");
-                        setMobileOpen(false);
-                      }}
-                      className="w-full border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC]"
-                    >
-                      <UserRound/>
-                      Profile
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        handleLogoutClick();
-                        setMobileOpen(false);
-                      }}
-                      className="w-full bg-[#FF5635] hover:bg-[#e44c2f] text-white"
-                    >
-                      Logout
-                    </Button>
                   </div>
                 ) : (
                   <Button

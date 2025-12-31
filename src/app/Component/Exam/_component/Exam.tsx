@@ -56,9 +56,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
   const isInProgress = exam?.userSummary?.target === 0 && isAttempted;
 
   const isCompleted = isAttempted && exam?.userSummary?.target === 100;
-console.log(isInProgress,"isInProgressisInProgress")
-console.log(isCompleted,"isCompletedisCompletedisCompleted")
-console.log(isAttempted,"isAttemptedisAttemptedisAttempted")
+
   return (
     <div
       className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white 
@@ -138,7 +136,7 @@ console.log(isAttempted,"isAttemptedisAttemptedisAttempted")
                 <Button
                   className="flex-1 bg-black text-white 
                              hover:bg-[#FF5635] transition cursor-pointer"
-                  onClick={() => handleExam(exam, "Restart")}
+                  onClick={() => handleExam(exam, "start")}
                 >
                   Restart
                 </Button>
@@ -236,7 +234,8 @@ export default function MergedExamPage() {
     const payload: any = null;
     dispatch(handleGivenExam(payload));
     dispatch(setCurrentSection(payload));
-    if (!examData?.hasGivenExam || type == "Resume") {
+    if (!examData?.hasGivenExam || type == "Resume" || type == "start") {
+       localStorage.setItem("exam_permission","true")
       const payload: any = {
         examTypeId: examData?.examTypeId,
         questionPaperId: examData?._id,
@@ -245,8 +244,11 @@ export default function MergedExamPage() {
         questionPapername: examData?.questionPapername,
         records: examData,
       };
-      dispatch(getUserQuestionData(payload));
-      router.push("/Exam/userExam");
+     let responce:any=await dispatch(getUserQuestionData(payload));
+      if(type=="start"){
+        localStorage.removeItem(`exam_timeLeft_${responce?.payload[0]._id}`)
+      }
+      router.push("/Exam/Instruction");
     } else {
       const payload: any = { questionPaperID: examData?._id };
       await dispatch(QuestionPaperResult(payload));
@@ -328,37 +330,8 @@ console.log(examById,"examByIdexamByIdexamById")
               </motion.div>
             </div>
             {/* <div className="max-w-7xl">
-              {examById ? (
-                <div className="flex items-center py-8 gap-4 w-full">
-                  <p className="text-[#727EA3] font-dm-sans">Change Collage </p>
-                  <Select
-                    options={examOptions}
-                    value={
-                      selectedExam
-                        ? { label: selectedExam.examname, value: selectedExam }
-                        : null
-                    }
-                    onChange={handleSelectExam}
-                    placeholder="Select Exam"
-                    isSearchable
-                    className="flex font-dn-sans"
-                    styles={{
-                      control: (base) => ({
-                        ...base,
-                        minWidth: "300px",
-                        width: "auto",
-                        background: "linear-gradient(to top, #F0F9FF, white)",
-                        borderRadius: "8px",
-                      }),
-                      input: (base) => ({
-                        ...base,
-                        color: "black",
-                      }),
-                    }}
-                  />
-                </div>
-              ) : null}
             </div> */}
+           
             {/* ===== Exam Cards Grid ===== */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mx-auto">
               {examdata.map((exam: any, index: number) => (
@@ -428,7 +401,7 @@ console.log(examById,"examByIdexamByIdexamById")
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             {/* ===== Banner ===== */}
-            <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-2 mb-12 flex flex-col md:flex-row items-center justify-between overflow-hidden">
+            <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-2  flex flex-col md:flex-row items-center justify-between overflow-hidden">
               <div className="z-10 max-w-xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl  font-medium text-[#FF5635] font-poppins">
                   <span className="text-black">
@@ -459,6 +432,37 @@ console.log(examById,"examByIdexamByIdexamById")
                 />
               </motion.div>
             </div>
+
+            {examById ? (
+              <div className="flex items-center py-8 gap-4 w-full">
+                <p className="text-[#727EA3] font-dm-sans">Change Collage </p>
+                <Select
+                  options={examOptions}
+                  value={
+                    selectedExam
+                      ? { label: selectedExam.examname, value: selectedExam }
+                      : null
+                  }
+                  onChange={handleSelectExam}
+                  placeholder="Select Exam"
+                  isSearchable
+                  className="flex font-dn-sans"
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      minWidth: "300px",
+                      width: "auto",
+                      background: "linear-gradient(to top, #F0F9FF, white)",
+                      borderRadius: "8px",
+                    }),
+                    input: (base) => ({
+                      ...base,
+                      color: "black",
+                    }),
+                  }}
+                />
+              </div>
+            ) : null}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mx-auto">
               {examById.map((exam: any, i: any) => (

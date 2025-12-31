@@ -2,51 +2,41 @@
 import React from "react";
 
 interface Props {
-  isSection: boolean;
-  examSections: any[];
-  selectedSection: any;
-  handleSection: (section: any) => void;
   timeLeft: any;
-  formatTime: (seconds: number) => string
+  formatTime: (seconds: number) => string;
+  examName?: string;
+  paperName?: string;
 }
 
 const HeaderSection: React.FC<Props> = ({
-  isSection,
-  examSections,
-  selectedSection,
-  handleSection,
   timeLeft,
   formatTime,
+  examName,
+  paperName,
 }) => {
   return (
-    <div className="flex flex-wrap items-center justify-between bg-white p-3 border-b">
-      {isSection && (
-        <div className="flex flex-wrap gap-1 overflow-x-auto">
-          {examSections.map((t) => (
-            <button
-              key={t.sectionId}
-              onClick={() => handleSection(t)}
-              className={`cursor-pointer px-5 py-2 rounded-sm border transition-all text-sm whitespace-nowrap ${
-                t.sectionId === selectedSection?.sectionId
-                  ? "bg-[#007bff] text-white "
-                  : "bg-[#fff] text-[#1E1E1E] border-gray-300"
-              }`}
-            >
-              {t.sectionDetail?.section || "Section"}
-            </button>
-          ))}
+    <div className="bg-white  border-b-[0.1px]">
+      {/* Top Header Row */}
+      <div className="flex flex-col md:flex-row gap-4 md:gap-0 items-center justify-between px-4 sm:px-8 md:px-12 lg:px-28 mb-3 font-poppins">
+        {/* Exam Title */}
+        <div className="flex items-center">
+          <h1 className="text-lg font-normal text-gray-800 text-center md:text-left">
+            {examName || "IPMAT-Indore"}{" "}
+            <span className="text-orange-500">{paperName || "Mock One"}</span>
+          </h1>
         </div>
-      )}
-      {timeLeft?(
-         <div
-        className={`font-bold mt-2 sm:mt-0 ${
-          timeLeft < 60 ? "text-red-600" : "text-green-600"
-        }`}
-      >
-        Time Left: {formatTime(timeLeft)}
+<div>
+        {/* Timer */}
+        {timeLeft ? (
+          <div className="text-base md:text-lg font-normal font-poppins mr-0 md:mr-[20rem]">
+            Time Left :{" "}
+            <span className="text-lg font-semibold text-blue-600">
+              {formatTime(timeLeft)}
+            </span>
+          </div>
+        ) : null}
+        </div>
       </div>
-      ):(null)}
-     
     </div>
   );
 };

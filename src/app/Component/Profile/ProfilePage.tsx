@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -11,10 +12,10 @@ import PurchasedPlanSection from "./PurchasedPlanSection";
 import { FaRegUserCircle } from "react-icons/fa";
 import { Download, Plus, User2 } from "lucide-react";
 import Image from "next/image";
-import USER from "@/assets/vectors/user-profile.svg";
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import SocialMedia from "../Home/_componets/social-media";
-import InvoicePrint from "./InvoicePDF.client";
+import USERDATA from "@/assets/vectors/user-profile.svg"
+
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -22,6 +23,7 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const user = useSelector((state: any) => state?.Auth?.loginUser);
+  console.log(user)
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
@@ -93,16 +95,16 @@ export default function ProfilePage() {
                     onError={(e) => {
                       e.currentTarget.src = "/default-user.png";
                     }}
-                    className=" object-cover w-16 h-16"
+                    className=" object-cover w-32 h-32 rounded-lg"
                   />
                 ) : (
                   <>
-                    <Image
-                      src={USER}
+                   <Image
+                      src={USERDATA}
                       alt="user"
-                      className="w-16 h-16 p-8 text-gray-400"
+                      className="w-32 h-32 p-8 text-gray-400"
                     />
-                    <span className="absolute -right-3 w-5 h-5 bg-[#FF5635] text-white  rounded-full flex items-center justify-center">
+                    <span className="absolute bottom-1 -right-3 w-5 h-5 bg-[#FF5635] text-white  rounded-full flex items-center justify-center">
                       <Plus size={12} />
                     </span>
                   </>
@@ -120,10 +122,10 @@ export default function ProfilePage() {
               {/* Info */}
               <div className="flex flex-col font-poppins">
                 <p className="text-xs text-[#1A1D1F]">Greetings,</p>
-                <h2 className="text-md font-semibold text-[#1A1D1F]">
+                <span className="text-md font-semibold text-[#1A1D1F]">
                   {user?.username || "User Name"}!
-                </h2>
-                <p className="text-xs text-[#727EA3]">Nikname :{user?.nickname}</p>
+                </span>
+                <p className="text-xs text-[#727EA3]">Nikname :{user?.nickname || "N/A"}</p>
                 <p className="text-xs text-[#FF5635]">
                   {user?.email} {user?.phone && `| +91 ${user.phone}`}
                 </p>
@@ -156,18 +158,18 @@ export default function ProfilePage() {
 
             <div className="flex border-b pb-2 gap-24">
               <span className="text-[#727EA3]">Attempt Year:</span>
-              <span className="">{user?.profile?.year}</span>
+              <span className="">{user?.profile.year}</span>
             </div>
 
             <div className="flex border-b pb-2 gap-24">
-              <span className="text-[#727EA3]">Stream:</span>
+              <span className="text-[#727EA3]">Stream:{}</span>
               <span className="">{user?.profile?.stream}</span>
             </div>
 
             <div className="flex border-b pb-2 gap-24">
               <span className="text-[#727EA3]">Preparing For:</span>
               <span className=" text-right">
-                {user?.profile?.stream}
+                IPMAT-Indore, IPMAT-Rohtak, IIM-B DBE, SAT, NPAT, Christ
               </span>
             </div>
           </div>
@@ -222,8 +224,7 @@ export default function ProfilePage() {
 
                     <Button className=" text-white bg-black text-sm">
                       <Download className="h-5 w-5" />
-                      <InvoicePrint invoice={item} />
-                      {/* Download Invoice */}
+                      Download Invoice
                     </Button>
                   </div>
 
@@ -278,6 +279,5 @@ export default function ProfilePage() {
         </div>
       </section>
     </div>
-  )
-
+  );
 }

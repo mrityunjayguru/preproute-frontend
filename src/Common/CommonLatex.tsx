@@ -38,14 +38,18 @@ const RenderPreview: React.FC<RenderPreviewProps> = ({ content }) => {
         if (blockLatexTest(part)) {
           const math = part.slice(2, -2).trim();
           return (
-            <div key={`${key}-b-${idx}`} style={{ textAlign: "center", margin: "0.5rem 0" }}>
+            <div key={`${key}-b-${idx}`} style={{ textAlign: "center", margin: "0.25rem 0" }}>
               <BlockMath math={math} />
             </div>
           );
         }
         if (inlineLatexTest(part)) {
           const math = part.slice(1, -1).trim();
-          return <InlineMath key={`${key}-i-${idx}`} math={math} />;
+          return (
+            <span key={`${key}-i-${idx}`} style={{ display: "inline-block", verticalAlign: "baseline" }}>
+              <InlineMath math={math} />
+            </span>
+          );
         }
         return null;
       });
@@ -85,7 +89,7 @@ const RenderPreview: React.FC<RenderPreviewProps> = ({ content }) => {
                 maxWidth: "100%",
                 height: "auto",
                 verticalAlign: "middle",
-                margin: "0 .3rem",
+                margin: "0.3rem",
                 ...inlineStyles,
               }}
             />
@@ -151,16 +155,32 @@ const RenderPreview: React.FC<RenderPreviewProps> = ({ content }) => {
   const output = Array.from(root.childNodes).map((n, i) => renderNode(n, `root-${i}`));
 
   return (
-    <div
-      style={{
-        lineHeight: 1.6,
-        wordBreak: "break-word",
-        overflowX: "auto",
-      }}
-      className="preview-container"
-    >
-      {output}
-    </div>
+    <>
+      <style>{`
+        .preview-container-latex .katex {
+          font-size: 1em !important;
+        }
+        .preview-container-latex .katex-display {
+          margin: 0.25rem 0 !important;
+        }
+        .preview-container-latex .katex-html {
+          white-space: normal;
+        }
+        .preview-container-latex .katex .katex-html {
+          display: inline-block;
+        }
+      `}</style>
+      <div
+        style={{
+          lineHeight: 1.6,
+          wordBreak: "break-word",
+          overflowX: "auto",
+        }}
+        className="preview-container preview-container-latex font-poppins"
+      >
+        {output}
+      </div>
+    </>
   );
 };
 

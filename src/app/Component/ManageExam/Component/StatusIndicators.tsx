@@ -1,38 +1,51 @@
-import { questionIcon } from "@/Common/svgIcon";
 import React from "react";
+import Image from "next/image";
+import NOTVISITED from "@/assets/vectors/perticulerExam/not-visited.svg";
+import ANSWERED from "@/assets/vectors/perticulerExam/answered.svg";
+import UNANSWERED from "@/assets/vectors/perticulerExam/unaswered.svg";
+import REVIEWMARKED from "@/assets/vectors/perticulerExam/reviewmarked.svg";
+import ANSWEREDANDREVIEW from "@/assets/vectors/perticulerExam/answeredAndReviewMarked.svg";
 
-// Wrapper to apply color via Tailwind text-* classes
-const IconShape = ({ icon, color } : any) => (
-  <span
-    className="w-8 h-8 flex items-center justify-center"
-    style={{ color }} // SVG inherits this color
-  >
-    {icon}
-  </span>
-);
-
-const Indicator = ({ color, label, icon } : any) => {
+const Indicator = ({ icon, label }: any) => {
   return (
     <div className="flex items-center space-x-3">
-      <IconShape icon={questionIcon} color={color} />
-      <span className="text-sm text-gray-800 whitespace-nowrap">{label}</span>
+      <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
+        <Image src={icon} alt={label} width={50} height={50} />
+      </div>
+      <span className="text-sm font-poppins font-normal text-gray-800">{label}</span>
     </div>
   );
 };
 
-const StatusIndicators = ({ questionIcon } : any) => {
+const StatusIndicators = () => {
   const indicatorsData = [
-    { color: "#8BC34A", label: "Answered" },
-    { color: "#F44336", label: "Not Answered" },
-    { color: "#BDBDBD", label: "Not Visited" },
-    { color: "#9C27B0", label: "Marked for Review" },
+    { 
+      icon: NOTVISITED,
+      label: "Not Visited"
+    },
+    { 
+      icon: ANSWERED,
+      label: "Answered"
+    },
+    { 
+      icon: UNANSWERED,
+      label: "Unanswered"
+    },
+    { 
+      icon: REVIEWMARKED,
+      label: "Review Marked"
+    },
+    { 
+      icon: ANSWEREDANDREVIEW,
+      label: "Answered and Review Marked"
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-2 w-full max-w-xs sm:max-w-sm">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
       {indicatorsData.map((item, index) => (
-        <Indicator key={index} {...item} icon={questionIcon} />
-      ))} 
+        <Indicator key={index} {...item} />
+      ))}
     </div>
   );
 };

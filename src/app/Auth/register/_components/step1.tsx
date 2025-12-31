@@ -92,9 +92,11 @@ const Step1: React.FC<Step1Props> = ({
         phone,
         parentPhone: parentPhone || undefined, // Only include if provided
         currentStep: 1,
-        password
+        password,
+        isGoogle:userLogin?.isGoogle?true:false
       };
       updateFormData(step1Data);
+      
       let usereesponce=await dispatch(CheckUserExists(step1Data))
       if(usereesponce.payload===true){
       nextStep();
@@ -180,7 +182,7 @@ const Step1: React.FC<Step1Props> = ({
             )}
           </div>
           {/* Password */}
-          <div>
+          {userLogin.isGoogle==true?(null):(<div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
               Password<span className="text-[#FF5635]">*</span>
             </Label>
@@ -195,8 +197,8 @@ const Step1: React.FC<Step1Props> = ({
             {errors.email && (
               <span className="text-xs text-red-500 mt-1">{errors.email}</span>
             )}
-          </div>
-          <div>
+          </div>)}
+          {userLogin?.isGoogle==true?(null):(<div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
               Confirm Password<span className="text-[#FF5635]">*</span>
             </Label>
@@ -226,7 +228,8 @@ const Step1: React.FC<Step1Props> = ({
                 {errors.confirmPassword}
               </span>
             )}
-          </div>
+          </div>)}
+          
 
           {/* Nickname */}
           <div>
