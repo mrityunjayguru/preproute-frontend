@@ -12,6 +12,9 @@ import {
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
+
+import USER from "@/assets/vectors/user.svg";
 
 interface UserProfileDropdownProps {
   user: any;
@@ -48,7 +51,12 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
         <Avatar className="h-9 w-9 border border-gray-200">
           <AvatarImage src={imageUrl} alt={user?.username || "User"} />
           <AvatarFallback className="bg-gray-100 text-gray-600 font-medium">
-            {initials}
+           <Image
+           src={user?.image || USER}
+           alt={user?.username || "User"}
+           width={40}
+           height={40}
+           />
           </AvatarFallback>
         </Avatar>
         <ChevronDown
