@@ -1,112 +1,97 @@
 "use client";
 import React, { useState } from "react";
 import Topic from "../../Tpoic/topic"; // ✅ check spelling
-import Exam from "../../Exam/Exam"; 
+import Exam from "../../Exam/Exam";
 import SetUpSection from "../Component/Section/Section";
 import SubTopic from "../Component/SubTopic/SubTopic";
 import ExamTypes from "../ExamType/ExamType";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CreateExamPage from "../Component/Exam/Exam";
-import PlanPricing from "../Component/Plan&Pricing/Plan&Pricing";
+
+
+const tabItems = [
+  { value: "sections", label: "Add examType", bannerText: "Add Exam Type" },
+  { value: "topics", label: "Add Sections", bannerText: "Add Section" },
+  { value: "subtopics", label: "Add Topics", bannerText: "Add Topic" },
+  {
+    value: "examtype",
+    label: "Add Sub Topics",
+    bannerText: "Add Sub Topic",
+  },
+  { value: "exam", label: "Add Exam", bannerText: "Add Exam" },
+];
 
 const Sidebar = () => {
-  const [activeComponent, setActiveComponent] = useState("sections");
+  const [activeTab, setActiveTab] = useState("sections");
 
-  const renderComponent = () => {
-    switch (activeComponent) {
-      case "sections":
-        return <SetUpSection />;
-      case "topics":
-        return <Topic />;
-      case "subtopics":
-        return <SubTopic />;
-      case "exam":
-        return <CreateExamPage />;
-          case "examtype":
-        return <ExamTypes />;
-         case "Plan":
-        return <PlanPricing />;
-      default:
-        // return <Section />;
-    }
-  };
+  const currentTab = tabItems.find((t) => t.value === activeTab);
 
   return (
+    <>
+      <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mb-8">
+        <div className="bg-[#F0F9FF] rounded-lg px-8 py-6 text-start font-poppins font-medium">
+          <h1 className="text-[#FF5635] text-2xl f font-poppins">
+            Exam Setup{" "}
+            <span className="text-black text-lg">
+              <span className="text-[#005EB6]"> | </span>
 
-    
-    <div className="flex">
-      {/* Sidebar */}
-      <div className="flex flex-col w-64 bg-[#F7F7F5]  h-1/2  ">
-        <nav className="flex flex-col space-y-2">
-                      <button
-            onClick={() => setActiveComponent("examtype")}
-            className={`p-2 rounded-md font-semibold ${
-              activeComponent === "examtype"
-                ? "bg-orange-500 text-white"
-                : "hover:bg-gray-200"
-            }`}
-          >
-            Create examType
-          </button>
-          <button
-            onClick={() => setActiveComponent("sections")}
-            className={`p-2 rounded-md font-semibold ${
-              activeComponent === "sections"
-                ? "bg-orange-500 text-white"
-                : "hover:bg-gray-200"
-            }`}
-          >
-            Create Sections
-          </button>
-
-          <button
-            onClick={() => setActiveComponent("topics")}
-            className={`p-2 rounded-md font-semibold ${
-              activeComponent === "topics"
-                ? "bg-orange-500 text-white"
-                : "hover:bg-gray-200"
-            }`}
-          >
-            Create Topics
-          </button>
-
-          <button
-            onClick={() => setActiveComponent("subtopics")}
-            className={`p-2 rounded-md font-semibold ${
-              activeComponent === "subtopics"
-                ? "bg-orange-500 text-white"
-                : "hover:bg-gray-200"
-            }`}
-          >
-            Create Sub Topics
-          </button>
-
-          <button
-            onClick={() => setActiveComponent("exam")}
-            className={`p-2 rounded-md font-semibold ${
-              activeComponent === "exam"
-                ? "bg-orange-500 text-white"
-                : "hover:bg-gray-200"
-            }`}
-          >
-            Create Exam
-          </button>
-
-                    <button
-            onClick={() => setActiveComponent("Plan")}
-            className={`p-2 rounded-md font-semibold ${
-              activeComponent === "Plan"
-                ? "bg-orange-500 text-white"
-                : "hover:bg-gray-200"
-            }`}
-          >
-            Create Plan
-          </button>
-        </nav>
+              {currentTab?.bannerText}
+            </span>
+          </h1>
+        </div>
       </div>
 
-      {/* Content Area */}
-      <div className="flex-1 px-6">{renderComponent()}</div>
-    </div>
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="w-full  mx-auto   px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12"
+      >
+        <div className="grid grid-cols-12 gap-8">
+          {/* Left Sidebar - Navigation */}
+          <div className="col-span-3  ">
+            <div className="bg-[#F9FAFC] py-4 rounded-[5px]">
+              <TabsList className="flex flex-col h-auto w-full bg-transparent p-0 cursor-pointer">
+                {tabItems.map((tab) => {
+                  return (
+                    <TabsTrigger
+                      key={tab.value}
+                      value={tab.value}
+                      className="w-full justify-start gap-3 px-4 py-3 data-[state=active]:bg-[#FF5635] data-[state=active]:border-l-8 rounded-none  data-[state=active]:border-[#FFD930] data-[state=active]:text-white  text-gray-600 hover:bg-gray-100 transition-colors"
+                    >
+                      <span className="font-medium font-poppins">
+                        {tab.label}
+                      </span>
+                    </TabsTrigger>
+                  );
+                })}
+              </TabsList>
+            </div>
+          </div>
+
+          {/* Right Content Area */}
+          <div className="col-span-1 lg:col-span-9 space-y-6">
+            {/* Content Area */}
+            <div className="mt-0  cursor-pointer">
+              {tabItems.map((tab) => (
+                <TabsContent
+                  key={tab.value}
+                  value={tab.value}
+                  className="mt-0 outline-none cursor-pointer"
+                >
+                  {/* Each tab content is responsible for its own container styling if needed */}
+                  {tab.value === "sections" && <ExamTypes />}
+                  {tab.value === "topics" && <SetUpSection />}
+                  {tab.value === "subtopics" && <Topic />}
+
+                  {tab.value === "exam" && <CreateExamPage />}
+                  {tab.value === "examtype" && <SubTopic />}
+                </TabsContent>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Tabs>
+    </>
   );
 };
 

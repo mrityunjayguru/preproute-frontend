@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -14,8 +13,8 @@ import { Download, Plus, User2 } from "lucide-react";
 import Image from "next/image";
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import SocialMedia from "../Home/_componets/social-media";
-import USERDATA from "@/assets/vectors/user-profile.svg"
-
+import USERDATA from "@/assets/vectors/user-profile.svg";
+import InvoicePrint from "./InvoicePDF.client";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -23,13 +22,14 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const user = useSelector((state: any) => state?.Auth?.loginUser);
-  console.log(user)
+  console.log(user);
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   const [profileImage, setProfileImage] = useState(
     user?.image || "/profile-avatar.png"
   );
+
   const [uploading, setUploading] = useState(false);
 
   const handleLogout = () => {
@@ -44,7 +44,6 @@ export default function ProfilePage() {
     }
   }, [token, router]);
 
-  console.log(user);
   // 📤 Upload Profile Image
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -75,6 +74,7 @@ export default function ProfilePage() {
     getuserData();
   }, []);
 
+  console.log(user, "useruseruser");
   return (
     <div className="h-screen flex flex-col justify-between">
       <div>
@@ -99,7 +99,7 @@ export default function ProfilePage() {
                   />
                 ) : (
                   <>
-                   <Image
+                    <Image
                       src={USERDATA}
                       alt="user"
                       className="w-32 h-32 p-8 text-gray-400"
@@ -125,7 +125,9 @@ export default function ProfilePage() {
                 <span className="text-md font-semibold text-[#1A1D1F]">
                   {user?.username || "User Name"}!
                 </span>
-                <p className="text-xs text-[#727EA3]">Nikname :{user?.nickname || "N/A"}</p>
+                <p className="text-xs text-[#727EA3]">
+                  Nikname :{user?.nickname || "N/A"}
+                </p>
                 <p className="text-xs text-[#FF5635]">
                   {user?.email} {user?.phone && `| +91 ${user.phone}`}
                 </p>
@@ -163,13 +165,17 @@ export default function ProfilePage() {
 
             <div className="flex border-b pb-2 gap-24">
               <span className="text-[#727EA3]">Stream:{}</span>
-              <span className="">{user?.profile?.stream}</span>
+              <span className="">
+                {user?.profile?.stream == "Other"
+                  ? user?.profile?.otherStream
+                  : user?.profile?.stream}
+              </span>
             </div>
 
             <div className="flex border-b pb-2 gap-24">
               <span className="text-[#727EA3]">Preparing For:</span>
               <span className=" text-right">
-                IPMAT-Indore, IPMAT-Rohtak, IIM-B DBE, SAT, NPAT, Christ
+                {user?.examdetail?.map((exam: any) => exam.examname).join(", ")}
               </span>
             </div>
           </div>
@@ -182,7 +188,7 @@ export default function ProfilePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
               {/* Free Plan */}
-              <div
+              {!user.purchaseDetails[0]?.planId ?(  <div
                 className="bg-gradient-to-t from-[#F0F9FF] to-white 
                  border border-[#E6F4FF] rounded-xl p-6 "
               >
@@ -192,67 +198,70 @@ export default function ProfilePage() {
                 <p className="text-md text-[#ff5635] mb-4">Limited Access</p>
 
                 <div className="text-[14px] space-y-1 font-poppins">
-                  <p>
+                  {/* <p>
                     <span className="text-[#1A1D1F]">Created on:</span>{" "}
-                  </p>
+                  </p> */}
                   <p className="flex gap-2 items-center">
-                    <h1 className="flex gap-1 flex-col">
+                    <h1 className="flex gap-2 items-center">
                       <span className="text-[#1A1D1F]">Price</span>{" "}
-                      <span className="text-[#1A1D1F] text-[8px]">
-                        inclusive of all taxes
-                      </span>
+                      
                     </h1>
                     <span className="text-[#ff5635] font-medium">₹0</span>
                   </p>
+                  {/* <span className="text-[#1A1D1F] text-[8px]">
+                        inclusive of all taxes
+                      </span> */}
                 </div>
-              </div>
+              </div>):(null)}
+            
 
               {/* Paid Plan */}
-              {user?.purchaseDetails?.map((item: any, index: number) => (
-                <div
-                  key={item?.orderId || index}
-                  className="bg-gradient-to-t from-[#F0F9FF] to-white 
-                    border border-[#E6F4FF] rounded-xl p-6 "
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className="text-[#ff5635] font-semibold text-2xl">
-                        {item?.plan?.title}
-                      </h4>
-                      <p className="text-md text-[#ff5635] mb-4">Full Access</p>
+              {Array.isArray(user?.purchaseDetails) &&
+                user.purchaseDetails.length > 0 &&
+                user.purchaseDetails[0]?.planId &&
+                user.purchaseDetails.map((item: any, index: number) => (
+                  <div
+                    key={item?.orderId || index}
+                    className="bg-gradient-to-t from-[#F0F9FF] to-white 
+       border border-[#E6F4FF] rounded-xl p-6"
+                  >
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h4 className="text-[#ff5635] font-semibold text-2xl">
+                          {item?.plan?.title}
+                        </h4>
+                        <p className="text-md text-[#ff5635] mb-4">
+                          Full Access
+                        </p>
+                      </div>
+
+                      <Button className="text-white bg-black text-sm">
+                        <Download className="h-5 w-5" />
+                        <InvoicePrint invoice={item} />
+                      </Button>
                     </div>
 
-                    <Button className=" text-white bg-black text-sm">
-                      <Download className="h-5 w-5" />
-                      Download Invoice
-                    </Button>
-                  </div>
+                    <div className="text-[14px] space-y-1 font-poppins">
+                      <p>
+                        <span className="text-[#1A1D1F]">Created on:</span>{" "}
+                        {item?.otherdetsil?.orderedAt
+                          ? new Date(
+                              item.otherdetsil.orderedAt
+                            ).toLocaleDateString()
+                          : item?.plan?.createdAt
+                          ? new Date(item.plan.createdAt).toLocaleDateString()
+                          : "—"}
+                      </p>
 
-                  <div className="text-[14px] space-y-1 font-poppins">
-                    <p>
-                      <span className="text-[#1A1D1F]">Created on:</span>{" "}
-                      {item?.otherdetsil?.orderedAt
-                        ? new Date(
-                            item.otherdetsil.orderedAt
-                          ).toLocaleDateString()
-                        : item?.plan?.createdAt
-                        ? new Date(item.plan.createdAt).toLocaleDateString()
-                        : "—"}
-                    </p>
-                    <p className="flex gap-2 items-center">
-                      <h1 className="flex gap-1 flex-col">
-                        <span className="text-[#1A1D1F]">Price</span>{" "}
-                        <span className="text-[#1A1D1F] text-[8px]">
-                          inclusive of all taxes
+                      <p className="flex gap-2 items-center">
+                        <span className="text-[#1A1D1F]">Price</span>
+                        <span className="text-[#ff5635] font-medium">
+                          ₹{item?.amount || item?.plan?.price || "0"}
                         </span>
-                      </h1>
-                      <span className="text-[#ff5635] font-medium">
-                        ₹{item?.amount || item?.plan?.price || "0"}
-                      </span>
-                    </p>
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
 

@@ -33,6 +33,8 @@ import SubmitExamPopup from "./Popup/SubmitExamPopup";
 import { routeSlicc } from "@/store/PlanRoute/Route";
 import SubjectTabs from "./SubjectTabs";
 import ManageFooter from "./manage-footer";
+import { setexam } from "@/store/seatUpexam/exam";
+import SwitchSectionRestrictionPopup from "./Popup/sectionRestriction";
 // import { allowResultAccess, removeResultAccess } from "../../Exam/Component/allowResultAccess";
 
 interface SectionDetail {
@@ -66,6 +68,7 @@ export default function ExamUI() {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [totalNoOfQuestions, setTotalNoOfQuestions] = useState(0);
+  const [sectionRestriction,setsectionRestriction]=useState(false);
   const [question, setQuestion] = useState<any>(null);
   const [numericalValue, setNumericalValue] = useState("");
   const [mcqSelected, setMcqSelected] = useState<string | null>(null);
@@ -116,6 +119,7 @@ export default function ExamUI() {
     const istDate = new Date(date.getTime() + utcOffsetInMinutes * 60000);
     return istDate;
   };
+  
 
   // ---------------- Setup Exam ----------------
   // ---------------- Setup Exam ----------------
@@ -298,20 +302,8 @@ const examId = examData?.[0]?._id;
         setCurrentQuestionIndex((p) => p + 1);
         fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
       } else if (isSection && currentSectionIndex + 1 < examSections.length) {
-        const nextSection: any = examSections[currentSectionIndex + 1];
-        // console.log(nextSection,"nextSectionnextSection")
-        if (switchable == false) {
-          setTimeLeft(nextSection?.duration * 60);
-        }
-        setSelectedSection(nextSection);
-        setCurrentSectionIndex((p) => p + 1);
-        setCurrentQuestionIndex(0);
-        setTotalNoOfQuestions(nextSection.noOfQuestions);
-        fetchQuestion(1, nextSection.sectionId);
-        await updateSectionTime(
-          selectedSection?.sectionId,
-          nextSection.sectionId
-        );
+        setsectionRestriction(true)
+
       }
       setloder(false);
       return;
@@ -414,6 +406,7 @@ const examId = examData?.[0]?._id;
   };
 
   const handleSubmitExamPopup = (val: any) => {
+    setShowSubmitPopup(false)
     handleSubmitFullExam();
   };
 
@@ -421,9 +414,9 @@ const examId = examData?.[0]?._id;
     try {
       await updateSectionTime(null, selectedSection?.sectionId);
       await dispatch(userExamResult(examData));
-      window.open("", "_self");
-      window.close();
-      window.open("/Exam/result", "_blank");
+      // window.open("", "_self");
+      // window.close();
+      router.push("/Exam/result")
     } catch (err) {
       console.error("Error submitting exam:", err);
     }
@@ -648,6 +641,23 @@ const examId = examData?.[0]?._id;
   }, []);
   const [sectionShowPopup, setSectionShowPopup] = useState(false);
   // alert(examData[0]?.exam?.examname)
+  const handleSubmitSection=async()=>{
+    setsectionRestriction(false)
+        const nextSection: any = examSections[currentSectionIndex + 1];
+        // console.log(nextSection,"nextSectionnextSection")
+        if (switchable == false) {
+          setTimeLeft(nextSection?.duration * 60);
+        }
+        setSelectedSection(nextSection);
+        setCurrentSectionIndex((p) => p + 1);
+        setCurrentQuestionIndex(0);
+        setTotalNoOfQuestions(nextSection.noOfQuestions);
+        fetchQuestion(1, nextSection.sectionId);
+        await updateSectionTime(
+          selectedSection?.sectionId,
+          nextSection.sectionId
+        );
+  }
   return (
     <>
       {showSubmitPopup && (
@@ -656,6 +666,15 @@ const examId = examData?.[0]?._id;
           onConfirm={handleSubmitExamPopup}
         />
       )}
+
+       {sectionRestriction && (
+        <SwitchSectionRestrictionPopup
+          onClose={() => setsectionRestriction(false)}
+          onConfirm={handleSubmitSection}
+          selectedSection={selectedSection}
+        />
+      )}
+
       {sectionShowPopup && (
         <SectionRestrictionPopup
           examname={examData[0]?.exam?.examname}
@@ -699,6 +718,7 @@ const examId = examData?.[0]?._id;
               currentQuestionIndex={
                 examProgress?.currentQuestionNoIndex || currentQuestionIndex
               }
+              selectedsection={selectedSection}
               CurrentInput={CurrentInput}
             />
           </div>

@@ -9,6 +9,7 @@ import CommonTable from "@/Common/CommonTable";
 import { useSelector } from "react-redux";
 import { getTopic, handlesetUpdateTopc } from "@/api/Topic";
 import { formatDateTime } from "@/Common/ComonDate";
+import { Search } from "lucide-react";
 
 const TopicTable = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,18 +36,23 @@ const TopicTable = () => {
     dispatch(handlesetUpdateTopc(val))
   }
   return (
-    <div className="bg-[#F7F7F5] p-6 rounded-lg">
+     <div className="">
+      <div className="flex justify-between items-center pb-3">
+      <h2 className="text-md font-poppins font-medium text-[#1570EF] mb-4">Topic List</h2>
       {/* Search box */}
-      <Input
+      <div className=" w-[90%] md:w-96 bg-white rounded-[2px] flex items-center px-4 py-3 border border-gray-200">
+        <Search className="w-5 h-5 text-gray-400 mr-2" />
+      <input
         type="text"
         placeholder="Search Exam Type"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="mb-4 bg-[#ffffff]"
+        className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
       />
 
       {/* CommonTable */}
-        
+        </div>
+      </div>
       <CommonTable data={sections} columns={columns} onEdit={handleEdit}/>
     </div>
   );

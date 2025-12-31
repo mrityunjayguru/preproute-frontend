@@ -12,12 +12,14 @@ interface Props {
   paperName: string;
   currentQuestionIndex: number;
   CurrentInput: any;
+  selectedsection:any
 }
 
 const QuestionView: React.FC<Props> = ({
   question,
   examName,
   paperName,
+  selectedsection,
   currentQuestionIndex,
   CurrentInput,
 }) => {
@@ -26,6 +28,7 @@ const QuestionView: React.FC<Props> = ({
       {question && (
         <QuestionHeader
           question={question}
+          selectedsection={selectedsection}
           currentQuestionIndex={currentQuestionIndex}
         />
       )}

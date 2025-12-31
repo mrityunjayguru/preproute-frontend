@@ -1,35 +1,102 @@
-import { Card } from "@/components/ui/card";
+"use client";
+
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  LabelList,
+} from "recharts";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+
 type ExamData = {
-    views: number;
-    // Add other properties if needed
+  name: string;
+  views: number;
 };
 
 interface TopExamsChartProps {
-    data: ExamData[];
+  data: ExamData[];
 }
 
+const chartConfig = {
+  views: {
+    label: "Students",
+    color: "hsl(var(--chart-1))",
+  },
+} satisfies ChartConfig;
+
 export const TopExamsChart = ({ data }: TopExamsChartProps) => {
-    // Find the max value for scaling
-    const maxView = Math.max(...data.map(item => item.views));
-
-    return (
-        <Card className="col-span-12 sm:col-span-8 lg:col-span-5 mt-4 sm:mt-0 bg-[#F7F7F5] px-5">
-            <h2 className="text-xl font-normal text-[#000000] mb-6">Top Performing Exams</h2>
-            <div className="flex h-56 items-end justify-around space-x-2 border-b-2 border-l-2 border-[#FF5635]">
-                {data.map((item, index) => (
-                    <div key={index} className="flex flex-col items-center h-full justify-end ">
-                        <div 
-                            className="w-3  rounded-t-lg bg-[#FF5635] transition-all duration-500 ease-out hover:bg-red-600"
-                            style={{ height: `${(item.views / maxView) * 90 + 10}%` }} // Scale bar height (10% base minimum)
-                        ></div>
-                    </div>
-                ))}
-            </div>
-            <p className="text-center text-xl font-medium text-[#000000] ">
-                Top Ten Exams
-            </p>
-        </Card>
-    );
+  return (
+    <Card className="col-span-12 sm:col-span-8 lg:col-span-5 mt-4 sm:mt-0 bg-[#F0F9FF] border-none shadow-none font-poppins">
+      <CardHeader>
+        <CardTitle className="text-xl font-normal text-[#000000]">
+          Top Performing Exams
+        </CardTitle>
+        <CardDescription>Student participation per exam</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
+          <BarChart
+            accessibilityLayer
+            data={data}
+            layout="vertical"
+            margin={{
+              left: 0,
+              right: 40,
+            }}
+          >
+            <CartesianGrid horizontal={false} />
+            <YAxis
+              dataKey="name"
+              type="category"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              hide
+            />
+            <XAxis dataKey="views" type="number" hide />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent indicator="line" />}
+            />
+            <Bar
+              dataKey="views"
+              layout="vertical"
+              fill="#FF5635"
+              radius={[0, 4, 4, 0]}
+              barSize={30}
+            >
+              <LabelList
+                dataKey="name"
+                position="insideLeft"
+                offset={8}
+                className="fill-white font-medium"
+                fontSize={12}
+              />
+              <LabelList
+                dataKey="views"
+                position="right"
+                offset={8}
+                className="fill-foreground font-medium"
+                fontSize={12}
+              />
+            </Bar>
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
+  );
 };
-
-

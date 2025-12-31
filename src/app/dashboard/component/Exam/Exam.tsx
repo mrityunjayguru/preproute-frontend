@@ -13,7 +13,10 @@ import { getSubTopicByTopicId } from "@/api/subTopic";
 import OptionWithLatex from "./OptionWithLatex";
 import QuestionWithOptionsEditor from "./Component/LatexCode";
 import LatexForSoluction from "./Component/LatexForSoluction";
+import RenderPreview from "@/Common/CommonLatex";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Footer from "@/app/layouts/_component/footer";
 
 type AnswerType = "Numeric" | "MCQ";
 
@@ -32,7 +35,7 @@ const Exam: React.FC = () => {
     (state: any) => state?.exam?.selectedExamDetail
   );
   // const topic = useSelector((state: any) => state?.topic?.topic);
-  const [topic,setTopic]=useState<any>([])
+  const [topic, setTopic] = useState<any>([]);
   const subtopicData = useSelector((state: any) => state?.subTopic?.subTopic);
   const singleQuestion = useSelector(
     (state: any) => state.question.singleQuestion
@@ -50,12 +53,11 @@ const Exam: React.FC = () => {
   const [activeQuestion, setActiveQuestion] = useState<number>(1);
   const [selectedSectionData, setSelectedSectionData] = useState<any>(null);
   const [numericAnswer, setNumericAnswer] = useState<number>(0);
-  const [passage,setPassage]=useState<string>("");
+  const [passage, setPassage] = useState<string>("");
   const [isSection, setIsSection] = useState<boolean>(true);
   const [numberOfQuestion, setNumberOfQuestion] = useState<number>(0);
 
   const sectionsData = selectedExamDetail[0]?.examDetail?.sections || [];
-  
 
   // initialize exam type
   useEffect(() => {
@@ -71,16 +73,16 @@ const Exam: React.FC = () => {
 
   const getTopicData = async () => {
     try {
-      const payload:any={}
+      const payload: any = {};
       await dispatch(getTopic(payload));
     } catch (err) {
       console.error(err);
     }
   };
-  
+
   useEffect(() => {
     if (selectedTopic) {
-      const payload:any={ topicId: selectedTopic }
+      const payload: any = { topicId: selectedTopic };
       dispatch(getSubTopicByTopicId(payload));
     }
   }, [selectedTopic, dispatch]);
@@ -98,7 +100,7 @@ const Exam: React.FC = () => {
       setSelectedSubtopic(q.subtopicId || "");
       setNumericAnswer(q.numericAnswer || 0);
       setQuestionPessage(q.questionPessage || "Normal");
-setPassage(q?.passage || "");
+      setPassage(q?.passage || "");
       if (q.answerType === "MCQ" && Array.isArray(q.options)) {
         setOptions(
           q.options.map((opt: any, i: number) => ({
@@ -152,17 +154,20 @@ setPassage(q?.passage || "");
       opts.map((opt) => ({ ...opt, isCorrect: opt.id === id }))
     );
   };
-  const [loader,setLoder]=useState(false)
+  const [loader, setLoder] = useState(false);
 
   // 🧠 Dynamic total questions
   const totalQuestions = isSection
     ? selectedSectionData?.noOfQuestions || 0
     : numberOfQuestion || 0;
-  const questionNumbers = Array.from({ length: totalQuestions }, (_, i) => i + 1);
+  const questionNumbers = Array.from(
+    { length: totalQuestions },
+    (_, i) => i + 1
+  );
 
   const handleSubmit = async () => {
     try {
-      setLoder(true)
+      setLoder(true);
       const correctAnswer = options.find((opt) => opt.isCorrect)?.text || "";
 
       const payload: any = {
@@ -189,7 +194,7 @@ setPassage(q?.passage || "");
             ? numericAnswer
             : options.find((opt) => opt.isCorrect)?.text || "",
         hint: hintText,
-        createdBy: "6710fbc3f2b9b9e...", 
+        createdBy: "6710fbc3f2b9b9e...",
       };
 
       if (singleQuestion && singleQuestion.length > 0) {
@@ -199,56 +204,55 @@ setPassage(q?.passage || "");
         await dispatch(createQuestion(payload));
         resetQuestionFields();
       }
-      setActiveQuestion(activeQuestion+1)
-      handleActiveQuestion(activeQuestion+1)
-      setLoder(false)
+      setActiveQuestion(activeQuestion + 1);
+      handleActiveQuestion(activeQuestion + 1);
+      setLoder(false);
     } catch (err) {
-      setLoder(false)
+      setLoder(false);
       console.error("Error creating question:", err);
     }
   };
 
-const handleActiveQuestion = (val: number) => {
-  let currentIndex = sectionsData.findIndex(
-    (sec: any) => sec.sectionId === activeSection
-  );
+  const handleActiveQuestion = (val: number) => {
+    let currentIndex = sectionsData.findIndex(
+      (sec: any) => sec.sectionId === activeSection
+    );
 
-  let currentSection = sectionsData[currentIndex];
+    let currentSection = sectionsData[currentIndex];
 
-  // If question exceeds current section limit → move to next section
-  if (currentSection?.noOfQuestions < val) {
-    const nextSection = sectionsData[currentIndex + 1];
+    // If question exceeds current section limit → move to next section
+    if (currentSection?.noOfQuestions < val) {
+      const nextSection = sectionsData[currentIndex + 1];
 
-    // If next section exists → move to next section
-    if (nextSection) {
-      return handleActiveSection(nextSection); // <-- PASS FULL DATA
+      // If next section exists → move to next section
+      if (nextSection) {
+        return handleActiveSection(nextSection); // <-- PASS FULL DATA
+      }
+
+      // If NO next section → stop (end of all sections)
+      return;
     }
 
-    // If NO next section → stop (end of all sections)
-    return;
-  }
+    // Load question inside current section
+    const payload: any = {
+      questionNo: val,
+      questionPaperId: selectedExamDetail[0]?._id,
+    };
 
-  // Load question inside current section
-  const payload: any = {
-    questionNo: val,
-    questionPaperId: selectedExamDetail[0]?._id,
+    if (isSection) payload.section = activeSection;
+
+    dispatch(getQuestionById(payload));
+    setActiveQuestion(val);
   };
-
-  if (isSection) payload.section = activeSection;
-
-  dispatch(getQuestionById(payload));
-  setActiveQuestion(val);
-};
-
 
   const handleActiveSection = (val: any) => {
     setActiveQuestion(1);
     setActiveSection(val.sectionId);
     setSelectedSectionData(val);
     setNumberOfQuestion(val.noOfQuestions);
- if(val?.topicDetails){
- setTopic(val?.topicDetails)
-  }
+    if (val?.topicDetails) {
+      setTopic(val?.topicDetails);
+    }
     const payload: any = {
       questionNo: 1,
       questionPaperId: selectedExamDetail[0]?._id,
@@ -258,273 +262,334 @@ const handleActiveQuestion = (val: number) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff] p-4 sm:p-8 mt-20">
-      <div className="w-full">
+    <div className="min-h-screen ">
+      <div className="w-full mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mb-8">
         {/* Header */}
-        <div className="flex  justify-between items-center mb-6 bg-[#fff] p-4 rounded-sm shadow-md">
-          {isSection && (
-            <div className="flex space-x-2">
-              {sectionsData.map((section: any) => (
+        <div className="flex justify-between items-center bg-[#F0F9FF] rounded-lg px-8 py-6 text-start font-poppins font-medium">
+          <h1 className="text-[#FF5635] text-2xl  font-poppins">
+            Exam Setup{" "}
+            <span className="text-black text-lg">
+              <span className="text-[#005EB6]"> | </span>
+              Create Oprator
+            </span>
+          </h1>
+          <div className="font-semibold text-gray-900 text-lg font-poppins">
+            {selectedExamDetail[0]?.examDetail?.examname}{" "}
+            <span className="text-[#FF4D4F]">
+              {selectedExamDetail[0]?.questionPapername}
+            </span>
+          </div>
+        </div>
+
+        {/* Section Tabs and Save Button Row */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 mt-4">
+          <div className="flex flex-wrap gap-4">
+            {isSection &&
+              sectionsData.map((section: any) => (
                 <button
                   key={section.sectionId}
                   onClick={() => handleActiveSection(section)}
-                  className={`w-52 cursor-pointer h-12 text-[14px] font-semibold rounded-lg transition-colors ${
+                  className={`px-6 py-2 rounded-[8px] text-sm font-normal font-dm-sans cursor-pointer ${
                     section.sectionId === activeSection
-                      ? "bg-red-500 text-white shadow-md"
-                      : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-100"
+                      ? "bg-[#005EB6] text-white"
+                      : "bg-[#5A9BD5] text-white hover:bg-[#4a8ac0]"
                   }`}
                 >
                   {section?.sectionDetail?.section}
                 </button>
               ))}
-            </div>
-          )}
-          <div className="flex items-center space-x-4">
-            <div className="text-sm">
-              <span className="text-gray-500 mr-2">Exam:</span>
-              <span className="font-bold text-lg text-red-500">
-                {selectedExamDetail[0]?.examDetail?.examname} -{" "}
-                {selectedExamDetail[0]?.questionPapername}
-              </span>
-            </div>
-           <button
-  onClick={handleSubmit}
-  disabled={loader}
-  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50"
->
-  {loader ? "Processing..." : "Save And Process"}
-</button>
-
           </div>
+
+          <button
+            onClick={handleSubmit}
+            disabled={loader}
+            className="px-10 py-2 w-fit bg-[#FF5635] text-white font-medium rounded-md font-dm-sans hover:bg-[#FF5632] disabled:opacity-50 cursor-pointer"
+          >
+            {loader ? "Processing..." : "Save & Process"}
+          </button>
         </div>
 
-        {/* Main Layout */}
-        <div className="  gap-6">
-          {/* Left Section */}
-          <div className=" flex justify-between gap-2 space-y-6">
-            <div className="rounded-xl w-full bg-white shadow-lg p-6 space-y-6">
-              <h2 className="text-xl font-bold text-gray-800">
-                Question No. {activeQuestion}
-              </h2>
-
-              {/* Topic/Subtopic (only if isSection true) */}
-              {isSection && (
-                <div className="flex flex-wrap gap-4">
-                  <div className="flex-1 min-w-[200px]">
-                    <label className="block text-sm font-semibold text-gray-700">
-                      Topic
-                    </label>
-                    <select
-                      value={selectedTopic}
-                      onChange={(e) => {
-                        setSelectedTopic(e.target.value);
-                        setSelectedSubtopic("");
-                      }}
-                      className="w-full mt-1 border border-gray-200 rounded-lg p-2"
-                    >
-                      <option value="">-- Select Topic --</option>
-                      {topic.map((t: any) => (
-                        <option key={t._id} value={t._id}>
-                          {t.topic}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="flex-1 min-w-[200px]">
-                    <label className="block text-sm font-semibold text-gray-700">
-                      Subtopic
-                    </label>
-                    <select
-                      value={selectedSubtopic}
-                      onChange={(e) => setSelectedSubtopic(e.target.value)}
-                      className="w-full mt-1 border border-gray-200 rounded-lg p-2"
-                    >
-                      <option value="">-- Select Subtopic --</option>
-                      {subtopicData?.map((sub: any) => (
-                        <option key={sub._id} value={sub._id}>
-                          {sub.subtopic}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+        {/* Main Content Grid */}
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
+          {/* Left Column: Form */}
+          <div className="flex-1 w-full space-y-8">
+            {/* Topic & Subtopic */}
+            {isSection && (
+              <div className="flex flex-col md:flex-row gap-8">
+                <div className="flex-1">
+                  <Label className="font-dm-sans text-md font-medium">
+                    Select Topic
+                  </Label>
+                  <select
+                    value={selectedTopic}
+                    onChange={(e) => {
+                      setSelectedTopic(e.target.value);
+                      setSelectedSubtopic("");
+                    }}
+                    className="w-full border border-gray-300 rounded-[2px] cursor-pointer p-2 text-gray-900 bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                  >
+                    <option value="">Select Topic</option>
+                    {topic.map((t: any) => (
+                      <option
+                        key={t._id}
+                        value={t._id}
+                        className="text-gray-900"
+                      >
+                        {t.topic}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              )}
-
-              {/* Question Type */}
-              <div className="flex flex-col pt-4">
-                <span className="text-sm font-semibold text-gray-700 mb-2">
-                  Question Type
-                </span>
-                <div className="flex items-center space-x-6">
-                  {["Easy", "Medium", "Hard"].map((type) => (
-                    <label key={type} className="flex items-center space-x-1">
-                      <input
-                        type="radio"
-                        name="questionType"
-                        value={type}
-                        checked={questionType === type}
-                        onChange={() => setQuestionType(type)}
-                        className="accent-red-500"
-                      />
-                      <span className="text-sm">{type}</span>
-                    </label>
-                  ))}
-                  <div className="flex items-center space-x-6">
-                  {["Normal", "Pass"].map((type) => (
-                    <label key={type} className="flex items-center space-x-1">
-                      <input
-                        type="radio"
-                        name="questionPessage"
-                        value={type}
-                        checked={questionPessage === type}
-                        onChange={() => setQuestionPessage(type)}
-                        className="accent-red-500"
-                      />
-                      <span className="text-sm">{type}</span>
-                    </label>
-                  ))}
-                  </div>
+                <div className="flex-1">
+                  <Label className="font-dm-sans text-md font-medium">
+                    Select Sub Topic
+                  </Label>
+                  <select
+                    value={selectedSubtopic}
+                    onChange={(e) => setSelectedSubtopic(e.target.value)}
+                    className="w-full border border-gray-300 rounded-[2px] cursor-pointer p-2 text-gray-900 bg-white focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                  >
+                    <option value="">Select Sub Topic</option>
+                    {subtopicData?.map((sub: any) => (
+                      <option
+                        key={sub._id}
+                        value={sub._id}
+                        className="text-gray-900"
+                      >
+                        {sub.subtopic}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
+            )}
 
-              {/* Question Editor */}
-<div
-  className={`assss ${
-    questionPessage === "Pass"
-      ? "flex gap-4 items-start" // side-by-side layout
-      : "block"                  // stacked layout
-  }`}
->
-  {/* ✅ Question Section */}
-  <div
-    className={`${
-      questionPessage === "Pass" ? "w-[65%]" : "w-full"
-    } border rounded-lg p-4 bg-white shadow-sm`}
-  >
-    <QuestionWithOptionsEditor
-      value={questionData}
-      onChange={setQuestionData}
-      QuestionType={questionPessage}
-    />
-  </div>
-
-  {/* ✅ Answer Section */}
-  <div
-    className={`${
-      questionPessage === "Pass" ? "w-[35%]" : "w-full"
-    } border rounded-lg p-4 bg-gray-50 shadow-sm`}
-  >
-    {questionPessage === "Pass"?(
-      <div>
-       <textarea
-  placeholder="Enter Text"
-  value={passage}
-  onChange={(e) => setPassage(e.target.value)}
-  className="w-full p-2 border rounded-md"
-/>
-
-      </div>
-    ):(null)}
-    {/* Answer Type */}
-    <div className="flex items-center space-x-6 pt-2">
-      <span className="text-base font-semibold text-gray-700">
-        Answer:
-      </span>
-      <div className="flex items-center space-x-4">
-        {["Numeric", "MCQ"].map((type) => (
-          <label key={type} className="flex items-center space-x-1">
-            <input
-              type="radio"
-              name="answerType"
-              value={type}
-              checked={answerType === type}
-              onChange={() => setAnswerType(type as AnswerType)}
-            />
-            <span className="text-sm">{type}</span>
-          </label>
-        ))}
-      </div>
-    </div>
-
-    {/* MCQ Options */}
-    {answerType === "MCQ" && (
-     <div
-  className={
-    questionPessage === "Pass"
-      ? "flex flex-col gap-4 pt-4"
-      : "grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4"
-  }
->
-        {options.map((opt) => (
-          <OptionWithLatex
-            key={opt.id}
-            choice={opt.label}
-            value={opt.text}
-            isCorrect={opt.isCorrect}
-            onChange={(html) => handleOptionTextChange(opt.id, html)}
-            onCheckToggle={() => handleCorrectToggle(opt.id)}
-            QuestionType={questionPessage}
-
-          />
-        ))}
-      </div>
-    )}
-
-    {/* Numeric Answer */}
-    {answerType === "Numeric" && (
-      <div className="pt-4">
-        <input
-          value={numericAnswer}
-          onChange={(e) => setNumericAnswer(Number(e.target.value))}
-          type="number"
-          placeholder="Enter Value"
-          className="border rounded p-2 w-full"
-        />
-      </div>
-    )}
-  </div>
-</div>
-
-            </div>
-               <div className="lg:col-span-1 space-y-6 w-[40%]">
-            {/* Question Navigation */}
-            <div className="rounded-xl h-full bg-white shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                Go to Question No.
-              </h3>
-              <div className="grid grid-cols-5 gap-3">
-                {questionNumbers.map((num) => (
-                  <button
-                    key={num}
-                    onClick={() => handleActiveQuestion(num)}
-                    className={`h-10 w-10 rounded-full font-bold transition-colors ${
-                      num === activeQuestion
-                        ? "bg-red-500 text-white shadow-md"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
+            {/* Question Difficulty (Type) */}
+            <div>
+              <Label className="font-dm-sans text-md font-medium mb-2">
+                Question Type
+              </Label>
+              <div className="flex flex-wrap gap-6 items-center">
+                {/* Difficulty Group */}
+                {["Easy", "Medium", "Hard"].map((type) => (
+                  <label
+                    key={type}
+                    className="flex items-center space-x-2 cursor-pointer"
                   >
-                    {num}
-                  </button>
+                    <div
+                      className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                        questionType === type
+                          ? "border-[#FF4D4F]"
+                          : "border-gray-300"
+                      }`}
+                    >
+                      {questionType === type && (
+                        <div className="w-3 h-3 rounded-full bg-[#FF4D4F]" />
+                      )}
+                    </div>
+                    <input
+                      type="radio"
+                      name="questionType"
+                      value={type}
+                      checked={questionType === type}
+                      onChange={() => setQuestionType(type)}
+                      className="hidden"
+                    />
+                    <span className="text-sm text-gray-600">{type}</span>
+                  </label>
+                ))}
+
+                {/* Passage/Normal Group */}
+                {["Normal", "Pass"].map((type) => (
+                  <label
+                    key={type}
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
+                    <div
+                      className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                        questionPessage === type
+                          ? "border-[#FF4D4F]"
+                          : "border-gray-300"
+                      }`}
+                    >
+                      {questionPessage === type && (
+                        <div className="w-3 h-3 rounded-[8px] bg-[#FF4D4F]" />
+                      )}
+                    </div>
+                    <input
+                      type="radio"
+                      name="questionPessage"
+                      value={type}
+                      checked={questionPessage === type}
+                      onChange={() => setQuestionPessage(type)}
+                      className="hidden"
+                    />
+                    <span className="text-sm text-gray-600">{type}</span>
+                  </label>
                 ))}
               </div>
             </div>
 
+            {/* Question Editor */}
+            <div className="space-y-4">
+              <div
+                className={`  ${
+                  questionPessage === "Pass" ? "flex gap-4" : ""
+                }`}
+              >
+                <div
+                  className={questionPessage === "Pass" ? "w-2/3" : "w-full"}
+                >
+                  <QuestionWithOptionsEditor
+                    value={questionData}
+                    onChange={setQuestionData}
+                    QuestionType={"HideInternalPreview"}
+                  />
+                </div>
+                {questionPessage === "Pass" && (
+                  <div className="w-1/3 text-md font-medium font-poppins">
+                    <textarea
+                      placeholder="Enter Passage"
+                      value={passage}
+                      onChange={(e) => setPassage(e.target.value)}
+                      className="w-full h-full min-h-[200px] p-2 border rounded-md"
+                    />
+                  </div>
+                )}
+              </div>
 
-            {/* Hint */}
-          
-          </div>
-          </div>
-  <div className="rounded-xl bg-white shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              {/* Preview */}
+              <div>
+                <h3 className="text-md font-medium font-poppins text-gray-700 mb-2">
+                  Preview
+                </h3>
+                <div className="border border-gray-200 text-md font-normal font-poppins rounded-[2px] p-4 min-h-[100px] bg-white ">
+                  <RenderPreview content={questionData} />
+                </div>
+              </div>
+            </div>
+
+            {/* Answer Type */}
+            <div>
+              <Label className="font-dm-sans text-md font-medium mb-2">
+                Question Type
+              </Label>
+              <div className="flex gap-6 font-poppins">
+                {["Numeric", "MCQ"].map((type) => (
+                  <label
+                    key={type}
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
+                    <div
+                      className={`w-5 h-5 rounded-full border flex items-center justify-center ${
+                        answerType === type
+                          ? "border-[#FF4D4F]"
+                          : "border-gray-300"
+                      }`}
+                    >
+                      {answerType === type && (
+                        <div className="w-3 h-3 rounded-full bg-[#FF4D4F]" />
+                      )}
+                    </div>
+                    <input
+                      type="radio"
+                      name="answerType"
+                      value={type}
+                      checked={answerType === type}
+                      onChange={() => setAnswerType(type as AnswerType)}
+                      className="hidden"
+                    />
+                    <span className="text-sm text-gray-600">{type}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Options */}
+            {answerType === "MCQ" && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {options.map((opt) => (
+                  <OptionWithLatex
+                    key={opt.id}
+                    choice={opt.label}
+                    value={opt.text}
+                    isCorrect={opt.isCorrect}
+                    onChange={(html) => handleOptionTextChange(opt.id, html)}
+                    onCheckToggle={() => handleCorrectToggle(opt.id)}
+                    QuestionType={questionPessage}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Numeric Answer */}
+            {answerType === "Numeric" && (
+              <div className="pt-4">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Enter Numeric Answer
+                </label>
+                <input
+                  value={numericAnswer}
+                  onChange={(e) => setNumericAnswer(Number(e.target.value))}
+                  type="number"
+                  placeholder="Enter Value"
+                  className="border border-gray-300 rounded-md p-2 w-full max-w-xs"
+                />
+              </div>
+            )}
+
+            {/* Solution */}
+            <div>
+              <h3 className="text-md font-medium font-poppins text-gray-700 mb-2">
                 Solution
               </h3>
-              <LatexForSoluction value={hintText} onChange={setHintText} />
+              <div className=" rounded-lg p-1">
+                <LatexForSoluction value={hintText} onChange={setHintText} />
+              </div>
+              {/* Solution Preview */}
+              <div className="mt-4">
+                <h3 className="text-md font-medium font-poppins text-gray-700 mb-2">
+                  Preview
+                </h3>
+                <div className="border border-gray-200 rounded-[2px] p-4 min-h-[100px] bg-white">
+                  <RenderPreview content={hintText} />
+                </div>
+              </div>
             </div>
-          {/* Sidebar */}
-       
+          </div>
+
+          {/* Right Column: Sidebar */}
+          <div className="w-full lg:w-[350px] shrink-0 pl-10">
+            <div className="bg-[#F9FAFC] border border-[#d6e4ff] rounded-lg overflow-hidden">
+              <div className="bg-[#0056b3] text-white p-3 font-normal text-md font-dm-sans">
+                {sectionsData.find((s: any) => s.sectionId === activeSection)
+                  ?.sectionDetail?.section || "Questions"}
+              </div>
+              <div className="p-4">
+                <div className="text-sm font-medium font-poppins text-gray-600 mb-3">
+                  Choose an option
+                </div>
+                <div className="grid grid-cols-5 gap-2">
+                  {questionNumbers.map((num) => (
+                    <button
+                      key={num}
+                      onClick={() => handleActiveQuestion(num)}
+                      className={`h-10 w-10 flex items-center justify-center rounded-md text-sm font-semibold transition-all border ${
+                        num === activeQuestion
+                          ? "bg-gradient-to-t from-[#005EB6] to-[#C8DCFE] text-white border border-[#E6F4FF]"
+                          : "bg-white text-gray-700 border-gray-200 hover:bg-gray-100"
+                      }`}
+                    >
+                      {num}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 };

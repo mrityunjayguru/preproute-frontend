@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { FaRegEdit } from "react-icons/fa";
+import Image from "next/image";
+import EDIT from "@/assets/vectors/edit-text 1.svg"
 
 interface Column<T> {
   header: string;
@@ -33,29 +35,43 @@ function CommonTable<T extends Record<string, any>>({
   onEdit,
 }: CommonTableProps<T>) {
   return (
-    <div className="bg-[#F7F7F5] max-h-[400px] p-6 rounded-lg overflow-x-auto">
-      <Table>
-        <TableHeader>
+    <div className="rounded-[10px] overflow-x-auto">
+      <Table className="bg-gradient-to-t from-[#F0F9FF] to-white  border border-[#E6F4FF] px-5 py-5">
+        <TableHeader className="bg-[#FF5635] text-white font-poppins font-medium text-sm">
           <TableRow>
             {columns.map((col) => (
-              <TableHead key={col.header}>{col.header}</TableHead>
+              <TableHead
+                key={col.header}
+                className="text-[white] font-poppins font-medium text-sm text-left px-10 "
+              >
+                {col.header}
+              </TableHead>
             ))}
-            {onEdit && <TableHead className="text-center">Actions</TableHead>}
+            {onEdit && (
+              <TableHead className="text-left px-10 text-white">Actions</TableHead>
+            )}
           </TableRow>
         </TableHeader>
 
-        <TableBody>
+        <TableBody className="text-[#222222] font-poppins font-medium text-sm">
           {data && data.length > 0 ? (
             data.map((row, index) => (
-              <TableRow key={index}>
-                {columns.map((col) => {
+              <TableRow key={index} className=" ">
+                {columns.map((col, colIndex) => {
                   const value =
                     typeof col.accessor === "function"
                       ? col.accessor(row)
                       : getValue(row, col.accessor);
 
                   return (
-                    <TableCell key={col.header}>
+                    <TableCell
+                      key={col.header}
+                      className={
+                        colIndex === 0
+                          ? "text-[#FF5635] font-poppins font-normal px-10"
+                          : "text-black font-poppins font-normal px-10"
+                      }
+                    >
                       {value !== undefined && value !== null
                         ? value.toString()
                         : "-"}
@@ -65,14 +81,10 @@ function CommonTable<T extends Record<string, any>>({
 
                 {/* EDIT BUTTON */}
                 {onEdit && (
-                  <TableCell className="text-center">
-                    <Button
-                      variant="orange"
-                      size="sm"
-                      onClick={() => onEdit(row)}
-                    >
-                      <FaRegEdit className="h-4 w-4" />
-                    </Button>
+                  <TableCell className="pl-10 font-poppins font-normal">
+                    <button  onClick={() => onEdit(row)}>
+                      <Image src={EDIT} alt="Edit" className="h-4 w-4" />
+                    </button>
                   </TableCell>
                 )}
               </TableRow>

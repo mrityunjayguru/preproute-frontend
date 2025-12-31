@@ -58,7 +58,7 @@ const ExamForm: React.FC = () => {
 
   // Load sections
   useEffect(() => {
-    const payload:any={}
+    const payload: any = {};
     dispatch(getsection(payload));
   }, [dispatch]);
 
@@ -170,7 +170,7 @@ const ExamForm: React.FC = () => {
       } else {
         await dispatch(createexam(payload));
       }
-const data:any=null
+      const data: any = null;
       await dispatch(getexam(data));
       dispatch(handlesetUpdateExam(data));
 
@@ -202,64 +202,69 @@ const data:any=null
   };
 
   return (
-    <div className="bg-[#F7F7F5] p-6 rounded-lg shadow-md mb-6">
-      <h2 className="text-xl font-semibold mb-4">
-        {editingId ? "Update Exam" : "Create Exam"}
-      </h2>
-
+    <div className="p-6 mb-6 font-dm-sans">
       {/* Basic Info */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-4">
-        <div>
-          <Label>Exam Name</Label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="flex-1">
+          <Label className="mb-4 block font-dm-sans text-md">Exam Name</Label>
           <Input
             value={examName}
             onChange={(e) => setExamName(e.target.value)}
-            placeholder="Enter exam name (e.g. JEE Main 2025)"
+            placeholder="Enter Exam Name (Ex. IPMAT, NPAT etc)"
+            className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none "
           />
         </div>
-
         <div>
-          <Label>Full Exam Duration (minutes)</Label>
+          <Label className="mb-4 block font-dm-sans text-md">
+            Exam Duration (In Minutes)
+          </Label>
           <Input
             type="number"
             value={fullExamDuration}
             onChange={(e) => setFullExamDuration(e.target.value)}
-            placeholder="Enter total duration (e.g. 120)"
+            placeholder="0"
+            className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none "
           />
         </div>
+      </div>
 
+      {/* Toggles */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div>
-          <Label>Switchable Sections?</Label>
-          <RadioGroup
-            onValueChange={setIsSwitchable}
-            value={isSwitchable}
-            className="flex space-x-4 mt-2"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="yes" id="switch-yes" />
-              <Label htmlFor="switch-yes">Yes</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="no" id="switch-no" />
-              <Label htmlFor="switch-no">No</Label>
-            </div>
-          </RadioGroup>
-        </div>
-
-        <div>
-          <Label>Section Based Exam?</Label>
+          <Label className="mb-4 block font-dm-sans text-md">
+            Section Based
+          </Label>
           <RadioGroup
             onValueChange={setIsSection}
             value={isSection}
-            className="flex space-x-4 mt-2"
+            className="flex items-center gap-6 mt-2"
           >
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <RadioGroupItem value="true" id="section-yes" />
               <Label htmlFor="section-yes">Yes</Label>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <RadioGroupItem value="false" id="section-no" />
               <Label htmlFor="section-no">No</Label>
+            </div>
+          </RadioGroup>
+        </div>
+        <div>
+          <Label className="mb-4 block font-dm-sans text-md">
+            Switchable Sections
+          </Label>
+          <RadioGroup
+            onValueChange={setIsSwitchable}
+            value={isSwitchable}
+            className="flex items-center gap-6 mt-2"
+          >
+            <div className="flex items-center gap-2">
+              <RadioGroupItem value="yes" id="switch-yes" />
+              <Label htmlFor="switch-yes">Yes</Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <RadioGroupItem value="no" id="switch-no" />
+              <Label htmlFor="switch-no">No</Label>
             </div>
           </RadioGroup>
         </div>
@@ -268,150 +273,167 @@ const data:any=null
       {/* Section-based exam */}
       {isSection === "true" ? (
         <>
-          <Label className="text-lg font-semibold">Sections</Label>
-          <div className="space-y-4 mt-2">
+          <div className="space-y-4">
             {sectionsData.map((item, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 sm:grid-cols-7 gap-4 bg-white p-3 border rounded-md"
+                className="w-full rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] px-5 py-5"
               >
-                <div>
-                  <Label>Section</Label>
-                  <Select
-                    options={sections.map((s: any) => ({
-                      value: s._id,
-                      label: s.section,
-                    }))}
-                    value={sections
-                      .map((s: any) => ({
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-md font-medium text-[#FF5635]">
+                    Add Section {index + 1}
+                  </p>
+                  {sectionsData.length > 1 && (
+                    <Button
+                      variant="destructive"
+                      className="bg-transparent cursor-pointer font-poppins text-red-500 border border-red-300 hover:bg-red-50"
+                      onClick={() => handleRemoveSection(index)}
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label className="mb-4 block font-dm-sans text-md">Select Section</Label>
+                    <Select
+                      options={sections.map((s: any) => ({
                         value: s._id,
                         label: s.section,
-                      }))
-                      .find((o:any) => o.value === item.sectionId)}
-                    onChange={(val: any) =>
-                      handleFieldChange(index, "sectionId", val?.value)
-                    }
-                    placeholder="Select a section"
-                  />
+                      }))}
+                      value={sections
+                        .map((s: any) => ({
+                          value: s._id,
+                          label: s.section,
+                        }))
+                        .find((o: any) => o.value === item.sectionId)}
+                      onChange={(val: any) =>
+                        handleFieldChange(index, "sectionId", val?.value)
+                      }
+                      placeholder="Select Section"
+                    />
+                  </div>
+                  <div>
+                    <Label className="mb-4 block font-dm-sans text-md">Select Topics</Label>
+                    <Select
+                      closeMenuOnSelect={false}
+                      isMulti
+                      components={makeAnimated()}
+                      options={topicOptions}
+                      value={topicOptions.filter((o: any) =>
+                        item.topic?.includes(o.value)
+                      )}
+                      onChange={(selected: any) =>
+                        handleFieldChange(
+                          index,
+                          "topic",
+                          selected.map((s: any) => s.value)
+                        )
+                      }
+                      placeholder="Select Relevant Topic(s)"
+                    />
+                  </div>
+                  <div>
+                    <Label className="mb-4 block font-dm-sans text-md">No. of Questions</Label>
+                    <Input
+                      type="number"
+                      value={item.noOfQuestions}
+                      onChange={(e) =>
+                        handleFieldChange(
+                          index,
+                          "noOfQuestions",
+                          e.target.value
+                        )
+                      }
+                      placeholder="Ex. 20"
+                      className="max-w-md px-4 py-2 border border-[#D0D5DD] bg-white rounded-[2px] font-dm-sans font-normal focus:ring-none "
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <Label>Topics</Label>
-                  <Select
-                    closeMenuOnSelect={false}
-                    isMulti
-                    components={makeAnimated()}
-                    options={topicOptions}
-                    value={topicOptions.filter((o:any) =>
-                      item.topic?.includes(o.value)
-                    )}
-                    onChange={(selected: any) =>
-                      handleFieldChange(
-                        index,
-                        "topic",
-                        selected.map((s: any) => s.value)
-                      )
-                    }
-                    placeholder="Select one or more topics"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                  <div>
+                    <Label className="mb-4 block font-dm-sans text-md">Section Duration (In Minutes)</Label>
+                    <Input
+                      type="number"
+                      value={item.duration}
+                      onChange={(e) =>
+                        handleFieldChange(index, "duration", e.target.value)
+                      }
+                      placeholder="0"
+                      className="max-w-md px-4 py-2 border border-[#D0D5DD] bg-white rounded-[2px] font-dm-sans font-normal focus:ring-none "
+                    />
+                  </div>
+                  <div>
+                    <Label className="mb-4 block font-dm-sans text-md">Correct Marks</Label>
+                    <Input
+                      type="number"
+                      value={item.correctMark}
+                      onChange={(e) =>
+                        handleFieldChange(index, "correctMark", e.target.value)
+                      }
+                      placeholder="Ex. 4"
+                      className="max-w-md px-4 py-2 border border-[#D0D5DD] bg-white rounded-[2px] font-dm-sans font-normal focus:ring-none "  
+                    />
+                  </div>
+                  <div>
+                    <Label className="mb-4 block font-dm-sans text-md">Negative Marks</Label>
+                    <Input
+                      type="number"
+                      value={item.negativeMark}
+                      onChange={(e) =>
+                        handleFieldChange(index, "negativeMark", e.target.value)
+                      }
+                      placeholder="Ex. -1"
+                      className="max-w-md px-4 py-2 border border-[#D0D5DD] bg-white rounded-[2px] font-dm-sans font-normal focus:ring-none "  
+                    />
+                  </div>
                 </div>
-
-                <div>
-                  <Label>No. of Questions</Label>
-                  <Input
-                    type="number"
-                    value={item.noOfQuestions}
-                    onChange={(e) =>
-                      handleFieldChange(index, "noOfQuestions", e.target.value)
-                    }
-                    placeholder="e.g. 20"
-                  />
-                </div>
-
-                <div>
-                  <Label>Correct Mark</Label>
-                  <Input
-                    type="number"
-                    value={item.correctMark}
-                    onChange={(e) =>
-                      handleFieldChange(index, "correctMark", e.target.value)
-                    }
-                    placeholder="e.g. 4"
-                  />
-                </div>
-
-                <div>
-                  <Label>Negative Mark</Label>
-                  <Input
-                    type="number"
-                    value={item.negativeMark}
-                    onChange={(e) =>
-                      handleFieldChange(index, "negativeMark", e.target.value)
-                    }
-                    placeholder="e.g. -1"
-                  />
-                </div>
-
-                <div>
-                  <Label>Duration (minutes)</Label>
-                  <Input
-                    type="number"
-                    value={item.duration}
-                    onChange={(e) =>
-                      handleFieldChange(index, "duration", e.target.value)
-                    }
-                    placeholder="e.g. 30"
-                  />
-                </div>
-
-                {sectionsData.length > 1 && (
-                  <Button
-                    variant="destructive"
-                    className="mt-6"
-                    onClick={() => handleRemoveSection(index)}
-                  >
-                    Remove
-                  </Button>
-                )}
               </div>
             ))}
-            <Button
-              type="button"
-              onClick={handleAddSection}
-              className="bg-green-500 hover:bg-green-600 mt-2"
-            >
-              + Add Section
-            </Button>
+            <div className="flex cursor-pointer justify-end">
+              <Button
+                type="button"
+                onClick={handleAddSection}
+                className="bg-black text-white hover:bg-gray-900"
+              >
+                + Add Section
+              </Button>
+            </div>
           </div>
         </>
       ) : (
         // Non-section based exam
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4">
           <div>
-            <Label>No. of Questions</Label>
+            <Label className="mb-4 block font-dm-sans text-md">No. of Questions</Label>
             <Input
               type="number"
               value={noOfQuestions}
               onChange={(e) => setNoOfQuestions(e.target.value)}
               placeholder="Enter total number of questions"
+              className="max-w-md px-4 py-2 border border-[#D0D5DD] bg-white rounded-[2px] font-dm-sans font-normal focus:ring-none "
             />
           </div>
           <div>
-            <Label>Correct Mark</Label>
+            <Label className="mb-4 block font-dm-sans text-md">Correct Mark</Label>
             <Input
               type="number"
               value={correctMark}
               onChange={(e) => setCorrectMark(e.target.value)}
               placeholder="Marks for each correct answer (e.g. 4)"
+              className="max-w-md px-4 py-2 border border-[#D0D5DD] bg-white rounded-[2px] font-dm-sans font-normal focus:ring-none "
             />
           </div>
           <div>
-            <Label>Negative Mark</Label>
+            <Label className="mb-4 block font-dm-sans text-md">Negative Mark</Label>
             <Input
               type="number"
               value={negativeMark}
               onChange={(e) => setNegativeMark(e.target.value)}
               placeholder="Negative mark (e.g. -1)"
+              className="max-w-md px-4 py-2 border border-[#D0D5DD] bg-white rounded-[2px] font-dm-sans font-normal focus:ring-none "
             />
           </div>
         </div>
@@ -421,7 +443,8 @@ const data:any=null
         <Button
           onClick={handleSubmit}
           disabled={loading}
-          className="bg-orange-500 hover:bg-orange-600 w-full"
+                     className="h-10 bg-[#FF5635] text-white px-10 font-normal font-poppins cursor-pointer"
+
         >
           {loading ? "Saving..." : editingId ? "Update Exam" : "Create Exam"}
         </Button>

@@ -50,7 +50,7 @@ const SectionForm = () => {
     } else {
       await dispatch(createsection(payload));
     }
-const data:any=null
+    const data: any = null;
     // ✅ Reset Redux and local form after save
     dispatch(handlesetUpdatesection(data));
     await getData();
@@ -60,27 +60,25 @@ const data:any=null
   };
 
   return (
-    <div className="bg-[#F7F7F5] p-6 rounded-lg mb-6">
-      <h2 className="text-xl font-semibold mb-4">
-        {editingId ? "Update Section" : "Create Section"}
-      </h2>
-
-      <div className="flex flex-col md:flex-row gap-4 md:w-3/4">
+    <div className="p-6 mb-6">
+      <div className="flex justify-center gap-3 flex-col">
         <div className="flex-1">
-          <Label className="mb-2 block">Enter Section Name</Label>
+          <Label className="mb-4 block font-dm-sans text-md">
+            Section Name
+          </Label>
           <Input
             type="text"
             placeholder="Enter Section Name"
             value={sectionName}
             onChange={(e) => setSectionName(e.target.value)}
+            className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none "
           />
         </div>
 
         <div className="flex items-end">
           <Button
             onClick={handleAddOrUpdateSection}
-            variant="orange"
-            className="h-10"
+            className="h-10 bg-[#FF5635] text-white px-10 font-normal font-poppins cursor-pointer"
           >
             {editingId ? "Update" : "Submit"}
           </Button>

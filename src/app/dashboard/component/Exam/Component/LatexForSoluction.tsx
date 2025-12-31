@@ -8,6 +8,7 @@ import { AppDispatch } from "@/store/store";
 import { handleUploadImage } from "@/api/QuestionPaper";
 import CanvaEditor from "./AAAA";
 import RenderPreview from "@/Common/CommonLatex";
+import Toolbar from "./ToolBar";
 
 interface QuestionEditorProps {
   value?: string;
@@ -330,6 +331,18 @@ export default function LatexForSoluction({ onChange, value }: QuestionEditorPro
     updateContent();
   };
 
+  const handleLink = () => {
+    const url = prompt("Enter URL:");
+    if (url) {
+      document.execCommand("createLink", false, url);
+    }
+  };
+
+  const execCommand = (command: string, value: any = null) => {
+    document.execCommand(command, false, value);
+    updateContent();
+  };
+
   // ---------------------- LaTeX ----------------------
   const renderAllLatex = () => {
     const spans = editorRef.current?.querySelectorAll(".latex-span");
@@ -372,18 +385,17 @@ export default function LatexForSoluction({ onChange, value }: QuestionEditorPro
 
   // ---------------------- Render UI ----------------------
   return (
-    <div className="card" style={{ position: "relative" }}>
+    <div className="editor-container" style={{ position: "relative" }}>
       {/* <h3>Custom Question Editor</h3> */}
 {/* <CanvaEditor/> */}
       {/* Toolbar */}
-      <div className="toolbar" style={{ marginBottom: "10px" }}>
-        <button onClick={() => document.execCommand("bold")}><b>B</b></button>
-        <button onClick={() => document.execCommand("italic")}><i>I</i></button>
-        <button onClick={() => document.execCommand("underline")}><u>U</u></button>
-        <button onClick={handleImageUpload}>🖼️</button>
-        <button onClick={() => insertTable(3, 3)}>📊</button>
-        <button onClick={() => { saveSelection(); setShowLatexModal(true); }}>∑</button>
-      </div>
+      <Toolbar 
+        onCommand={execCommand}
+        onInsertLatex={() => { saveSelection(); setShowLatexModal(true); }}
+        onInsertImage={handleImageUpload}
+        onInsertTable={() => insertTable(3, 3)}
+        onInsertLink={handleLink}
+      />
 
       {/* Editor */}
       <div
@@ -395,10 +407,6 @@ export default function LatexForSoluction({ onChange, value }: QuestionEditorPro
         onClick={handleEditorClick}
         style={{
           minHeight: "200px",
-          border: "1px solid #ccc",
-          padding: "10px",
-          borderRadius: "6px",
-          background: "white",
         }}
       />
 
@@ -407,7 +415,6 @@ export default function LatexForSoluction({ onChange, value }: QuestionEditorPro
         <div
           className="table-toolbar"
           style={{
-            position: "absolute",
             top: tableToolbarPos.top,
             left: tableToolbarPos.left,
             background: "white",
@@ -442,7 +449,7 @@ export default function LatexForSoluction({ onChange, value }: QuestionEditorPro
               boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
             }}
           >
-            <h4>Insert LaTeX Formula</h4>
+            <h4 className="text-md font-poppins font-medium mb-4">Insert LaTeX Formula </h4>
             <textarea
               rows={4}
               value={latexInput}
@@ -451,22 +458,16 @@ export default function LatexForSoluction({ onChange, value }: QuestionEditorPro
               style={{ width: "100%", marginBottom: "10px" }}
             />
             <div className="preview">
-              <strong>Preview:</strong>
-              {latexInput ? <BlockMath math={latexInput} /> : <p>Type to see preview...</p>}
+              <strong className="text-md font-poppins font-medium">Preview:</strong>
+              {latexInput ? <BlockMath math={latexInput} /> : <p className="text-md font-poppins font-medium">Type to see preview...</p>}
             </div>
-            <button onClick={() => insertLatex(latexInput)}>Insert</button>
+            <button onClick={() => insertLatex(latexInput)} className="px-4 py-2 w-full rounded-[8px] bg-[#ff6600] text-white hover:bg-[#e65c00] cursor-pointer font-poppins">Insert</button>
           </div>
         </div>
       )}
 
       {/* Preview */}
-      <div className="preview-box" style={{ marginTop: "20px" }}>
-        <h4>Preview</h4>
-        {/* <div className="question-preview">{renderPreview()}</div>
-         */}
-                <RenderPreview content={content} />
-
-      </div>
+    
     </div>
   );
 }

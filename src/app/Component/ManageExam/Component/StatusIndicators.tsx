@@ -10,9 +10,9 @@ const Indicator = ({ icon, label }: any) => {
   return (
     <div className="flex items-center space-x-3">
       <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
-        <Image src={icon} alt={label} width={50} height={50} />
+        <Image src={icon} alt={label} width={40} height={40} />
       </div>
-      <span className="text-sm font-poppins font-normal text-gray-800">{label}</span>
+      <span className="text-xs font-poppins font-normal text-gray-800">{label}</span>
     </div>
   );
 };

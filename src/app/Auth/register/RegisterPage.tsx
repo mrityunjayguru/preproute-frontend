@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  googlelogin,
   handleRegister,
   userRegister,
 } from "@/api/Auth/UserAuth";
@@ -74,7 +73,7 @@ export default function RegisterPage() {
     const token: any = credentialResponse?.credential;
     if (token) {
       const payload: any = { token: token };
-      let responce: any = await dispatch(googlelogin(payload));
+      // let responce: any = await dispatch(googlelogin(payload));
       if (responce.payload == true) {
         router.push(`/home`);
       }

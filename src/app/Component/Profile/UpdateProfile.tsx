@@ -72,12 +72,9 @@ export default function UpdateProfile() {
         parentPhone: formData.parentPhone,
         _id: user?._id,
       };
-
       if (file) payload.image = file;
-
       await dispatch(updateUserInfo(payload));
-
-      alert("Profile Updated Successfully!");
+      // alert("Profile Updated Successfully!");
       router.push("/Profile");
     } catch (error) {
       console.error(error);

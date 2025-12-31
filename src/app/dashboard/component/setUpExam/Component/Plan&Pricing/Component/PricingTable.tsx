@@ -7,6 +7,7 @@ import { AppDispatch } from "@/store/store";
 import { getPlanandPricing } from "@/api/Plan&Pricing";
 import CommonTable from "@/Common/CommonTable";
 import { formatDateTime } from "@/Common/ComonDate";
+import { Search } from "lucide-react";
 
 const PricingTable = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -58,19 +59,32 @@ const PricingTable = () => {
         row.createdAt ? formatDateTime(row.createdAt) : "-",
     },
   ];
-const handleEdit=(val:any)=>{
-}
+  const handleEdit = (val: any) => {};
   return (
-    <div className="bg-[#F7F7F5] p-6 rounded-lg">
-      <Input
-        type="text"
-        placeholder="Search by Title / Exam / Price"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="mb-4 bg-white"
-      />
-
-      <CommonTable data={filteredData} columns={columns} onEdit={handleEdit} />
+    <div className="px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+      <div className="flex justify-between items-center pb-3">
+        <h2 className="text-md font-poppins font-medium text-[#1570EF] mb-4">
+          Plan List
+        </h2>
+        {/* Search box */}
+        <div className=" w-[90%] md:w-96 bg-white rounded-[2px] flex items-center px-4 py-3 border border-gray-200">
+          <Search className="w-5 h-5 text-gray-400 mr-2" />
+          <input
+            type="text"
+            placeholder="Search plan"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
+          />
+        </div>
+      </div>
+      <div>
+        <CommonTable
+          data={filteredData}
+          columns={columns}
+          onEdit={handleEdit}
+        />
+      </div>
     </div>
   );
 };

@@ -182,7 +182,7 @@ const Step1: React.FC<Step1Props> = ({
             )}
           </div>
           {/* Password */}
-          {userLogin.isGoogle==true?(null):(<div>
+          {userLogin?.isGoogle==true?(null):(<div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
               Password<span className="text-[#FF5635]">*</span>
             </Label>

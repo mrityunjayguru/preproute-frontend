@@ -9,10 +9,9 @@ interface Section {
 }
 
 const SetUpSection = () => {
-
   return (
-    <div className="flex-1 ">
-      <SectionForm  />
+    <div className="">
+      <SectionForm />
       <SectionTable />
     </div>
   );

@@ -28,7 +28,7 @@ const HeaderSection: React.FC<Props> = ({
 <div>
         {/* Timer */}
         {timeLeft ? (
-          <div className="text-base md:text-lg font-normal font-poppins mr-0 md:mr-[20rem]">
+          <div className="text-base md:text-lg lg:mr-18 font-normal font-poppins md:mr-[0]">
             Time Left :{" "}
             <span className="text-lg font-semibold text-blue-600">
               {formatTime(timeLeft)}
