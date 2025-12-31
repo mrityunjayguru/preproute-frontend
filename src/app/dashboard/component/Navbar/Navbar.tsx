@@ -7,6 +7,8 @@ import { useRouter, usePathname } from "next/navigation";
 import React from "react";
 import { useSelector } from "react-redux";
 import { AdminProfileDropdown } from "./_component/admin-dropdown";
+import USER from "@/assets/vectors/user.svg"
+
 
 export function DashboardHeader() {
   const router = useRouter();

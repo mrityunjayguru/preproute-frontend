@@ -166,6 +166,32 @@ export default function RichTextEditor({
         <button onClick={() => execCommand("justifyRight")}>R</button>
         <button onClick={() => execCommand("insertOrderedList")}>1.</button>
         <button onClick={() => execCommand("insertUnorderedList")}>•</button>
+        {/* Font Size */}
+        <select
+          onChange={(e) => execCommand("fontSize", e.target.value)}
+          defaultValue="3"
+          className="border rounded px-1 h-8"
+          title="Font Size"
+        >
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+        </select>
+
+        {/* Text Color */}
+        <div className="flex items-center">
+          <input
+            type="color"
+            onChange={(e) => execCommand("foreColor", e.target.value)}
+            className="w-8 h-8 p-0 border-0 cursor-pointer"
+            title="Text Color"
+          />
+        </div>
+
         <button onClick={handleInsertLatex}>∑</button>
         <button onClick={handleInsertImage}>🖼</button>
       </div>

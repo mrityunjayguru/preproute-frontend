@@ -6,6 +6,9 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { handleUploadImage } from "@/api/QuestionPaper";
 import RenderPreview from "@/Common/CommonLatex";
+import Image from "next/image";
+import ADDIMAGE from "@/assets/vectors/mangeExam/image.svg";
+import TRUE from "@/assets/vectors/mangeExam/true.svg";
 
 interface OptionProps {
   choice: string;
@@ -193,40 +196,45 @@ export default function OptionWithLatex({
   }, []);
 
   return (
-    <div className="border p-3 rounded bg-gray-50 space-y-3">
+    <div className=" rounded  space-y-3">
       {/* Editable Option Input */}
-      <div
-        ref={editorRef}
-        contentEditable
-        suppressContentEditableWarning
-        onInput={updateContent}
-        className="border rounded p-2 min-h-[60px] bg-white focus:outline-none focus:ring-2 focus:ring-orange-400"
-      />
-
+      <div className="flex items-center justify-between gap-3 w-full">
+        <div
+          ref={editorRef}
+          contentEditable
+          suppressContentEditableWarning
+          onInput={updateContent}
+          className="border rounded-[2px] p-2 w-full bg-white focus:outline-none focus:ring-2 focus:ring-orange-400"
+        />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleImageUpload}
+            className="text-blue-600 hover:underline"
+          >
+            <Image src={ADDIMAGE} alt="add" width={24} height={24} />
+          </button>
+          <button
+            onClick={onCheckToggle}
+            className={`py-1 px-0.5 rounded-full font-medium transition ${
+              isCorrect
+                ? "bg-green-500 text-white hover:bg-green-600"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
+          >
+            <Image src={TRUE} alt="true" width={12} height={12} />
+          </button>
+        </div>
+      </div>
       {/* Toolbar */}
       <div className="flex items-center gap-3 text-sm">
-        <button
-          onClick={handleImageUpload}
-          className="text-blue-600 hover:underline"
-        >
-          🖼️ Add Image
-        </button>
-
-        <button
-          onClick={onCheckToggle}
-          className={`px-3 py-1 rounded font-medium transition ${
-            isCorrect
-              ? "bg-green-500 text-white hover:bg-green-600"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
-        >
-          {isCorrect ? "✓ Correct" : "Mark"}
-        </button>
+        <p className="font-poppins text-[#4BAE4F] font-dm-sans">
+          {isCorrect ? "Marked Correct" : ""}
+        </p>
       </div>
 
       {/* ✅ Live Rendered Preview */}
-      <div className="bg-white p-3 rounded border">
-        <h4 className="font-semibold mb-2 text-gray-700">Preview:</h4>
+      <div className="border border-gray-200 rounded-[2px] p-3 min-h-[100px] bg-white">
+        <h4 className="text-md font-poppins font-medium  text-gray-700 ">Preview:</h4>
         <RenderPreview content={value} />
       </div>
     </div>

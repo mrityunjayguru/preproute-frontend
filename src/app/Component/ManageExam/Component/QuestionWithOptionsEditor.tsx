@@ -5,6 +5,13 @@ import "katex/dist/katex.min.css";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { handleUploadImage } from "@/api/QuestionPaper"; // your API thunk
+import { 
+  Bold, Italic, Underline, Strikethrough, 
+  AlignLeft, AlignCenter, AlignRight, 
+  List, ListOrdered, Image as ImageIcon, 
+  Link as LinkIcon, Type, ChevronDown, 
+  Table as TableIcon, Sigma
+} from "lucide-react";
 
 interface QuestionEditorProps {
   value?: string;
@@ -250,6 +257,13 @@ const createImageWrapper = (imageUrl: string) => {
     updateContent();
   };
 
+  const handleLink = () => {
+    const url = prompt("Enter URL:");
+    if (url) {
+      document.execCommand("createLink", false, url);
+    }
+  };
+
   // ---------------------- LaTeX ----------------------
   const insertLatex = (latex: string) => {
     const cleanLatex = latex.trim();
@@ -294,17 +308,77 @@ const createImageWrapper = (imageUrl: string) => {
   };
 
   return (
-    <div className="card" style={{ position: "relative" }}>
-      <h3>Custom Question Editor</h3>
-
+    <div className="editor-container" style={{ position: "relative" }}>
       {/* Toolbar */}
       <div className="toolbar">
-        <button onClick={() => document.execCommand("bold")}><b>B</b></button>
-        <button onClick={() => document.execCommand("italic")}><i>I</i></button>
-        <button onClick={() => document.execCommand("underline")}><u>U</u></button>
-        <button onClick={handleImageUpload}>🖼️</button>
-        <button onClick={() => insertTable(3, 3)}>📊</button>
-        <button onClick={() => { saveSelection(); setShowLatexModal(true); }}>∑</button>
+        <div className="toolbar-group">
+          <div className="select-wrapper">
+            <select
+              onChange={(e) => document.execCommand("fontSize", false, e.target.value)}
+              defaultValue="3"
+              title="Font Size"
+            >
+              <option value="1">10</option>
+              <option value="2">12</option>
+              <option value="3">14</option>
+              <option value="4">16</option>
+              <option value="5">18</option>
+              <option value="6">20</option>
+              <option value="7">24</option>
+            </select>
+            <ChevronDown size={14} className="select-arrow" />
+          </div>
+        </div>
+
+        <div className="toolbar-divider" />
+
+        <div className="toolbar-group">
+          <button onClick={() => document.execCommand("fontName", false, "Arial")} title="Font Family">
+            <Type size={18} />
+          </button>
+          <div className="color-picker-wrapper">
+            <input
+              type="color"
+              onChange={(e) => document.execCommand("foreColor", false, e.target.value)}
+              title="Text Color"
+              className="color-input"
+            />
+            <div className="color-circle" />
+          </div>
+        </div>
+
+        <div className="toolbar-divider" />
+
+        <div className="toolbar-group">
+          <button onClick={() => document.execCommand("bold")} title="Bold"><Bold size={18} /></button>
+          <button onClick={() => document.execCommand("italic")} title="Italic"><Italic size={18} /></button>
+          <button onClick={() => document.execCommand("underline")} title="Underline"><Underline size={18} /></button>
+          <button onClick={() => document.execCommand("strikeThrough")} title="Strikethrough"><Strikethrough size={18} /></button>
+        </div>
+
+        <div className="toolbar-divider" />
+
+        <div className="toolbar-group">
+          <button onClick={() => document.execCommand("justifyLeft")} title="Align Left"><AlignLeft size={18} /></button>
+          <button onClick={() => document.execCommand("justifyCenter")} title="Align Center"><AlignCenter size={18} /></button>
+          <button onClick={() => document.execCommand("justifyRight")} title="Align Right"><AlignRight size={18} /></button>
+        </div>
+
+        <div className="toolbar-divider" />
+
+        <div className="toolbar-group">
+          <button onClick={() => document.execCommand("insertOrderedList")} title="Ordered List"><ListOrdered size={18} /></button>
+          <button onClick={() => document.execCommand("insertUnorderedList")} title="Bullet List"><List size={18} /></button>
+        </div>
+
+        <div className="toolbar-divider" />
+
+        <div className="toolbar-group">
+          <button onClick={handleImageUpload} title="Insert Image"><ImageIcon size={18} /></button>
+          <button onClick={handleLink} title="Insert Link"><LinkIcon size={18} /></button>
+          <button onClick={() => insertTable(3, 3)} title="Insert Table"><TableIcon size={18} /></button>
+          <button onClick={() => { saveSelection(); setShowLatexModal(true); }} title="Insert LaTeX"><Sigma size={18} /></button>
+        </div>
       </div>
 
       {/* Editor */}
@@ -350,14 +424,6 @@ const createImageWrapper = (imageUrl: string) => {
           </div>
         </div>
       )}
-
-      {/* Preview */}
-      <div className="preview-box">
-        <h4>Preview</h4>
-        <div className="question-preview">{renderPreview()}</div>
-      </div>
-
-      
     </div>
   );
 }

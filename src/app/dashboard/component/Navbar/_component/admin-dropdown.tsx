@@ -12,7 +12,8 @@ import {
 import { ChevronDown } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
+import Image from "next/image";
+import USER from "@/assets/vectors/user.svg"
 interface AdminProfileDropdownProps {
   user: any;
   onLogout: () => void;
@@ -48,7 +49,7 @@ export const AdminProfileDropdown: React.FC<AdminProfileDropdownProps> = ({
         <Avatar className="h-9 w-9 border border-gray-200">
           <AvatarImage src={imageUrl} alt={user?.username || "User"} />
           <AvatarFallback className="bg-gray-100 text-gray-600 font-medium">
-            {initials}
+            <Image src={USER} fill alt="user" className="h-4 w-4" />
           </AvatarFallback>
         </Avatar>
         <ChevronDown

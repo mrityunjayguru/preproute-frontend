@@ -103,24 +103,50 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
     setShowLatexModal(false);
   };
 
+  const insertTable = (rows: number, cols: number) => {
+    let tableHtml = '<table class="editor-table"><tbody>';
+    for (let i = 0; i < rows; i++) {
+      tableHtml += "<tr>";
+      for (let j = 0; j < cols; j++) {
+        tableHtml += "<td>&nbsp;</td>";
+      }
+      tableHtml += "</tr>";
+    }
+    tableHtml += "</tbody></table><p>&nbsp;</p>";
+    insertHTML(tableHtml);
+  };
+
+  const handleLink = () => {
+    const url = prompt("Enter URL:");
+    if (url) {
+      execCommand("createLink", url);
+    }
+  };
+
   return (
-    <div className="relative">
+    <div className="editor-container">
       <Toolbar
         onCommand={execCommand}
-        onInsertLatex={() => { saveSelection(); setShowLatexModal(true); }}
-        onInsertImage={() => {}}
+        onInsertLatex={() => {
+          saveSelection();
+          setShowLatexModal(true);
+        }}
+        onInsertImage={() => {
+          const url = prompt("Enter Image URL:");
+          if (url) insertHTML(`<img src="${url}" style="max-width:100%; height:auto;" />`);
+        }}
+        onInsertTable={() => insertTable(3, 3)}
+        onInsertLink={handleLink}
       />
+
       <div
         ref={editorRef}
+        className="editor"
         contentEditable
-        suppressContentEditableWarning
+        onInput={() => onChange(editorRef.current?.innerHTML || "")}
         onBlur={() => onChange(editorRef.current?.innerHTML || "")}
-        onKeyUp={saveSelection}
-        onMouseUp={saveSelection}
-        className="min-h-[200px] border rounded-md p-3 bg-white"
-        dir="ltr"
-        style={{ textAlign: "left" }}
         dangerouslySetInnerHTML={{ __html: value }}
+        style={{ minHeight: "150px" }}
       />
       {showLatexModal && (
         <LatexModal

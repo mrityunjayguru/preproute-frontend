@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { handleUploadImage } from "@/api/QuestionPaper";
 import CanvaEditor from "./AAAA";
+import Toolbar from "./ToolBar";
 
 interface QuestionEditorProps {
   value?: string;
@@ -331,6 +332,18 @@ export default function QuestionEditor({ onChange, value,QuestionType }: Questio
     updateContent();
   };
 
+  const handleLink = () => {
+    const url = prompt("Enter URL:");
+    if (url) {
+      document.execCommand("createLink", false, url);
+    }
+  };
+
+  const execCommand = (command: string, value: any = null) => {
+    document.execCommand(command, false, value);
+    updateContent();
+  };
+
   // ---------------------- LaTeX ----------------------
   const renderAllLatex = () => {
     const spans = editorRef.current?.querySelectorAll(".latex-span");
@@ -608,18 +621,17 @@ export default function QuestionEditor({ onChange, value,QuestionType }: Questio
 
   // ---------------------- Render UI ----------------------
   return (
-    <div className="card" style={{ position: "relative" }}>
+    <div className="editor-container" style={{ position: "relative" }}>
       {/* <h3>Custom Question Editor</h3> */}
 {/* <CanvaEditor/> */}
       {/* Toolbar */}
-      <div className="toolbar" style={{ marginBottom: "10px" }}>
-        <button onClick={() => document.execCommand("bold")}><b>B</b></button>
-        <button onClick={() => document.execCommand("italic")}><i>I</i></button>
-        <button onClick={() => document.execCommand("underline")}><u>U</u></button>
-        <button onClick={handleImageUpload}>🖼️</button>
-        <button onClick={() => insertTable(3, 3)}>📊</button>
-        <button onClick={() => { saveSelection(); setShowLatexModal(true); }}>∑</button>
-      </div>
+      <Toolbar 
+        onCommand={execCommand}
+        onInsertLatex={() => { saveSelection(); setShowLatexModal(true); }}
+        onInsertImage={handleImageUpload}
+        onInsertTable={() => insertTable(3, 3)}
+        onInsertLink={handleLink}
+      />
 
       {/* Editor */}
       <div
@@ -631,10 +643,6 @@ export default function QuestionEditor({ onChange, value,QuestionType }: Questio
         onClick={handleEditorClick}
         style={{
           minHeight: "200px",
-          border: "1px solid #ccc",
-          padding: "10px",
-          borderRadius: "6px",
-          background: "white",
         }}
       />
 
