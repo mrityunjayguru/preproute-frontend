@@ -409,7 +409,7 @@ const createImageWrapper = (imageUrl: string) => {
       {showLatexModal && (
         <div className="modal-overlay" onClick={() => setShowLatexModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h4>Insert LaTeX Formula</h4>
+            <h4 className="text-md font-poppins font-medium mb-4">Insert LaTeX Formula</h4>
             <textarea
               rows={4}
               value={latexInput}
@@ -417,10 +417,10 @@ const createImageWrapper = (imageUrl: string) => {
               placeholder="Type LaTeX formula"
             />
             <div className="preview">
-              <strong>Preview:</strong>
-              {latexInput ? <BlockMath math={latexInput} /> : <p>Type to see preview...</p>}
+              <strong className="text-md font-poppins font-medium">Preview:</strong>
+              {latexInput ? <BlockMath math={latexInput} /> : <p className="text-md font-poppins font-medium">Type to see preview...</p>}
             </div>
-            <button onClick={() => insertLatex(latexInput)}>Insert</button>
+            <button onClick={() => insertLatex(latexInput)} className="px-4 py-2 w-full rounded-[8px] bg-[#ff6600] text-white hover:bg-[#e65c00] cursor-pointer font-poppins">Insert</button>
           </div>
         </div>
       )}
