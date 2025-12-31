@@ -4,9 +4,8 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { AppDispatch } from "@/store/store";
-import localFont from "next/font/local";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -18,8 +17,6 @@ import { UserProfileDropdown } from "@/components/UserProfileDropdown";
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 
@@ -34,21 +31,18 @@ import {
   MenuIcon,
 } from "lucide-react";
 
-// const artegra = localFont({
-//   src: "../assets/fonts/artegra-soft-medium.woff",
-// });
-
 export const Header: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const pathname = usePathname();
 
   const [examMenuOpen, setExamMenuOpen] = useState(false);
   const [resourcesMenuOpen, setResourcesMenuOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [selectedExam, setSelectedExam] = useState("Practice");
 
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
   const examTypeData =
     useSelector((state: any) => state.examType.examType) || [];
@@ -60,17 +54,13 @@ export const Header: React.FC = () => {
 
   const handleExamClick = (exam: any) => {
     dispatch(handleSelectedExamType(exam));
-    setSelectedExam(exam.examType);
-    setExamMenuOpen(false);
-    const payload: any = null;
-    dispatch(resetQuestionByExamID(payload));
-    dispatch(resetQuestion(payload));
+    dispatch(resetQuestionByExamID(null));
+    dispatch(resetQuestion(null));
     router.push("/Exam/Mocks");
   };
 
   const handleLogoutClick = async () => {
-    const payload: any = null;
-    await dispatch(handleLogout(payload));
+    await dispatch(handleLogout(null));
     localStorage.removeItem("token");
     router.push("/home");
     window.location.reload();
@@ -82,86 +72,81 @@ export const Header: React.FC = () => {
     { label: "Community", href: "/Community" },
   ];
 
+  /* ---------- Active Helpers ---------- */
+  const isActive = (href: string) => {
+    if (href.includes("#")) return pathname === href.split("#")[0];
+    return pathname.startsWith(href);
+  };
+
+  const activeClass = "text-[#FF5635]";
+  const inactiveClass = "text-black hover:text-[#FF5635] transition-colors";
+
+  const isPracticeActive = pathname.startsWith("/Exam");
+  const isResourcesActive =
+    pathname.startsWith("/resources") ||
+    pathname.startsWith("/instructions") ||
+    pathname.startsWith("/blog");
+
   return (
-    <header
-      className={`sticky font-dm-sans  top-0 z-20 w-full bg-white font-DM_Sans sm:px-6 md:px-8 lg:px-10 xl:px-12`}
-    >
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4  py-4 lg:py-5">
-        {/* Left: Logo */}
+    <header className="sticky top-0 z-20 w-full bg-white sm:px-6 md:px-8 lg:px-10 xl:px-12">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:py-5">
+        {/* Logo */}
         <div className="flex items-center gap-12">
-          <div className="cursor-pointer" onClick={() => router.push("/home")}>
-            <Image
-              src={logo}
-              alt="Logo"
-              className="h-8 w-auto object-contain"
-            />
+          <div
+            className="cursor-pointer"
+            onClick={() => router.push("/home")}
+          >
+            <Image src={logo} alt="Logo" className="h-8 w-auto" />
           </div>
-          {/* Center: Desktop nav */}
-          <nav className="hidden items-center gap-6 text-sm font-normal text-black lg:flex xl:gap-8">
-            {/* Practice dropdown (exams) */}
+
+          {/* Desktop Nav */}
+          <nav className="hidden lg:flex items-center gap-6 text-sm">
+            {/* Practice */}
             <DropdownMenu open={examMenuOpen} onOpenChange={setExamMenuOpen}>
               <DropdownMenuTrigger
                 onMouseEnter={() => setExamMenuOpen(true)}
                 onMouseLeave={() => setExamMenuOpen(false)}
-                className="flex items-center gap-1 cursor-pointer outline-none transition-colors hover:text-[#FF5635]"
+                className={`flex items-center gap-1 cursor-pointer outline-none ${
+                  isPracticeActive ? activeClass : inactiveClass
+                }`}
               >
                 Practice
-                <span
-                  className={`transition-transform ${
-                    examMenuOpen ? "rotate-180" : ""
-                  }`}
-                >
-                  <ChevronDownIcon className="size-4 text-[#FF5635]" />
-                </span>
+                <ChevronDownIcon className="h-4 w-4 text-[#FF5635]" />
               </DropdownMenuTrigger>
+
               <DropdownMenuContent
                 align="start"
                 className="w-56"
                 onMouseEnter={() => setExamMenuOpen(true)}
                 onMouseLeave={() => setExamMenuOpen(false)}
               >
-                {examTypeData.length > 0 ? (
-                  <>
-                    {examTypeData.map((exam: any) => (
-                      <DropdownMenuItem
-                        key={exam._id}
-                        onSelect={(e) => {
-                          e.preventDefault();
-                          handleExamClick(exam);
-                        }}
-                        className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
-                      >
-                        {exam.examType}
-                      </DropdownMenuItem>
-                    ))}
-
-                    {/* Static coming soon item */}
-                    <DropdownMenuItem
-                      disabled
-                      className="mt-1 border-t border-gray-100 cursor-default text-xs text-gray-400 hover:bg-transparent hover:text-gray-400"
-                    >
-                      Coming soon
-                    </DropdownMenuItem>
-                  </>
-                ) : (
-                  <DropdownMenuItem disabled>
-                    No exams available
+                {examTypeData.map((exam: any) => (
+                  <DropdownMenuItem
+                    key={exam._id}
+                    onSelect={(e) => {
+                      e.preventDefault();
+                      handleExamClick(exam);
+                    }}
+                    className="cursor-pointer hover:bg-orange-50 hover:text-[#FF5635]"
+                  >
+                    {exam.examType}
                   </DropdownMenuItem>
-                )}
+                ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
+            {/* Main Links */}
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="transition-colors hover:text-[#FF5635]"
+                className={isActive(link.href) ? activeClass : inactiveClass}
               >
                 {link.label}
               </Link>
             ))}
 
-            {/* Resources dropdown - matching Practice dropdown */}
+            {/* Resources */}
             <DropdownMenu
               open={resourcesMenuOpen}
               onOpenChange={setResourcesMenuOpen}
@@ -169,72 +154,51 @@ export const Header: React.FC = () => {
               <DropdownMenuTrigger
                 onMouseEnter={() => setResourcesMenuOpen(true)}
                 onMouseLeave={() => setResourcesMenuOpen(false)}
-                className="flex items-center gap-1 cursor-pointer outline-none transition-colors hover:text-[#FF5635]"
+                className={`flex items-center gap-1 cursor-pointer outline-none ${
+                  isResourcesActive ? activeClass : inactiveClass
+                }`}
               >
                 Resources
-                <span
-                  className={`transition-transform ${
-                    resourcesMenuOpen ? "rotate-180" : ""
-                  }`}
-                >
-                  <ChevronDownIcon className="size-4 text-[#FF5635]" />
-                </span>
+                <ChevronDownIcon className="h-4 w-4 text-[#FF5635]" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="start"
-                className="w-48"
-                onMouseEnter={() => setResourcesMenuOpen(true)}
-                onMouseLeave={() => setResourcesMenuOpen(false)}
-              >
-                <DropdownMenuItem
-                  asChild
-                  className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
-                >
+
+              <DropdownMenuContent align="start" className="w-48">
+                <DropdownMenuItem asChild>
                   <Link href="/resources">Resources Home</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  asChild
-                  className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
-                >
+                <DropdownMenuItem asChild>
                   <Link href="/instructions">Instructions</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  asChild
-                  className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
-                >
+                <DropdownMenuItem asChild>
                   <Link href="/blog">Blogs</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </nav>
         </div>
-        {/* Right: Auth */}
-        <div className="flex items-center gap-3 xl:gap-4">
-          {!token && (
-            <div className="hidden items-center gap-3 lg:flex">
-              <Link
-                href="/Auth/register"
-                className="text-sm font-normal text-[#FF5635] transition-colors cursor-pointer hover:text-[#e44c2f]"
-              >
+
+        {/* Right */}
+        <div className="flex items-center gap-3">
+          {!token ? (
+            <div className="hidden lg:flex items-center gap-3">
+              <Link href="/Auth/register" className="text-[#FF5635]">
                 Register
               </Link>
               <Button
                 onClick={() => router.push("/Auth/signin")}
-                className="rounded-full bg-[#FF5635] px-6 py-2 cursor-pointer text-white shadow-sm transition hover:bg-[#e44c2f]"
+                className="rounded-full bg-[#FF5635] text-white"
               >
                 Login
               </Button>
             </div>
-          )}
-
-          {token && (
+          ) : (
             <>
               {(userLogin?.role === "Admin" ||
                 userLogin?.role === "Expert") && (
                 <Button
                   variant="outline"
                   onClick={() => router.push("/dashboard/home")}
-                  className="hidden lg:flex border-[#FF5635] text-[#FF5635] cursor-pointer hover:bg-[#FFF1EC] px-4"
+                  className="hidden lg:flex border-[#FF5635] text-[#FF5635]"
                 >
                   <LayoutDashboard className="mr-2 h-4 w-4" />
                   Dashboard
@@ -246,128 +210,35 @@ export const Header: React.FC = () => {
               />
             </>
           )}
-        </div>
 
-        {/* Mobile: Sheet Menu */}
-        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="lg:hidden">
-              <MenuIcon className="h-6 w-6" />
-              <span className="sr-only">Open menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent
-            side="right"
-            className="w-[300px] sm:w-[350px] overflow-y-auto"
-          >
-            <div className="flex flex-col gap-6 py-6">
-              {/* Navigation Section */}
-              <div className="space-y-3">
-                {/* Practice Exams */}
-                {examTypeData.length > 0 && (
-                  <div className="space-y-2">
-                    <div className="text-sm font-semibold text-black px-2">
-                      Practice Exams
-                    </div>
-                    <div className="space-y-1">
-                      {examTypeData.map((exam: any) => (
-                        <button
-                          key={exam._id}
-                          onClick={() => {
-                            handleExamClick(exam);
-                            setMobileOpen(false);
-                          }}
-                          className="w-full text-left px-4 py-2.5 text-sm text-gray-700 rounded-lg transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
-                        >
-                          {exam.examType}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
+          {/* Mobile */}
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="lg:hidden">
+                <MenuIcon />
+              </Button>
+            </SheetTrigger>
 
-                {/* Main Links */}
-                <div className="space-y-1">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-4 py-2.5 text-sm font-medium text-gray-700 rounded-lg transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-
-                {/* Resources */}
-                <div className="space-y-2">
-                  <div className="text-sm font-semibold text-black px-2">
-                    Resources
-                  </div>
-                  <div className="space-y-1">
-                    <Link
-                      href="/resources"
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-4 py-2.5 text-sm text-gray-700 rounded-lg transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
-                    >
-                      Resources Home
-                    </Link>
-                    <Link
-                      href="/instructions"
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-4 py-2.5 text-sm text-gray-700 rounded-lg transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
-                    >
-                      Instructions
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              {/* Auth Section */}
-              <div className="flex space-y-3 pt-4 border-t">
-                {!token && (
+            <SheetContent side="right" className="w-[320px]">
+              <div className="space-y-3 pt-6">
+                {navLinks.map((link) => (
                   <Link
-                    href="/Auth/register"
+                    key={link.href}
+                    href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className="block px-4 py-2.5 text-sm font-medium text-[#FF5635] rounded-lg transition-colors hover:bg-orange-50"
+                    className={`block px-4 py-2 rounded-lg ${
+                      isActive(link.href)
+                        ? "text-[#FF5635] font-semibold"
+                        : "text-gray-700 hover:text-[#FF5635]"
+                    }`}
                   >
-                    Register
+                    {link.label}
                   </Link>
-                )}
-
-                {token ? (
-                  <div className="flex space-y-2">
-                    {(userLogin?.role === "Admin" ||
-                      userLogin?.role === "Expert") && (
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          router.push("/dashboard/home");
-                          setMobileOpen(false);
-                        }}
-                        className="w-full border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC]"
-                      >
-                        <LayoutDashboard />
-                        Dashboard
-                      </Button>
-                    )}
-                  </div>
-                ) : (
-                  <Button
-                    onClick={() => {
-                      router.push("/Auth/signin");
-                      setMobileOpen(false);
-                    }}
-                    className="w-fit rounded-full bg-[#FF5635] text-white shadow-sm transition hover:bg-[#e44c2f]"
-                  >
-                    Login
-                  </Button>
-                )}
+                ))}
               </div>
-            </div>
-          </SheetContent>
-        </Sheet>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );

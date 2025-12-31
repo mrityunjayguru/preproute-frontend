@@ -77,7 +77,7 @@ export default function RichTextEditor({ value, onChange }: RichTextEditorProps)
     sel.addRange(range);
     editorRef.current?.focus();
     onChange(editorRef.current?.innerHTML || "");
-    setTimeout(() => window.MathJax?.typesetPromise?.(), 50);
+    setTimeout(() => (window as any).MathJax?.typesetPromise?.(), 50);
   };
 
   const insertLatexAtSelection = (latex: string) => {
