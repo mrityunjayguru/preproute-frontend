@@ -8,17 +8,17 @@ import FOOTERLOGO from "@/assets/vectors/footer-logo.svg"
 export default function Page() {
   return (
     <main className="min-h-screen bg-white ">
-      <div className=" mx-auto  py-12 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+      <div className=" mx-auto  px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         {/* Header Section with Light Blue Background */}
-        <div className="bg-[#E8F4F8] rounded-lg px-8 py-10 mb-8 text-center">
-          <h1 className="text-[#FF5635] text-3xl md:text-4xl font-semibold font-poppins mb-2">
+        <div className="bg-[#E8F4F8] rounded-lg px-4 sm:px-6 md:px-8 py-8 sm:py-10 mb-6 sm:mb-8 text-center">
+          <h1 className="text-[#FF5635] text-2xl sm:text-3xl md:text-4xl font-semibold font-poppins mb-2">
             Privacy Policy
           </h1>
-          <p className="text-sm text-gray-700 font-dm-sans">
+          <p className="text-xs sm:text-sm text-gray-700 font-dm-sans">
             Effective Date: 01 October 2025
           </p>
         </div>
-        <div className="max-w-4xl mx-auto px-6 py-2">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-2">
           {/* Introduction */}
           <div className="mb-8">
             <p className="text-sm text-gray-800 leading-relaxed font-dm-sans">

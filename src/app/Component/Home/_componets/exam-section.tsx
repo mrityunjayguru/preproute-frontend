@@ -28,9 +28,9 @@ const ExamsSection = (props: Props) => {
           Exams we help you prepare for
         </motion.h4>
 
-        <div className="mt-6 sm:mt-8 font-poppins flex flex-col items-center gap-5 sm:gap-4">
+        <div className="mt-6 sm:mt-8 font-poppins flex flex-col items-center gap-3 sm:gap-4">
           {/* First row */}
-          <div className="flex flex-wrap justify-center gap-5 sm:gap-4">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             {exams.slice(0, 4).map((t, index) => (
               <motion.span
                 key={t}
@@ -39,7 +39,7 @@ const ExamsSection = (props: Props) => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
                 whileHover={{ scale: 1.05 }}
-                className=" items-center justify-center rounded-lg bg-[#050814] px-10 py-4 
+                className=" items-center justify-center rounded-lg bg-[#050814] px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-4 
                            text-xs sm:text-sm md:text-base lg:text-[18px] text-white tracking-wide cursor-pointer"
               >
                 {t}
@@ -48,7 +48,7 @@ const ExamsSection = (props: Props) => {
           </div>
 
           {/* Second row */}
-          <div className="flex flex-wrap justify-center gap-5 sm:gap-4">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             {exams.slice(4, 8).map((t, index) => (
               <motion.span
                 key={t}
@@ -57,7 +57,7 @@ const ExamsSection = (props: Props) => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: (index + 4) * 0.1 }}
                 whileHover={{ scale: 1.05 }}
-                className=" items-center justify-center rounded-[12px] bg-[#050814] px-10 py-4
+                className=" items-center justify-center rounded-[12px] bg-[#050814] px-4 sm:px-6 md:px-8 lg:px-10 py-3 sm:py-4
                            text-xs sm:text-sm md:text-base lg:text-[18px] text-white tracking-wide cursor-pointer"
               >
                 {t}
