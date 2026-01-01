@@ -22,7 +22,14 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const user = useSelector((state: any) => state?.Auth?.loginUser);
-  console.log(user);
+  const getuserData = async () => {
+    const payload: any = { _id: user?._id };
+    dispatch(userProfileData(payload));
+  };
+  
+  useEffect(() => {
+    getuserData();
+  }, []);
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
@@ -65,14 +72,8 @@ export default function ProfilePage() {
       setUploading(false);
     }
   };
-  const getuserData = async () => {
-    const payload: any = { _id: user?._id };
-    dispatch(userProfileData(payload));
-  };
 
-  useEffect(() => {
-    getuserData();
-  }, []);
+
 
   console.log(user, "useruseruser");
   return (
@@ -188,7 +189,7 @@ export default function ProfilePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
               {/* Free Plan */}
-              {!user?.purchaseDetails[0]?.planId ?(  <div
+              {!user?.purchaseDetails?.[0]?.planId ?(  <div
                 className="bg-gradient-to-t from-[#F0F9FF] to-white 
                  border border-[#E6F4FF] rounded-xl p-6 "
               >
