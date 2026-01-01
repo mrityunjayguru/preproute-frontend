@@ -188,7 +188,7 @@ export default function ProfilePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
               {/* Free Plan */}
-              {!user.purchaseDetails[0]?.planId ?(  <div
+              {!user?.purchaseDetails[0]?.planId ?(  <div
                 className="bg-gradient-to-t from-[#F0F9FF] to-white 
                  border border-[#E6F4FF] rounded-xl p-6 "
               >

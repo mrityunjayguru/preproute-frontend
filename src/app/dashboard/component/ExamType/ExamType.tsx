@@ -4,10 +4,10 @@ function ExamForm() {
   const [examName, setExamName] = useState("");
   const [examType, setExamType] = useState("");
   const [year, setYear] = useState("");
-  const [sections, setSections] = useState([]);
+  const [sections, setSections] = useState<any>([]);
   const [category, setCategory] = useState("");
   const [subcategory, setSubcategory] = useState("");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<any>({});
 
   // Example Data
   const exams = [
@@ -25,23 +25,23 @@ function ExamForm() {
   const years = ["2023", "2024", "2025"];
   const allSections = ["Quantitative Aptitude", "Logical Reasoning", "Verbal Ability"];
   const categories = ["Science", "Commerce", "Arts"];
-  const subcategoriesMap = {
+  const subcategoriesMap:any = {
     Science: ["Physics", "Chemistry", "Biology", "Maths"],
     Commerce: ["Accounts", "Economics", "Business Studies"],
     Arts: ["History", "Political Science", "Geography"],
   };
 
   // Handle multiple sections
-  const toggleSection = (sec) => {
-    setSections((prev) =>
-      prev.includes(sec) ? prev.filter((s) => s !== sec) : [...prev, sec]
+  const toggleSection = (sec:any) => {
+    setSections((prev:any) =>
+      prev.includes(sec) ? prev.filter((s:any) => s !== sec) : [...prev, sec]
     );
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:any) => {
     e.preventDefault();
 
-    let newErrors = {};
+    let newErrors:any = {};
     if (!examName) newErrors.examName = "Please choose an exam";
     if (!examType) newErrors.examType = "Please select exam type";
     if (!year) newErrors.year = "Please select year";
@@ -161,7 +161,7 @@ Subcategory: ${subcategory}`);
         >
           <option value="">Choose Subcategory</option>
           {category &&
-            subcategoriesMap[category].map((sub, index) => (
+            subcategoriesMap[category].map((sub:any, index:any) => (
               <option key={index} value={sub}>
                 {sub}
               </option>
