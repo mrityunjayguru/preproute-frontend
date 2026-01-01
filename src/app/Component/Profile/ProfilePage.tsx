@@ -77,13 +77,13 @@ export default function ProfilePage() {
 
   console.log(user, "useruseruser");
   return (
-    <div className="h-screen flex flex-col justify-between">
-      <div>
-        <div className="mx-auto space-y-6 px-6 sm:px-8 md:px-12 lg:px-28">
+    <div className="min-h-screen flex flex-col">
+      <div className="flex-1 pb-8">
+        <div className="mx-auto space-y-6 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28 py-6 sm:py-8">
           {/* 🔹 PROFILE HEADER */}
-          <div className="bg-[#F0F9FF] rounded-[8px] p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+          <div className="bg-[#F0F9FF] rounded-[8px] p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6">
             {/* Left */}
-            <div className="flex items-center gap-8">
+            <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 sm:gap-8">
               {/* Avatar */}
               <div
                 className="relative cursor-pointer  bg-[#ffffff] rounded-[8px]"
@@ -136,15 +136,15 @@ export default function ProfilePage() {
             </div>
 
             {/* Right */}
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
               <Button
-                className="bg-black rounded-[8px] font-poppins font-thin cursor-pointer text-white hover:bg-[#ff5635] hover:text-white"
+                className="bg-black rounded-[8px] font-poppins font-thin cursor-pointer text-white hover:bg-[#ff5635] hover:text-white w-full sm:w-auto"
                 onClick={() => router.push("/Profile/edit")}
               >
                 Edit Details
               </Button>
               <Button
-                className="bg-[#FF5635] rounded-[8px] hover:bg-black font-thin font-poppins cursor-pointer text-white hover:text-white"
+                className="bg-[#FF5635] rounded-[8px] hover:bg-black font-thin font-poppins cursor-pointer text-white hover:text-white w-full sm:w-auto"
                 onClick={handleLogout}
               >
                 Logout
@@ -153,13 +153,13 @@ export default function ProfilePage() {
           </div>
 
           {/* 🔹 USER DETAILS */}
-          <div className="bg-white rounded-xl p-8 font-poppins grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-4 text-sm">
-            <div className="flex border-b pb-2 gap-24">
+          <div className="bg-white rounded-xl p-4 sm:p-6 md:p-8 font-poppins grid grid-cols-1 md:grid-cols-2 gap-x-6 md:gap-x-10 gap-y-4 text-sm">
+            <div className="flex justify-between border-b pb-2">
               <span className="text-[#727EA3]">Parent Contact:</span>
               <span className="">{user?.parentPhone || "—"}</span>
             </div>
 
-            <div className="flex border-b pb-2 gap-24">
+            <div className="flex justify-between border-b pb-2">
               <span className="text-[#727EA3]">Attempt Year:</span>
               <span className="">{user?.profile.year}</span>
             </div>
@@ -173,7 +173,7 @@ export default function ProfilePage() {
               </span>
             </div>
 
-            <div className="flex border-b pb-2 gap-24">
+            <div className="flex justify-between border-b pb-2">
               <span className="text-[#727EA3]">Preparing For:</span>
               <span className=" text-right">
                 {user?.examdetail?.map((exam: any) => exam.examname).join(", ")}
@@ -269,8 +269,8 @@ export default function ProfilePage() {
           {/* Keep your existing section */}
         </div>
       </div>
-      <section className="w-full bg-[#FF5635] text-white px-6 sm:px-10 lg:px-12 xl:px-16 mt-16 py-2 sm:py-5 lg:py-6 xl:py-8">
-        <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-8 px-6 sm:px-8 md:px-12 lg:px-28">
+      <section className="w-full bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-12 sm:mt-16 py-4 sm:py-5 lg:py-6 xl:py-8">
+        <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
           <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
             {/* Logo */}
             <div className="w-[130px] sm:w-[160px] lg:w-[200px]">

@@ -12,7 +12,6 @@ import { useDispatch } from "react-redux";
 export default function Step1({ nextStep, updateForm, formData }: any) {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-console.log(formData,"formData")
   const [name, setName] = useState(formData?.name || "");
   const [email, setEmail] = useState(formData?.email || "");
   const [phone, setPhone] = useState(formData?.phone || "");
@@ -22,7 +21,7 @@ console.log(formData,"formData")
   const handleNext = async () => {
     try {
       if (!name || !email || !phone || !password) {
-        alert("कृपया सभी फ़ील्ड भरें!");
+        // alert("कृपया सभी फ़ील्ड भरें!");
         return;
       }
 

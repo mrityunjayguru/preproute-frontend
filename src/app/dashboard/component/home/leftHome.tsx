@@ -48,6 +48,8 @@ const ExamCard = ({ exam }: any) => {
     await dispatch(getDashboardData(payload));
   };
   
+  console.log(exam,"examexamexam")
+
   return (
     <div className="flex flex-col w-full rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] px-5 py-5 ">
       {/* Top Section */}
@@ -94,7 +96,7 @@ const ExamCard = ({ exam }: any) => {
             Edit
           </Button>
           
-          {isDraft && (
+          {/* {!isDraft && ( */}
             <Button 
               onClick={() => updateStatus(exam)} 
               className={`flex-1 sm:flex-none h-9 px-6 font-normal text-md rounded-md text-white ${
@@ -104,9 +106,10 @@ const ExamCard = ({ exam }: any) => {
               }`}
               disabled={exam.overallCompletion != "100"}
             >
-              Publish
+              {exam?.isPublished ? "Unpublish" : "Publish"}
+              {/* Publish */}
             </Button>
-          )}
+          {/* )} */}
         </div>
       </div>
     </div>

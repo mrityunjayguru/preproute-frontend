@@ -51,8 +51,8 @@ const RightSection: React.FC<Props> = ({
 
   const sectionName = isSection
     ? selectedSection?.sectionDetail?.section ||
-      selectedSection?.currentSection?.sectionName ||
-      "Section"
+    selectedSection?.currentSection?.sectionName ||
+    "Section"
     : "Question Palette";
 
   const [imageError, setImageError] = useState(false);
@@ -143,8 +143,8 @@ const RightSection: React.FC<Props> = ({
         </p>
 
         {/* ================= SCROLLABLE GRID ================= */}
-        <div className="flex-1 min-h-0 overflow-y-auto px-3 pb-3">
-          <div className="grid grid-cols-5 gap-2">
+        <div className="flex-1 min-h-0 overflow-y-auto px-2 sm:px-3 pb-3">
+          <div className="grid grid-cols-4 sm:grid-cols-5 gap-1.5 sm:gap-2">
             {Array.from({ length: totalNoOfQuestions }, (_, idx) => {
               const status = currentStatus[idx];
 

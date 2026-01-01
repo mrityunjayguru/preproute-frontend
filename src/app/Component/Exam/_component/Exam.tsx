@@ -81,7 +81,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
 
         {/* FREE BADGE */}
         {index === 0 && !isLocked && (
-          <div className="absolute top-0 right-0">
+          <div className="absolute top-0 right-0 font-poppins">
             <span className="bg-[#4FA77E] px-3 py-1 rounded-md text-sm text-white">
               Free
             </span>
@@ -103,7 +103,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
         {isLocked && (
           <Button
             disabled
-            className="px-10 h-11 rounded-[8px] bg-[#E3E5E9] text-[#ADB5CC] cursor-not-allowed"
+            className="px-10 h-11 rounded-[8px] bg-[#E3E5E9] text-[#ADB5CC] cursor-not-allowed font-poppins"
           >
             Start
           </Button>
@@ -116,7 +116,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
                 variant="outline"
                 onClick={() => handleExam(exam)}
                 className="border border-[#FF5635] text-[#FF5635] 
-                           hover:bg-[#FF5635] hover:text-white transition cursor-pointer"
+                           hover:bg-[#FF5635] hover:text-white transition cursor-pointer font-poppins"
               >
                 Result and Analysis
               </Button>
@@ -127,7 +127,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
               <div className="flex gap-2">
                 <Button
                   className="flex-1 bg-[#FF5635] text-white 
-                             hover:bg-black transition cursor-pointer"
+                             hover:bg-black transition cursor-pointer font-poppins"
                   onClick={() => handleExam(exam, "Resume")}
                 >
                   Resume
@@ -148,7 +148,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
               <Button
                 className="px-10 h-11 rounded-[8px] 
                            bg-[#FF5635] text-white 
-                           hover:bg-black transition cursor-pointer"
+                           hover:bg-black transition cursor-pointer font-poppins"
                 onClick={() => handleExam(exam, "start")}
               >
                 Start
@@ -331,7 +331,7 @@ console.log(examById,"examByIdexamByIdexamById")
             </div>
             {/* <div className="max-w-7xl">
             </div> */}
-           
+
             {/* ===== Exam Cards Grid ===== */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mx-auto">
               {examdata.map((exam: any, index: number) => (
@@ -368,7 +368,7 @@ console.log(examById,"examByIdexamByIdexamById")
                     <div className="mt-auto font-poppins">
                       <button
                         className="
-                md:w-fit px-10 cursor-pointer
+                w-full md:w-fit px-6 sm:px-8 md:px-10 cursor-pointer
                 h-10 sm:h-11
                 rounded-[8px]
                 bg-[#FF5635] text-white
@@ -382,7 +382,7 @@ console.log(examById,"examByIdexamByIdexamById")
                           })
                         }
                       >
-                        <span className="text-[14px] sm:text-[15px] lg:text-[16px]">
+                        <span className="text-[14px] sm:text-[15px]  lg:text-[16px]">
                           Choose to start
                         </span>
                       </button>

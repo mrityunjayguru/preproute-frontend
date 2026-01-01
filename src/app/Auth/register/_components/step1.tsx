@@ -116,7 +116,7 @@ const Step1: React.FC<Step1Props> = ({
             <MailIcons />
           </div>
           <h2 className="text-xl sm:text-2xl font-poppins font-medium text-[#1A1D1F]">
-            {userLogin?.isGoogle === true ? "Update Profile" : "Register"}
+            {userLogin?.isGoogle === false ? "Update Profile" : "Register"}
           </h2>
         </div>
 
@@ -172,7 +172,7 @@ const Step1: React.FC<Step1Props> = ({
             <Input
               placeholder="Enter your email"
               value={email}
-              disabled={userLogin?.isGoogle === true}
+              disabled={userLogin?.isGoogle === false}
               onChange={(e) => setEmail(e.target.value)}
               className={`mt-1 h-[43px] font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all
                 ${errors.email ? "border-red-500" : ""}`}
@@ -182,7 +182,7 @@ const Step1: React.FC<Step1Props> = ({
             )}
           </div>
           {/* Password */}
-          {userLogin?.isGoogle==true?(null):(<div>
+          {userLogin?.isGoogle==false?(null):(<div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
               Password<span className="text-[#FF5635]">*</span>
             </Label>
@@ -198,7 +198,7 @@ const Step1: React.FC<Step1Props> = ({
               <span className="text-xs text-red-500 mt-1">{errors.email}</span>
             )}
           </div>)}
-          {userLogin?.isGoogle==true?(null):(<div>
+          {userLogin?.isGoogle==false?(null):(<div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
               Confirm Password<span className="text-[#FF5635]">*</span>
             </Label>

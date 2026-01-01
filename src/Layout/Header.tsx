@@ -104,11 +104,8 @@ export const Header: React.FC = () => {
             {/* Practice */}
             <DropdownMenu open={examMenuOpen} onOpenChange={setExamMenuOpen}>
               <DropdownMenuTrigger
-                onMouseEnter={() => setExamMenuOpen(true)}
-                onMouseLeave={() => setExamMenuOpen(false)}
-                className={`flex items-center gap-1 cursor-pointer outline-none ${
-                  isPracticeActive ? activeClass : inactiveClass
-                }`}
+                className={`flex items-center gap-1 cursor-pointer outline-none ${isPracticeActive ? activeClass : inactiveClass
+                  }`}
               >
                 Practice
                 <ChevronDownIcon className="h-4 w-4 text-[#FF5635]" />
@@ -117,8 +114,6 @@ export const Header: React.FC = () => {
               <DropdownMenuContent
                 align="start"
                 className="w-56"
-                onMouseEnter={() => setExamMenuOpen(true)}
-                onMouseLeave={() => setExamMenuOpen(false)}
               >
                 {examTypeData.map((exam: any) => (
                   <DropdownMenuItem
@@ -126,6 +121,7 @@ export const Header: React.FC = () => {
                     onSelect={(e) => {
                       e.preventDefault();
                       handleExamClick(exam);
+                      setExamMenuOpen(false);
                     }}
                     className="cursor-pointer hover:bg-orange-50 hover:text-[#FF5635]"
                   >
@@ -162,7 +158,7 @@ export const Header: React.FC = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48" onMouseLeave={() => setResourcesMenuOpen(false)} >
                 <DropdownMenuItem asChild>
-                  <Link href="/resources">Resources Home</Link>
+                  <Link href="/resources" onClick={() => setResourcesMenuOpen(false)}>Resources Home</Link>
                 </DropdownMenuItem>
                 {/* <DropdownMenuItem
                   asChild
@@ -199,15 +195,15 @@ export const Header: React.FC = () => {
             <>
               {(userLogin?.role === "Admin" ||
                 userLogin?.role === "Expert") && (
-                <Button
-                  variant="outline"
-                  onClick={() => router.push("/dashboard/home")}
-                  className="hidden lg:flex border-[#FF5635] text-[#FF5635]"
-                >
-                  <LayoutDashboard className="mr-2 h-4 w-4" />
-                  Dashboard
-                </Button>
-              )}
+                  <Button
+                    variant="outline"
+                    onClick={() => router.push("/dashboard/home")}
+                    className="hidden lg:flex border-[#FF5635] text-[#FF5635]"
+                  >
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Button>
+                )}
               <UserProfileDropdown
                 user={userLogin}
                 onLogout={handleLogoutClick}
@@ -225,20 +221,106 @@ export const Header: React.FC = () => {
 
             <SheetContent side="right" className="w-[320px]">
               <div className="space-y-3 pt-6">
+                {/* Practice Menu - Mobile */}
+                <div className="px-4">
+                  <p className="text-sm font-semibold text-gray-900 mb-2">Practice</p>
+                  <div className="space-y-1 pl-2">
+                    {examTypeData.map((exam: any) => (
+                      <button
+                        key={exam._id}
+                        onClick={() => {
+                          handleExamClick(exam);
+                          setMobileOpen(false);
+                        }}
+                        className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:text-[#FF5635] hover:bg-orange-50 rounded-lg transition-colors"
+                      >
+                        {exam.examType}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Main Links */}
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`block px-4 py-2 rounded-lg ${
-                      isActive(link.href)
-                        ? "text-[#FF5635] font-semibold"
-                        : "text-gray-700 hover:text-[#FF5635]"
-                    }`}
+                    className={`block px-4 py-2 rounded-lg ${isActive(link.href)
+                      ? "text-[#FF5635] font-semibold"
+                      : "text-gray-700 hover:text-[#FF5635]"
+                      }`}
                   >
                     {link.label}
                   </Link>
                 ))}
+
+                {/* Resources Menu - Mobile */}
+                <div className="px-4">
+                  <p className="text-sm font-semibold text-gray-900 mb-2">Resources</p>
+                  <div className="space-y-1 pl-2">
+                    <Link
+                      href="/resources"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 text-sm text-gray-700 hover:text-[#FF5635] hover:bg-orange-50 rounded-lg transition-colors"
+                    >
+                      Resources Home
+                    </Link>
+                    <Link
+                      href="/instructions"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 text-sm text-gray-700 hover:text-[#FF5635] hover:bg-orange-50 rounded-lg transition-colors"
+                    >
+                      Instructions
+                    </Link>
+                    <Link
+                      href="/blog"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 text-sm text-gray-700 hover:text-[#FF5635] hover:bg-orange-50 rounded-lg transition-colors"
+                    >
+                      Blogs
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Auth Buttons - Mobile */}
+                {!token && (
+                  <div className="px-4 pt-4 space-y-2 border-t">
+                    <Link
+                      href="/Auth/register"
+                      onClick={() => setMobileOpen(false)}
+                      className="block text-center px-4 py-2 text-[#FF5635] font-semibold rounded-lg border border-[#FF5635]"
+                    >
+                      Register
+                    </Link>
+                    <Button
+                      onClick={() => {
+                        router.push("/Auth/signin");
+                        setMobileOpen(false);
+                      }}
+                      className="w-full rounded-full bg-[#FF5635] text-white"
+                    >
+                      Login
+                    </Button>
+                  </div>
+                )}
+
+                {/* Dashboard Button - Mobile */}
+                {token && (userLogin?.role === "Admin" || userLogin?.role === "Expert") && (
+                  <div className="px-4 pt-4 border-t">
+                    <Button
+                      onClick={() => {
+                        router.push("/dashboard/home");
+                        setMobileOpen(false);
+                      }}
+                      className="w-full border-[#FF5635] text-[#FF5635]"
+                      variant="outline"
+                    >
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </Button>
+                  </div>
+                )}
               </div>
             </SheetContent>
           </Sheet>
