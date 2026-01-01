@@ -93,7 +93,7 @@ const Step1: React.FC<Step1Props> = ({
         parentPhone: parentPhone || undefined, // Only include if provided
         currentStep: 1,
         password,
-        isGoogle:userLogin?.isGoogle?true:false
+        isGoogle:!userLogin?.isGoogle?true:false
       };
       updateFormData(step1Data);
       
