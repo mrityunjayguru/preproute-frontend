@@ -43,6 +43,11 @@ export function DashboardHeader() {
       path: "/dashboard/plan",
       isView: userLogin?.role === "Admin",
     },
+        {
+      label: "Blogs",
+      path: "/dashboard/blogs",
+      isView: userLogin?.role === "Admin",
+    },
   ];
 
   return (

@@ -34,6 +34,7 @@ function CommonTable<T extends Record<string, any>>({
   columns,
   onEdit,
 }: CommonTableProps<T>) {
+ 
   return (
     <div className="rounded-[10px] overflow-x-auto">
       <Table className="bg-gradient-to-t from-[#F0F9FF] to-white  border border-[#E6F4FF] px-5 py-5">
@@ -81,9 +82,9 @@ function CommonTable<T extends Record<string, any>>({
 
                 {/* EDIT BUTTON */}
                 {onEdit && (
-                  <TableCell className="pl-10 font-poppins font-normal">
+                  <TableCell className="pl-10 font-poppins font-normal cursor-pointer">
                     <button  onClick={() => onEdit(row)}>
-                      <Image src={EDIT} alt="Edit" className="h-4 w-4" />
+                      <Image src={EDIT} alt="Edit" className="h-4 w-4 cursor-pointer" />
                     </button>
                   </TableCell>
                 )}

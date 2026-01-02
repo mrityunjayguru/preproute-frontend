@@ -11,6 +11,8 @@ import IMG3 from "@/assets/images/blogs/Rectangle340.png";
 import SocialMedia from "@/app/Component/Home/_componets/social-media";
 
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
+import { useSelector } from "react-redux";
+import { formatDateTime } from "@/Common/ComonDate";
 
 // Mock blog data - same as in the main blog page
 const blogPosts = [
@@ -53,11 +55,11 @@ const blogPosts = [
 ];
 
 const SingleBlog = () => {
+      const data = useSelector((state: any) => state?.blog?.Blog || []);
+  
   const params = useParams();
-  const id = params?.id ? parseInt(params.id as string) : null;
-
-  const post = blogPosts.find((p) => p.id === id);
-
+  const id = params?.id 
+  const post = data.find((p:any) => p._id === id);
   if (!post) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
@@ -85,7 +87,7 @@ const SingleBlog = () => {
           <div />
           <div className="max-w-4xl text-center">
             <p className="text-sm text-gray-700 font-dm-sans">
-              Posted On : {post.date}
+              Posted On : {formatDateTime(post.createdAt)}
             </p>
             <h1 className="text-[#FF5635] text-2xl md:text-3xl font-medium font-poppins mb-2">
               {post.title}
@@ -103,7 +105,8 @@ const SingleBlog = () => {
           {/* Featured Image */}
           <div className="relative w-full h-[200px] md:h-[300px] lg:h-[300px] rounded-2xl overflow-hidden mb-10">
             <Image
-              src={post.image}
+             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${post.image}`}
+
               alt={post.title}
               fill
               className="object-cover"
@@ -112,46 +115,24 @@ const SingleBlog = () => {
           </div>
 
           {/* Blog Text Content */}
-          <div className="prose prose-lg max-w-none font-dm-sans text-[#333333] space-y-6">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer a
-              fermentum lectus. Suspendisse potenti. Donec ac lorem at libero
-              viverra aliquet. Vivamus non ultrices odio. Cras auctor, ligula id
-              fermentum tincidunt, sapien arcu convallis ipsum, in feugiat lorem
-              elit a justo. Sed sodales, lorem nec malesuada aliquet, orci nisl
-              feugiat enim, a tincidunt lorem ipsum non massa.
-            </p>
+        <div className="prose prose-lg max-w-none font-dm-sans text-[#333333] space-y-6">
+  <div
+    dangerouslySetInnerHTML={{ __html: post.description }}
+  />
+</div>
 
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer a
-              fermentum lectus. Suspendisse potenti. Donec ac lorem at libero
-              viverra aliquet. Vivamus non ultrices odio. Cras auctor, ligula id
-              fermentum tincidunt, sapien arcu convallis ipsum, in feugiat lorem
-              elit a justo. Sed sodales, lorem nec malesuada aliquet, orci nisl
-              feugiat enim, a tincidunt lorem ipsum non massa.
-            </p>
-
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer a
-              fermentum lectus. Suspendisse potenti. Donec ac lorem at libero
-              viverra aliquet. Vivamus non ultrices odio. Cras auctor, ligula id
-              fermentum tincidunt, sapien arcu convallis ipsum, in feugiat lorem
-              elit a justo. Sed sodales, lorem nec malesuada aliquet, orci nisl
-              feugiat enim, a tincidunt lorem ipsum non massa.
-            </p>
-          </div>
         </div>
 
         {/* Related Posts Section */}
         <div className="mt-16 md:mt-24 max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {relatedPosts.map((post) => (
-              <Link key={post.id} href={`/blog/single-blog/${post.id}`} className="hover:underline-none">
+            {data.map((post) => (
+              <Link key={post._id} href={`/blog/single-blog/${post._id}`} className="hover:underline-none">
                 <div className="group cursor-pointer">
                   {/* Image */}
                   <div className="relative rounded-2xl w-full h-56 md:h-64 overflow-hidden mb-4">
                     <Image
-                      src={post.image}
+                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${post.image}`}
                       alt={post.title}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -161,7 +142,7 @@ const SingleBlog = () => {
                   {/* Content */}
                   <div>
                     <p className="text-sm text-black font-dm-sans mb-1 font-medium">
-                      Posted On: {post.date}
+                      Posted On: {formatDateTime(post.createdAt)}
                     </p>
                     <h3 className="text-lg md:text-xl font-normal font-poppins text-[#FF5635] group-hover:underline">
                       {post.title}

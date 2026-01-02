@@ -17,9 +17,11 @@ import dashboard from "./dashboard/index"
 import question from "./seatUpexam/question/index"
 import user from "./user/index"
 import palnAndpricing from "./seatUpexam/planAndPricing/index"
+import blog from "./Blog/index"
 const appReducer = combineReducers({
  school:school,
  exam:exam,
+ blog:blog,
  user:user,
  section:section,
  vehicleType:vehicleType,

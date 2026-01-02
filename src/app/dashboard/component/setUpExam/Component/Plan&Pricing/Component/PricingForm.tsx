@@ -13,7 +13,7 @@ import {
   handlesetUpdatesubTopic,
 } from "@/api/subTopic";
 import { getexam } from "@/api/Exam";
-import { createPlanAndPricing } from "@/api/Plan&Pricing";
+import { createPlanAndPricing, getPlanandPricing } from "@/api/Plan&Pricing";
 
 const PricingForm = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -47,6 +47,7 @@ const PricingForm = () => {
   const getData = async () => {
     const payload: any = {};
     await dispatch(getexam(payload));
+    await dispatch(getPlanandPricing(payload));
   };
 
   useEffect(() => {
@@ -78,8 +79,8 @@ const PricingForm = () => {
     setPrice("");
     setSelected([]);
     const data: any = null;
-    dispatch(handlesetUpdatesubTopic(data));
-
+    await dispatch(handlesetUpdatesubTopic(data));
+    await getData()
     // await fetchSubTopics();
   };
 

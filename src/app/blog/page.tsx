@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Search } from "lucide-react";
@@ -12,6 +12,10 @@ import IMG3 from "@/assets/images/blogs/Rectangle340.png";
 import SocialMedia from "../Component/Home/_componets/social-media";
 
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
+import { getblog } from "@/api/Blog";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { formatDateTime } from "@/Common/ComonDate";
 // Mock blog data - replace with actual data from API
 const blogPosts = [
   {
@@ -55,12 +59,19 @@ const blogPosts = [
 
 
 const BlogPage = () => {
+  const dispatch=useDispatch<AppDispatch>()
+    const data = useSelector((state: any) => state?.blog?.Blog || []);
   const [searchQuery, setSearchQuery] = useState("");
-
   const filteredPosts = blogPosts.filter((post) =>
     post.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  const fetchBlog = async () => {
+    await dispatch(getblog({}));
+  };
 
+  useEffect(() => {
+    fetchBlog();
+  }, []);
   return (
     <div>
       <div className="min-h-screen bg-white px-6 sm:px-8 md:px-12 lg:px-28">
@@ -94,13 +105,13 @@ const BlogPage = () => {
 
           {/* Blog Posts Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {filteredPosts.map((post) => (
-              <Link key={post.id} href={`/blog/single-blog/${post.id}`} className="hover:underline-none">
+            {data.map((post:any) => (
+              <Link key={post._id} href={`/blog/single-blog/${post._id}`} className="hover:underline-none">
                 <div className="overflow-hidden cursor-pointer">
                   {/* Blog Image */}
                   <div className="relative rounded-lg w-full h-48 md:h-60 overflow-hidden bg-gray-100">
                     <Image
-                      src={post.image}
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${post.image}`}
                       alt={post.title}
                       fill
                       className="object-cover hover:scale-105 transition-transform duration-300"
@@ -111,7 +122,7 @@ const BlogPage = () => {
                   <div className=" mt-4">
                     {/* Date */}
                     <p className="text-sm text-black font-dm-sans">
-                      Posted On: {post.date}
+                      Posted On: {formatDateTime(post.createdAt)}
                     </p>
 
                     {/* Title */}

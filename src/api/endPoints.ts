@@ -13,6 +13,12 @@ const UserAuth={
   AdminLogin:"Auth/adminLogin",
   exam:"statusmaster",
 }
+export const blog={
+  create:"Blog/create",
+  get:"Blog/get",
+  update:"Blog/update",
+  getallblogsbysectionid:"Blog/getallblogsbysectionid"  
+}
 export const examType={
   create:"setUpexam/examType/create",
   get:"setUpexam/examType/get",

@@ -73,6 +73,14 @@ const Step1: React.FC<Step1Props> = ({
     if (!phone.trim()) {
       newErrors.phone = "Phone is required";
     }
+if (!/^\d{10}$/.test(phone)) {
+  newErrors.phone = "Phone number must be exactly 10 digits";
+}
+
+if (!/^\d{10}$/.test(parentPhone)) {
+  newErrors.parentPhone = "parentPhone number must be exactly 10 digits";
+}
+
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;

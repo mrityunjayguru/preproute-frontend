@@ -51,7 +51,9 @@ export const UserRepo: UserRepo = {
     headers: {
       "Content-Type": "multipart/form-data",
     },
-  });
+  }
+
+);
 }
 
 };
