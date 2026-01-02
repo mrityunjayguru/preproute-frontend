@@ -20,10 +20,16 @@ interface Question {
   usergiven?: {
     userAnswer: string;
     numericAnswer?: string;
+    timeTaken?: number;
   }[];
   correctAnswer: string;
   hint?: string;
-  solution?: string; // Check if solution exists
+  solution?: string;
+  userAttempt?: boolean;
+  topic?: string;
+  subtopic?: string;
+  difficulty?: string;
+  avgTime?: string;
 }
 
 interface Props {
@@ -43,21 +49,6 @@ const QuestionWiswView: React.FC<Props> = ({
   sectionQuestions,
   getQuestionByNumberId,
 }) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  // Helper to scroll navigator
-  const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      const { current } = scrollRef;
-      const scrollAmount = 200;
-      if (direction === "left") {
-        current.scrollLeft -= scrollAmount;
-      } else {
-        current.scrollLeft += scrollAmount;
-      }
-    }
-  };
-
   // Render HTML/LaTeX content
   const renderPreview = (content: string) => {
     if (!content) return null;
@@ -101,17 +92,19 @@ const QuestionWiswView: React.FC<Props> = ({
 
   if (!question) return <div className="p-4">Loading question...</div>;
 
-  // Determine Answered Text
-  let answeredText: React.ReactNode = "-";
-  if (question.usergiven && question.usergiven.length > 0) {
-    const userAns = question.usergiven[0];
+  const userAns = question.usergiven?.[0];
+  const isAttempted = question.userAttempt && !!userAns;
+
+  // Determine Correctness
+  let isCorrect = false;
+  if (isAttempted) {
     if (question.answerType === "Numeric") {
-      answeredText = userAns.numericAnswer || "-";
+      isCorrect = userAns?.numericAnswer == question.correctAnswer;
     } else {
       const selectedOpt = question.options?.find(
-        (opt) => opt._id === userAns.userAnswer
+        (opt) => opt._id === userAns?.userAnswer
       );
-      answeredText = selectedOpt ? renderPreview(selectedOpt.text) : "-";
+      isCorrect = selectedOpt?.isCorrect || false;
     }
   }
 
@@ -126,55 +119,80 @@ const QuestionWiswView: React.FC<Props> = ({
       : renderPreview(question.correctAnswer);
   }
 
+  // Time formatting
+  const timeTaken = userAns?.timeTaken || 0;
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m} Min ${s} Sec`;
+  };
+
   return (
     <div className="flex-1 mt-6 bg-white">
-      {/* Navigator */}
-      <div className="mb-8">
-        <p className="text-sm text-gray-600 mb-3 font-normal font-poppins">
-          Choose an option
-        </p>
-        <div className="flex items-center gap-2">
+      {/* Status Bar */}
+      <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] py-3 px-2 flex flex-wrap gap-36 items-start mb-6 font-poppins">
+        <div>
+          <p className="text-xs font-medium text-black mb-1">Answer Status</p>
+          {isAttempted ? (
+            isCorrect ? (
+              <p className="text-xl font-medium text-[#84CC16]">Correct</p>
+            ) : (
+              <p className="text-xl font-medium text-red-500">Wrong</p>
+            )
+          ) : (
+            <p className="text-xl font-medium text-gray-400">Unattempted</p>
+          )}
+        </div>
+
+        <div>
+          <p className="text-xs font-medium text-gray-500 mb-1">
+            Response Time
+          </p>
+          <p className="text-lg font-medium text-[#005EB6]">
+            {formatTime(timeTaken)}
+          </p>
+        </div>
+
+        <div>
+          <p className="text-xs font-medium text-gray-500 mb-1">Average Time</p>
+          <p className="text-lg font-medium text-[#005EB6]">
+            {question.avgTime || "1 Min 26 Sec"}
+          </p>
+        </div>
+        <div>
+          <p className="text-xs font-medium text-gray-500 mb-1">
+            Difficulty Level
+          </p>
+          <p className="text-lg font-medium text-[#005EB6]">
+            {question.difficulty || "Easy"}
+          </p>
+        </div>
+      </div>
+
+      {/* Topic Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-[#005EB6] text-lg font-medium font-dm-sans">
+          {question.topic || "Topic"} | {question.subtopic || "Subtopic"}
+        </h2>
+        <div className="flex gap-2">
           <Button
             variant="outline"
-            className="bg-[#005EB6] hover:bg-[#0044a5] text-white border-none h-9 w-9 rounded-md cursor-pointer shrink-0"
-            onClick={() => scroll("left")}
+            className="bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] text-[#1E1E1E] font-normal font-poppins cursor-pointer"
           >
-            <ChevronLeft size={16} className="text-white" />
+            Bookmark
           </Button>
-
-          <div
-            ref={scrollRef}
-            className="flex gap-1 overflow-x-auto no-scrollbar scroll-smooth px-1 w-full sm:w-[80%] lg:w-[100%] max-w-[820px]"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            {sectionQuestions.map((q, idx) => (
-              <button
-                key={q._id || idx}
-                onClick={() => getQuestionByNumberId(idx)}
-                className={`flex items-center justify-center min-w-[40px] h-10 rounded-md font-medium font-poppins text-xs transition-colors border ${
-                  q.questionNo === question.questionNo
-                    ? "bg-gradient-to-t from-[#FFECDF] to-white border border-[#E6F4FF]"
-                    : "bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] "
-                }`}
-              >
-                {q.questionNo}
-              </button>
-            ))}
-          </div>
-
           <Button
             variant="outline"
-            className="bg-[#0056D2] hover:bg-[#0044a5] text-white border-none h-9 w-9 rounded-md cursor-pointer shrink-0"
-            onClick={() => scroll("right")}
+            className="bg-gradient-to-t from-[#FFECDF] to-white border border-[#F0F9FF] font-normal font-poppins cursor-pointer"
           >
-            <ChevronRight size={16} className="text-white" />
+            Report
           </Button>
         </div>
       </div>
 
       {/* Question Box */}
-      <div className="bg-[#F0F9FF] p-6 rounded-[8px] mb-8">
-        <p className="text-[#0056D2] font-medium font-dm-sans mb-3">
+      <div className="bg-[#F0F9FF] p-6 rounded-[8px] mb-6">
+        <p className="text-[#0056D2] font-medium font-dm-sans mb-3 text-sm">
           Question No. {question.questionNo}
         </p>
         <div className="text-gray-900 font-normal font-poppins leading-relaxed">
@@ -182,34 +200,71 @@ const QuestionWiswView: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Answers Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-8 pb-8 ">
-        <div>
-          <p className="text-[#0056D2] font-medium font-dm-sans mb-2">
-            Answered
-          </p>
-          <div className="text-2xl font-normal font-poppins text-gray-900">
-            {answeredText}
-          </div>
-        </div>
-        <div>
+      <div
+        className={`grid grid-cols-2 ${
+          question.answerType === "Numeric" ? "" : "lg:grid-cols-1"
+        } gap-6 w-full`}
+      >
+        {/* LEFT: Correct Answer */}
+        <div className="">
           <p className="text-[#84CC16] font-medium font-dm-sans mb-2">
             Correct Answer
           </p>
-          <div className="text-2xl font-normal font-poppins text-gray-900">
+          <div className="text-xl font-normal font-poppins text-gray-900">
             {correctText}
           </div>
+        </div>
+
+        {/* RIGHT: User Answer */}
+        <div className="w-full">
+          {question.answerType === "Numeric" ? (
+            /* ✅ keep your existing numeric UI */
+            <div className="border border-gray-200 rounded-lg p-4 bg-white relative">
+              <p className="text-[#0056D2] font-medium text-sm mb-1 font-dm-sans">
+                Input
+              </p>
+              <p className="text-lg text-gray-900">
+                {userAns?.numericAnswer || "-"}
+              </p>
+            </div>
+          ) : (
+            /* ✅ MCQ VIEW (like image) */
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {question.options?.map((opt, idx) => {
+                const isSelected = userAns?.userAnswer === opt._id;
+
+                return (
+                  <div
+                    key={opt._id || idx}
+                    className="border border-gray-200 rounded-md p-3 bg-white relative"
+                  >
+                    <p className="text-[#2563EB] text-xs font-medium mb-1 font-dm-sans">
+                      Option {idx + 1}
+                    </p>
+
+                    <p className="text-sm text-gray-800 font-poppins">
+                      {renderPreview(opt.text)}
+                    </p>
+
+                    {isSelected && (
+                      <span className="absolute top-2 right-2 text-[#FF5959] text-xs font-medium font-dm-sans">
+                        Answered
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Solution */}
-      <div className="rounded-xl bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] p-6">
-        <p className="text-[#0056D2] font-medium font-dm-sans mb-3">
-          Solution
-        </p>
+      <div className="rounded-xl bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] p-6 mb-8 mt-5">
+        <p className="text-[#0056D2] font-medium font-dm-sans mb-3">Solution</p>
         <div className="text-gray-800 font-normal leading-relaxed font-poppins">
           {renderPreview(
-            question.hint || question.solution || "No solution provided."
+            question.solution || question.hint || "No solution provided."
           )}
         </div>
       </div>

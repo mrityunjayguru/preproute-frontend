@@ -56,7 +56,7 @@ export default function QuestionWiseTab({ data }: QuestionWiseTabProps) {
   const [isTimeUp, setIsTimeUp] = useState(false);
   const examResult = useSelector((state: any) => state.question?.result?.data);
   const exam = examResult || {};
-  const examSections: Section[] = examResult?.examdetail.sections || [];
+  const examSections: Section[] = examResult?.examdetail?.sections || [];
   const currentStatus =
     sectionQuestionStatus[selectedSection?.sectionId || "no-section"] || {};
   const [questionStartTime, setQuestionStartTime] = useState<number | null>(
@@ -70,36 +70,40 @@ export default function QuestionWiseTab({ data }: QuestionWiseTabProps) {
   };
   useEffect(() => {
     const examInfo = examResult;
+    if (!examInfo) return;
+
     setIsSection(examInfo?.examdetail?.isSection);
     setSwitchable(examInfo?.examdetail?.switchable);
     // Calculate exam duration
-    const totalDuration = examInfo.isSection
-      ? examInfo?.examdetail?.sections[0].duration
+    const totalDuration = examInfo?.examdetail?.isSection
+      ? examInfo?.examdetail?.sections?.[0]?.duration
       : Number(examInfo.fullExamduration || 0);
 
     setTimeLeft(totalDuration * 60); // seconds
 
     // Load first question
-    if (examInfo?.examdetail.isSection) {
+    if (examInfo?.examdetail?.isSection) {
       const firstSection: any = examSections[0];
-      setSelectedSection(firstSection);
-      setTotalNoOfQuestions(firstSection.noOfQuestions);
-      fetchQuestion(1, firstSection._id);
-      const payload: any = {
-        questionPaperId: examResult?.questionPaperID,
-        sectionWise: [
-          {
-            sectionId: firstSection.sectionId,
-            startTime: getISTDate(),
-          },
-        ],
-      };
-      dispatch(updaquesPaperTime(payload));
+      if (firstSection) {
+        setSelectedSection(firstSection);
+        setTotalNoOfQuestions(firstSection.noOfQuestions);
+        fetchQuestion(1, firstSection._id);
+        const payload: any = {
+          questionPaperId: examResult?.questionPaperID,
+          sectionWise: [
+            {
+              sectionId: firstSection.sectionId,
+              startTime: getISTDate(),
+            },
+          ],
+        };
+        dispatch(updaquesPaperTime(payload));
+      }
     } else {
       setTotalNoOfQuestions(Number(examInfo.noOfQuestions) || 0);
       fetchQuestion(1);
     }
-  }, [examData]);
+  }, [examData, examResult]);
 
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
@@ -308,6 +312,8 @@ export default function QuestionWiseTab({ data }: QuestionWiseTabProps) {
         timeLeft=""
         formatTime={formatTime}
         data={data}
+        examName={examResult?.examdetail?.examname}
+        attemptDate={data?.fullExamEndTime || data?.createdAt} 
       />
 
       <div className="flex flex-col lg:flex-row flex-1">
@@ -331,6 +337,7 @@ export default function QuestionWiseTab({ data }: QuestionWiseTabProps) {
           selectedSection={selectedSection}
           isTimeUp={isTimeUp}
           data={data}
+          sectionQuestions={sectionQuestions}
         />
       </div>
 

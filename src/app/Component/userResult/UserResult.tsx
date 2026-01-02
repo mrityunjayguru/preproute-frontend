@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import SummaryTabs from "./component/SummaryTabs";
 import { useSelector, useDispatch } from "react-redux";
 import { getTopic } from "@/api/Topic";
 import { AppDispatch } from "@/store/store";
