@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import SummaryTabs from "./component/SummaryTabs";
 import { useSelector, useDispatch } from "react-redux";
 import { getTopic } from "@/api/Topic";
 import { AppDispatch } from "@/store/store";
@@ -65,7 +64,7 @@ function UserResult() {
 
         {/* Summary Tabs */}
         <div className="mt-6">
-          <SummaryTabs data={examResult} />
+          {/* <SummaryTabs data={examResult} /> */}
         </div>
       </div>
       <section className="w-full bg-[#FF5635] text-white px-6 sm:px-10 lg:px-12 xl:px-16 mt-16 py-2 sm:py-5 lg:py-6 xl:py-8">

@@ -416,7 +416,7 @@ const examId = examData?.[0]?._id;
       await dispatch(userExamResult(examData));
       // window.open("", "_self");
       // window.close();
-      router.push("/Exam/result")
+      router.push("/analytics")
     } catch (err) {
       console.error("Error submitting exam:", err);
     }

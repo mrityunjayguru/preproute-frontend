@@ -174,6 +174,10 @@ export const Header: React.FC = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
+             <Link href="/analytics" className={isActive("/analytics") ? activeClass : inactiveClass}>
+                Analytics
+              </Link>
           </nav>
         </div>
 

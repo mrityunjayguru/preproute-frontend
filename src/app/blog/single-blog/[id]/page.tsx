@@ -13,6 +13,7 @@ import SocialMedia from "@/app/Component/Home/_componets/social-media";
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import { useSelector } from "react-redux";
 import { formatDateTime } from "@/Common/ComonDate";
+import BlogCarousel from "./BlogCarousel";
 
 // Mock blog data - same as in the main blog page
 const blogPosts = [
@@ -76,7 +77,7 @@ const SingleBlog = () => {
   }
 
   // Generate related posts (excluding current one, take first 2)
-  const relatedPosts = blogPosts.filter((p) => p.id !== id).slice(0, 2);
+  const relatedPosts = blogPosts.filter((p:any) => p.id !== id).slice(0, 2);
 
   return (
     <div className="min-h-screen bg-white">
@@ -124,35 +125,9 @@ const SingleBlog = () => {
         </div>
 
         {/* Related Posts Section */}
-        <div className="mt-16 md:mt-24 max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {data.map((post) => (
-              <Link key={post._id} href={`/blog/single-blog/${post._id}`} className="hover:underline-none">
-                <div className="group cursor-pointer">
-                  {/* Image */}
-                  <div className="relative rounded-2xl w-full h-56 md:h-64 overflow-hidden mb-4">
-                    <Image
-                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${post.image}`}
-                      alt={post.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
+       <BlogCarousel data={data} />
 
-                  {/* Content */}
-                  <div>
-                    <p className="text-sm text-black font-dm-sans mb-1 font-medium">
-                      Posted On: {formatDateTime(post.createdAt)}
-                    </p>
-                    <h3 className="text-lg md:text-xl font-normal font-poppins text-[#FF5635] group-hover:underline">
-                      {post.title}
-                    </h3>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
+
       </div>
       <section className=" bg-[#FF5635] text-white px-6 sm:px-10 lg:px-12 xl:px-16 mt-16 py-2 sm:py-5 lg:py-6 xl:py-8">
         <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-8 px-6 sm:px-8 md:px-12 lg:px-28">

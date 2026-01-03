@@ -49,6 +49,9 @@ const Signin = () => {
   const handleGoogleError = () => {
     console.log("Google login failed");
   };
+ const navigatePassword = () => {
+    router.push("/Auth/resetPassword");
+  };
 
   return (
     <section className="w-full min-h-screen bg-[#FAFAFA] flex flex-col justify-between items-center overflow-hidden">
@@ -117,7 +120,7 @@ const Signin = () => {
                 </div>
 
                 {/* REMEMBER + FORGOT */}
-                <div className="flex items-center justify-between text-xs text-gray-500">
+                <div onClick={navigatePassword} className="flex items-center justify-between text-xs text-gray-500">
                   <label className="flex items-center gap-2 cursor-pointer group">
                     <input type="checkbox" className="w-4 h-4 rounded-sm border-gray-300 text-[#FF5635] focus:ring-[#FF5635]" />
                     <span className="group-hover:text-gray-700 transition-colors">Remember</span>

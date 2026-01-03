@@ -77,7 +77,6 @@ export default function MarksDistributionChart() {
      const examResult = useSelector(
         (state: any) => state.question?.result?.data
       );
-      console.log(examResult?.summarylogsresult,"examResultexamResult")
   return (
     <div className="bg-white rounded-2xl p-6 ">
       {/* Header */}

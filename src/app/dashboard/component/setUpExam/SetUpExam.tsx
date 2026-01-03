@@ -74,9 +74,9 @@ const SetUpExam = () => {
           </TableHeader>
           <TableBody>
             {sections.map((section, index) => (
-              <TableRow key={index}>
+              <TableRow key={index}createdOn>
                 <TableCell className="font-medium">{section.name}</TableCell>
-                <TableCell>{section.createdOn}</TableCell>
+                <TableCell>{section.}</TableCell>
               </TableRow>
             ))}
           </TableBody>

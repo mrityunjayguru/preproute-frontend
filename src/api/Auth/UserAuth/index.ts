@@ -199,9 +199,9 @@ export const CheckUserExists = createAsyncThunk<boolean, Payload>(
       const data = err.response?.data;
 
       if (status === 409) {
-        console.log(data?.type,"statusstatusstatus")
+        console.log(data,"statusstatusstatus")
         if (data?.type === "email") {
-          ToastError("Email already exists");
+          ToastError(data?.message);
         } else if (data?.type === "phone") {
           ToastError("Phone number already exists");
         } else {
@@ -220,3 +220,59 @@ export const CheckUserExists = createAsyncThunk<boolean, Payload>(
     }
   }
 );
+
+
+export const VerifyOtp = createAsyncThunk<boolean, Payload>(
+  APIName.checkUser,
+  async (payload) => {
+    try {
+      await AuthRepo.VerifyOtp(payload);
+      return true;
+    } catch (err: any) {
+      const status = err.response?.status;
+      const data = err.response?.data;
+
+      if (status === 404) {
+          ToastError("Invalid Otp");
+        return false;
+      }
+
+      if (status === 401) {
+        ToastError(data?.message || "Unauthorized");
+        return false;
+      }
+
+      ToastWarning("Something went wrong");
+      return false;
+    }
+  }
+);
+
+
+
+export const resetPassword = createAsyncThunk<boolean, Payload>(
+  APIName.checkUser,
+  async (payload) => {
+    try {
+      await AuthRepo.resetPassword(payload);
+      return true;
+    } catch (err: any) {
+      const status = err.response?.status;
+      const data = err.response?.data;
+
+      if (status === 404) {
+          ToastError("Invalid Otp");
+        return false;
+      }
+
+      if (status === 401) {
+        ToastError(data?.message || "Unauthorized");
+        return false;
+      }
+
+      ToastWarning("Something went wrong");
+      return false;
+    }
+  }
+);
+

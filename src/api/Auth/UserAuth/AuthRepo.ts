@@ -14,6 +14,8 @@ userRegister: (payload: Payload) => Promise<AxiosResponse>;
 AdminLogin: (payload: Payload) => Promise<AxiosResponse>;
 googlelogin: (payload: Payload) => Promise<AxiosResponse>;
 checkUser: (payload: Payload) => Promise<AxiosResponse>;
+VerifyOtp: (payload: Payload) => Promise<AxiosResponse>;
+resetPassword: (payload: Payload) => Promise<AxiosResponse>;
 }
 
 export const AuthRepo: AuthRepo = {
@@ -37,5 +39,11 @@ export const AuthRepo: AuthRepo = {
   },
   checkUser(payload) {
     return Repository.post(APIName.checkUser,payload);
+  },
+  VerifyOtp(payload) {
+    return Repository.post(APIName.VerifyOtp,payload);
+  },
+  resetPassword(payload) {
+    return Repository.post(APIName.resetPassword,payload);
   },
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Script from "next/script";
 import { Check, Dot } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +16,7 @@ import CULT from "@/assets/vectors/pricing/CULT.svg";
 import SocialMedia from "../Home/_componets/social-media";
 
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
+import { verifyCouponCode } from "@/api/coupon";
 
 /* ---------------- UI CONFIG ARRAY ---------------- */
 const PRICING_UI = [
@@ -62,6 +63,10 @@ const FULL_ACCESS_FEATURES = [
 export default function PricingPlans() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+const [couponCodes, setCouponCodes] = useState<Record<string, string>>({});
+const [couponErrors, setCouponErrors] = useState<Record<string, string>>({});
+const [discountAmounts, setDiscountAmounts] = useState<Record<string, number>>({});
+
 
   const user = useSelector((state: any) => state?.Auth?.loginUser);
   const palnAndpricing = useSelector(
@@ -101,16 +106,16 @@ uid:user?._id
     }
 
     // Prevent payment if plan is already purchased
+     const discount = discountAmounts[plan._id] || 0;
   
 
     try {
       const payload: any = {
-        amount: Number(plan.price) * 100,
+        amount: Number(plan.price-discount) * 100,
         currency: "INR",
         userId: user?._id,
         planId: plan._id,
       };
-
       const response: any = await dispatch(createOrder(payload));
       if (!response?.payload?.success) return alert("Unable to create order.");
 
@@ -141,6 +146,50 @@ uid:user?._id
       alert("Payment error");
     }
   };
+const handleVerifyCoupon = async (plan: any) => {
+  const code = couponCodes[plan._id];
+
+  if (!code) {
+    setCouponErrors(prev => ({
+      ...prev,
+      [plan._id]: "Please enter coupon code",
+    }));
+    return;
+  }
+
+  const payload = {
+    planId: plan._id,
+    code,
+  };
+
+  const result: any = await dispatch(verifyCouponCode(payload));
+if(result?.payload.status==true){
+  setCouponErrors({})
+     const coupon = result.payload?.data;
+
+  const discount = coupon.discountValue;
+
+  const finalDiscount =
+    discount > 100
+      ? discount
+      : (plan.price * discount) / 100;
+
+  setDiscountAmounts(prev => ({
+    ...prev,
+    [plan._id]: finalDiscount,
+  }));
+}
+if(result?.payload.status==false){
+  setDiscountAmounts({})
+   setCouponErrors(prev => ({
+      ...prev,
+      [plan._id]: result?.payload?.data || "Invalid coupon",
+    }));
+}
+
+};
+
+
 
   /* ---------------- UI ---------------- */
   return (
@@ -287,6 +336,44 @@ uid:user?._id
                             ? "Get Started"
                             : "Get Started"}
                         </button>
+<div className="relative w-full my-2">
+  <input
+    type="text"
+    placeholder="Have a coupon code"
+    value={couponCodes[plan._id] || ""}
+    onChange={(e) =>
+      setCouponCodes((prev) => ({
+        ...prev,
+        [plan._id]: e.target.value,
+      }))
+    }
+    className="border py-2 pl-3 pr-20 rounded w-full focus:outline-none"
+  />
+
+  <button
+    type="button"
+    onClick={() => handleVerifyCoupon(plan)}
+    className="absolute right-1 top-1/2 -translate-y-1/2
+               px-3 py-1.5 text-xs font-medium
+               text-white bg-[#FF5635] rounded"
+  >
+    Verify
+  </button>
+</div>
+{couponErrors[plan._id] && (
+  <p className="text-red-500 text-sm">
+    {couponErrors[plan._id]}
+  </p>
+)}
+
+{discountAmounts[plan._id] && (
+  <p className="text-green-600 text-sm">
+    Discount Applied: ₹{discountAmounts[plan._id]}
+  </p>
+)}
+
+
+
                         <p className="text-sm py-3 text-[#ff5635] font-dm-sans">
                           {plan.alreadyPurchased
                             ? "Already Purchased"

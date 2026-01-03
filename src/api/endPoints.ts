@@ -10,8 +10,17 @@ const UserAuth={
   yearMaster:"yearsmaster",
   register:"Auth/signUp",
   checkUser:"Auth/checUser",
+  VerifyOtp:"Auth/VerifyOtp",
+  resetPassword:"Auth/resetPassword",
   AdminLogin:"Auth/adminLogin",
   exam:"statusmaster",
+}
+export const coupon={
+  create:"coupon/create",
+  get:"coupon/get",
+  update:"coupon/update",
+  verifyCouponCode:"coupon/verifyCouponCode"
+
 }
 export const blog={
   create:"Blog/create",
