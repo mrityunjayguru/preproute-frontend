@@ -18,11 +18,17 @@ interface examRepo {
   getCommonQuestionBeExamId: (payload: any) => Promise<AxiosResponse>;
   getCommonexam: (payload: any) => Promise<AxiosResponse>;
   ManageExamProgress: (payload: any) => Promise<AxiosResponse>;
+  givenExam: (payload: any) => Promise<AxiosResponse>;
 }
 
 export const examRepo: examRepo = {
   createexam(payload) {
     return Repository.post(exam.create, payload, {
+    });
+  },
+  
+  givenExam(payload) {
+    return Repository.post(exam.givenExam, payload, {
     });
   },
     getexam(payload) {

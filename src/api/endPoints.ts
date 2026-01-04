@@ -67,6 +67,7 @@ export const User={
   updateUserInfo:"user/updateProfile",
   createReport:"user/report",
   userProfiel:"user/userData",
+  givenExam:"user/givenExam"
 }
 export const Order={
   createOrder:"razorpay/createOrder"
@@ -75,7 +76,9 @@ export const exam={
   create:"setUpexam/exam/create",
   get:"setUpexam/exam/get",
   update:"setUpexam/exam/update",
-  getdatabyexamtypeidandname:"createexam/getdatabyexamtypeidandname"
+  getdatabyexamtypeidandname:"createexam/getdatabyexamtypeidandname",
+  givenExam:"user/givenExam"
+
 }
 export const Question={
     create:"setUpexam/question/create",

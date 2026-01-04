@@ -17,7 +17,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import SummaryTabs from "./_components/SummaryTabs";
-import { QuestionPaperResult } from "@/api/Users";
+import { QuestionPaperResult, setQuestionPaperResult } from "@/api/Users";
+import { useFormField } from "@/components/ui/form";
+import { givenExam } from "@/api/Exam";
 
 function Analytics() {
   const examResult = useSelector((state: any) => state.question?.result?.data);
@@ -29,8 +31,33 @@ function Analytics() {
     useSelector((state: any) => state?.examType?.examDetail) || [];
   const [selectedExamTypeId, setSelectedExamTypeId] = useState<string>("");
   const [selectedExamId, setSelectedExamId] = useState<string>("");
-  const [selectedYearOrNumber, setSelectedYearOrNumber] = useState<string>("");
+  const [selectedQuestion, setselectedQuestion] = useState<string>("");
   const commonexam=useSelector((state:any)=>state?.exam?.exam)
+  const givenAllExam=useSelector((state:any)=>state?.exam?.givenAllExam)
+  // console.log(givenAllExam,"givenAllExamgivenAllExamgivenAllExam")
+  // 1️⃣ Exam Types
+const examTypes = useMemo(() => {
+  return givenAllExam?.map((item: any) => item.examType) || [];
+}, [givenAllExam]);
+// 2️⃣ Exams (based on selected exam type)
+const exams = useMemo(() => {
+  if (!selectedExamTypeId) return [];
+
+  const found = givenAllExam.find(
+    (item: any) => item.examType._id === selectedExamTypeId
+  );
+
+  return found?.exams || [];
+}, [givenAllExam, selectedExamTypeId]);
+// 3️⃣ Question Papers (based on selected exam)
+const questionPapers = useMemo(() => {
+  if (!selectedExamId) return [];
+
+  const exam = exams.find((ex: any) => ex._id === selectedExamId);
+  return exam?.questionPapers || [];
+}, [exams, selectedExamId]);
+
+
   const getData = async () => {
     const payload: any = {};
     await dispatch(getTopic(payload));
@@ -49,26 +76,35 @@ function Analytics() {
     if (!selectedExamTypeId) return;
     dispatch(getExamBeExamTypeId({ examTypeId: selectedExamTypeId } as any));
     setSelectedExamId("");
-    setSelectedYearOrNumber("");
+    setselectedQuestion("");
   }, [dispatch, selectedExamTypeId]);
 
   useEffect(() => {
     const fetchResult = async () => {
-      if (selectedExamId && userLogin?._id) {
-if(!selectedExamTypeId && !selectedExamId && selectedYearOrNumber=="") return
+      if (selectedExamId && userLogin?._id && selectedQuestion && selectedExamTypeId) {
         const payload: any = {
           userId: userLogin._id,
           selectedExamTypeId:selectedExamTypeId,
           selectedExamId: selectedExamId,
-          selectedquestion:selectedYearOrNumber
+          questionPaperID:selectedQuestion
         };
         await dispatch(QuestionPaperResult(payload));
       }
     };
     fetchResult();
-  }, [selectedExamId, selectedYearOrNumber, userLogin, examList, dispatch]);
+  }, [selectedExamId, selectedQuestion, userLogin, examList, dispatch]);
 
   const yearOrNumberOptions = [2001,2002,2003]
+
+  useEffect(()=>{
+    const payload:any={
+      userId:userLogin._id
+    }
+    const payload2:any=null
+         dispatch(setQuestionPaperResult(payload2));
+    
+dispatch(givenExam(payload))
+  },[])
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-between ">
@@ -98,9 +134,9 @@ if(!selectedExamTypeId && !selectedExamId && selectedYearOrNumber=="") return
                 </SelectTrigger>
 
                 <SelectContent>
-                  {examTypeData.map((type: any) => (
+                  {examTypes.map((type: any) => (
                     <SelectItem key={type?._id} value={type?._id}>
-                      {type?.examType}
+                      {type?.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -117,9 +153,9 @@ if(!selectedExamTypeId && !selectedExamId && selectedYearOrNumber=="") return
                 </SelectTrigger>
 
                 <SelectContent>
-                  {commonexam.map((ex: any) => (
+                  {exams?.map((ex: any) => (
                     <SelectItem key={ex?._id} value={ex?._id}>
-                      {ex?.examname || ex?.examname }
+                      {ex?.name || ex?.name }
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -131,17 +167,17 @@ if(!selectedExamTypeId && !selectedExamId && selectedYearOrNumber=="") return
                 Question Paper
               </p>
               <Select
-                value={selectedYearOrNumber}
-                onValueChange={setSelectedYearOrNumber}
+                value={selectedQuestion}
+                onValueChange={setselectedQuestion}
               >
                 <SelectTrigger className="w-full px-4 py-2 rounded-[4px] bg-white border border-[#E6F4FF] focus:outline-none font-dm-sans text-sm">
                   <SelectValue placeholder="Select Year or Number" />
                 </SelectTrigger>
 
                 <SelectContent>
-                  {examList.map((val: any) => (
+                  {questionPapers.map((val: any) => (
                    <SelectItem key={val?._id} value={val?._id}>
-                      {val?.questionPapername || val?.questionPapername }
+                      {val?.name || val?.name }
                     </SelectItem>
                   ))}
                 </SelectContent>
