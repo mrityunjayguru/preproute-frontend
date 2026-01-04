@@ -73,6 +73,7 @@ const Step6: React.FC<Step6Props> = ({
     // };
 
   const handleSubmit = async () => {
+    
     const payload:any={
         ...formData,
 password:formData.password,

@@ -37,7 +37,7 @@ export default function HomePage() {
   }, [dispatch]);
 
   if (
-    (userLogin?.isGoogle === true || userLogin?.isProfile === undefined) &&
+    (userLogin?.isGoogle === true) &&
     userLogin?.role === "User"
   ) {
     router.push("/Auth/register");
