@@ -93,7 +93,6 @@ otherStream:formData.otherStream,
  if(userLogin?._id){
     payload._id=userLogin?._id
  }
- console.log(payload,"payloadpayload")
  
   let response:any;
     try {
@@ -102,9 +101,12 @@ otherStream:formData.otherStream,
     }else{
      response = await dispatch(userRegister(payload));
     }
-      if (response?.payload === true) {
+      if (response?.payload == true || response?._id ) {
+        //  router.push("/home");
+        //  router.push("/home");
+         window.location.href="/home"
+
         await dispatch(updateUserProfile)
-         router.push("/home");
         // nextStep();
       } 
     } catch (error) {

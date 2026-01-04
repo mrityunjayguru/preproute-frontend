@@ -76,9 +76,11 @@ const Step1: React.FC<Step1Props> = ({
 if (!/^\d{10}$/.test(phone)) {
   newErrors.phone = "Phone number must be exactly 10 digits";
 }
-
+if(parentPhone){
 if (!/^\d{10}$/.test(parentPhone)) {
   newErrors.parentPhone = "parentPhone number must be exactly 10 digits";
+}
+
 }
 
 
@@ -287,6 +289,9 @@ if (!/^\d{10}$/.test(parentPhone)) {
               onChange={(e) => setParentPhone(e.target.value)}
               className="mt-1 h-[43px] font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all"
             />
+               {errors.parentPhone && (
+              <span className="text-xs text-red-500 mt-1">{errors.parentPhone}</span>
+            )}
           </div>
         </div>
 
