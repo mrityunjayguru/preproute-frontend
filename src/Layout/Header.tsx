@@ -63,7 +63,7 @@ export const Header: React.FC = () => {
     await dispatch(handleLogout(null));
     localStorage.removeItem("token");
     router.push("/home");
-    window.location.reload();
+    // window.location.reload();
   };
 
   const navLinks = [
