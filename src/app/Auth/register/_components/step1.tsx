@@ -103,7 +103,7 @@ if (!/^\d{10}$/.test(parentPhone)) {
         parentPhone: parentPhone || undefined, // Only include if provided
         currentStep: 1,
         password,
-        isGoogle:!userLogin?.isGoogle?true:false
+        isGoogle:userLogin?.isGoogle?true:false
       };
       updateFormData(step1Data);
       
@@ -126,7 +126,7 @@ if (!/^\d{10}$/.test(parentPhone)) {
             <MailIcons />
           </div>
           <h2 className="text-xl sm:text-2xl font-poppins font-medium text-[#1A1D1F]">
-            {userLogin?.isGoogle === false ? "Update Profile" : "Register"}
+            {userLogin?.isGoogle === true ? "Update Profile" : "Register"}
           </h2>
         </div>
 
@@ -182,7 +182,7 @@ if (!/^\d{10}$/.test(parentPhone)) {
             <Input
               placeholder="Enter your email"
               value={email}
-              disabled={userLogin?.isGoogle === false}
+              disabled={userLogin?.isGoogle === true}
               onChange={(e) => setEmail(e.target.value)}
               className={`mt-1 h-[43px] font-dm-sans rounded-[2px] border-[#E6E6E6] focus:border-[#FF5635] transition-all
                 ${errors.email ? "border-red-500" : ""}`}
@@ -192,7 +192,7 @@ if (!/^\d{10}$/.test(parentPhone)) {
             )}
           </div>
           {/* Password */}
-          {userLogin?.isGoogle==false?(null):(<div>
+          {userLogin?.isGoogle==true?(null):(<div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
               Password<span className="text-[#FF5635]">*</span>
             </Label>
@@ -208,7 +208,7 @@ if (!/^\d{10}$/.test(parentPhone)) {
               <span className="text-xs text-red-500 mt-1">{errors.email}</span>
             )}
           </div>)}
-          {userLogin?.isGoogle==false?(null):(<div>
+          {userLogin?.isGoogle==true?(null):(<div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
               Confirm Password<span className="text-[#FF5635]">*</span>
             </Label>
