@@ -1,11 +1,14 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import PREPBANNER from "@/assets/vectors/prep-banner.svg"
+import PREPBANNER from "@/assets/images/IPMAT2026.svg"
+import { useRouter } from "next/navigation";
 
 type Props = {}
 
 const FeatureSection = (props: Props) => {
+    const router = useRouter();
+  
   return (
     <>
         <motion.div
@@ -16,7 +19,7 @@ const FeatureSection = (props: Props) => {
           className=" my-14 sm:my-24 lg:my-32 px-6 sm:px-8 md:px-12 lg:px-28
           text-center rounded-2xl sm:rounded-3xl "
         >
-          <Image
+          <Image onClick={()=>router.push("/Exam/Mocks")}
           src={PREPBANNER} 
           alt='prep-banner'
           className='w-full'

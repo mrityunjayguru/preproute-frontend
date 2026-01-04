@@ -174,9 +174,9 @@ export const Header: React.FC = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-{token?( <Link href="/analytics" className={isActive("/analytics") ? activeClass : inactiveClass}>
+       <Link href="/analytics" className={isActive("/analytics") ? activeClass : inactiveClass}>
                 Analytics
-              </Link>):(null)}
+              </Link>
             
           </nav>
         </div>

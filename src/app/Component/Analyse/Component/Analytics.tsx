@@ -9,7 +9,9 @@ function Analytics() {
   const dispatch = useDispatch<AppDispatch>();
   const data = useSelector((state: any) => state?.user?.AttemptedExam || []);
   const router = useRouter();
-
+  const examTypeMocks = useSelector((s: any) => s.exam?.exam) || [];
+  
+console.log(examTypeMocks,"examdataexamdataexamdata")
   const fetchData = async () => {
     try {
       const payload: any = {};
@@ -32,6 +34,7 @@ const payload:any={
       router.push("/Exam/result");
     // You can navigate or open modal here
   };
+
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">

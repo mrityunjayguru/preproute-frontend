@@ -15,6 +15,11 @@ import FEATURE1 from "@/assets/vectors/analytics-vector.svg";
 import FEATURE2 from "@/assets/vectors/compete-vector.svg";
 import FEATURE3 from "@/assets/vectors/content-vector.svg";
 import FEATURE4 from "@/assets/vectors/exam-vector.svg";
+import img1 from "@/assets/images/compete.jpg"
+import img2 from "@/assets/images/expert.jpg"
+import img3 from "@/assets/images/analytics.jpg"
+import img4 from "@/assets/images/realexam.jpg"
+
 
 type Props = {};
 
@@ -22,28 +27,28 @@ const FEATURES = [
   {
     value: "exam",
     label: "Real Exam Simulation",
-    screen: "/mockup/exam.png",
+    screen:img4,
     vector: FEATURE4,
     description: "Take mock tests in real exam-like conditions.",
   },
   {
     value: "analytics",
     label: "Smart Analytics Dashboard",
-    screen: "/mockup/analytics.png",
+    screen: img3,
     vector: FEATURE1,
     description: "Track performance with detailed analytics.",
   },
   {
     value: "content",
     label: "Expert Curated Content",
-    screen: "/mockup/content.png",
+    screen: img2,
     vector: FEATURE3,
     description: "Practice with expert-curated questions.",
   },
   {
     value: "compete",
     label: "Compete With Peers",
-    screen: "/mockup/compete.png",
+    screen: img1,
     vector: FEATURE2,
     description: "Compare scores and rankings with peers.",
   },

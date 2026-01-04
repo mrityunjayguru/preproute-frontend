@@ -257,3 +257,22 @@ export const userProfileData = createAsyncThunk<boolean, Payload>(
     }
   }
 );
+
+
+
+export const setQuestionPaperResult = createAsyncThunk<boolean, Payload>(
+  "topic/get", // ✅ action type string must be a string, not a variable
+  async (payload, thunkAPI) => {
+    try {
+      // Dispatch your synchronous action
+        // thunkAPI.dispatch(setAttemptedExam(data.data.data));
+        thunkAPI.dispatch(setResult(payload));
+      // Return success flag
+      return true;
+    } catch (err: any) {
+      console.error("Error in updaquesPaperTime:", err);
+      // Properly reject the thunk if something fails
+      return thunkAPI.rejectWithValue(false) as any;
+    }
+  }
+);

@@ -13,7 +13,7 @@ export default function UserLayout({ children }: { children: ReactNode }) {
 
   // Hide header on exam flows and Auth pages; footer always shown per request
   const isExamPage =
-    pathname === "/Exam/userExam" || pathname === "/Exam/InstructionPaeg";
+    pathname === "/Exam/userExam" || pathname === "/Exam/Instruction";
   const isAuthPage = pathname?.startsWith("/Auth");
   const hideChrome = isExamPage || isAuthPage;
 

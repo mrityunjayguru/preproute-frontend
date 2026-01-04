@@ -272,7 +272,6 @@ export default function MergedExamPage() {
       }
     }
   }, [isMock, examdata]);
-console.log(examById,"examByIdexamByIdexamById")
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">

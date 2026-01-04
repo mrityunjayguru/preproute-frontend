@@ -29,8 +29,8 @@ function Analytics() {
     useSelector((state: any) => state?.examType?.examDetail) || [];
   const [selectedExamTypeId, setSelectedExamTypeId] = useState<string>("");
   const [selectedExamId, setSelectedExamId] = useState<string>("");
-  const [selectedYearOrNumber, setSelectedYearOrNumber] = useState<string>("2004");
-
+  const [selectedYearOrNumber, setSelectedYearOrNumber] = useState<string>("");
+  const commonexam=useSelector((state:any)=>state?.exam?.exam)
   const getData = async () => {
     const payload: any = {};
     await dispatch(getTopic(payload));
@@ -49,30 +49,19 @@ function Analytics() {
     if (!selectedExamTypeId) return;
     dispatch(getExamBeExamTypeId({ examTypeId: selectedExamTypeId } as any));
     setSelectedExamId("");
-    setSelectedYearOrNumber("2005");
+    setSelectedYearOrNumber("");
   }, [dispatch, selectedExamTypeId]);
 
-  console.log(examList,"examListexamListexamList")
   useEffect(() => {
     const fetchResult = async () => {
       if (selectedExamId && userLogin?._id) {
-        const selectedExam = examList.find(
-          (e: any) => e?._id === selectedExamId
-        );
-        const hasYears =
-          (selectedExam?.years && selectedExam.years.length > 0) ||
-          (selectedExam?.year && selectedExam.year.length > 0);
-
-        if (hasYears && !selectedYearOrNumber) return;
-
+if(!selectedExamTypeId && !selectedExamId && selectedYearOrNumber=="") return
         const payload: any = {
           userId: userLogin._id,
-          questionPaperId: selectedExamId,
+          selectedExamTypeId:selectedExamTypeId,
+          selectedExamId: selectedExamId,
+          selectedquestion:selectedYearOrNumber
         };
-        if (selectedYearOrNumber) {
-          payload.year = selectedYearOrNumber;
-        }
-
         await dispatch(QuestionPaperResult(payload));
       }
     };
@@ -128,9 +117,9 @@ function Analytics() {
                 </SelectTrigger>
 
                 <SelectContent>
-                  {examList.map((ex: any) => (
+                  {commonexam.map((ex: any) => (
                     <SelectItem key={ex?._id} value={ex?._id}>
-                      {ex?.questionPapername || ex?.questionPapername }
+                      {ex?.examname || ex?.examname }
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -139,7 +128,7 @@ function Analytics() {
 
             <div className="space-y-2">
               <p className="text-xs font-medium text-gray-900 font-poppins">
-                Year / Number
+                Question Paper
               </p>
               <Select
                 value={selectedYearOrNumber}
@@ -150,9 +139,9 @@ function Analytics() {
                 </SelectTrigger>
 
                 <SelectContent>
-                  {yearOrNumberOptions.map((opt: any) => (
-                    <SelectItem key={String(opt)} value={String(opt)}>
-                      {String(opt)}
+                  {examList.map((val: any) => (
+                   <SelectItem key={val?._id} value={val?._id}>
+                      {val?.questionPapername || val?.questionPapername }
                     </SelectItem>
                   ))}
                 </SelectContent>

@@ -23,12 +23,12 @@ const PRICING_UI = [
   {
     isPopular: false,
     comingSoon: false,
-    subtitle: "CORE",
+    // subtitle: "CORE",
   },
   {
     isPopular: true,
     comingSoon: false,
-    subtitle: "Full Access",
+    // subtitle: "Full Access",
     badge: "Popular Plan",
   },
   {
@@ -323,20 +323,7 @@ if(result?.payload.status==false){
                       <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-4 sm:my-6" />
                       {/* BUTTON */}
                       <div className="w-full px-4 sm:px-6 pb-4 sm:pb-6 mt-auto flex justify-center items-center flex-col">
-                        <button
-                          onClick={() => handleCreatePayment(plan)}
-                          disabled={plan.alreadyPurchased}
-                          className={`w-full sm:w-fit py-3 sm:py-3.5 px-8 sm:px-16 rounded-[8px] font-poppins text-sm sm:text-base transition-colors ${
-                            plan.alreadyPurchased
-                              ? "bg-gray-400 text-white cursor-not-allowed"
-                              : "bg-[#FF5635] hover:bg-[#e14c2f] text-white cursor-pointer"
-                          }`}
-                        >
-                          {plan.alreadyPurchased
-                            ? "Get Started"
-                            : "Get Started"}
-                        </button>
-<div className="relative w-full my-2">
+                        <div className="relative w-full my-2">
   <input
     type="text"
     placeholder="Have a coupon code"
@@ -361,16 +348,30 @@ if(result?.payload.status==false){
   </button>
 </div>
 {couponErrors[plan._id] && (
-  <p className="text-red-500 text-sm">
+  <p className="text-red-500 py-1 text-sm">
     {couponErrors[plan._id]}
   </p>
 )}
 
 {discountAmounts[plan._id] && (
-  <p className="text-green-600 text-sm">
+  <p className="text-green-600  py-1 text-sm">
     Discount Applied: ₹{discountAmounts[plan._id]}
   </p>
 )}
+                        <button
+                          onClick={() => handleCreatePayment(plan)}
+                          disabled={plan.alreadyPurchased}
+                          className={`w-full sm:w-fit py-3 sm:py-3.5 px-8 sm:px-16 rounded-[8px] font-poppins text-sm sm:text-base transition-colors ${
+                            plan.alreadyPurchased
+                              ? "bg-gray-400 text-white cursor-not-allowed"
+                              : "bg-[#FF5635] hover:bg-[#e14c2f] text-white cursor-pointer"
+                          }`}
+                        >
+                          {plan.alreadyPurchased
+                            ? "Get Started"
+                            : "Get Started"}
+                        </button>
+
 
 
 

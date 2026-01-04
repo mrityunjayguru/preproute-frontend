@@ -23,6 +23,7 @@ import WhatsAppSocialApp from "./_componets/whatsapp-socialmedia";
 
 import heroImage from "@/assets/vectors/hero-vectore/mast-image.svg";
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg"
+import { fetchAttemptedExam, QuestionPaperResult, setQuestionPaperResult } from "@/api/Users";
 
 export default function HomePage() {
   const router = useRouter();
@@ -32,6 +33,9 @@ export default function HomePage() {
   useEffect(() => {
     const payload: any = null;
     dispatch(resetQuestionByExamID(payload));
+      // dispatch(fetchAttemptedExam(payload));
+     dispatch(setQuestionPaperResult(payload));
+      
     dispatch(resetQuestion(payload));
     dispatch(handleSelectedExamType(payload));
   }, [dispatch]);
@@ -141,7 +145,7 @@ useEffect(() => {
 
             {/* Text */}
             <p className="mt-2 text-sm sm:text-base md:text-lg lg:text-xl leading-snug text-white/95">
-              Elevate Your Exam Preparation
+             Take Your Exam Preparation 
               <br className="hidden sm:block" />
               to the Next Level
             </p>
