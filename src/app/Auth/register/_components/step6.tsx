@@ -73,7 +73,7 @@ const Step6: React.FC<Step6Props> = ({
     // };
 
   const handleSubmit = async () => {
-    
+
     const payload:any={
         ...formData,
 password:formData.password,
@@ -186,7 +186,7 @@ otherStream:formData.otherStream,
                        Back
                     </Button>
                     <Button
-                        disabled={selectedSources.length === 0}
+                        disabled={selectedSources.length === 0 || selectedSources.includes("Other") && otherSource==""}
                         onClick={handleSubmit}
                         className="h-[43px] w-full max-w-[320px] bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins rounded-[2px] shadow-sm shadow-[#FF5635]/20 transition-all active:scale-95 cursor-pointer"
                     >
