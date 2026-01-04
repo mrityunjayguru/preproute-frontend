@@ -104,9 +104,10 @@ otherStream:formData.otherStream,
       if (response?.payload == true || response?._id ) {
         //  router.push("/home");
         //  router.push("/home");
+        await dispatch(updateUserProfile)
+
          window.location.href="/home"
 
-        await dispatch(updateUserProfile)
         // nextStep();
       } 
     } catch (error) {
