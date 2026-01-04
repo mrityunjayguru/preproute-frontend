@@ -19,7 +19,7 @@ const FeatureSection = (props: Props) => {
           className=" my-14 sm:my-24 lg:my-32 px-6 sm:px-8 md:px-12 lg:px-28
           text-center rounded-2xl sm:rounded-3xl "
         >
-          <Image onClick={()=>router.push("/Exam/Mocks")}
+          <Image onClick={()=>router.push("/PlanandPricing")}
           src={PREPBANNER} 
           alt='prep-banner'
           className='w-full'
