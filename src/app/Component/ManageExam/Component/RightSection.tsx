@@ -19,6 +19,7 @@ interface Props {
   currentQuestionIndex: number;
   getQuestionByNumberId: (idx: number) => void;
   isSection: boolean;
+   handleSubmit: () => void;
   selectedSection: any;
   isTimeUp: boolean;
 }
@@ -28,6 +29,7 @@ const RightSection: React.FC<Props> = ({
   totalNoOfQuestions,
   currentStatus,
   currentQuestionIndex,
+  handleSubmit,
   getQuestionByNumberId,
   isSection,
   selectedSection,
@@ -76,7 +78,7 @@ const RightSection: React.FC<Props> = ({
       "
     >
       {/* ================= USER PROFILE ================= */}
-      <div className="bg-[#F9FAFC] rounded-[8px] border border-[#E6F4FF]">
+      <div className="bg-[#F9FAFC] rounded-[8px] border border-[#E6F4FF] flex-shrink-0">
         {userLogin && (
           <>
             <div className="flex items-center bg-[#F9FAFC] p-4 rounded-[8px]">
@@ -128,17 +130,15 @@ const RightSection: React.FC<Props> = ({
           border
           bg-[#F9FAFC]
           border-[#C8DCFE]
-          flex flex-col
-          flex-1
-          min-h-0
+          flex flex-col flex-1 
         "
       >
         {/* Header */}
-        <div className="bg-[#005EB6] text-white py-2 px-3 rounded-t-[8px]">
+        <div className="bg-[#005EB6] text-white py-2 px-3 rounded-t-[8px] flex-shrink-0">
           <h3 className="text-md font-normal font-dm-sans">{sectionName}</h3>
         </div>
 
-        <p className="text-sm text-gray-700 px-3 py-2 font-poppins font-normal">
+        <p className="text-sm text-gray-700 px-3 py-2 font-poppins font-normal flex-shrink-0">
           Choose an option
         </p>
 
@@ -202,7 +202,16 @@ const RightSection: React.FC<Props> = ({
             })}
           </div>
         </div>
+       
       </div>
+      <div className="mt-6 flex justify-center px-3 pb-4 items-center flex-shrink-0">
+       <Button
+          onClick={handleSubmit}
+          className="w-fit py-4 sm:py-5 md:py-6 px-8 sm:px-10 md:px-12 font-normal text-sm sm:text-md cursor-pointer font-poppins bg-[#00ACEF] hover:bg-[#0095cc] text-white rounded-[4px]"
+        >
+          Submit Exam
+        </Button>
+        </div>
     </aside>
   );
 };
