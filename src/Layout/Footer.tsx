@@ -29,7 +29,7 @@ export const Footer = () => {
         onSubmit={submitReport}
         question="kkkkkkk"
       />
-      <footer className="w-full font-dm-sans bg-transparent py-4 text-xs text-gray-500 z-20">
+      <footer className="w-full  font-dm-sans bg-transparent py-4 text-xs text-gray-500 z-20 sticky bottom-0">
         <div className="container mx-auto px-6 sm:px-8 md:px-12 lg:px-28 flex flex-col  sm:flex-row justify-between items-center">
           <div className="mb-2 sm:mb-0">
             A product of{" "}

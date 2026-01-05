@@ -24,8 +24,8 @@ const FooterActions: React.FC<Props> = ({
   loder,
 }) => {
   return (
-    <div className="w-full bg-white px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28 py-3">
-      <div className=" flex flex-wrap items-center justify-center md:justify-between gap-2 sm:gap-3">
+    <div className="w-full bg-white px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28 py-3 fixed md:static bottom-0 left-0 right-0 z-40 border-t">
+      <div className=" flex flex-wrap items-center justify-between gap-2 sm:gap-3">
         {/* LEFT ACTIONS */}
         <div className="flex gap-2 flex-wrap justify-center">
           <Button
@@ -44,7 +44,6 @@ const FooterActions: React.FC<Props> = ({
             Clear Response
           </Button>
         </div>
-
         {/* CENTER ACTIONS */}
         <div className="flex gap-2 sm:gap-3 flex-wrap font-poppins font-medium justify-center">
           <Button
@@ -73,12 +72,12 @@ const FooterActions: React.FC<Props> = ({
         </div>
 
         {/* RIGHT ACTION */}
-        <Button
+        {/* <Button
           onClick={handleSubmit}
           className=" py-4 sm:py-5 md:py-6 px-8 sm:px-10 md:px-12 font-normal text-sm sm:text-md cursor-pointer font-poppins bg-[#00ACEF] hover:bg-[#0095cc] text-white rounded-[4px]"
         >
           Submit Exam
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

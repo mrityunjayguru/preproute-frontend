@@ -22,9 +22,10 @@ useEffect(()=>{
   }
 })
   return (
-    <div className="pb-20"> {/* padding-bottom to avoid hidden content behind fixed nav */}
+    <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mb-8"> {/* padding-bottom to avoid hidden content behind fixed nav */}
+   
       {/* Top Navigation Tabs */}
-      <div className="topnav">
+      {/* <div className="topnav">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -34,10 +35,10 @@ useEffect(()=>{
             {tab.label}
           </button>
         ))}
-      </div>
+      </div> */}
 
       {/* Tab Content */}
-      <div className="p-4">
+      <div >
         {/* {activeTab === 'Discount' && <CouponManager />} */}
         {activeTab === 'Discount' && <DiscountForm />}
       </div>

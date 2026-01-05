@@ -56,11 +56,9 @@ const blogPosts = [
   },
 ];
 
-
-
 const BlogPage = () => {
-  const dispatch=useDispatch<AppDispatch>()
-    const data = useSelector((state: any) => state?.blog?.Blog || []);
+  const dispatch = useDispatch<AppDispatch>();
+  const data = useSelector((state: any) => state?.blog?.Blog || []);
   const [searchQuery, setSearchQuery] = useState("");
   const filteredPosts = blogPosts.filter((post) =>
     post.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -90,7 +88,7 @@ const BlogPage = () => {
             <div className="hidden md:block">
               <Image src={STUDENTREAD} alt="student" className="w-48 h-auto" />
             </div>
-            
+
             {/* Overlapping Search Bar */}
             <div className="absolute bottom-8 left-1/2 md:left-auto md:right-8 -translate-x-1/2 md:translate-x-0 translate-y-1/2 w-[90%] md:w-96 bg-white rounded-full flex items-center px-4 py-3 border border-gray-100">
               <Search className="w-5 h-5 text-gray-400 mr-2" />
@@ -105,17 +103,21 @@ const BlogPage = () => {
 
           {/* Blog Posts Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {data.map((post:any) => (
-              <Link key={post._id} href={`/blog/single-blog/${post._id}`} className="hover:underline-none">
-                <div className="overflow-hidden cursor-pointer">
+            {data.map((post: any) => (
+              <Link 
+                key={post._id}
+                href={`/blog/single-blog/${post._id}`}
+                className="group hover:underline-none"
+              >
+                <div className="cursor-pointer">
                   {/* Blog Image */}
-                  <div className="relative rounded-lg w-full h-48 md:h-60 overflow-hidden bg-gray-100">
+                  <div className="relative rounded-lg w-full h-48 md:h-60 overflow-hidden  transition-shadow duration-300 group-hover:shadow-md">
                     <Image
                       src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${post.image}`}
                       alt={post.title}
                       fill
-                      className="object-cover hover:scale-105 transition-transform duration-300"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-contain transition-transform duration-300"
+                      
                     />
                   </div>
 

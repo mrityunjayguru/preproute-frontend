@@ -4,7 +4,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { addcoupon, getcoupon, setUpdatecoupon, updatecoupon } from "@/api/coupon";
+import {
+  addcoupon,
+  getcoupon,
+  setUpdatecoupon,
+  updatecoupon,
+} from "@/api/coupon";
 import { getPlanandPricing } from "@/api/Plan&Pricing";
 
 interface CouponFormData {
@@ -36,7 +41,7 @@ function CouponForm() {
     (state: any) => state?.coupon?.updateCoupon
   );
   const [planId, setplanId] = useState<string>("");
-console.log(updatecouponRecord,"updatecouponRecordupdatecouponRecord")
+  console.log(updatecouponRecord, "updatecouponRecordupdatecouponRecord");
   const {
     register,
     handleSubmit,
@@ -66,23 +71,21 @@ console.log(updatecouponRecord,"updatecouponRecordupdatecouponRecord")
   /* ================= Edit Mode ================= */
   useEffect(() => {
     if (!updatecouponRecord) {
-    reset({
-      discountCode: "",
-      discountValue: 0,
-      discountStart: "",
-      discountEnd: "",
-    });
-    setplanId("");
-    return;
-  }
+      reset({
+        discountCode: "",
+        discountValue: 0,
+        discountStart: "",
+        discountEnd: "",
+      });
+      setplanId("");
+      return;
+    }
     if (updatecouponRecord) {
       reset({
         discountCode: updatecouponRecord.discountCode || "",
         discountValue: updatecouponRecord.discountValue || 0,
-        discountStart:
-          updatecouponRecord.discountStart?.slice(0, 10) || "",
-        discountEnd:
-          updatecouponRecord.discountEnd?.slice(0, 10) || "",
+        discountStart: updatecouponRecord.discountStart?.slice(0, 10) || "",
+        discountEnd: updatecouponRecord.discountEnd?.slice(0, 10) || "",
       });
       setplanId(updatecouponRecord.planId || "");
     }
@@ -95,61 +98,65 @@ console.log(updatecouponRecord,"updatecouponRecordupdatecouponRecord")
         ...data,
         planId,
       };
-let responce:any;
+      let responce: any;
       if (updatecouponRecord?._id) {
-       responce= await dispatch(
+        responce = await dispatch(
           updatecoupon({
             ...payload,
             _id: updatecouponRecord._id,
           })
         );
       } else {
-       responce= await dispatch(addcoupon(payload));
+        responce = await dispatch(addcoupon(payload));
       }
-const payload1:any=null
+      const payload1: any = null;
       await dispatch(setUpdatecoupon(payload1));
-      if(responce.payload==true){
-          reset();
-         setplanId("");
-        fetchCoupons()
+      if (responce.payload == true) {
+        reset();
+        setplanId("");
+        fetchCoupons();
       }
-    
     } catch (error) {
       console.error("Failed to add/update coupon:", error);
     }
   };
 
-  const handleplanIdTypeChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleplanIdTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setplanId(e.target.value);
   };
 
   return (
-    <div className="w-[70%]">
-      <h2 className="text-gray-700 font-semibold mb-4">
-        {updatecouponRecord ? "Update Coupon" : "Create Coupon"}
-      </h2>
+    <div className="">
+      <div className="bg-[#F0F9FF] rounded-lg px-8 py-6 text-start font-poppins font-medium mb-3">
+        <h1 className="text-[#FF5635] text-2xl f font-poppins">
+          {updatecouponRecord ? "Update Coupon" : "Create Coupon"}
+        </h1>
+      </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="grid grid-cols-2 gap-4"
+        className="grid grid-cols-2 gap-4 space-y-4 max-w-md"
       >
         <div className="col-span-2">
-          <input
-            type="text"
-            placeholder="Enter Discount Code"
-            {...register("discountCode")}
-            className="border p-2 rounded w-full"
-          />
-          {errors.discountCode && (
-            <p className="text-red-500 text-sm">
-              {errors.discountCode.message}
-            </p>
-          )}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Discount Code</label>
+
+            <input
+              type="text"
+              placeholder="Enter Discount Code"
+              {...register("discountCode")}
+              className="w-full border border-[#EBEBEB] rounded px-3 py-2 text-[#585859] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            {errors.discountCode && (
+              <p className="text-red-500 text-sm">
+                {errors.discountCode.message}
+              </p>
+            )}
+          </div>
         </div>
 
-        <div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Plan ID</label>
           <select
             value={planId}
             onChange={handleplanIdTypeChange}
@@ -164,12 +171,13 @@ const payload1:any=null
           </select>
         </div>
 
-        <div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Discount Value</label>
           <input
             type="number"
             placeholder="Discount Value"
             {...register("discountValue")}
-            className="border p-2 rounded w-full"
+            className="w-full border border-[#EBEBEB] rounded px-3 py-2 text-[#585859] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
           {errors.discountValue && (
             <p className="text-red-500 text-sm">
@@ -178,26 +186,28 @@ const payload1:any=null
           )}
         </div>
 
-        <div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Discount Start Date</label>
           <input
             type="date"
             {...register("discountStart")}
-            className="border p-2 rounded w-full"
+            className="w-full border border-[#EBEBEB] rounded px-3 py-2 text-[#585859] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
 
-        <div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Discount End Date</label>
           <input
             type="date"
             {...register("discountEnd")}
-            className="border p-2 rounded w-full"
+            className="w-full border border-[#EBEBEB] rounded px-3 py-2 text-[#585859] text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="col-span-2 mt-4 px-6 py-2 bg-black text-lime-400 font-semibold rounded disabled:opacity-50"
+          className="bg-[#FF5635] text-white px-4 py-2 rounded hover:bg-orange-600 cursor-pointer"
         >
           {isSubmitting
             ? "Submitting..."

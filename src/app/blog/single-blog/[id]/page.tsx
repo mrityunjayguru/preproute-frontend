@@ -56,11 +56,11 @@ const blogPosts = [
 ];
 
 const SingleBlog = () => {
-      const data = useSelector((state: any) => state?.blog?.Blog || []);
-  
+  const data = useSelector((state: any) => state?.blog?.Blog || []);
+
   const params = useParams();
-  const id = params?.id 
-  const post = data.find((p:any) => p._id === id);
+  const id = params?.id;
+  const post = data.find((p: any) => p._id === id);
   if (!post) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
@@ -77,7 +77,7 @@ const SingleBlog = () => {
   }
 
   // Generate related posts (excluding current one, take first 2)
-  const relatedPosts = blogPosts.filter((p:any) => p.id !== id).slice(0, 2);
+  const relatedPosts = blogPosts.filter((p: any) => p.id !== id).slice(0, 2);
 
   return (
     <div className="min-h-screen bg-white">
@@ -102,12 +102,11 @@ const SingleBlog = () => {
         </div>
 
         {/* Main Content Area */}
-        <div className="mt-8 md:mt-12 max-w-5xl mx-auto">
+        <div className=" md:mt-12 max-w-5xl mx-auto">
           {/* Featured Image */}
           <div className="relative w-full h-[200px] md:h-[300px] lg:h-[300px] rounded-2xl overflow-hidden mb-10">
             <Image
-             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${post.image}`}
-
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${post.image}`}
               alt={post.title}
               fill
               className="object-cover"
@@ -116,18 +115,15 @@ const SingleBlog = () => {
           </div>
 
           {/* Blog Text Content */}
-        <div className="prose prose-lg max-w-none font-dm-sans text-[#333333] space-y-6">
-  <div
-    dangerouslySetInnerHTML={{ __html: post.description }}
-  />
-</div>
-
+          <div className="prose prose-lg max-w-none font-dm-sans text-[#333333] space-y-6">
+            <div dangerouslySetInnerHTML={{ __html: post.description }} />
+          </div>
         </div>
 
         {/* Related Posts Section */}
-       <BlogCarousel data={data} />
-
-
+        <div className="">
+        <BlogCarousel data={data} />
+        </div>
       </div>
       <section className=" bg-[#FF5635] text-white px-6 sm:px-10 lg:px-12 xl:px-16 mt-16 py-2 sm:py-5 lg:py-6 xl:py-8">
         <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-8 px-6 sm:px-8 md:px-12 lg:px-28">

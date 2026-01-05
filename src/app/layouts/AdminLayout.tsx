@@ -9,7 +9,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     <div className="flex flex-col max-h-screen">
       <DashboardHeader />
       <main className="flex-1">{children}</main>
-      
       <UserFooter />
     </div>
   );
