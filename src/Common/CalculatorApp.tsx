@@ -8,36 +8,50 @@ const performCalculation = (prev, next, op) => {
   if (isNaN(p) || isNaN(n)) return next;
 
   switch (op) {
-    case "+": return (p + n).toString();
-    case "-": return (p - n).toString();
-    case "*": return (p * n).toString();
-    case "/": return n === 0 ? "Error: Div by Zero" : (p / n).toString();
-    default: return next;
+    case "+":
+      return (p + n).toString();
+    case "-":
+      return (p - n).toString();
+    case "*":
+      return (p * n).toString();
+    case "/":
+      return n === 0 ? "Error: Div by Zero" : (p / n).toString();
+    default:
+      return next;
   }
 };
 
-const CalcButton = React.memo(({ label, className, onClick, isMemoryActive }) => (
-  <button
-    onClick={onClick}
-    disabled={label === "MR" && !isMemoryActive}
-    className={`flex items-center justify-center p-3 text-xl font-medium 
-      rounded-md transition duration-150 ease-in-out shadow-sm border 
+const CalcButton = React.memo(
+  ({ label, className, onClick, isMemoryActive } : {
+    label: string,
+    className: string,
+    onClick: () => void,
+    isMemoryActive: boolean,
+  }) => (
+    <>
+      <button
+        onClick={onClick}
+        disabled={label === "MR" && !isMemoryActive}
+        className={`flex items-center justify-center p-3 text-xl font-medium 
+      rounded-md transition duration-150 ease-in-out shadow-sm border-b-4 border-gray-500
       ${className}
-      ${(label === "MR" && !isMemoryActive)
-        ? "opacity-50 cursor-not-allowed"
-        : "hover:bg-gray-200 active:scale-[0.98]"}`}
-  >
-    {label}
-  </button>
-));
+      ${
+        label === "MR" && !isMemoryActive
+          ? "opacity-50 cursor-not-allowed"
+          : " active:scale-[0.98] font-dm-sans"
+      }`}
+      >
+        {label}
+      </button>
+    </>
+  )
+);
 
 const CalculatorApp = ({ onClose, initialPosition }) => {
-
   // -------------------- DRAG LOGIC --------------------
   const [dragging, setDragging] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-const [position, setPosition] = useState(initialPosition);
-
+  const [position, setPosition] = useState(initialPosition);
 
   const handleMouseDown = (e) => {
     setDragging(true);
@@ -131,17 +145,28 @@ const [position, setPosition] = useState(initialPosition);
     (action) => {
       const currentValue = parseFloat(displayValue);
       switch (action) {
-        case "MC": return setMemoryValue(0);
+        case "MC":
+          return setMemoryValue(0);
         case "MR":
           if (isMemoryActive) {
             setDisplayValue(memoryValue.toString());
             setWaitingForSecondOperand(false);
           }
           break;
-        case "MS": setMemoryValue(currentValue); setWaitingForSecondOperand(true); break;
-        case "M+": setMemoryValue((prev) => prev + currentValue); setWaitingForSecondOperand(true); break;
-        case "M-": setMemoryValue((prev) => prev - currentValue); setWaitingForSecondOperand(true); break;
-        default: break;
+        case "MS":
+          setMemoryValue(currentValue);
+          setWaitingForSecondOperand(true);
+          break;
+        case "M+":
+          setMemoryValue((prev) => prev + currentValue);
+          setWaitingForSecondOperand(true);
+          break;
+        case "M-":
+          setMemoryValue((prev) => prev - currentValue);
+          setWaitingForSecondOperand(true);
+          break;
+        default:
+          break;
       }
     },
     [displayValue, isMemoryActive, memoryValue]
@@ -154,7 +179,9 @@ const [position, setPosition] = useState(initialPosition);
         setDisplayValue(String(digit));
         setWaitingForSecondOperand(false);
       } else {
-        setDisplayValue(displayValue === "0" ? String(digit) : displayValue + digit);
+        setDisplayValue(
+          displayValue === "0" ? String(digit) : displayValue + digit
+        );
       }
     },
     [displayValue, waitingForSecondOperand, clearCalculator]
@@ -205,7 +232,8 @@ const [position, setPosition] = useState(initialPosition);
   );
 
   const handleEquals = useCallback(() => {
-    if (previousValue == null || operator == null || waitingForSecondOperand) return;
+    if (previousValue == null || operator == null || waitingForSecondOperand)
+      return;
     const result = performCalculation(previousValue, displayValue, operator);
     setDisplayValue(result);
     setPreviousValue(null);
@@ -214,38 +242,147 @@ const [position, setPosition] = useState(initialPosition);
   }, [displayValue, operator, previousValue, waitingForSecondOperand]);
 
   const buttons = [
-    { label: "MC", className: "bg-gray-300 text-gray-700 cursor-pointer", action: () => handleMemory("MC") },
-    { label: "MR", className: "bg-gray-300 text-gray-700 cursor-pointer", action: () => handleMemory("MR"), isMemoryActive },
-    { label: "MS", className: "bg-gray-300 text-gray-700 cursor-pointer", action: () => handleMemory("MS") },
-    { label: "M+", className: "bg-gray-300 text-gray-700 cursor-pointer", action: () => handleMemory("M+") },
-    { label: "M-", className: "bg-gray-300 text-gray-700 cursor-pointer", action: () => handleMemory("M-") },
+    {
+      label: "MC",
+      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
+      action: () => handleMemory("MC"),
+    },
+    {
+      label: "MR",
+      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
+      action: () => handleMemory("MR"),
+      isMemoryActive,
+    },
+    {
+      label: "MS",
+      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
+      action: () => handleMemory("MS"),
+    },
+    {
+      label: "M+",
+      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
+      action: () => handleMemory("M+"),
+    },
+    {
+      label: "M-",
+      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
+      action: () => handleMemory("M-"),
+    },
 
-    { label: "←", className: "bg-red-500 text-white font-bold cursor-pointer", action: handleBackspace },
-    { label: "C", className: "bg-red-500 text-white font-bold cursor-pointer", action: clearCalculator },
-    { label: "±", className: "bg-red-500 text-white font-bold cursor-pointer", action: toggleSign },
-    { label: "√", className: "bg-gray-300 text-gray-700 cursor-pointer", action: handleSquareRoot },
-    { label: "%", className: "bg-gray-300 text-gray-700 cursor-pointer", action: inputPercent },
+    {
+      label: "←",
+      className: "bg-red-500 text-white font-bold cursor-pointer font-dm-sans border-b border-red-400 hover:bg-red-400",
+      action: handleBackspace,
+    },
+    {
+      label: "C",
+      className: "bg-red-500 text-white font-bold cursor-pointer font-dm-sans border-b border-red-400 hover:bg-red-400",
+      action: clearCalculator,
+    },
+    {
+      label: "±",
+      className: "bg-red-500 text-white font-bold cursor-pointer font-dm-sans border-b border-red-400 hover:bg-red-400",
+      action: toggleSign,
+    },
+    {
+      label: "√",
+      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
+      action: handleSquareRoot,
+    },
+    {
+      label: "%",
+      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
+      action: inputPercent,
+    },
 
-    { label: "7", className: "bg-white text-gray-900 font-bold cursor-pointer", action: () => inputDigit(7) },
-    { label: "8", className: "bg-white text-gray-900 font-bold cursor-pointer", action: () => inputDigit(8) },
-    { label: "9", className: "bg-white text-gray-900 font-bold cursor-pointer", action: () => inputDigit(9) },
-    { label: "/", className: "bg-gray-300 text-gray-700 cursor-pointer", action: () => handleOperator("/") },
-    { label: "1/x", className: "bg-gray-300 text-gray-700 cursor-pointer", action: handleReciprocal },
+    {
+      label: "7",
+      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
+      action: () => inputDigit(7),
+    },
+    {
+      label: "8",
+      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
+      action: () => inputDigit(8),
+    },
+    {
+      label: "9",
+      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
+      action: () => inputDigit(9),
+    },  
+    {
+      label: "/",
+      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
+      action: () => handleOperator("/"),
+    },
+    {
+      label: "1/x",
+      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
+      action: handleReciprocal,
+    },
 
-    { label: "4", className: "bg-white text-gray-900 font-bold cursor-pointer", action: () => inputDigit(4) },
-    { label: "5", className: "bg-white text-gray-900 font-bold cursor-pointer", action: () => inputDigit(5) },
-    { label: "6", className: "bg-white text-gray-900 font-bold cursor-pointer", action: () => inputDigit(6) },
-    { label: "*", className: "bg-gray-300 text-gray-700 cursor-pointer", action: () => handleOperator("*") },
-    { label: "=", className: "bg-green-600 text-white font-bold row-span-2 cursor-pointer", action: handleEquals },
+    {
+      label: "4",
+      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
+      action: () => inputDigit(4),
+    },
+    {
+      label: "5",
+      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
+      action: () => inputDigit(5),
+    },
+    {
+      label: "6",
+      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
+      action: () => inputDigit(6),
+    },
+    {
+      label: "*",
+      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
+      action: () => handleOperator("*"),
+    },
+    {
+      label: "=",
+      className: "bg-green-600 text-white font-bold row-span-2 cursor-pointer font-dm-sans border-b border-green-400 hover:bg-green-500",
+      action: handleEquals,
+    },
 
-    { label: "1", className: "bg-white text-gray-900 font-bold cursor-pointer", action: () => inputDigit(1) },
-    { label: "2", className: "bg-white text-gray-900 font-bold cursor-pointer", action: () => inputDigit(2) },
-    { label: "3", className: "bg-white text-gray-900 font-bold cursor-pointer", action: () => inputDigit(3) },
-    { label: "-", className: "bg-gray-300 text-gray-700 cursor-pointer", action: () => handleOperator("-") },
+    {
+      label: "1",
+      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
+      action: () => inputDigit(1),
+    },
+    {
+      label: "2",
+      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
+      action: () => inputDigit(2),
+    },
+    {
+      label: "3",
+      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200 ",
+      action: () => inputDigit(3),
+    },
+    {
+      label: "-",
+      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
+      action: () => handleOperator("-"),
+    },
 
-    { label: "0", className: "col-span-2 bg-white text-gray-900 font-bold cursor-pointer", action: () => inputDigit(0) },
-    { label: ".", className: "bg-white text-gray-900 font-bold cursor-pointer", action: inputDecimal },
-    { label: "+", className: "bg-gray-300 text-gray-700 cursor-pointer", action: () => handleOperator("+") },
+    {
+      label: "0",
+      className: "col-span-2 bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
+      action: () => inputDigit(0),
+    },
+    {
+      label: ".",
+      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
+      action: inputDecimal,
+    },
+    {
+      label: "+",
+      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
+      action: () => handleOperator("+"),
+    },
   ];
 
   return (
@@ -258,13 +395,12 @@ const [position, setPosition] = useState(initialPosition);
       }}
     >
       <div className="w-full max-w-[450px] font-poppins bg-white shadow-xl border border-gray-300 rounded-lg overflow-hidden">
-
         {/* HEADER (DRAG HANDLE) */}
         <div
           onMouseDown={handleMouseDown}
-          className="flex justify-between items-center bg-[#FF5635] text-white p-2 cursor-move select-none"
+          className="flex justify-between items-center bg-[#005EB6] text-white p-2 cursor-move select-none"
         >
-          <h1 className="text-sm font-medium">Calculator</h1>
+          <h1 className="text-sm font-medium ">Calculator</h1>
           <div className="flex items-center space-x-2">
             {isMemoryActive && (
               <div className="w-5 h-5 text-xs font-bold flex items-center justify-center rounded-sm bg-white text-blue-600">
@@ -273,15 +409,15 @@ const [position, setPosition] = useState(initialPosition);
             )}
             <div
               onClick={onClose}
-              className="w-6 h-6 text-sm flex items-center justify-center rounded-sm bg-red-600 hover:bg-red-700 cursor-pointer"
+              className="w-6 h-6 text-sm flex items-center justify-center rounded-sm bg-white text-black cursor-pointer"
             >
-            <X/>
+              <X />
             </div>
           </div>
         </div>
 
         {/* DISPLAY */}
-        <div className="p-4 bg-gray-200 border-b border-gray-300 font-poppins">
+        <div className="p-4 bg-gray-200 border-b border-gray-300 font-dm-sans">
           <div className="text-gray-500 text-xs h-3 text-right font-mono">
             {isMemoryActive ? "Memory Active" : ""}
           </div>
@@ -293,7 +429,7 @@ const [position, setPosition] = useState(initialPosition);
         </div>
 
         {/* BUTTONS */}
-        <div className="p-4 grid grid-cols-5 gap-1.5 font-poppins">
+        <div className="p-4 grid grid-cols-5 gap-1.5 font-dm-sans">
           {buttons.map((btn) => (
             <CalcButton
               key={btn.label}
@@ -304,7 +440,6 @@ const [position, setPosition] = useState(initialPosition);
             />
           ))}
         </div>
-
       </div>
     </div>
   );
