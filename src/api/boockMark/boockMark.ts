@@ -10,6 +10,7 @@ interface Payload {
 interface boockMarkRepo {
   createboockMark: (payload: Payload) => Promise<AxiosResponse>;
   getboockMark: (payload: Payload) => Promise<AxiosResponse>;
+  getQuestionById: (payload: Payload) => Promise<AxiosResponse>;
 }
 
 export const boockMarkRepo: boockMarkRepo = {
@@ -19,5 +20,7 @@ export const boockMarkRepo: boockMarkRepo = {
     getboockMark(payload) {
     return Repository.post(boockMark.get, payload);
   },
- 
+ getQuestionById(payload) {
+    return Repository.post(boockMark.getQuestionById, payload);
+  },
 };

@@ -79,7 +79,8 @@ export const feedback={
 }
 export const boockMark={
     create:"boockMark/create",
-  get:"boockMark/get"
+  get:"boockMark/get",
+  getQuestionById:"boockMark/bookMarkByid"
 }
 export const exam={
   create:"setUpexam/exam/create",

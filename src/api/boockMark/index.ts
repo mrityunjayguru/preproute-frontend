@@ -89,3 +89,25 @@ export const getboockMark = createAsyncThunk<boolean, boockMarkPayload>(
     }
   }
 );
+
+
+
+
+export const getQuestionById = createAsyncThunk<boolean, boockMarkPayload>(
+  topic.get,
+  async (payload, thunkAPI) => {
+    try {
+      const res = await boockMarkRepo.getQuestionById(payload);
+        return res;
+    } catch (err: any) {
+      if (err?.response?.status === 401) {
+        ToastError("Unauthorized");
+        localStorage.removeItem("token");
+        window.location.href = "/signin";
+      } else {
+        ToastError("Something went wrong");
+      }
+      return false;
+    }
+  }
+);

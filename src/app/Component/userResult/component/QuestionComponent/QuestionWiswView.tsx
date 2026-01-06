@@ -1,11 +1,11 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BlockMath } from "react-katex";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { createboockMark } from "@/api/boockMark";
+import { createboockMark, getQuestionById } from "@/api/boockMark";
 
 interface Option {
   _id: string;
@@ -129,12 +129,26 @@ const QuestionWiswView: React.FC<Props> = ({
     const s = seconds % 60;
     return `${m} Min ${s} Sec`;
   };
-const handlebookMark=async(val:any)=>{
+const handlebookMark=async(val:any,BookmarkStatus:any)=>{
 const payload:any={
-  questionId:val?._id
+  questionId:val?._id,
+  BookmarkStatus
 }
 await dispatch(createboockMark(payload))
+await getData()
 }
+const [status,setStatus]=useState(false)
+
+const getData=async()=>{
+    const payload:any={
+    questionId:question?._id
+  }
+let responce:any=await dispatch(getQuestionById(payload))
+setStatus(responce.payload.data.status)
+}
+useEffect(()=>{
+getData()
+},[question])
   return (
     <div className="flex-1 mt-6 bg-white">
       {/* Status Bar */}
@@ -183,12 +197,20 @@ await dispatch(createboockMark(payload))
           {question.topic || "Topic"} | {question.subtopic || "Subtopic"}
         </h2>
         <div className="flex gap-2">
-          <Button onClick={()=>handlebookMark(question)}
+          {status?( 
+            <Button onClick={()=>handlebookMark(question,"remove")}
+            variant="outline"
+            className="bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] text-[#1E1E1E] font-normal font-poppins cursor-pointer"
+          >
+           Remove Bookmark
+          </Button>
+        ):( <Button onClick={()=>handlebookMark(question,"add")}
             variant="outline"
             className="bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] text-[#1E1E1E] font-normal font-poppins cursor-pointer"
           >
             Bookmark
-          </Button>
+          </Button>)}
+         
           <Button
             variant="outline"
             className="bg-gradient-to-t from-[#FFECDF] to-white border border-[#F0F9FF] font-normal font-poppins cursor-pointer"
