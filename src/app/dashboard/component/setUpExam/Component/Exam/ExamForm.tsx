@@ -12,7 +12,7 @@ import {
   createexam,
   getexam,
   handlesetUpdateExam,
-  handleUpdateExam,
+  handleUpdateExam
 } from "@/api/Exam";
 import { getsection } from "@/api/Section";
 

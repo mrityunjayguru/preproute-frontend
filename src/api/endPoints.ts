@@ -72,6 +72,11 @@ export const User={
 export const Order={
   createOrder:"razorpay/createOrder"
 }
+export const feedback={
+  create:"feedback/create",
+  get:"feedback/get"
+
+}
 export const exam={
   create:"setUpexam/exam/create",
   get:"setUpexam/exam/get",

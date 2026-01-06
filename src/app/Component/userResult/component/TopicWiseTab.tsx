@@ -68,7 +68,6 @@ const TopicWiseTab = ({ data }: TopicWiseTabProps) => {
     const topic = topicData?.find((t: any) => t._id === topicId);
     return topic ? topic.topic : "Unknown Topic";
   };
-
   const sections = useMemo(() => {
     if (!data?.topicData) return [];
     const set = new Set<string>();
@@ -91,19 +90,22 @@ const TopicWiseTab = ({ data }: TopicWiseTabProps) => {
   }, [data?.examdetail?.examDate]);
 
   const filteredData = useMemo(() => {
+    console.log(data.topicData,"data.topicDatadata.topicData")
     if (!data?.topicData) return [];
     return data.topicData
       .map((topic: any) => {
         let details = topic.details || [];
-        if (filterSection !== "All") {
-          details = details.filter((d: any) => d.section === filterSection);
-        }
+        console.log(details,"oooooooooooooooooooooo")
+        // if (filterSection !== "All") {
+        //   details = details.filter((d: any) => d.section == filterSection);
+        //   console.log(details,"ppppppppppppppppppppppp")
+        // }
         if (!details.length) return null;
         return { ...topic, details };
       })
       .filter(Boolean);
   }, [data, filterSection]);
-
+console.log(filteredData,"datadatadatadatadata")
   return (
     <div className="w-full">
       {" "}
@@ -138,8 +140,8 @@ const TopicWiseTab = ({ data }: TopicWiseTabProps) => {
         >
           {" "}
           <option value="All">Section</option>{" "}
-          {sections.map((s) => (
-            <option key={s}>{s}</option>
+          {data?.sectionDetails?.map((s:any) => (
+            <option key={s._id} value={s._id}>{s?.section}</option>
           ))}{" "}
         </select>{" "}
       </div>

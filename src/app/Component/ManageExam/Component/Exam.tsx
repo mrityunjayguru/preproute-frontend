@@ -376,7 +376,7 @@ const examId = examData?.[0]?._id;
 
   const handleClearResponse = async () => {
     const payload: any = {
-      questionPaperId: question?._id,
+      questionPaperId: question,
     };
     await dispatch(clearQuestionResponce(payload));
     setMcqSelected("");

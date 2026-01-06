@@ -20,7 +20,7 @@ const PricingForm = () => {
 
   const topics = useSelector((state: any) => state?.topic?.topic) || [];
   const exam = useSelector((state: any) => state?.exam?.exam) || [];
-
+  const updatedplan=useSelector((state:any)=>state?.palnAndpricing?.updatePlan)
   const updatesubTopic =
     useSelector((state: any) => state?.subTopic?.updatesubTopic) || null;
 
@@ -28,7 +28,7 @@ const PricingForm = () => {
   const [price, setPrice] = useState<string>("");
   const [selected, setSelected] = useState<any[]>([]);
   const [editingId, seteditingId] = useState<string | null>(null);
-
+console.log(updatedplan,"updatedplanupdatedplanupdatedplan")
   // Fetch Topics
   //   const fetchTopics = async () => {
   //     const payload: any = {};
@@ -55,13 +55,24 @@ const PricingForm = () => {
   }, []);
 
   // Prefill form when editing
-  useEffect(() => {
-    if (updatesubTopic && updatesubTopic._id) {
-      setTitle(updatesubTopic.subtopic);
-      setPrice(updatesubTopic.topic?._id || "");
-    }
-  }, [updatesubTopic?._id]);
+useEffect(() => {
+  if (updatedplan && updatedplan._id && exam.length > 0) {
+    setTitle(updatedplan.title);
+    setPrice(updatedplan.price);
 
+    // 🔥 convert examId array → react-select format
+    const selectedOptions = exam
+      .filter((ex: any) => updatedplan.examId.includes(ex._id))
+      .map((ex: any) => ({
+        label: ex.examname,
+        value: ex._id,
+      }));
+
+    setSelected(selectedOptions);
+  }
+}, [updatedplan?._id]);
+
+console.log(selected,"selectedselectedselected")
   // Submit
   const handleSubmit = async () => {
     const examIdArray = selected.map((item: any) => item.value);
@@ -89,6 +100,7 @@ const PricingForm = () => {
     label: topic.examname,
     value: topic._id, // ⭐ ObjectId passed correctly
   }));
+console.log(selected,"")
 
   return (
     <div className=" px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mb-8">

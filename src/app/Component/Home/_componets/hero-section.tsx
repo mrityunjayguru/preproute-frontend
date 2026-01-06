@@ -19,14 +19,15 @@ const HeroSection = ({ logoSrc }: { logoSrc: any }) => {
   };
   // console.log(examTypeData,"examTypeDataexamTypeData")
 
-  const handleIPmatExam = () => {
-    let mockExam = examTypeData.find((item: any) => item.examType === "Mocks");
-    dispatch(handleSelectedExamType(mockExam));
-    const payload: any = null;
-    dispatch(resetQuestionByExamID(payload));
-    dispatch(resetQuestion(payload));
-    router.push("/Exam/Mocks?isMock=true");
-  };
+  const handleIPmatExam=()=>{
+let mockExam=examTypeData.find((item:any)=>item.examType==="Mocks");
+
+  dispatch(handleSelectedExamType(mockExam));
+        const payload: any = null;
+        dispatch(resetQuestionByExamID(payload));
+        dispatch(resetQuestion(payload));
+   router.push("/Exam/Mocks?isMock=true");
+  }
   return (
     <>
       <section className="w-full flex items-center flex-col justify-center">

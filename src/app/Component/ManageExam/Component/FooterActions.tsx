@@ -77,7 +77,7 @@ const FooterActions: React.FC<Props> = ({
           onClick={handleSubmit}
           className=" py-4 sm:py-5 md:py-6 px-8 sm:px-10 md:px-12 font-normal text-sm sm:text-md cursor-pointer font-poppins bg-[#00ACEF] hover:bg-[#0095cc] text-white rounded-[4px]"
         >
-          Submit Exam
+          Submit
         </Button>
       </div>
     </div>

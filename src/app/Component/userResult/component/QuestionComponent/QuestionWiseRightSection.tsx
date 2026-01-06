@@ -48,16 +48,40 @@ const QuestionWiseRightSection: React.FC<Props> = ({
 }) => {
   const totalQuestions = sectionQuestions.length;
 
-  const getStatusIcon = (q: Question) => {
-    if (!q.userAttempt) return NOTVISITED;
-    if (!q.usergiven || q.usergiven.length === 0) return UNANSWERED;
-
-    const isReview = q.usergiven[0]?.review;
-    if (isReview && q.userAttempt) return ANSWEREDANDREVIEW;
-    if (q.userAttempt) return ANSWERED;
-
+const getStatusIcon = (q: any) => {
+  // ❌ Not visited
+  if (!q.userAttempt || !q.usergiven) {
     return NOTVISITED;
-  };
+  }
+
+  // ================= NUMERIC =================
+  if (q.answerType === "Numeric") {
+    const userAns = Number(q.usergiven.numericAnswer);
+    const correctAns = Number(q.numericAnswer);
+
+    if (isNaN(userAns)) return NOTVISITED;
+
+    return userAns === correctAns ? ANSWERED : UNANSWERED;
+  }
+
+  // ================= MCQ =================
+  if (q.answerType === "MCQ") {
+    const userAnswerId = q.usergiven.userAnswer;
+
+    if (!userAnswerId) return NOTVISITED;
+
+    const selectedOption = q.options?.find(
+      (opt: any) => opt._id === userAnswerId
+    );
+
+    if (!selectedOption) return UNANSWERED;
+
+    return selectedOption.isCorrect ? ANSWERED : UNANSWERED;
+  }
+
+  return NOTVISITED;
+};
+
 
   // ⬅️ Previous
   const handlePrev = () => {
@@ -73,7 +97,6 @@ const QuestionWiseRightSection: React.FC<Props> = ({
     }
   };
 
-
   // ✅ Filter only selected section
   // const selectedSectionKey =
   //   selectedSection?.sectionId;
@@ -81,6 +104,7 @@ const QuestionWiseRightSection: React.FC<Props> = ({
   // const selectedSectionQuestions =
   //   groupedData[selectedSectionKey] || [];
   //   const shortingData=selectedSectionQuestions.sort((a,b)=>a.questionNo - b.questionNo)
+  // console.log(sectionQuestions,"sectionQuestionssectionQuestions")
   return (
     <aside className="lg:w-[350px] w-full bg-white py-6 flex-shrink-0 font-poppins px-6 ">
       <div className="bg-[#F8F9FA] rounded-xl p-4 h-fit border-[0.5px] border-[#C8DCFE] overflow-y-auto custom-scrollbar">

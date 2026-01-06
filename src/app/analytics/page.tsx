@@ -32,31 +32,30 @@ function Analytics() {
   const [selectedExamTypeId, setSelectedExamTypeId] = useState<string>("");
   const [selectedExamId, setSelectedExamId] = useState<string>("");
   const [selectedQuestion, setselectedQuestion] = useState<string>("");
-  const commonexam=useSelector((state:any)=>state?.exam?.exam)
-  const givenAllExam=useSelector((state:any)=>state?.exam?.givenAllExam)
+  const commonexam = useSelector((state: any) => state?.exam?.exam);
+  const givenAllExam = useSelector((state: any) => state?.exam?.givenAllExam || []);
   // console.log(givenAllExam,"givenAllExamgivenAllExamgivenAllExam")
   // 1️⃣ Exam Types
-const examTypes = useMemo(() => {
-  return givenAllExam?.map((item: any) => item.examType) || [];
-}, [givenAllExam]);
-// 2️⃣ Exams (based on selected exam type)
-const exams = useMemo(() => {
-  if (!selectedExamTypeId) return [];
+  const examTypes = useMemo(() => {
+    return givenAllExam?.map((item: any) => item.examType) || [];
+  }, [givenAllExam]);
+  // 2️⃣ Exams (based on selected exam type)
+  const exams = useMemo(() => {
+    if (!selectedExamTypeId) return [];
 
-  const found = givenAllExam.find(
-    (item: any) => item.examType._id === selectedExamTypeId
-  );
+    const found = givenAllExam.find(
+      (item: any) => item.examType._id === selectedExamTypeId
+    );
 
-  return found?.exams || [];
-}, [givenAllExam, selectedExamTypeId]);
-// 3️⃣ Question Papers (based on selected exam)
-const questionPapers = useMemo(() => {
-  if (!selectedExamId) return [];
+    return found?.exams || [];
+  }, [givenAllExam, selectedExamTypeId]);
+  // 3️⃣ Question Papers (based on selected exam)
+  const questionPapers = useMemo(() => {
+    if (!selectedExamId) return [];
 
-  const exam = exams.find((ex: any) => ex._id === selectedExamId);
-  return exam?.questionPapers || [];
-}, [exams, selectedExamId]);
-
+    const exam = exams.find((ex: any) => ex._id === selectedExamId);
+    return exam?.questionPapers || [];
+  }, [exams, selectedExamId]);
 
   const getData = async () => {
     const payload: any = {};
@@ -81,12 +80,17 @@ const questionPapers = useMemo(() => {
 
   useEffect(() => {
     const fetchResult = async () => {
-      if (selectedExamId && userLogin?._id && selectedQuestion && selectedExamTypeId) {
+      if (
+        selectedExamId &&
+        userLogin?._id &&
+        selectedQuestion &&
+        selectedExamTypeId
+      ) {
         const payload: any = {
           userId: userLogin._id,
-          selectedExamTypeId:selectedExamTypeId,
+          selectedExamTypeId: selectedExamTypeId,
           selectedExamId: selectedExamId,
-          questionPaperID:selectedQuestion
+          questionPaperID: selectedQuestion,
         };
         await dispatch(QuestionPaperResult(payload));
       }
@@ -94,17 +98,17 @@ const questionPapers = useMemo(() => {
     fetchResult();
   }, [selectedExamId, selectedQuestion, userLogin, examList, dispatch]);
 
-  const yearOrNumberOptions = [2001,2002,2003]
+  const yearOrNumberOptions = [2001, 2002, 2003];
 
-  useEffect(()=>{
-    const payload:any={
-      userId:userLogin._id
-    }
-    const payload2:any=null
-         dispatch(setQuestionPaperResult(payload2));
-    
-dispatch(givenExam(payload))
-  },[])
+  useEffect(() => {
+    const payload: any = {
+      userId: userLogin._id,
+    };
+    const payload2: any = null;
+    dispatch(setQuestionPaperResult(payload2));
+
+    dispatch(givenExam(payload));
+  }, []);
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-between ">
@@ -155,7 +159,7 @@ dispatch(givenExam(payload))
                 <SelectContent>
                   {exams?.map((ex: any) => (
                     <SelectItem key={ex?._id} value={ex?._id}>
-                      {ex?.name || ex?.name }
+                      {ex?.name || ex?.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -176,8 +180,8 @@ dispatch(givenExam(payload))
 
                 <SelectContent>
                   {questionPapers.map((val: any) => (
-                   <SelectItem key={val?._id} value={val?._id}>
-                      {val?.name || val?.name }
+                    <SelectItem key={val?._id} value={val?._id}>
+                      {val?.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -188,10 +192,13 @@ dispatch(givenExam(payload))
 
         {/* Summary Tabs */}
         <div className="">
-          {examResult?(
-          <SummaryTabs data={examResult} />
-          ):(null)}
+          {examResult ? <SummaryTabs data={examResult} /> : null}
         </div>
+      <div className="flex justify-center items-center my-10">
+          { givenAllExam.length==0?(
+            <p className="text-xl font-medium text-gray-900 font-poppins">Not Attempted yet </p>
+          ):(null)}
+      </div>
       </div>
       <section className="w-full bg-[#FF5635] text-white px-6 sm:px-10 lg:px-12 xl:px-16 mt-16 py-2 sm:py-5 lg:py-6 xl:py-8">
         <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-8 px-6 sm:px-8 md:px-12 lg:px-28">

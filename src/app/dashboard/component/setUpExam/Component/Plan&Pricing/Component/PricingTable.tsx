@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { getPlanandPricing } from "@/api/Plan&Pricing";
+import { getPlanandPricing, setUpdatePlanData } from "@/api/Plan&Pricing";
 import CommonTable from "@/Common/CommonTable";
 import { formatDateTime } from "@/Common/ComonDate";
 import { Search } from "lucide-react";
@@ -59,7 +59,9 @@ const PricingTable = () => {
         row.createdAt ? formatDateTime(row.createdAt) : "-",
     },
   ];
-  const handleEdit = (val: any) => {};
+  const handleEdit = (val: any) => {
+    dispatch(setUpdatePlanData(val))
+  };
   return (
     <div className="px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
       <div className="flex justify-between items-center pb-3">

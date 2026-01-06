@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { Pie, PieChart, ResponsiveContainer, Cell } from "recharts";
 import AnswerAccuracyGraph from "../Graph/AnswerAccuracyGraph";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,10 @@ import TROPHY from "@/assets/vectors/reportanalytics/kpis/cup.svg";
 import AIM from "@/assets/vectors/reportanalytics/kpis/target.svg";
 import PERCENTAGE from "@/assets/vectors/reportanalytics/kpis/percentage.svg";
 import DISCOUNT from "@/assets/vectors/reportanalytics/kpis/discount.svg";
+import { formatDateTime } from "@/Common/ComonDate";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { addfeedback } from "@/api/feedback";
 
 interface OverallTabProps {
   data: any;
@@ -47,6 +51,7 @@ const AvgTimeTooltip = ({ value }: { value: number }) => (
 
 
 const OverallTab = ({ data }: OverallTabProps) => {
+  const dispatch=useDispatch<AppDispatch>()
   const attemptedDate = useMemo(() => {
     const raw = data?.examdetail?.examDate;
     if (!raw) return "";
@@ -146,8 +151,14 @@ const OverallTab = ({ data }: OverallTabProps) => {
       pie,
     };
   }, [data]);
-
+const [title,settitle]=useState("")
   const onSubmitFeedback = (e: React.FormEvent) => {
+    const payload:any={
+      title:title,
+      questionPaperId:data?._id
+    }
+    dispatch(addfeedback(payload))
+    settitle("")
     e.preventDefault();
   };
 
@@ -168,7 +179,7 @@ const OverallTab = ({ data }: OverallTabProps) => {
             </span>
           </h2>
           <p className="text-sm text-gray-600 font-dm-sans">
-            Attempted on {attemptedDate || "-"}
+            Attempted on {formatDateTime(data?.updatedAt) || "-"}
           </p>
         </div>
 
@@ -499,6 +510,9 @@ const OverallTab = ({ data }: OverallTabProps) => {
           </h3>
           <form onSubmit={onSubmitFeedback} className="space-y-4">
             <Textarea
+             value={title}
+             disabled={data?.isfeedBack}
+            onChange={(e)=>settitle(e.target.value)}
               placeholder="Enter your feedback and suggestions..."
               className="min-h-[120px] border border-[#E6F4FF] bg-white"
             />

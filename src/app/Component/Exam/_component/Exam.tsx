@@ -31,6 +31,7 @@ import LOCK2 from "@/assets/vectors/lock-2.svg";
 const MockExamCard = ({ exam, handleExam, index }: any) => {
   const examById = useSelector((s: any) => s.exam?.examById) || [];
   const examlength: any = examById.length;
+  const router = useRouter();
 
   const user = useSelector((s: any) => s.Auth?.loginUser);
   const hasPurchase = user?.PurchaseDetail?.length > 0;
@@ -101,8 +102,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
       {/* ---------------- BUTTONS ---------------- */}
       <div className="mt-auto w-full font-poppins">
         {isLocked && (
-          <Button
-            disabled
+          <Button onClick={()=>router.push("/PlanandPricing")}
             className="px-10 h-11 rounded-[8px] bg-[#E3E5E9] text-[#ADB5CC] cursor-not-allowed font-poppins"
           >
             Start
@@ -252,7 +252,7 @@ export default function MergedExamPage() {
     } else {
       const payload: any = { questionPaperID: examData?._id };
       await dispatch(QuestionPaperResult(payload));
-      router.push("/Exam/result");
+      router.push("/analytics");
     }
   };
 
@@ -264,9 +264,8 @@ export default function MergedExamPage() {
     if (isMock) {
       // Find only IPMAT Indore
       const ipmatIndoreExam = examdata.find(
-        (ex: any) => ex.examname === "IPMAT-INDORE"
+        (ex: any) => ex.examname === "IPMAT Indore"
       );
-      console.log(ipmatIndoreExam, "ipmatIndoreExamipmatIndoreExam");
       if (ipmatIndoreExam) {
         handleSelectExamDynamic(ipmatIndoreExam); // Pass only one exam
       }
@@ -476,7 +475,7 @@ export default function MergedExamPage() {
                 [
                   ...Array((examById[0]?.exam?.Mocks || 24) - examById.length),
                 ].map((_, idx) => (
-                  <div
+                  <div onClick={()=>router.push("/PlanandPricing")}
                     key={`locked-${idx}`}
                     className={`rounded-[8px] bg-[#F3F4F6] p-4 sm:p-5  lg:p-6 flex flex-col transition-all  h-full`}
                   >
