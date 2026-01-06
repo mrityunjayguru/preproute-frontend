@@ -63,10 +63,11 @@ const FULL_ACCESS_FEATURES = [
 export default function PricingPlans() {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-const [couponCodes, setCouponCodes] = useState<Record<string, string>>({});
-const [couponErrors, setCouponErrors] = useState<Record<string, string>>({});
-const [discountAmounts, setDiscountAmounts] = useState<Record<string, number>>({});
-
+  const [couponCodes, setCouponCodes] = useState<Record<string, string>>({});
+  const [couponErrors, setCouponErrors] = useState<Record<string, string>>({});
+  const [discountAmounts, setDiscountAmounts] = useState<
+    Record<string, number>
+  >({});
 
   const user = useSelector((state: any) => state?.Auth?.loginUser);
   const palnAndpricing = useSelector(
@@ -75,9 +76,9 @@ const [discountAmounts, setDiscountAmounts] = useState<Record<string, number>>({
 
   /* ---------------- FETCH DATA ---------------- */
   const getData = async () => {
-    const payload:any={
-uid:user?._id
-    }
+    const payload: any = {
+      uid: user?._id,
+    };
     await dispatch(getPlanandPricing(payload));
   };
 
@@ -106,12 +107,11 @@ uid:user?._id
     }
 
     // Prevent payment if plan is already purchased
-     const discount = discountAmounts[plan._id] || 0;
-  
+    const discount = discountAmounts[plan._id] || 0;
 
     try {
       const payload: any = {
-        amount: Number(plan.price-discount) * 100,
+        amount: Number(plan.price - discount) * 100,
         currency: "INR",
         userId: user?._id,
         planId: plan._id,
@@ -146,50 +146,45 @@ uid:user?._id
       alert("Payment error");
     }
   };
-const handleVerifyCoupon = async (plan: any) => {
-  const code = couponCodes[plan._id];
+  const handleVerifyCoupon = async (plan: any) => {
+    const code = couponCodes[plan._id];
 
-  if (!code) {
-    setCouponErrors(prev => ({
-      ...prev,
-      [plan._id]: "Please enter coupon code",
-    }));
-    return;
-  }
+    if (!code) {
+      setCouponErrors((prev) => ({
+        ...prev,
+        [plan._id]: "Please enter coupon code",
+      }));
+      return;
+    }
 
-  const payload = {
-    planId: plan._id,
-    code,
+    const payload = {
+      planId: plan._id,
+      code,
+    };
+
+    const result: any = await dispatch(verifyCouponCode(payload));
+    if (result?.payload.status == true) {
+      setCouponErrors({});
+      const coupon = result.payload?.data;
+
+      const discount = coupon.discountValue;
+
+      const finalDiscount =
+        discount > 100 ? discount : (plan.price * discount) / 100;
+
+      setDiscountAmounts((prev) => ({
+        ...prev,
+        [plan._id]: finalDiscount,
+      }));
+    }
+    if (result?.payload.status == false) {
+      setDiscountAmounts({});
+      setCouponErrors((prev) => ({
+        ...prev,
+        [plan._id]: result?.payload?.data || "Invalid coupon",
+      }));
+    }
   };
-
-  const result: any = await dispatch(verifyCouponCode(payload));
-if(result?.payload.status==true){
-  setCouponErrors({})
-     const coupon = result.payload?.data;
-
-  const discount = coupon.discountValue;
-
-  const finalDiscount =
-    discount > 100
-      ? discount
-      : (plan.price * discount) / 100;
-
-  setDiscountAmounts(prev => ({
-    ...prev,
-    [plan._id]: finalDiscount,
-  }));
-}
-if(result?.payload.status==false){
-  setDiscountAmounts({})
-   setCouponErrors(prev => ({
-      ...prev,
-      [plan._id]: result?.payload?.data || "Invalid coupon",
-    }));
-}
-
-};
-
-
 
   /* ---------------- UI ---------------- */
   return (
@@ -324,40 +319,40 @@ if(result?.payload.status==false){
                       {/* BUTTON */}
                       <div className="w-full px-4 sm:px-6 pb-4 sm:pb-6 mt-auto flex justify-center items-center flex-col">
                         <div className="relative w-full my-2">
-  <input
-    type="text"
-    placeholder="Have a coupon code"
-    value={couponCodes[plan._id] || ""}
-    onChange={(e) =>
-      setCouponCodes((prev) => ({
-        ...prev,
-        [plan._id]: e.target.value,
-      }))
-    }
-    className="border py-2 pl-3 pr-20 rounded w-full focus:outline-none"
-  />
+                          <input
+                            type="text"
+                            placeholder="Have a coupon code"
+                            value={couponCodes[plan._id] || ""}
+                            onChange={(e) =>
+                              setCouponCodes((prev) => ({
+                                ...prev,
+                                [plan._id]: e.target.value,
+                              }))
+                            }
+                            className="border py-2 pl-3 pr-20 rounded w-full focus:outline-none font-poppins text-sm font-normal"
+                          />
 
-  <button
-    type="button"
-    onClick={() => handleVerifyCoupon(plan)}
-    className="absolute right-1 top-1/2 -translate-y-1/2
+                          <button
+                            type="button"
+                            onClick={() => handleVerifyCoupon(plan)}
+                            className="absolute right-1 top-1/2 -translate-y-1/2
                px-3 py-1.5 text-xs font-medium
-               text-white bg-[#FF5635] rounded"
-  >
-    Verify
-  </button>
-</div>
-{couponErrors[plan._id] && (
-  <p className="text-red-500 py-1 text-sm">
-    {couponErrors[plan._id]}
-  </p>
-)}
+               text-white bg-[#FF5635] rounded-[8px] font-poppins"
+                          >
+                            Verify
+                          </button>
+                        </div>
+                        {couponErrors[plan._id] && (
+                          <p className="text-red-500 py-1 text-sm font-poppins">
+                            {couponErrors[plan._id]}
+                          </p>
+                        )}
 
-{discountAmounts[plan._id] && (
-  <p className="text-green-600  py-1 text-sm">
-    Discount Applied: ₹{discountAmounts[plan._id]}
-  </p>
-)}
+                        {discountAmounts[plan._id] && (
+                          <p className="text-green-600  py-1 text-sm font-poppins">
+                            Discount Applied: ₹{discountAmounts[plan._id]}
+                          </p>
+                        )}
                         <button
                           onClick={() => handleCreatePayment(plan)}
                           disabled={plan.alreadyPurchased}
@@ -371,14 +366,8 @@ if(result?.payload.status==false){
                             ? "Get Started"
                             : "Get Started"}
                         </button>
-
-
-
-
                         <p className="text-sm py-3 text-[#ff5635] font-dm-sans">
-                          {plan.alreadyPurchased
-                            ? "Already Purchased"
-                            : ""}
+                          {plan.alreadyPurchased ? "Already Purchased" : ""}
                         </p>
                       </div>
                     </div>
@@ -391,7 +380,7 @@ if(result?.payload.status==false){
           {/* SPACER */}
           <div className="h-0 md:h-[420px] lg:h-[520px]" />
         </div>
-        <section className="bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-8 sm:mt-12 md:mt-20 py-4 sm:py-5 lg:py-6 xl:py-8">
+        <section className="bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-8 sm:mt-12 md:mt-20 py-4 sm:py-5 lg:py-6 xl:py-8 ">
           <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
             <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
               {/* Logo */}

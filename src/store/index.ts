@@ -19,8 +19,10 @@ import user from "./user/index"
 import palnAndpricing from "./seatUpexam/planAndPricing/index"
 import blog from "./Blog/index"
 import coupon from "./coupon/index"
+import bookMark from "./boockMark/index"
 const appReducer = combineReducers({
  school:school,
+ bookMark:bookMark,
  exam:exam,
  coupon:coupon,
  blog:blog,

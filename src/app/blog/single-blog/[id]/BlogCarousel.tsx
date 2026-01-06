@@ -32,6 +32,7 @@ export default function BlogCarousel({ data }: Props) {
           0: { slidesPerView: 1 },
           768: { slidesPerView: 2 },
         }}
+        className="mt-4"
       >
         {data.map((post) => (
           <SwiperSlide key={post._id}>
@@ -41,17 +42,17 @@ export default function BlogCarousel({ data }: Props) {
             >
               <div className="group cursor-pointer">
                 {/* Image */}
-                <div className="relative rounded-2xl w-full h-56 md:h-64 overflow-hidden mb-4">
+                <div className="relative rounded-lg w-full h-48 md:h-60 overflow-hidden  transition-shadow duration-300 group-hover:shadow-md">
                   <Image
                     src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${post.image}`}
                     alt={post.title}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="object-contain transition-transform duration-300"
                   />
                 </div>
 
                 {/* Content */}
-                <div>
+                <div className="mt-3">
                   <p className="text-sm text-black font-dm-sans mb-1 font-medium">
                     Posted On: {formatDateTime(post.createdAt)}
                   </p>

@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import React, { useMemo, useRef } from "react";
 import { BlockMath } from "react-katex";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { createboockMark } from "@/api/boockMark";
 
 interface Option {
   _id: string;
@@ -50,9 +53,9 @@ const QuestionWiswView: React.FC<Props> = ({
   getQuestionByNumberId,
 }) => {
   // Render HTML/LaTeX content
+  const dispatch=useDispatch<AppDispatch>()
   const renderPreview = (content: string) => {
     if (!content) return null;
-
     const parser = new DOMParser();
     const doc = parser.parseFromString(content, "text/html");
     const nodes = Array.from(doc.body.childNodes);
@@ -126,7 +129,12 @@ const QuestionWiswView: React.FC<Props> = ({
     const s = seconds % 60;
     return `${m} Min ${s} Sec`;
   };
-
+const handlebookMark=async(val:any)=>{
+const payload:any={
+  questionId:val?._id
+}
+await dispatch(createboockMark(payload))
+}
   return (
     <div className="flex-1 mt-6 bg-white">
       {/* Status Bar */}
@@ -175,7 +183,7 @@ const QuestionWiswView: React.FC<Props> = ({
           {question.topic || "Topic"} | {question.subtopic || "Subtopic"}
         </h2>
         <div className="flex gap-2">
-          <Button
+          <Button onClick={()=>handlebookMark(question)}
             variant="outline"
             className="bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] text-[#1E1E1E] font-normal font-poppins cursor-pointer"
           >

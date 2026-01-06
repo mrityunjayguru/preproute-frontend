@@ -68,7 +68,7 @@ export default function ExamUI() {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [totalNoOfQuestions, setTotalNoOfQuestions] = useState(0);
-  const [sectionRestriction,setsectionRestriction]=useState(false);
+  const [sectionRestriction, setsectionRestriction] = useState(false);
   const [question, setQuestion] = useState<any>(null);
   const [numericalValue, setNumericalValue] = useState("");
   const [mcqSelected, setMcqSelected] = useState<string | null>(null);
@@ -119,7 +119,6 @@ export default function ExamUI() {
     const istDate = new Date(date.getTime() + utcOffsetInMinutes * 60000);
     return istDate;
   };
-  
 
   // ---------------- Setup Exam ----------------
   // ---------------- Setup Exam ----------------
@@ -141,8 +140,9 @@ export default function ExamUI() {
     setSwitchable(examInfo?.switchable);
 
     // ⏳ GET SAVED TIME FROM LOCAL STORAGE
-         const savedTime =  localStorage.getItem(`exam_timeLeft_${examData?.[0]?._id}`);
-
+    const savedTime = localStorage.getItem(
+      `exam_timeLeft_${examData?.[0]?._id}`
+    );
 
     if (savedTime) {
       // ⬇️ Restore timer from last saved state
@@ -224,7 +224,6 @@ export default function ExamUI() {
         // ✅ Update backend with section timing
         updateSectionTime(prevSectionId, nextSection.sectionId);
 
-      
         setSelectedSection(nextSection);
         setTimeLeft(nextSection.duration * 60);
         setCurrentSectionIndex((p) => p + 1);
@@ -235,12 +234,15 @@ export default function ExamUI() {
       handleSubmitFullExam();
       return;
     }
-const examId = examData?.[0]?._id;
+    const examId = examData?.[0]?._id;
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => (prev <= 1 ? 0 : prev - 1));
       localStorage.setItem("exam_timeLeft", timeLeft.toString());
-       localStorage.setItem(`exam_timeLeft_${examData?.[0]?._id}`, String(timeLeft.toString()));
+      localStorage.setItem(
+        `exam_timeLeft_${examData?.[0]?._id}`,
+        String(timeLeft.toString())
+      );
     }, 1000);
     return () => clearInterval(timer);
   }, [timeLeft]);
@@ -273,8 +275,8 @@ const examId = examData?.[0]?._id;
   // ---------------- Handlers ----------------
   const fetchQuestion = async (questionNo: number, sectionId?: string) => {
     const payload: any = { questionNo, questionPaperId: examData?.[0]?._id };
- 
-   payload.section = sectionId;
+
+    payload.section = sectionId;
     await dispatch(userQuestiongetQuestionById(payload));
   };
 
@@ -302,8 +304,7 @@ const examId = examData?.[0]?._id;
         setCurrentQuestionIndex((p) => p + 1);
         fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
       } else if (isSection && currentSectionIndex + 1 < examSections.length) {
-        setsectionRestriction(true)
-
+        setsectionRestriction(true);
       }
       setloder(false);
       return;
@@ -406,7 +407,7 @@ const examId = examData?.[0]?._id;
   };
 
   const handleSubmitExamPopup = (val: any) => {
-    setShowSubmitPopup(false)
+    setShowSubmitPopup(false);
     handleSubmitFullExam();
   };
 
@@ -416,7 +417,7 @@ const examId = examData?.[0]?._id;
       await dispatch(userExamResult(examData));
       // window.open("", "_self");
       // window.close();
-      router.push("/analytics")
+      router.push("/analytics");
     } catch (err) {
       console.error("Error submitting exam:", err);
     }
@@ -568,20 +569,21 @@ const examId = examData?.[0]?._id;
 
       const response: any = await dispatch(ManageExamProgress(payload));
       if (response?.payload?.givenExam) {
-         setSectionQuestionStatus(response?.payload?.givenExam)
-      if(response?.payload.currentSection.sectionId){
-        examSections.map((val)=>{
-          if(val.sectionId==response?.payload?.currentSection?.sectionId){
-      setSelectedSection(val)
-
-          }
-        })
-      }
-      setCurrentQuestionIndex(response?.payload.currentQuestionNoIndex)
-      // setTimeLeft(response?.payload?.remainingTime)
-    fetchQuestion(response?.payload.currentQuestionNoIndex+1, response?.payload.currentSection.sectionId);
-    setTotalNoOfQuestions(response?.payload.currentSection.noofQuestion)
-
+        setSectionQuestionStatus(response?.payload?.givenExam);
+        if (response?.payload.currentSection.sectionId) {
+          examSections.map((val) => {
+            if (val.sectionId == response?.payload?.currentSection?.sectionId) {
+              setSelectedSection(val);
+            }
+          });
+        }
+        setCurrentQuestionIndex(response?.payload.currentQuestionNoIndex);
+        // setTimeLeft(response?.payload?.remainingTime)
+        fetchQuestion(
+          response?.payload.currentQuestionNoIndex + 1,
+          response?.payload.currentSection.sectionId
+        );
+        setTotalNoOfQuestions(response?.payload.currentSection.noofQuestion);
       }
     };
 
@@ -641,23 +643,20 @@ const examId = examData?.[0]?._id;
   }, []);
   const [sectionShowPopup, setSectionShowPopup] = useState(false);
   // alert(examData[0]?.exam?.examname)
-  const handleSubmitSection=async()=>{
-    setsectionRestriction(false)
-        const nextSection: any = examSections[currentSectionIndex + 1];
-        // console.log(nextSection,"nextSectionnextSection")
-        if (switchable == false) {
-          setTimeLeft(nextSection?.duration * 60);
-        }
-        setSelectedSection(nextSection);
-        setCurrentSectionIndex((p) => p + 1);
-        setCurrentQuestionIndex(0);
-        setTotalNoOfQuestions(nextSection.noOfQuestions);
-        fetchQuestion(1, nextSection.sectionId);
-        await updateSectionTime(
-          selectedSection?.sectionId,
-          nextSection.sectionId
-        );
-  }
+  const handleSubmitSection = async () => {
+    setsectionRestriction(false);
+    const nextSection: any = examSections[currentSectionIndex + 1];
+    // console.log(nextSection,"nextSectionnextSection")
+    if (switchable == false) {
+      setTimeLeft(nextSection?.duration * 60);
+    }
+    setSelectedSection(nextSection);
+    setCurrentSectionIndex((p) => p + 1);
+    setCurrentQuestionIndex(0);
+    setTotalNoOfQuestions(nextSection.noOfQuestions);
+    fetchQuestion(1, nextSection.sectionId);
+    await updateSectionTime(selectedSection?.sectionId, nextSection.sectionId);
+  };
   return (
     <>
       {showSubmitPopup && (
@@ -667,7 +666,7 @@ const examId = examData?.[0]?._id;
         />
       )}
 
-       {sectionRestriction && (
+      {sectionRestriction && (
         <SwitchSectionRestrictionPopup
           onClose={() => setsectionRestriction(false)}
           onConfirm={handleSubmitSection}
@@ -721,6 +720,18 @@ const examId = examData?.[0]?._id;
               selectedsection={selectedSection}
               CurrentInput={CurrentInput}
             />
+            <div className="mb-[6rem]">
+              <FooterActions
+                handleMarkForReview={handleMarkForReview}
+                handleClearResponse={handleClearResponse}
+                handlePreviousQuestion={handlePreviousQuestion}
+                handleNextQuestion={handleNextQuestion}
+                handleSubmit={handleSubmit}
+                isTimeUp={isTimeUp}
+                loder={loder}
+                ReportQuestion={ReportQuestion}
+              />
+            </div>
           </div>
           <RightSection
             userLogin={userLogin}
@@ -729,24 +740,14 @@ const examId = examData?.[0]?._id;
             currentQuestionIndex={currentQuestionIndex}
             getQuestionByNumberId={getQuestionByNumberId}
             isSection={isSection}
+            handleSubmit={handleSubmit}
             selectedSection={examProgress}
             isTimeUp={isTimeUp}
           />
         </div>
-
-        <FooterActions
-          handleMarkForReview={handleMarkForReview}
-          handleClearResponse={handleClearResponse}
-          handlePreviousQuestion={handlePreviousQuestion}
-          handleNextQuestion={handleNextQuestion}
-          handleSubmit={handleSubmit}
-          isTimeUp={isTimeUp}
-          loder={loder}
-          ReportQuestion={ReportQuestion}
-        />
       </div>
 
-      <ManageFooter/>
+      <ManageFooter />
     </>
   );
 }

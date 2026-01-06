@@ -190,7 +190,7 @@ export const Header: React.FC = () => {
               </Link>
               <Button
                 onClick={() => router.push("/Auth/signin")}
-                className="rounded-full bg-[#FF5635] text-white"
+                className="rounded-full bg-[#FF5635] text-white cursor-pointer"
               >
                 Login
               </Button>
@@ -202,7 +202,7 @@ export const Header: React.FC = () => {
                   <Button
                     variant="outline"
                     onClick={() => router.push("/dashboard/home")}
-                    className="hidden lg:flex border-[#FF5635] text-[#FF5635]"
+                    className="hidden lg:flex border-[#FF5635] text-[#FF5635] cursor-pointer"
                   >
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     Dashboard

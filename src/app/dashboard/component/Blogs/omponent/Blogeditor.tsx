@@ -195,7 +195,7 @@ export default function Blogeditor({ value, onChange }: RichTextEditorProps) {
         onInput={emitChange}
         onKeyUp={saveSelection}
         onMouseUp={saveSelection}
-        style={{ minHeight: 150 }}
+        // style={{ maxHeight: 450 }}
       />
     </div>
   );

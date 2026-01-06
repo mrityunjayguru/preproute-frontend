@@ -3,7 +3,7 @@ import DiscountCopoun from '../component/Discount-Copoun/DiscountCopoun'
 
 function page() {
   return (
-    <div>
+    <div className='max-h-screen'>
       <DiscountCopoun/>
     </div>
   )

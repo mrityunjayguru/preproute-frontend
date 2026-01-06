@@ -27,7 +27,6 @@ const SingleBlog = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="px-6 sm:px-8 md:px-12 lg:px-28 mx-auto py-8">
-        
         {/* Header Section */}
         <div className="bg-[#E8F4F8] rounded-2xl relative overflow-hidden px-6 py-10 md:px-12 md:py-16 flex flex-col md:flex-row items-center justify-center md:justify-between text-center md:text-left">
           <div className="relative z-10 w-full flex flex-col items-center">
@@ -38,7 +37,7 @@ const SingleBlog = () => {
               How to Build a Smart Exam Preparation Routine That Actually Works
             </h1>
           </div>
-          
+
           {/* Illustration - Absolute positioned to right as per design implication or flex */}
           {/* Based on the screenshot, the illustration is on the right side. 
               However, the text is centered in the screenshot. 
@@ -48,7 +47,11 @@ const SingleBlog = () => {
               "Posted On" is above the title, centered.
           */}
           <div className="hidden md:block absolute right-0 bottom-0 w-48 lg:w-64">
-             <Image src={STUDENTREAD} alt="Student Reading" className="object-contain" />
+            <Image
+              src={STUDENTREAD}
+              alt="Student Reading"
+              className="object-contain"
+            />
           </div>
         </div>
 
@@ -75,7 +78,7 @@ const SingleBlog = () => {
               elit a justo. Sed sodales, lorem nec malesuada aliquet, orci nisl
               feugiat enim, a tincidunt lorem ipsum non massa.
             </p>
-            
+
             <p>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer a
               fermentum lectus. Suspendisse potenti. Donec ac lorem at libero
@@ -103,15 +106,15 @@ const SingleBlog = () => {
               <Link key={post.id} href={`/blog/single-blog`}>
                 <div className="group cursor-pointer">
                   {/* Image */}
-                  <div className="relative rounded-2xl w-full h-56 md:h-64 overflow-hidden mb-4">
+                  <div className="relative rounded-lg w-full h-48 md:h-60 overflow-hidden shadow-sm transition-shadow duration-300 group-hover:shadow-md">
                     <Image
                       src={post.image}
                       alt={post.title}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="object-contain transition-transform duration-300"
                     />
                   </div>
-                  
+
                   {/* Content */}
                   <div>
                     <p className="text-sm text-black font-dm-sans mb-1 font-medium">

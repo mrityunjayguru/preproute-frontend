@@ -77,6 +77,10 @@ export const feedback={
   get:"feedback/get"
 
 }
+export const boockMark={
+    create:"boockMark/create",
+  get:"boockMark/get"
+}
 export const exam={
   create:"setUpexam/exam/create",
   get:"setUpexam/exam/get",

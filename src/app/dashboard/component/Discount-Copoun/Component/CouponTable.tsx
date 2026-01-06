@@ -92,13 +92,14 @@ function CouponTable() {
           />
         </div>
       </div>
-
+<div className=" mb-10">
       <CommonTable
         data={filteredData}
         columns={columns}
         onEdit={handleEdit}
         actionLabel="Edit"
       />
+        </div>
     </div>
   );
 }
