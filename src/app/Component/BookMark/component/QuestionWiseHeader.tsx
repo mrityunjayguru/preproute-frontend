@@ -66,7 +66,7 @@ const QuestionWiseHeader: React.FC<Props> = ({
 
       {/* Section Tabs */}
       {isSection && (
-        <div className="flex  flex-wrap gap-3 overflow-x-auto  ">
+        <div className="flex flex-wrap gap-3 overflow-x-auto  ">
           {examSections.map((t) => (
             <button
               key={t.sectionId}
