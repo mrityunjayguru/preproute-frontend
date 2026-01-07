@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Footer from "@/app/layouts/_component/footer";
 import OptionWithEditot from "./Component/OptionWithEditot";
+import LatesForpassage from "./Component/LatesForpassage";
 
 type AnswerType = "Numeric" | "MCQ";
 
@@ -183,7 +184,7 @@ const Exam: React.FC = () => {
         answerType,
         questionPessage,
         numericAnswer,
-        passage,
+        passage:passage,
         options:
           answerType === "MCQ"
             ? options.map((opt) => ({
@@ -214,7 +215,7 @@ const Exam: React.FC = () => {
       console.error("Error creating question:", err);
     }
   };
-
+console.log(passage,"passagepassagepassage")
   const handleActiveQuestion = (val: number) => {
     let currentIndex = sectionsData.findIndex(
       (sec: any) => sec.sectionId === activeSection
@@ -450,12 +451,13 @@ const Exam: React.FC = () => {
                 </div>
                 {questionPessage === "Pass" && (
                   <div className="w-1/3 text-md font-medium font-poppins">
-                    <textarea
+                      <LatesForpassage value={passage} onChange={setPassage} />
+                    {/* <textarea
                       placeholder="Enter Passage"
                       value={passage}
                       onChange={(e) => setPassage(e.target.value)}
                       className="w-full h-full min-h-[200px] p-2 border rounded-md"
-                    />
+                    /> */}
                   </div>
                 )}
               </div>

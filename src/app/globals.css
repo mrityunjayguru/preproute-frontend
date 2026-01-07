@@ -530,3 +530,6 @@ div[class*="badge"] {
 .Toastify__toast--error {
   background: linear-gradient(135deg, #d50000, #ff1744);
 }
+.preview-container {
+  white-space: pre-wrap;
+}

@@ -259,40 +259,36 @@ export default function OptionWithEditor({
     return () => clearTimeout(t);
   });
 
-  const renderPreview = useMemo(() => {
-    if (!previewHTML) return null;
+const renderPreview = useMemo(() => {
+  if (!previewHTML) return null;
 
-    const latexRegex = /(\$\$[\s\S]+?\$\$|\$[^$]+\$)/g;
+  const latexRegex = /(\$\$[\s\S]*?\$\$|\$[^$\n]+\$)/g;
 
-    const parseText = (text: string) =>
-      text.split(latexRegex).map((part, i) => {
-        if (part.startsWith("$$"))
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(previewHTML, "text/html");
+
+  // ✅ Preserve line breaks
+  const fullText = doc.body.innerText || "";
+
+  return (
+    <div className="preview-container whitespace-pre-wrap">
+      {fullText.split(latexRegex).map((part, i) => {
+        if (part.startsWith("$$")) {
           return <BlockMath key={i} math={part.slice(2, -2)} />;
-        if (part.startsWith("$"))
+        }
+
+        if (part.startsWith("$")) {
           return <InlineMath key={i} math={part.slice(1, -1)} />;
+        }
+
         return <span key={i}>{part}</span>;
-      });
+      })}
+    </div>
+  );
+}, [previewHTML]);
 
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(previewHTML, "text/html");
 
-    return (
-      <div className="preview-container">
-        {Array.from(doc.body.childNodes).map((n, i) =>
-          n.nodeType === 3 ? (
-            <div key={i}>{parseText(n.textContent || "")}</div>
-          ) : (
-            <div
-              key={i}
-              dangerouslySetInnerHTML={{
-                __html: (n as HTMLElement).outerHTML,
-              }}
-            />
-          )
-        )}
-      </div>
-    );
-  }, [previewHTML]);
+
 
   /* ================= RENDER ================= */
 
