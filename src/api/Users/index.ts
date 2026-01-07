@@ -12,6 +12,7 @@ import Swal from "sweetalert2";
 import { setResult } from "@/store/seatUpexam/question";
 import { setAuth } from "@/store/Auth";
 import { toast } from "react-toastify";
+import { ToastSuccess } from "@/Utils/toastUtils";
 interface Payload {
   // Define your payload structure here, for example:
   someField: string; // replace this with actual fields
@@ -217,15 +218,7 @@ export const createReport = createAsyncThunk<boolean, Payload>(
     try {
       const data: any = await UserRepo.createReport(payload);
       if (data?.status == 200) {
-        toast.success("Report submitted successfully 🎉", {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          theme: "colored",
-        });
+       ToastSuccess("success");
         return true;
       } else {
         toast.error("Failed to submit report ❌");

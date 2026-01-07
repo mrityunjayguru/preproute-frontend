@@ -17,6 +17,7 @@ import RenderPreview from "@/Common/CommonLatex";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Footer from "@/app/layouts/_component/footer";
+import OptionWithEditot from "./Component/OptionWithEditot";
 
 type AnswerType = "Numeric" | "MCQ";
 
@@ -102,6 +103,7 @@ const Exam: React.FC = () => {
       setQuestionPessage(q.questionPessage || "Normal");
       setPassage(q?.passage || "");
       if (q.answerType === "MCQ" && Array.isArray(q.options)) {
+        console.log(q.options,"q.optionsq.options")
         setOptions(
           q.options.map((opt: any, i: number) => ({
             id: i + 1,
@@ -509,15 +511,24 @@ const Exam: React.FC = () => {
             {answerType === "MCQ" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {options.map((opt) => (
-                  <OptionWithLatex
-                    key={opt.id}
-                    choice={opt.label}
-                    value={opt.text}
-                    isCorrect={opt.isCorrect}
-                    onChange={(html) => handleOptionTextChange(opt.id, html)}
-                    onCheckToggle={() => handleCorrectToggle(opt.id)}
-                    QuestionType={questionPessage}
+                    <OptionWithEditot
+                     key={opt.id}
+                     choice={opt.label}
+                     value={opt.text}
+                     isCorrect={opt.isCorrect}
+                     onChange={(html) => handleOptionTextChange(opt.id, html)}
+                     onCheckToggle={() => handleCorrectToggle(opt.id)}
+                     QuestionType={questionPessage}
                   />
+                  // <OptionWithLatex
+                  //   key={opt.id}
+                  //   choice={opt.label}
+                  //   value={opt.text}
+                  //   isCorrect={opt.isCorrect}
+                  //   onChange={(html) => handleOptionTextChange(opt.id, html)}
+                  //   onCheckToggle={() => handleCorrectToggle(opt.id)}
+                  //   QuestionType={questionPessage}
+                  // />
                 ))}
               </div>
             )}

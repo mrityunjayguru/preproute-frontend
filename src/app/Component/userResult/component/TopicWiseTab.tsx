@@ -1,6 +1,9 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import SectionWiseTab from "./SectionWiseTab";
+import TimeWiseTab from "./TimeWiseTab";
+import DifficultyWiseTab from "./DifficultyWiseTab";
 
 /* -------------------- Helpers -------------------- */
 const avg = (arr: number[]) =>
@@ -62,7 +65,9 @@ interface TopicWiseTabProps {
 
 const TopicWiseTab = ({ data }: TopicWiseTabProps) => {
   const topicData = useSelector((state: any) => state?.topic?.topic);
-  const [filterSection, setFilterSection] = useState("All");
+  const [filterSection, setFilterSection] = useState("Topic Wise");
+  const filterBy=["Section Wise","Time Wise","Topic Wise","Diffucilty"]
+
 
   const getTopicName = (topicId: string) => {
     const topic = topicData?.find((t: any) => t._id === topicId);
@@ -90,12 +95,12 @@ const TopicWiseTab = ({ data }: TopicWiseTabProps) => {
   }, [data?.examdetail?.examDate]);
 
   const filteredData = useMemo(() => {
-    console.log(data.topicData,"data.topicDatadata.topicData")
+ 
     if (!data?.topicData) return [];
     return data.topicData
       .map((topic: any) => {
         let details = topic.details || [];
-        console.log(details,"oooooooooooooooooooooo")
+ 
         // if (filterSection !== "All") {
         //   details = details.filter((d: any) => d.section == filterSection);
         //   console.log(details,"ppppppppppppppppppppppp")
@@ -139,14 +144,14 @@ console.log(filteredData,"datadatadatadatadata")
           className="bg-white border border-gray-200 px-4 py-2 rounded min-w-[150px]"
         >
           {" "}
-          <option value="All">Section</option>{" "}
-          {data?.sectionDetails?.map((s:any) => (
-            <option key={s._id} value={s._id}>{s?.section}</option>
+          {/* <option value="All">Topic</option>{" "} */}
+          {filterBy?.map((s:any,i:any) => (
+            <option key={i} value={s}>{s}</option>
           ))}{" "}
         </select>{" "}
       </div>
       {/* Topics */}
-      <div className="space-y-8">
+      {filterSection=="Topic Wise"?( <div className="space-y-8">
         {filteredData.map((topic: any) => (
           <div
             key={topic.topicId}
@@ -276,7 +281,18 @@ console.log(filteredData,"datadatadatadatadata")
             </div>
           </div>
         ))}
-      </div>
+      </div>):(null)}
+     
+     {filterSection=="Section Wise"?(
+      <SectionWiseTab data={data}/>
+     ):(null)}
+   {filterSection=="Time Wise"?(
+      <TimeWiseTab data={data}/>
+     ):(null)}
+  {filterSection=="Diffucilty"?(
+      <DifficultyWiseTab data={data}/>
+     ):(null)}
+      
     </div>
   );
 };

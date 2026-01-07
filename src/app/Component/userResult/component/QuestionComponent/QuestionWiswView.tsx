@@ -6,6 +6,8 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { createboockMark, getQuestionById } from "@/api/boockMark";
+import Popup from "@/app/Component/ManageExam/Component/Report";
+import { createReport } from "@/api/Users";
 
 interface Option {
   _id: string;
@@ -149,7 +151,26 @@ setStatus(responce.payload.data.status)
 useEffect(()=>{
 getData()
 },[question])
+const [reporttoggle,setReportToggle]=useState(false)
+const handlereport=()=>{
+setReportToggle(true)
+}
+const handleSubmitReport=(val:any)=>{
+  const payload:any={
+    title:val,
+    questionId:question?._id
+  }
+  dispatch(createReport(payload))
+}
   return (
+  <>
+<Popup
+  isOpen={reporttoggle}
+  onClose={() => setReportToggle(false)}
+  onSubmit={handleSubmitReport}
+  title="Report Question"
+  question={question}
+/>
     <div className="flex-1 mt-6 bg-white">
       {/* Status Bar */}
       <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] py-3 px-2 flex flex-wrap gap-36 items-start mb-6 font-poppins">
@@ -211,7 +232,7 @@ getData()
             Bookmark
           </Button>)}
          
-          <Button
+          <Button onClick={handlereport}
             variant="outline"
             className="bg-gradient-to-t from-[#FFECDF] to-white border border-[#F0F9FF] font-normal font-poppins cursor-pointer"
           >
@@ -299,6 +320,7 @@ getData()
         </div>
       </div>
     </div>
+  </>
   );
 };
 

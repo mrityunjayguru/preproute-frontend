@@ -1,4 +1,5 @@
 import React from "react";
+
 interface TypeWiseData {
   questionType: string;
   totalQuestions: number;
@@ -13,70 +14,115 @@ interface TypeWiseData {
   percentage: string;
 }
 
-interface TopicWiseTabProps {
+interface DifficultyWiseTabProps {
   data: {
     typeWise?: TypeWiseData[];
   };
 }
 
-const DifficultyWiseTab: React.FC<TopicWiseTabProps> = ({ data }) => {
+const DifficultyWiseTab: React.FC<DifficultyWiseTabProps> = ({ data }) => {
   const typeWise = data?.typeWise || [];
 
+  if (!typeWise.length) {
+    return (
+      <p className="text-center text-gray-500 py-6">
+        No difficulty data found.
+      </p>
+    );
+  }
+
   return (
-    <div className="overflow-x-auto border border-[#E6F4FF] rounded-[8px]">
-        {!data ? (
-        <p className="text-center text-gray-500">No topic data found.</p>
-      ) : (
-      <table className="min-w-full bg-gradient-to-t from-[#F0F9FF] to-white text-sm text-left">
-        <thead className="bg-[#005EB6] text-white">
-           <tr className="font-poppins  font-medium text-sm">
-            <th className="p-2">Difficulty</th>
-            <th className="p-2">Total Qs</th>
-            <th className="p-2">Attempted</th>
-            <th className="p-2">Correct</th>
-            <th className="p-2">Wrong</th>
-            <th className="p-2">Not Attempted</th>
-            <th className="p-2">Accuracy</th>
-            <th className="p-2">Total Marks</th>
-          <th className="p-2">Neg. Marks</th>
-           <th className="p-2">Possible Marks</th>
-            <th className="p-2">Percentage</th>
-          </tr>
-        </thead>
-        <tbody>
-          {typeWise.map((item, idx) => (
-            <tr
-              key={idx}
-             className="border-t border-[#C8DCFE] font-poppins font-normal"
-            >
-              <td className="px-4 py-2 font-medium">
-                {item.questionType}
-              </td>
-              <td className="p-2">{item.totalQuestions}</td>
-              <td className="p-2">{item.attempted}</td>
-              <td className="p-2 text-green-600">
-                {item.correct}
-              </td>
-              <td className="p-2 text-red-500">{item.wrong}</td>
-              <td className="p-2">{item.notAttempted}</td>
-              <td className="p-2">{item.accuracy}</td>
-              <td className="p-2">{item.totalMarks}</td>
-              <td className="p-2">{item.totalNegative}</td>
-              <td className="p-2">{item.totalPossibleMarks}</td>
-              <td
-                className={`p-2 ${
-                  parseFloat(item.percentage) >= 0
-                    ? "text-green-600"
-                    : "text-red-500"
-                }`}
+    <div className="space-y-8">
+      <div className="bg-white rounded-lg overflow-hidden border border-[#E6F4FF]">
+        {/* 🔹 Header */}
+        <div className="bg-[#005EB6] text-white flex">
+          <div className="p-4 w-1/4 min-w-[220px] text-lg font-poppins">
+            Difficulty
+          </div>
+          <div className="flex-1 flex">
+            {typeWise.map((item, i) => (
+              <div
+                key={i}
+                className="flex-1 p-4 text-center text-sm"
               >
-                {item.percentage}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      )}
+                {item.questionType}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 🔹 Total Questions */}
+        <div className="flex border-b">
+          <div className="p-4 w-1/4 min-w-[220px] font-poppins">
+            Total Questions
+          </div>
+          <div className="flex-1 flex">
+            {typeWise.map((item, i) => (
+              <div key={i} className="flex-1 p-4 text-center">
+                {item.totalQuestions}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 🔹 Correct | Wrong | Attempted | NA */}
+        <div className="flex border-b bg-[#F9FBFC]">
+          <div className="p-4 w-1/4 min-w-[220px] font-poppins">
+            Correct | Wrong | Attempted | NA
+          </div>
+          <div className="flex-1 flex text-sm">
+            {typeWise.map((item, i) => (
+              <div key={i} className="flex-1 p-4 text-center">
+                <span className="text-green-600">{item.correct}</span> |{" "}
+                <span className="text-red-500">{item.wrong}</span> |{" "}
+                <span>{item.attempted}</span> |{" "}
+                <span>{item.notAttempted}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 🔹 Accuracy | Percentage */}
+        <div className="flex border-b">
+          <div className="p-4 w-1/4 min-w-[220px] font-poppins text-[#005EB6]">
+            Accuracy | Percentage
+          </div>
+          <div className="flex-1 flex text-[#005EB6]">
+            {typeWise.map((item, i) => (
+              <div key={i} className="flex-1 p-4 text-center">
+                {item.accuracy} |{" "}
+                <span
+                  className={
+                    parseFloat(item.percentage) >= 0
+                      ? "text-green-600"
+                      : "text-red-500"
+                  }
+                >
+                  {item.percentage}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* 🔹 Marks */}
+        <div className="flex bg-[#F9FBFC]">
+          <div className="p-4 w-1/4 min-w-[220px] font-poppins">
+            Marks (Scored | Negative | Possible)
+          </div>
+          <div className="flex-1 flex">
+            {typeWise.map((item, i) => (
+              <div key={i} className="flex-1 p-4 text-center">
+                {item.totalMarks} |{" "}
+                <span className="text-red-500">
+                  {item.totalNegative}
+                </span>{" "}
+                | {item.totalPossibleMarks}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

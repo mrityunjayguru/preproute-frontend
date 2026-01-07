@@ -622,9 +622,7 @@ export default function QuestionEditor({ onChange, value,QuestionType }: Questio
   // ---------------------- Render UI ----------------------
   return (
     <div className="editor-container" style={{ position: "relative" }}>
-      {/* <h3>Custom Question Editor</h3> */}
-{/* <CanvaEditor/> */}
-      {/* Toolbar */}
+  
       <Toolbar 
         onCommand={execCommand}
         onInsertLatex={() => { saveSelection(); setShowLatexModal(true); }}
