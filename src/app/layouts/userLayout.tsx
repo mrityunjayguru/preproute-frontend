@@ -20,13 +20,7 @@ export default function UserLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-col ">
       {!hideChrome && <UserHeader />}
-      <main
-        className={
-          hideChrome
-            ? "flex-1 overflow-hidden"
-            : "flex-1 "
-        }
-      >
+      <main className={hideChrome ? "flex-1 overflow-hidden" : "flex-1 "}>
         {children}
       </main>
       {!hideChrome && <UserFooter />}
