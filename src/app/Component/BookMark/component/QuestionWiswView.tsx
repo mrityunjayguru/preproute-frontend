@@ -165,7 +165,7 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
                 {correctText}
               </div>
             </div>
-            <Button
+            {/* <Button
               onClick={(e) => {
                 e.stopPropagation();
                 handleBookmark();
@@ -175,7 +175,7 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
                  border border-[#E6F4FF]"
             >
               Remove Bookmark
-            </Button>
+            </Button> */}
           </div>
 
           {/* OPTIONS - Only show if question has options */}

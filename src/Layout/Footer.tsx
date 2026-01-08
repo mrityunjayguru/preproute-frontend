@@ -33,7 +33,7 @@ export const Footer = () => {
         <div className="container mx-auto px-6 sm:px-8 md:px-12 lg:px-28 flex flex-col  sm:flex-row justify-between items-center">
           <div className="mb-2 sm:mb-0">
             A product of{" "}
-            <a href="#" className="text-[#ff6600]">
+            <a href="https://brillovate.com" target="blank" className="text-[#ff6600]">
                ⓒ Brillovate Pvt. Ltd.
             </a>{" "}
             All rights reserved.

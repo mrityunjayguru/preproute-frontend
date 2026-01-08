@@ -158,7 +158,7 @@ export const Header: React.FC = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48" onMouseLeave={() => setResourcesMenuOpen(false)} >
                 <DropdownMenuItem asChild>
-                  <Link href="/resources" onClick={() => setResourcesMenuOpen(false)}>Resources Home</Link>
+                  <Link href="/bookMark" onClick={() => setResourcesMenuOpen(false)}>book Mark</Link>
                 </DropdownMenuItem>
                 {/* <DropdownMenuItem
                   asChild

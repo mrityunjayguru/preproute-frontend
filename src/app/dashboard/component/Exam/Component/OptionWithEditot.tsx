@@ -262,23 +262,67 @@ export default function OptionWithEditor({
 const renderPreview = useMemo(() => {
   if (!previewHTML) return null;
 
-  const latexRegex = /(\$\$[\s\S]*?\$\$|\$[^$\n]+\$)/g;
-
   const parser = new DOMParser();
   const doc = parser.parseFromString(previewHTML, "text/html");
 
-  // ✅ Preserve line breaks
-  const fullText = doc.body.innerText || "";
+  const extractText = (node: Node): string => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      return node.textContent || "";
+    }
+
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      const el = node as HTMLElement;
+      const tag = el.tagName.toLowerCase();
+
+      let text = "";
+      el.childNodes.forEach((child) => {
+        text += extractText(child);
+      });
+
+      // block elements → new line
+      if (!["span", "b", "i", "u", "strong", "em"].includes(tag)) {
+        return text + "\n";
+      }
+
+      return text;
+    }
+
+    return "";
+  };
+
+  const fullText = extractText(doc.body)
+    .replace(/\u00A0/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  const latexRegex = /(\${1,2}[\s\S]*?\${1,2})/g;
 
   return (
-    <div className="preview-container whitespace-pre-wrap">
+    <div
+      className="preview-container"
+      style={{ whiteSpace: "pre-wrap", lineHeight: 1.6 }}
+    >
       {fullText.split(latexRegex).map((part, i) => {
-        if (part.startsWith("$$")) {
-          return <BlockMath key={i} math={part.slice(2, -2)} />;
-        }
+        if (!part) return null;
 
-        if (part.startsWith("$")) {
-          return <InlineMath key={i} math={part.slice(1, -1)} />;
+        const isLatex =
+          (part.startsWith("$$") && part.endsWith("$$")) ||
+          (part.startsWith("$") && part.endsWith("$"));
+
+        if (isLatex) {
+          const math = part.replace(/^\$+|\$+$/g, "").trim();
+
+          // 🔹 multiline → block (LEFT aligned)
+          if (math.includes("\n")) {
+            return (
+              <div key={i} style={{ margin: "0.4rem 0" }}>
+                <BlockMath math={math} />
+              </div>
+            );
+          }
+
+          // 🔹 single line → inline
+          return <InlineMath key={i} math={math} />;
         }
 
         return <span key={i}>{part}</span>;
@@ -286,6 +330,11 @@ const renderPreview = useMemo(() => {
     </div>
   );
 }, [previewHTML]);
+
+
+
+
+
 
 
 
