@@ -209,7 +209,7 @@ export default function PricingPlans() {
           {/* CARDS */}
           <div className="relative md:absolute md:left-1/2 md:-translate-x-1/2 md:top-[160px] lg:top-[180px] w-full max-w-6xl mx-auto mt-8 md:mt-0">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-16 px-2 sm:px-4">
-              {PRICING_UI.map((ui, index) => {
+              {palnAndpricing.map((ui:any, index:any) => {
                 /* -------- COMING SOON -------- */
                 if (ui.comingSoon) {
                   return (

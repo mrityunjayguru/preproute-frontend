@@ -22,7 +22,7 @@ import TECH from "@/assets/vectors/technical-support.svg";
 const SupportPage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.auth?.user);
-
+    const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,7 +37,10 @@ const SupportPage = () => {
       const payload: any = {
         title: subject,
         message,
+        type:"suport"
       };
+       if(userLogin?._id)
+      Object.assign(payload,{userId:userLogin?._id})
       await dispatch(createReport(payload) as any);
 
       setShowSuccess(true);

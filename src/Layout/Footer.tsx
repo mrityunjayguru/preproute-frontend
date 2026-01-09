@@ -2,18 +2,23 @@
 import { createReport } from "@/api/Users";
 import Popup from "@/app/Component/ManageExam/Component/Report";
 import { use, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export const Footer = () => {
   const dispatch = useDispatch();
+  const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
+  
   const routes = useRouter();
   const [showPopup, setShowPopup] = useState(false);
   const submitReport = async (val: any) => {
     const payload: any = {
       title: val,
+      type:"suport"
     };
+    if(userLogin?._id)
+      Object.assign(payload,{uid:userLogin?._id})
     await dispatch(createReport(payload) as any);
     setShowPopup(false);
   };

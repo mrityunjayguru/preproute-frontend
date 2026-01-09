@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { BlockMath } from "react-katex";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { createboockMark, getQuestionById } from "@/api/boockMark";
 import Popup from "@/app/Component/ManageExam/Component/Report";
@@ -155,10 +155,13 @@ const [reporttoggle,setReportToggle]=useState(false)
 const handlereport=()=>{
 setReportToggle(true)
 }
+  const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
+
 const handleSubmitReport=(val:any)=>{
   const payload:any={
     title:val,
-    questionId:question?._id
+    questionId:question?._id,
+    userId:userLogin?._id
   }
   dispatch(createReport(payload))
 }

@@ -11,7 +11,7 @@ import Image from "next/image";
 const socials = [
   {
     label: "Instagram",
-    href: "https://www.instagram.com/preproute?igsh=ZjhtNjM5YnM3enYy",
+    href: "https://www.instagram.com/thepreproute/",
     icon: Instagram,
   },
   {

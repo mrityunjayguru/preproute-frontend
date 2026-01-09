@@ -156,10 +156,12 @@ export const Header: React.FC = () => {
                 Resources
                 <ChevronDownIcon className="h-4 w-4 text-[#FF5635]" />
               </DropdownMenuTrigger>
+            
               <DropdownMenuContent align="start" className="w-48" onMouseLeave={() => setResourcesMenuOpen(false)} >
-                <DropdownMenuItem asChild>
-                  <Link href="/bookMark" onClick={() => setResourcesMenuOpen(false)}>book Mark</Link>
-                </DropdownMenuItem>
+              
+              {token?(  <DropdownMenuItem asChild>
+                  <Link href="/bookMark" onClick={() => setResourcesMenuOpen(false)}>Bookmark</Link>
+                </DropdownMenuItem>):(null)}
                 {/* <DropdownMenuItem
                   asChild
                   className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"

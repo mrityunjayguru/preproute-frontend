@@ -32,7 +32,12 @@ export const createboockMark = createAsyncThunk<boolean, boockMarkPayload>(
       const res = await boockMarkRepo.createboockMark(payload);
 
       if (res.status === 200 || res.status === 201) {
-        ToastSuccess("success");
+        if(payload?.BookmarkStatus=="add"){
+        ToastSuccess("bookMarked");
+        }else{
+        ToastSuccess("bookMarked Remove");
+
+        }
         return true;
       }
 
