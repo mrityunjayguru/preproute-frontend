@@ -74,7 +74,6 @@ const RightSection: React.FC<Props> = ({
         flex-shrink-0
         mr-0 lg:mr-4
         mt-6 lg:mt-0
-        overflow-hidden
       "
     >
       {/* ================= USER PROFILE ================= */}
@@ -125,12 +124,14 @@ const RightSection: React.FC<Props> = ({
       {/* ================= QUESTION PALETTE ================= */}
       <div
         className="
-          mt-4
+          mt-2
           rounded-[8px]
           border
           bg-[#F9FAFC]
           border-[#C8DCFE]
           flex flex-col flex-1 
+          overflow-hidden
+          max-h-[390px]
         "
       >
         {/* Header */}

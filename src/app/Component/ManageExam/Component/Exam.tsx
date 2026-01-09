@@ -720,7 +720,7 @@ export default function ExamUI() {
               selectedsection={selectedSection}
               CurrentInput={CurrentInput}
             />
-            <div className="mb-[6rem]">
+            <div className="mb-[7rem]">
               <FooterActions
                 handleMarkForReview={handleMarkForReview}
                 handleClearResponse={handleClearResponse}
