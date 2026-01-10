@@ -42,7 +42,7 @@ const QuestionView: React.FC<Props> = ({
         {/* 🟩 Question Preview Section */}
         <div
           className={`${question?.questionPessage === "Pass"
-              ? "w-1/2 overflow-y-auto border border-border h-[calc(100vh-280px)] p-3 rounded-lg"
+              ? "w-1/2 overflow-y-auto border border-border h-[calc(100vh-380px)] p-3 rounded-lg"
               : "w-full"
             } question-preview leading-relaxed space-y-2`}
         >
@@ -52,7 +52,7 @@ const QuestionView: React.FC<Props> = ({
         {/* 🟦 Current Input Section */}
         <div
           className={`${question?.questionPessage === "Pass"
-              ? " border-gray-300 w-1/2 h-[calc(100vh-280px)] overflow-y-auto"
+              ? " border-gray-300 w-1/2 h-[calc(100vh-380px)] overflow-y-auto"
               : "w-full max-h-[calc(100vh-280px)] overflow-y-auto"
             } font-poppins`}
         >
