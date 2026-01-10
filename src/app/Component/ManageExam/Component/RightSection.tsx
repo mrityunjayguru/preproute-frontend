@@ -152,7 +152,7 @@ const RightSection: React.FC<Props> = ({
                 status === "answered" || status === "answered-review";
               const isReview =
                 status === "review" || status === "answered-review";
-              const isAnsweredAndReview = status === "answered-review";
+              const isAnsweredAndReview = status === "reviewAndAnswer";
               const isVisited =
                 status === "visited" ||
                 (idx === currentQuestionIndex && !status);

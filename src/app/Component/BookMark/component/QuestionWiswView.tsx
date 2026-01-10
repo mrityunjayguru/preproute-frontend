@@ -101,9 +101,6 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
         : "-";
 
   /* ---------- Bookmark ---------- */
-  const handleBookmark = async () => {
-    await dispatch(createboockMark({ questionId: question._id }));
-  };
 
   // Check if question has options
   const hasOptions = question.options && question.options.length > 0;
@@ -140,7 +137,7 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
               )}
             </div>
             {/* Question Text in Header */}
-            <div className="text-gray-900 text-base font-normal">
+            <div className="preview text-gray-900 text-base font-normal">
               {renderPreview(question.questionText)}
             </div>
           </div>
@@ -194,7 +191,7 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
                           : "bg-white border-gray-200"
                         }`}
                     >
-                      <div className="text-gray-800 text-sm font-poppins">
+                      <div className="preview text-gray-800 text-sm font-poppins">
                         {renderPreview(opt.text)}
                       </div>
                       {isSelected && (
@@ -213,7 +210,7 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
           <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white 
                  border border-[#E6F4FF] p-4 max-w-4xl">
             <p className="text-[#005EB6] font-medium mb-2 font-dm-sans" >Solution</p>
-            <div className="text-gray-800 font-poppins">
+            <div className="text-gray-800 font-poppins preview">
               {question.solution || question.hint ? (
                 renderPreview(question.solution || question.hint || "")
               ) : (

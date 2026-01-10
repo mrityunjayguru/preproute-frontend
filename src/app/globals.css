@@ -533,3 +533,10 @@ div[class*="badge"] {
 .preview-container {
   white-space: pre-wrap;
 }
+
+.preview .remove-img-btn {
+  display: none !important;
+}
+.preview .resize-handle {
+  display: none !important;
+}

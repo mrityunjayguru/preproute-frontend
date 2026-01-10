@@ -54,8 +54,8 @@ export function DashboardHeader() {
       isView: userLogin?.role === "Admin",
     },
      {
-      label: "suport",
-      path: "/dashboard/suport",
+      label: "Support",
+      path: "/dashboard/support",
       isView: userLogin?.role === "Admin",
     },
   ];

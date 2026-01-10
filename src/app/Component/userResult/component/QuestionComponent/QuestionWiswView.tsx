@@ -19,9 +19,11 @@ interface Question {
   _id: string;
   questionNo: number;
   questionText: string;
+  numericAnswer:any;
   questionType: string; // "MCQ" or "Numeric"
   answerType: string;
   options: Option[];
+  userAttempted:Boolean,
   usergiven?: {
     userAnswer: string;
     numericAnswer?: string;
@@ -97,21 +99,26 @@ const QuestionWiswView: React.FC<Props> = ({
 
   if (!question) return <div className="p-4">Loading question...</div>;
 
-  const userAns = question.usergiven?.[0];
-  const isAttempted = question.userAttempt && !!userAns;
+ const userAns = question.usergiven?.[0];
+const isAttempted = question.userAttempted && !!userAns;
 
-  // Determine Correctness
-  let isCorrect = false;
-  if (isAttempted) {
-    if (question.answerType === "Numeric") {
-      isCorrect = userAns?.numericAnswer == question.correctAnswer;
-    } else {
-      const selectedOpt = question.options?.find(
-        (opt) => opt._id === userAns?.userAnswer
-      );
-      isCorrect = selectedOpt?.isCorrect || false;
-    }
+let isCorrect = false;
+
+if (isAttempted) {
+  if (question.answerType === "Numeric") {
+    const correctValue =
+      question.numericAnswer ??
+      Number(question.correctAnswer); // fallback if needed
+
+    isCorrect = Number(userAns?.numericAnswer) === Number(correctValue);
+  } else {
+    const selectedOpt = question.options?.find(
+      (opt) => opt._id === userAns?.userAnswer
+    );
+    isCorrect = Boolean(selectedOpt?.isCorrect);
   }
+}
+
 
   // Determine Correct Answer Text
   let correctText: React.ReactNode = "-";
@@ -165,6 +172,7 @@ const handleSubmitReport=(val:any)=>{
   }
   dispatch(createReport(payload))
 }
+console.log(question,"questionquestionquestion")
   return (
   <>
 <Popup
@@ -249,7 +257,7 @@ const handleSubmitReport=(val:any)=>{
         <p className="text-[#0056D2] font-medium font-dm-sans mb-3 text-sm">
           Question No. {question.questionNo}
         </p>
-        <div className="text-gray-900 font-normal font-poppins leading-relaxed">
+        <div className="preview text-gray-900 font-normal font-poppins leading-relaxed">
           {renderPreview(question.questionText)}
         </div>
       </div>
@@ -296,7 +304,7 @@ const handleSubmitReport=(val:any)=>{
                       Option {idx + 1}
                     </p>
 
-                    <p className="text-sm text-gray-800 font-poppins">
+                    <p className="preview text-sm text-gray-800 font-poppins">
                       {renderPreview(opt.text)}
                     </p>
 
@@ -316,7 +324,7 @@ const handleSubmitReport=(val:any)=>{
       {/* Solution */}
       <div className="rounded-xl bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] p-6 mb-8 mt-5">
         <p className="text-[#0056D2] font-medium font-dm-sans mb-3">Solution</p>
-        <div className="text-gray-800 font-normal leading-relaxed font-poppins">
+        <div className="preview text-gray-800 font-normal leading-relaxed font-poppins">
           {renderPreview(
             question.solution || question.hint || "No solution provided."
           )}

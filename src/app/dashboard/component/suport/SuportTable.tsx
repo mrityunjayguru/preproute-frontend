@@ -95,10 +95,10 @@ const handleOpen = (row: any) => {
           support List
         </h2>
         {/* Search box */}
-    <div className="w-[90%] md:w-96 bg-white rounded-[2px] flex items-center gap-3 px-4 py-2 border border-gray-200">
+<div className="w-[90%] md:w-[420px] bg-white rounded-lg flex items-center justify-between px-4 py-2 border border-gray-200 shadow-sm">
   {/* Search */}
-  <div className="flex items-center flex-1">
-    <Search className="w-4 h-4 text-gray-400 mr-2" />
+  <div className="flex items-center gap-2 flex-1">
+    <Search className="w-4 h-4 text-gray-400" />
     <input
       type="text"
       placeholder="Search..."
@@ -108,17 +108,21 @@ const handleOpen = (row: any) => {
     />
   </div>
 
-  {/* Type Filter */}
+  {/* Divider */}
+  <div className="h-6 w-px bg-gray-200 mx-3" />
+
+  {/* Dropdown */}
   <select
     value={type}
     onChange={(e) => setType(e.target.value)}
-    className="border rounded-md px-3 py-1.5 text-sm text-gray-700 outline-none focus:ring-1 focus:ring-blue-500"
+    className="bg-transparent text-sm text-gray-700 font-poppins outline-none cursor-pointer"
   >
-    <option value="">All</option>
+    {/* <option value="">All</option> */}
     <option value="support">Support</option>
     <option value="report">Report</option>
   </select>
 </div>
+
 
       </div>
       <CommonTable

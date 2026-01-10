@@ -101,13 +101,16 @@ function Analytics() {
   const yearOrNumberOptions = [2001, 2002, 2003];
 
   useEffect(() => {
-    const payload: any = {
+ const payload: any = {
       userId: userLogin._id,
     };
-    const payload2: any = null;
-    dispatch(setQuestionPaperResult(payload2));
+
 
     dispatch(givenExam(payload));
+    const payload2:any=null
+  //   return () => {
+  //   dispatch(setQuestionPaperResult(payload2));
+  // };
   }, []);
 
   return (

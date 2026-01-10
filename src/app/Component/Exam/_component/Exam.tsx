@@ -27,6 +27,7 @@ import SocialMedia from "../../Home/_componets/social-media";
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import LOCK from "@/assets/vectors/lock.svg";
 import LOCK2 from "@/assets/vectors/lock-2.svg";
+import { capitalizeWords } from "@/Utils/Cappital";
 
 const MockExamCard = ({ exam, handleExam, index }: any) => {
   const examById = useSelector((s: any) => s.exam?.examById) || [];
@@ -57,6 +58,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
   const isInProgress = exam?.userSummary?.target === 0 && isAttempted;
 
   const isCompleted = isAttempted && exam?.userSummary?.target === 100;
+
 
   return (
     <div
@@ -96,7 +98,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
                      font-medium font-poppins text-[#FF5635] 
                      mb-4 sm:mb-5 lg:mb-6"
       >
-        {exam?.questionPapername}
+        {capitalizeWords(exam?.questionPapername)}
       </h3>
 
       {/* ---------------- BUTTONS ---------------- */}

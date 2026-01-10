@@ -143,39 +143,42 @@ export const Header: React.FC = () => {
             ))}
 
             {/* Resources */}
-            <DropdownMenu
-              open={resourcesMenuOpen}
-              onOpenChange={setResourcesMenuOpen}
-            >
-              <DropdownMenuTrigger
-                onMouseEnter={() => setResourcesMenuOpen(true)}
-                className={`flex items-center gap-1 cursor-pointer outline-none ${
-                  isResourcesActive ? activeClass : inactiveClass
-                }`}
-              >
-                Resources
-                <ChevronDownIcon className="h-4 w-4 text-[#FF5635]" />
-              </DropdownMenuTrigger>
-            
-              <DropdownMenuContent align="start" className="w-48" onMouseLeave={() => setResourcesMenuOpen(false)} >
-              
-              {token?(  <DropdownMenuItem asChild>
-                  <Link href="/bookMark" onClick={() => setResourcesMenuOpen(false)}>Bookmark</Link>
-                </DropdownMenuItem>):(null)}
-                {/* <DropdownMenuItem
-                  asChild
-                  className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
-                >
-                  <Link href="/instructions">Instructions</Link>
-                </DropdownMenuItem> */}
-                <DropdownMenuItem
-                  asChild
-                  className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
-                >
-                  <Link href="/blog">Blogs</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+          <div
+  onMouseEnter={() => setResourcesMenuOpen(true)}
+  onMouseLeave={() => setResourcesMenuOpen(false)}
+>
+  <DropdownMenu open={resourcesMenuOpen}>
+    <DropdownMenuTrigger
+      className={`flex items-center gap-1 cursor-pointer outline-none ${
+        isResourcesActive ? activeClass : inactiveClass
+      }`}
+    >
+      Resources
+      <ChevronDownIcon className="h-4 w-4 text-[#FF5635]" />
+    </DropdownMenuTrigger>
+
+    <DropdownMenuContent align="start" className="w-48">
+      {token && (
+        <DropdownMenuItem asChild>
+          <Link
+            href="/bookMark"
+            onClick={() => setResourcesMenuOpen(false)}
+          >
+            Bookmark
+          </Link>
+        </DropdownMenuItem>
+      )}
+
+      <DropdownMenuItem
+        asChild
+        className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
+      >
+        <Link href="/blog">Blogs</Link>
+      </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</div>
+
       {token?( <Link href="/analytics" className={isActive("/analytics") ? activeClass : inactiveClass}>
                 Analytics
               </Link>):(null)}

@@ -287,6 +287,7 @@ export default function ExamUI() {
   }, []);
 
   const updateStatus = (status: string) => {
+  
     const sectionKey = isSection ? selectedSection?.sectionId : "no-section";
     if (!sectionKey) return;
     setSectionQuestionStatus((prev) => ({
@@ -366,6 +367,55 @@ export default function ExamUI() {
       setCurrentQuestionIndex((p) => p + 1);
       fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
     } else if (isSection && currentSectionIndex + 1 < examSections.length) {
+      setsectionRestriction(true);
+      // const nextSection = examSections[currentSectionIndex + 1];
+      // setSelectedSection(nextSection);
+      // setCurrentSectionIndex((p) => p + 1);
+      // setCurrentQuestionIndex(0);
+      // setTotalNoOfQuestions(nextSection.noOfQuestions);
+      // fetchQuestion(1, nextSection.sectionId);
+    }
+  };
+  const handleMarkForAnswerAndReview =async () => {
+    if (!question || (!mcqSelected && !numericalValue)) return 
+     if (!question || (!mcqSelected && !numericalValue)) {
+      updateStatus("reviewAndAnswer");
+      if (currentQuestionIndex + 1 < totalNoOfQuestions) {
+        setCurrentQuestionIndex((p) => p + 1);
+        fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
+      } else if (isSection && currentSectionIndex + 1 < examSections.length) {
+        setsectionRestriction(true);
+      }
+      setloder(false);
+      return;
+    }
+
+    const endTime = Date.now();
+    const timeTaken = questionStartTime
+      ? Math.floor((endTime - questionStartTime) / 1000)
+      : 0; // seconds
+    const payload: any = {
+      questionId: question._id,
+      userId: userLogin?._id,
+      timeTaken: timeTaken,
+      statusType:"reviewAndAnswer",
+      questionPaperId: examData?.[0]?._id,
+    };
+    question.answerType === "Numeric"
+      ? (payload.numericAnswer = numericalValue)
+      : (payload.userAnswer = mcqSelected);
+
+    try {
+      await dispatch(createUserExam(payload));
+      updateStatus("reviewAndAnswer");
+    } catch (err) {
+      console.error("Failed to save user answer:", err);
+    }
+    setQuestionStartTime(Date.now());
+    if (currentQuestionIndex + 1 < totalNoOfQuestions) {
+      setCurrentQuestionIndex((p) => p + 1);
+      fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
+    } else if (isSection && currentSectionIndex + 1 < examSections.length) {
       const nextSection = examSections[currentSectionIndex + 1];
       setSelectedSection(nextSection);
       setCurrentSectionIndex((p) => p + 1);
@@ -373,8 +423,10 @@ export default function ExamUI() {
       setTotalNoOfQuestions(nextSection.noOfQuestions);
       fetchQuestion(1, nextSection.sectionId);
     }
+    setloder(false);
   };
 
+  
   const handleClearResponse = async () => {
     const payload: any = {
       questionPaperId: question,
@@ -727,6 +779,7 @@ export default function ExamUI() {
                 handlePreviousQuestion={handlePreviousQuestion}
                 handleNextQuestion={handleNextQuestion}
                 handleSubmit={handleSubmit}
+                handleMarkForAnswerAndReview={handleMarkForAnswerAndReview}
                 isTimeUp={isTimeUp}
                 loder={loder}
                 ReportQuestion={ReportQuestion}
