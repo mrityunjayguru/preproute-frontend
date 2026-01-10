@@ -80,12 +80,14 @@ const FooterActions: React.FC<Props> = ({
         </div>
 
         {/* RIGHT ACTION */}
-        {/* <Button
+       <div className="mt-6 flex justify-center px-3 pb-4 items-center flex-shrink-0">
+       <Button
           onClick={handleSubmit}
-          className=" py-4 sm:py-5 md:py-6 px-8 sm:px-10 md:px-12 font-normal text-sm sm:text-md cursor-pointer font-poppins bg-[#00ACEF] hover:bg-[#0095cc] text-white rounded-[4px]"
+          className="w-fit py-4 sm:py-5 md:py-6 px-8 sm:px-10 md:px-12 font-normal text-sm sm:text-md cursor-pointer font-poppins bg-[#00ACEF] hover:bg-[#0095cc] text-white rounded-[4px]"
         >
-          Submit Exam
-        </Button> */}
+          Submit
+        </Button>
+        </div>
       </div>
     </div>
   );

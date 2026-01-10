@@ -100,7 +100,7 @@ export default function QuestionWiseTab({ data }: QuestionWiseTabProps) {
         dispatch(updaquesPaperTime(payload));
       }
     } else {
-      setTotalNoOfQuestions(Number(examInfo.noOfQuestions) || 0);
+      setTotalNoOfQuestions(Number(examInfo?.noOfQuestions) || 0);
       fetchQuestion(1);
     }
   }, [examData, examResult]);

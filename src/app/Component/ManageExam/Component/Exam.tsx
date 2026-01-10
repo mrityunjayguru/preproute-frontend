@@ -136,7 +136,7 @@ export default function ExamUI() {
 
     const examInfo = examData[0].exam;
 
-    setIsSection(examInfo.isSection);
+    setIsSection(examInfo?.isSection);
     setSwitchable(examInfo?.switchable);
 
     // ⏳ GET SAVED TIME FROM LOCAL STORAGE
@@ -161,7 +161,7 @@ export default function ExamUI() {
     }
 
     // ⬇️ Load First Question Logic
-    if (examInfo.isSection && examSections.length) {
+    if (examInfo?.isSection && examSections?.length) {
       const firstSection: any = examSections[0];
       // STEP 1: Set section only once (when NOT already selected)
 
@@ -209,7 +209,7 @@ export default function ExamUI() {
         localStorage.setItem("sectionStartTime_" + firstSection.sectionId, "1");
       }
     } else {
-      setTotalNoOfQuestions(Number(examInfo.noOfQuestions) || 0);
+      setTotalNoOfQuestions(Number(examInfo?.noOfQuestions) || 0);
       fetchQuestion(1);
     }
   }, [examData]);
@@ -747,7 +747,7 @@ export default function ExamUI() {
         <ExamHeader />
       </div>
 
-      <div className="flex flex-col min-h-screen  my-5">
+      <div className="h-[94vh] flex flex-col overflow-hidden">
         <HeaderSection timeLeft={timeLeft} formatTime={formatTime} />
 
         <div className="flex flex-col justify-between lg:flex-row flex-1">
@@ -772,7 +772,22 @@ export default function ExamUI() {
               selectedsection={selectedSection}
               CurrentInput={CurrentInput}
             />
-            <div className="mb-[7rem]">
+          
+          </div>
+          <RightSection
+            userLogin={userLogin}
+            totalNoOfQuestions={totalNoOfQuestions}
+            currentStatus={currentStatus}
+            currentQuestionIndex={currentQuestionIndex}
+            getQuestionByNumberId={getQuestionByNumberId}
+            isSection={isSection}
+            // handleSubmit={handleSubmit}
+            selectedSection={examProgress}
+            isTimeUp={isTimeUp}
+          />
+        </div>
+      </div>
+  <div className="fixed bottom-0 left-0 w-full z-50 bg-white border-t">
               <FooterActions
                 handleMarkForReview={handleMarkForReview}
                 handleClearResponse={handleClearResponse}
@@ -784,23 +799,8 @@ export default function ExamUI() {
                 loder={loder}
                 ReportQuestion={ReportQuestion}
               />
-            </div>
-          </div>
-          <RightSection
-            userLogin={userLogin}
-            totalNoOfQuestions={totalNoOfQuestions}
-            currentStatus={currentStatus}
-            currentQuestionIndex={currentQuestionIndex}
-            getQuestionByNumberId={getQuestionByNumberId}
-            isSection={isSection}
-            handleSubmit={handleSubmit}
-            selectedSection={examProgress}
-            isTimeUp={isTimeUp}
-          />
-        </div>
-      </div>
-
-      <ManageFooter />
+    </div>
+      {/* <ManageFooter /> */}
     </>
   );
 }

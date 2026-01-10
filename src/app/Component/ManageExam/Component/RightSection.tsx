@@ -19,7 +19,7 @@ interface Props {
   currentQuestionIndex: number;
   getQuestionByNumberId: (idx: number) => void;
   isSection: boolean;
-   handleSubmit: () => void;
+  //  handleSubmit: () => void;
   selectedSection: any;
   isTimeUp: boolean;
 }
@@ -29,7 +29,7 @@ const RightSection: React.FC<Props> = ({
   totalNoOfQuestions,
   currentStatus,
   currentQuestionIndex,
-  handleSubmit,
+  // handleSubmit,
   getQuestionByNumberId,
   isSection,
   selectedSection,
@@ -64,16 +64,18 @@ const RightSection: React.FC<Props> = ({
     : null;
 
   return (
-    <aside
+    <div
       className="
-        lg:w-1/5
-        w-full
-        h-screen
-        flex flex-col
-        font-semibold
-        flex-shrink-0
-        mr-0 lg:mr-4
-        mt-6 lg:mt-0
+       lg:w-1/5
+  w-full
+  flex flex-col
+  font-semibold
+  flex-shrink-0
+  mr-0 lg:mr-4
+  mt-6 lg:mt-0
+  h-[74vh] 
+  sm:h-[75vh]
+  lg:h-[76vh]
       "
     >
       {/* ================= USER PROFILE ================= */}
@@ -124,14 +126,14 @@ const RightSection: React.FC<Props> = ({
       {/* ================= QUESTION PALETTE ================= */}
       <div
         className="
-          mt-2
-          rounded-[8px]
-          border
-          bg-[#F9FAFC]
-          border-[#C8DCFE]
-          flex flex-col flex-1 
-          overflow-hidden
-          max-h-[390px]
+        mt-2
+    rounded-[8px]
+    border
+    bg-[#F9FAFC]
+    border-[#C8DCFE]
+    flex flex-col
+    flex-1
+    overflow-hidden
         "
       >
         {/* Header */}
@@ -144,7 +146,7 @@ const RightSection: React.FC<Props> = ({
         </p>
 
         {/* ================= SCROLLABLE GRID ================= */}
-        <div className="flex-1 min-h-0 overflow-y-auto px-2 sm:px-3 pb-3">
+        <div className="flex-1 min-h-0 overflow-y-auto px-2 sm:px-3 pb-3 ">
           <div className="grid grid-cols-4 sm:grid-cols-5 gap-1.5 sm:gap-2">
             {Array.from({ length: totalNoOfQuestions }, (_, idx) => {
               const status = currentStatus[idx];
@@ -205,15 +207,15 @@ const RightSection: React.FC<Props> = ({
         </div>
        
       </div>
-      <div className="mt-6 flex justify-center px-3 pb-4 items-center flex-shrink-0">
+      {/* <div className="mt-6 flex justify-center px-3 pb-4 items-center flex-shrink-0">
        <Button
           onClick={handleSubmit}
           className="w-fit py-4 sm:py-5 md:py-6 px-8 sm:px-10 md:px-12 font-normal text-sm sm:text-md cursor-pointer font-poppins bg-[#00ACEF] hover:bg-[#0095cc] text-white rounded-[4px]"
         >
           Submit Exam
         </Button>
-        </div>
-    </aside>
+        </div> */}
+    </div>
   );
 };
 
