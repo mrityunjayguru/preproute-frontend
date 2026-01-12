@@ -7,104 +7,107 @@ interface RenderPreviewProps {
   content: string;
 }
 
+const latexRegex = /(\$\$[\s\S]+?\$\$|\$[^$]+\$)/g;
+const blockLatexTest = (t: string) => /^\$\$[\s\S]+\$\$$/.test(t);
+const inlineLatexTest = (t: string) => /^\$[^$]+\$$/.test(t);
+
 const RenderPreview: React.FC<RenderPreviewProps> = ({ content }) => {
   if (!content) return null;
-
-  // ---- Latex detection regex ----
-  const latexRegex = /(\$\$[\s\S]+?\$\$|\$[^$]+\$)/g;
-  const blockLatexTest = (t: string) => /^\$\$[\s\S]+\$\$$/.test(t);
-  const inlineLatexTest = (t: string) => /^\$[^$]+\$$/.test(t);
 
   const parser = new DOMParser();
   const doc = parser.parseFromString(`<div id="__root__">${content}</div>`, "text/html");
   const root = doc.getElementById("__root__");
   if (!root) return null;
 
-  const normalizeText = (s: string) => s.replace(/\u00A0/g, " ").replace(/\r/g, "");
+  const normalizeText = (s: string) =>
+    s.replace(/\u00A0/g, " ").replace(/\r/g, "");
 
   const renderNode = (node: ChildNode, key: string | number): React.ReactNode => {
-    // --- text node ---
+
+    // ================= TEXT NODE =================
     if (node.nodeType === Node.TEXT_NODE) {
       const raw = normalizeText(node.textContent || "");
       if (!raw) return null;
 
       const parts = raw.split(latexRegex);
+
       return parts.map((part, idx) => {
-        if (part === "") return null;
-        if (!latexRegex.test(part)) {
-          const html = part.replace(/\n/g, "<br/>").replace(/ {2}/g, "&nbsp;&nbsp;");
-          return <span key={`${key}-t-${idx}`} dangerouslySetInnerHTML={{ __html: html }} />;
+        if (!part) return null;
+
+        const isBlock = blockLatexTest(part);
+        const isInline = inlineLatexTest(part);
+
+        // ---- Normal text ----
+        if (!isBlock && !isInline) {
+          const html = part
+            .replace(/\n/g, "<br/>")
+            .replace(/ {2}/g, "&nbsp;&nbsp;");
+          return (
+            <span
+              key={`${key}-t-${idx}`}
+              dangerouslySetInnerHTML={{ __html: html }}
+            />
+          );
         }
-        if (blockLatexTest(part)) {
+
+        // ---- Block LaTeX $$...$$ ----
+        if (isBlock) {
           const math = part.slice(2, -2).trim();
           return (
-            <div key={`${key}-b-${idx}`} style={{ textAlign: "center", margin: "0.25rem 0" }}>
+            <div key={`${key}-b-${idx}`} style={{ margin: "0.4rem 0" }}>
               <BlockMath math={math} />
             </div>
           );
         }
-        if (inlineLatexTest(part)) {
-          const math = part.slice(1, -1).trim();
-          return (
-            <span key={`${key}-i-${idx}`} style={{ display: "inline-block", verticalAlign: "baseline" }}>
-              <InlineMath math={math} />
-            </span>
-          );
-        }
-        return null;
+
+        // ---- Inline LaTeX $...$ ----
+        const math = part.slice(1, -1).trim();
+        return (
+          <span key={`${key}-i-${idx}`} style={{ display: "inline-block" }}>
+            <InlineMath math={math} />
+          </span>
+        );
       });
     }
 
-    // --- element node ---
+    // ================= ELEMENT NODE =================
     if (node.nodeType === Node.ELEMENT_NODE) {
       const el = node as Element;
       const tag = el.tagName.toLowerCase();
-      const children = Array.from(node.childNodes);
-      const renderedChildren = children.map((child, i) => renderNode(child, `${key}-${tag}-${i}`));
+      const children = Array.from(el.childNodes).map((child, i) =>
+        renderNode(child, `${key}-${tag}-${i}`)
+      );
 
       switch (tag) {
         case "img": {
           const src = el.getAttribute("src") || "";
           const alt = el.getAttribute("alt") || "";
-          const styleAttr = el.getAttribute("style") || "";
-          const inlineStyles: Record<string, string> = {};
-          styleAttr.split(";").forEach((rule) => {
-            const [prop, value] = rule.split(":").map((s) => s && s.trim());
-            if (prop && value) {
-              const jsProp = prop.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
-              inlineStyles[jsProp] = value;
-            }
-          });
-          const width = el.getAttribute("width");
-          const height = el.getAttribute("height");
           return (
             <img
               key={key}
               src={src}
               alt={alt}
-              width={width || undefined}
-              height={height || undefined}
-              style={{
-                display: "inline-block",
-                maxWidth: "100%",
-                height: "auto",
-                verticalAlign: "middle",
-                margin: "0.3rem",
-                ...inlineStyles,
-              }}
+              style={{ maxWidth: "100%", margin: "0.4rem 0" }}
             />
           );
         }
 
         case "table":
           return (
-            <table key={key} style={{ borderCollapse: "collapse", width: "100%", margin: "0.5rem 0" }}>
-              {renderedChildren}
+            <table
+              key={key}
+              style={{
+                borderCollapse: "collapse",
+                width: "100%",
+                margin: "0.5rem 0",
+              }}
+            >
+              {children}
             </table>
           );
 
         case "tr":
-          return <tr key={key}>{renderedChildren}</tr>;
+          return <tr key={key}>{children}</tr>;
 
         case "td":
         case "th":
@@ -114,71 +117,63 @@ const RenderPreview: React.FC<RenderPreviewProps> = ({ content }) => {
               style={{
                 border: "1px solid #ccc",
                 padding: 6,
-                verticalAlign: "middle",
               }}
             >
-              {renderedChildren}
+              {children}
             </td>
           );
 
-        case "p":
-          return (
-            <p key={key} style={{ margin: "0.6rem 0" }}>
-              {renderedChildren}
-            </p>
-          );
-
         case "br":
-          return <br key={key} />; // ✅ fixed
+          return <br key={key} />;
+
+        case "p":
+          return <p key={key}>{children}</p>;
 
         case "div":
         case "span":
-        case "ul":
-        case "ol":
-        case "li":
         case "b":
         case "i":
         case "u":
         case "strong":
         case "em":
+        case "ul":
+        case "ol":
+        case "li":
         case "thead":
         case "tbody":
-          return React.createElement(tag, { key }, renderedChildren);
+          return React.createElement(tag, { key }, children);
 
         default:
-          return <span key={key} dangerouslySetInnerHTML={{ __html: el.innerHTML }} />;
+          return <span key={key}>{children}</span>;
       }
     }
+
     return null;
   };
-
-  const output = Array.from(root.childNodes).map((n, i) => renderNode(n, `root-${i}`));
 
   return (
     <>
       <style>{`
-        .preview-container-latex .katex {
-          font-size: 1em !important;
-        }
         .preview-container-latex .katex-display {
-          margin: 0.25rem 0 !important;
+          margin: 0.4rem 0 !important;
+          text-align: left;
         }
-        .preview-container-latex .katex-html {
-          white-space: normal;
-        }
-        .preview-container-latex .katex .katex-html {
-          display: inline-block;
+        .preview-container-latex .katex {
+          font-size: 1em;
         }
       `}</style>
+
       <div
+        className="preview-container-latex"
         style={{
+          whiteSpace: "normal",
           lineHeight: 1.6,
           wordBreak: "break-word",
-          overflowX: "auto",
         }}
-        className="preview-container preview-container-latex font-poppins"
       >
-        {output}
+        {Array.from(root.childNodes).map((n, i) =>
+          renderNode(n, `root-${i}`)
+        )}
       </div>
     </>
   );

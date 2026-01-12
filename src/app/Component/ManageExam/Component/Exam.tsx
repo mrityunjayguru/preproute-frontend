@@ -360,24 +360,29 @@ export default function ExamUI() {
     }
   };
 
-  const handleMarkForReview = () => {
+  const handleMarkForReviews = () => {
     updateStatus("review");
-    // handleNextQuestion();
     if (currentQuestionIndex + 1 < totalNoOfQuestions) {
       setCurrentQuestionIndex((p) => p + 1);
       fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
     } else if (isSection && currentSectionIndex + 1 < examSections.length) {
       setsectionRestriction(true);
-      // const nextSection = examSections[currentSectionIndex + 1];
-      // setSelectedSection(nextSection);
-      // setCurrentSectionIndex((p) => p + 1);
-      // setCurrentQuestionIndex(0);
-      // setTotalNoOfQuestions(nextSection.noOfQuestions);
-      // fetchQuestion(1, nextSection.sectionId);
+
     }
   };
-  const handleMarkForAnswerAndReview =async () => {
-    if (!question || (!mcqSelected && !numericalValue)) return 
+  const handleMarkForReview =async () => {
+    if (!question || (!mcqSelected && !numericalValue)) {
+     updateStatus("review");
+    if (currentQuestionIndex + 1 < totalNoOfQuestions) {
+      setCurrentQuestionIndex((p) => p + 1);
+      fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
+    } else if (isSection && currentSectionIndex + 1 < examSections.length) {
+      setsectionRestriction(true);
+
+    } 
+       
+       return
+    } 
      if (!question || (!mcqSelected && !numericalValue)) {
       updateStatus("reviewAndAnswer");
       if (currentQuestionIndex + 1 < totalNoOfQuestions) {
@@ -794,7 +799,7 @@ export default function ExamUI() {
                 handlePreviousQuestion={handlePreviousQuestion}
                 handleNextQuestion={handleNextQuestion}
                 handleSubmit={handleSubmit}
-                handleMarkForAnswerAndReview={handleMarkForAnswerAndReview}
+                // handleMarkForAnswerAndReview={handleMarkForAnswerAndReview}
                 isTimeUp={isTimeUp}
                 loder={loder}
                 ReportQuestion={ReportQuestion}

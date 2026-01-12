@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 
 interface Props {
   handleMarkForReview: () => void;
-  handleMarkForAnswerAndReview: () => void;
+  // handleMarkForAnswerAndReview: () => void;
   handleClearResponse: () => void;
   handlePreviousQuestion: () => void;
   handleNextQuestion: () => void;
@@ -21,7 +21,7 @@ const FooterActions: React.FC<Props> = ({
   handlePreviousQuestion,
   handleNextQuestion,
   handleSubmit,
-  handleMarkForAnswerAndReview,
+  // handleMarkForAnswerAndReview,
   isTimeUp,
   loder,
 }) => {
@@ -37,13 +37,13 @@ const FooterActions: React.FC<Props> = ({
           >
             Mark for Review & Next
           </Button>
-  <Button
+  {/* <Button
             onClick={handleMarkForAnswerAndReview}
             disabled={isTimeUp}
             className="py-2 px-3 sm:px-4 md:px-6 cursor-pointer font-normal text-xs sm:text-sm text-gray-900  font-poppins bg-gradient-to-t from-[#FFECDF] to-white border border-[#E6F4FF] "
           >
             Mark 
-          </Button>
+          </Button> */}
           <Button
             onClick={handleClearResponse}
             disabled={isTimeUp}

@@ -74,7 +74,7 @@ const RightSection: React.FC<Props> = ({
   mr-0 lg:mr-4
   mt-6 lg:mt-0
   h-[74vh] 
-  sm:h-[75vh]
+  sm:h-screen
   lg:h-[76vh]
       "
     >

@@ -199,7 +199,12 @@ function Analytics() {
         </div>
       <div className="flex justify-center items-center my-10">
           { givenAllExam.length==0?(
-            <p className="text-xl font-medium text-gray-900 font-poppins">Not Attempted yet </p>
+            <p className="text-xl font-medium text-gray-900 font-poppins">No exams attempted yet. Attempt an exam to view your analytics. </p>
+          ):(null)}
+      </div>
+            <div className="flex justify-center items-center my-10">
+          { givenAllExam.length>0 && !selectedExamId?(
+            <p className="text-xl font-medium text-gray-900 font-poppins">⁠⁠Choose an exam from the top dropdown to see detailed performance analytics. </p>
           ):(null)}
       </div>
       </div>
