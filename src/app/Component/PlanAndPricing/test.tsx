@@ -191,7 +191,7 @@ export default function PricingPlans() {
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
 
-      <section className="min-h-screen w-full  bg-white">
+      <section className="min-h-screen w-full flex flex-col bg-white">
         <div className="relative mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
           {/* HEADER */}
           <div className="bg-[#F4FBFF]  rounded-[8px] py-8 sm:py-12 md:py-16 text-center w-full">
@@ -376,7 +376,7 @@ export default function PricingPlans() {
           </div>
 
           {/* SPACER */}
-          {/* <div className="h-0 md:h-[420px] lg:h-[520px]" /> */}
+          <div className="h-0 md:h-[420px] lg:h-[520px]" />
         </div>
         <section className="bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-8 sm:mt-12 md:mt-20 py-4 sm:py-5 lg:py-6 xl:py-8 ">
           <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">

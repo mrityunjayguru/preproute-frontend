@@ -1,5 +1,6 @@
 import { Dot } from "lucide-react";
 import React from "react";
+import { BlockMath, InlineMath } from "react-katex";
 
 interface Option {
   _id: string;
@@ -30,6 +31,78 @@ export const MCQOptions: React.FC<MCQOptionsProps> = ({
   if (isSubmitted && question?.usergiven?.[0]?.userAnswer) {
     userAnswer = question.usergiven[0].userAnswer;
   }
+const renderPreview =(previewHTML:any) => {
+  if (!previewHTML) return null;
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(previewHTML, "text/html");
+
+  const extractText = (node: Node): string => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      return node.textContent || "";
+    }
+
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      const el = node as HTMLElement;
+      const tag = el.tagName.toLowerCase();
+
+      let text = "";
+      el.childNodes.forEach((child) => {
+        text += extractText(child);
+      });
+
+      // block elements → new line
+      if (!["span", "b", "i", "u", "strong", "em"].includes(tag)) {
+        return text + "\n";
+      }
+
+      return text;
+    }
+
+    return "";
+  };
+
+  const fullText = extractText(doc.body)
+    .replace(/\u00A0/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  const latexRegex = /(\${1,2}[\s\S]*?\${1,2})/g;
+
+  return (
+    <div
+      className="preview-container"
+      style={{ whiteSpace: "pre-wrap", lineHeight: 1.6 }}
+    >
+      {fullText.split(latexRegex).map((part, i) => {
+        if (!part) return null;
+
+        const isLatex =
+          (part.startsWith("$$") && part.endsWith("$$")) ||
+          (part.startsWith("$") && part.endsWith("$"));
+
+        if (isLatex) {
+          const math = part.replace(/^\$+|\$+$/g, "").trim();
+
+          // 🔹 multiline → block (LEFT aligned)
+          if (math.includes("\n")) {
+            return (
+              <div key={i} style={{ margin: "0.4rem 0" }}>
+                <BlockMath math={math} />
+              </div>
+            );
+          }
+
+          // 🔹 single line → inline
+          return <InlineMath key={i} math={math} />;
+        }
+
+        return <span key={i}>{part}</span>;
+      })}
+    </div>
+  );
+};
+
 
   return (
     <div className="space-y-3">
@@ -87,10 +160,11 @@ export const MCQOptions: React.FC<MCQOptionsProps> = ({
             </span>
 
             {/* Option Text */}
-            <span
+            {renderPreview(opt.text)}
+            {/* <span
               className="text-gray-900"
               dangerouslySetInnerHTML={{ __html: opt.text }}
-            />
+            /> */}
           </div>
         );
       })}

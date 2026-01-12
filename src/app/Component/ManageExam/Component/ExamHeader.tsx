@@ -30,7 +30,7 @@ function ExamHeader() {
         isOpen={openPopup}
         onClose={() => setOpenPopup(false)}
       />
-      <div className="w-full bg-black flex justify-between items-center px-6 sm:px-8 md:px-12 lg:px-28 py-2">
+      <div className="w-full bg-black flex justify-between items-center px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 py-2">
         <Image src={logo} alt="Logo" className="w-auto " />
         {/* RIGHT: Calculator Button */}
         <div className="flex font-poppins gap-5 cursor-pointer">

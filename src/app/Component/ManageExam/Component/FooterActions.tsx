@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 
 interface Props {
   handleMarkForReview: () => void;
-  // handleMarkForAnswerAndReview: () => void;
+  handleMarkForAnswerAndReview: () => void;
   handleClearResponse: () => void;
   handlePreviousQuestion: () => void;
   handleNextQuestion: () => void;
@@ -21,29 +21,29 @@ const FooterActions: React.FC<Props> = ({
   handlePreviousQuestion,
   handleNextQuestion,
   handleSubmit,
-  // handleMarkForAnswerAndReview,
+  handleMarkForAnswerAndReview,
   isTimeUp,
   loder,
 }) => {
   return (
-    <div className="w-full bg-white px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28 py-3 fixed md:static bottom-0 left-0 right-0 z-40 ">
-      <div className=" flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+    <div className="w-full bg-white px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10  bottom-0 left-0 right-0 z-40 ">
+      <div className=" flex flex-wrap items-center justify-between gap-2 sm:gap-3 ">
         {/* LEFT ACTIONS */}
         <div className="flex gap-2 flex-wrap justify-center">
           <Button
-            onClick={handleMarkForReview}
+            onClick={handleMarkForAnswerAndReview}
             disabled={isTimeUp}
             className="py-2 px-3 sm:px-4 md:px-6 cursor-pointer font-normal text-xs sm:text-sm text-gray-900  font-poppins bg-gradient-to-t from-[#FFECDF] to-white border border-[#E6F4FF] "
           >
             Mark for Review & Next
           </Button>
-  {/* <Button
+          {/* <Button
             onClick={handleMarkForAnswerAndReview}
             disabled={isTimeUp}
             className="py-2 px-3 sm:px-4 md:px-6 cursor-pointer font-normal text-xs sm:text-sm text-gray-900  font-poppins bg-gradient-to-t from-[#FFECDF] to-white border border-[#E6F4FF] "
           >
             Mark 
-          </Button> */}
+          </Button>  */}
           <Button
             onClick={handleClearResponse}
             disabled={isTimeUp}
@@ -80,13 +80,13 @@ const FooterActions: React.FC<Props> = ({
         </div>
 
         {/* RIGHT ACTION */}
-       <div className="mt-6 flex justify-center px-3 pb-4 items-center flex-shrink-0">
-       <Button
-          onClick={handleSubmit}
-          className="w-fit py-4 sm:py-5 md:py-6 px-8 sm:px-10 md:px-12 font-normal text-sm sm:text-md cursor-pointer font-poppins bg-[#00ACEF] hover:bg-[#0095cc] text-white rounded-[4px]"
-        >
-          Submit
-        </Button>
+        <div className=" mt-1 flex justify-center px-3 pb-4 items-center flex-shrink-0">
+          <Button
+            onClick={handleSubmit}
+            className="w-fit py-4 sm:py-5 md:py-6 px-8 sm:px-10 md:px-12 font-normal text-sm sm:text-md cursor-pointer font-poppins bg-[#00ACEF] hover:bg-[#0095cc] text-white rounded-[4px]"
+          >
+            Submit
+          </Button>
         </div>
       </div>
     </div>

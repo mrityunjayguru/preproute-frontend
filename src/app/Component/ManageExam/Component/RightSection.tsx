@@ -66,7 +66,7 @@ const RightSection: React.FC<Props> = ({
   return (
     <div
       className="
-       lg:w-1/5
+       lg:w-1/6
   w-full
   flex flex-col
   font-semibold
@@ -82,7 +82,7 @@ const RightSection: React.FC<Props> = ({
       <div className="bg-[#F9FAFC] rounded-[8px] border border-[#E6F4FF] flex-shrink-0">
         {userLogin && (
           <>
-            <div className="flex items-center bg-[#F9FAFC] p-4 rounded-[8px]">
+            <div className="flex items-center bg-[#F9FAFC] p-2 rounded-[8px]">
               <div className="rounded-[8px] flex items-center justify-center mr-4 flex-shrink-0 overflow-hidden bg-gray-100 w-16 h-16">
                 {userImageUrl && !imageError ? (
                   <Image
@@ -116,7 +116,7 @@ const RightSection: React.FC<Props> = ({
               </div>
             </div>
 
-            <div className="px-3 pb-4">
+            <div className="px-2 pb-2">
               <StatusIndicators />
             </div>
           </>
@@ -137,7 +137,7 @@ const RightSection: React.FC<Props> = ({
         "
       >
         {/* Header */}
-        <div className="bg-[#005EB6] text-white py-2 px-3 rounded-t-[8px] flex-shrink-0">
+        <div className="bg-[#005EB6] text-white py-2 px-2 rounded-t-[8px] flex-shrink-0">
           <h3 className="text-md font-normal font-dm-sans">{sectionName}</h3>
         </div>
 
@@ -187,8 +187,8 @@ const RightSection: React.FC<Props> = ({
                   <Image
                     src={iconSrc}
                     alt={`Question ${idx + 1}`}
-                    width={36}
-                    height={36}
+                    width={34}
+                    height={34}
                     className="w-full h-full object-contain"
                   />
 
@@ -205,7 +205,7 @@ const RightSection: React.FC<Props> = ({
             })}
           </div>
         </div>
-       
+
       </div>
       {/* <div className="mt-6 flex justify-center px-3 pb-4 items-center flex-shrink-0">
        <Button

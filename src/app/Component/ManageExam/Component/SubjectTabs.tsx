@@ -34,23 +34,24 @@ const SubjectTabs: React.FC<Props> = ({
   return (
     <>
       {isSection && examSections.length > 0 && (
-        <div className="flex gap-2 items-center overflow-x-auto no-scrollbar font-dm-sans px-4 sm:px-8 md:px-12 lg:px-28 pb-3 mt-3">
+        <div className="flex gap-2 items-center overflow-x-auto no-scrollbar font-dm-sans px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10  pb-2 mt-2">
           {examSections.map((t) => (
             <button
               key={t.sectionId}
               onClick={() => handleSection(t)}
-              className={`cursor-pointer px-6 py-2 rounded-[8px] text-md transition-all whitespace-nowrap ${
-                t.sectionId === selectedSection?.sectionId
+              className={`cursor-pointer px-6 py-2 rounded-[8px] text-md transition-all whitespace-nowrap ${t.sectionId === selectedSection?.sectionId
                   ? "bg-[#005EB6] text-white"
                   : "bg-blue-100 text-[#5291D2] "
-              }`}
+                }`}
             >
               {t.sectionDetail?.section || "Section"}
             </button>
           ))}
         </div>
       )}
-      <hr className="h-6 bg-[#5291D2] text-[#5291D2]" />
+      <span className="h-6 bg-[#5291D2] font-dm-sans text-sm font-medium px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10  text-white" >
+        Question No. {currentQuestionIndex + 1}
+      </span>
     </>
   );
 };
