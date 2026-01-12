@@ -247,7 +247,7 @@ export default function ExamUI() {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  useEffect(() => {}, [isTimeUp]);
+  useEffect(() => { }, [isTimeUp]);
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
@@ -287,7 +287,7 @@ export default function ExamUI() {
   }, []);
 
   const updateStatus = (status: string) => {
-  
+
     const sectionKey = isSection ? selectedSection?.sectionId : "no-section";
     if (!sectionKey) return;
     setSectionQuestionStatus((prev) => ({
@@ -376,9 +376,9 @@ export default function ExamUI() {
       // fetchQuestion(1, nextSection.sectionId);
     }
   };
-  const handleMarkForAnswerAndReview =async () => {
-    if (!question || (!mcqSelected && !numericalValue)) return 
-     if (!question || (!mcqSelected && !numericalValue)) {
+  const handleMarkForAnswerAndReview = async () => {
+    if (!question || (!mcqSelected && !numericalValue)) return
+    if (!question || (!mcqSelected && !numericalValue)) {
       updateStatus("reviewAndAnswer");
       if (currentQuestionIndex + 1 < totalNoOfQuestions) {
         setCurrentQuestionIndex((p) => p + 1);
@@ -398,7 +398,7 @@ export default function ExamUI() {
       questionId: question._id,
       userId: userLogin?._id,
       timeTaken: timeTaken,
-      statusType:"reviewAndAnswer",
+      statusType: "reviewAndAnswer",
       questionPaperId: examData?.[0]?._id,
     };
     question.answerType === "Numeric"
@@ -426,7 +426,7 @@ export default function ExamUI() {
     setloder(false);
   };
 
-  
+
   const handleClearResponse = async () => {
     const payload: any = {
       questionPaperId: question,
@@ -772,7 +772,7 @@ export default function ExamUI() {
               selectedsection={selectedSection}
               CurrentInput={CurrentInput}
             />
-          
+
           </div>
           <RightSection
             userLogin={userLogin}
@@ -787,19 +787,19 @@ export default function ExamUI() {
           />
         </div>
       </div>
-  <div className="fixed bottom-0 left-0 w-full z-50 bg-white border-t">
-              <FooterActions
-                handleMarkForReview={handleMarkForReview}
-                handleClearResponse={handleClearResponse}
-                handlePreviousQuestion={handlePreviousQuestion}
-                handleNextQuestion={handleNextQuestion}
-                handleSubmit={handleSubmit}
-                handleMarkForAnswerAndReview={handleMarkForAnswerAndReview}
-                isTimeUp={isTimeUp}
-                loder={loder}
-                ReportQuestion={ReportQuestion}
-              />
-    </div>
+      <div className="fixed bottom-0 left-0 w-full z-50 bg-white border-t">
+        <FooterActions
+          handleMarkForReview={handleMarkForReview}
+          handleClearResponse={handleClearResponse}
+          handlePreviousQuestion={handlePreviousQuestion}
+          handleNextQuestion={handleNextQuestion}
+          handleSubmit={handleSubmit}
+          handleMarkForAnswerAndReview={handleMarkForAnswerAndReview}
+          isTimeUp={isTimeUp}
+          loder={loder}
+          ReportQuestion={ReportQuestion}
+        />
+      </div>
       {/* <ManageFooter /> */}
     </>
   );
