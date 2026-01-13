@@ -39,10 +39,13 @@ const SupportPopup: React.FC<SupportPopupProps> = ({
         {/* Body */}
         <div className="p-6 space-y-4 text-sm">
           {/* Title */}
-          <div>
-            <span className="font-medium">Title:</span>
-            <p className="text-gray-700">{data?.title || "-"}</p>
-          </div>
+        <div className="min-w-0">
+  <span className="font-medium">Title:</span>
+  <p className="text-gray-700 break-words">
+    {data?.title || "-"}
+  </p>
+</div>
+
 
           {/* Message */}
           <div>

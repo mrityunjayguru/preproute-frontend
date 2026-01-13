@@ -45,7 +45,7 @@ const QuestionWiseHeader: React.FC<Props> = ({
         </div>
 
         {/* Right: Rank Card */}
-         <div className="w-full md:w-[220px] rounded-[8px] bg-gradient-to-t from-[#FFECDF] to-white drop-shadow-xs p-4 flex items-center justify-between">
+         {/* <div className="w-full md:w-[220px] rounded-[8px] bg-gradient-to-t from-[#FFECDF] to-white drop-shadow-xs p-4 flex items-center justify-between">
           <div>
              <p className="text-sm font-medium font-poppins text-gray-900">
               My Rank
@@ -61,7 +61,7 @@ const QuestionWiseHeader: React.FC<Props> = ({
           <div className="w-7 h-7 rounded-full   text-[#FF5635] text-sm">
             <Image src={RANKING} alt="ranking" width={24} height={24} />
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Section Tabs */}

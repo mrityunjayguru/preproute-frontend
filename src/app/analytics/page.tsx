@@ -203,7 +203,7 @@ function Analytics() {
           ):(null)}
       </div>
             <div className="flex justify-center items-center my-10">
-          { givenAllExam.length>0 && !selectedExamId?(
+          { givenAllExam.length>0 && !selectedExamId && !examResult?(
             <p className="text-xl font-medium text-gray-900 font-poppins">⁠⁠Choose an exam from the top dropdown to see detailed performance analytics. </p>
           ):(null)}
       </div>

@@ -43,7 +43,7 @@ interface SectionDetail {
 }
 
 interface Section {
-  sectionId: string;
+  sectionId: any;
   sectionDetail: SectionDetail;
   noOfQuestions: number;
   duration?: number;
@@ -101,18 +101,16 @@ export default function ExamUI() {
   const activeSectionId: any =
     examProgress?.currentSection?.sectionId || selectedSection?.sectionId;
 
-  let currentStatus = {};
-
+  let currentStatus:any = {};
   if (examProgress?.givenExam) {
     currentStatus = examProgress?.givenExam[activeSectionId] || {};
   } else {
     currentStatus = sectionQuestionStatus[selectedSection?.sectionId] || {};
   }
-
   const [questionStartTime, setQuestionStartTime] = useState<number | null>(
     null
   );
-
+// console.log(currentStatus,"currentStatuscurrentStatus")
   const getISTDate = () => {
     const date = new Date();
     const utcOffsetInMinutes = 5 * 60 + 30; // IST is UTC + 5:30
@@ -371,7 +369,16 @@ export default function ExamUI() {
     }
   };
   const handleMarkForAnswerAndReview = async () => {
-    if (!question || (!mcqSelected && !numericalValue)) return
+    if (!question || (!mcqSelected && !numericalValue)) {
+      updateStatus("review");
+       if (currentQuestionIndex + 1 < totalNoOfQuestions) {
+        setCurrentQuestionIndex((p) => p + 1);
+        fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
+      } else if (isSection && currentSectionIndex + 1 < examSections.length) {
+        setsectionRestriction(true);
+      }
+      return
+    }
     if (!question || (!mcqSelected && !numericalValue)) {
       updateStatus("reviewAndAnswer");
       if (currentQuestionIndex + 1 < totalNoOfQuestions) {
@@ -503,13 +510,19 @@ export default function ExamUI() {
   };
   useEffect(() => {
     // console.log(question,"questionquestion")
+    // console.log(currentStatus[currentQuestionIndex],"currentStatuscurrentStatus")
+    // console.log(currentStatus[currentQuestionIndex])
     if (question?.userAttempted) {
-      updateStatus("answered");
+      updateStatus(currentStatus[currentQuestionIndex]);
     } else {
       setMcqSelected("");
       setNumericalValue("");
-
-      updateStatus("visited");
+if(currentStatus[currentQuestionIndex]){
+updateStatus(currentStatus[currentQuestionIndex]);
+}else{
+updateStatus("visited");
+}
+      // updateStatus(currentStatus[currentQuestionIndex]);
     }
   }, [question]);
 

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
 interface Props {
-  handleMarkForReview: () => void;
+  // handleMarkForReview: () => void;
   handleMarkForAnswerAndReview: () => void;
   handleClearResponse: () => void;
   handlePreviousQuestion: () => void;
@@ -16,7 +16,7 @@ interface Props {
 }
 
 const FooterActions: React.FC<Props> = ({
-  handleMarkForReview,
+  // handleMarkForReview,
   handleClearResponse,
   handlePreviousQuestion,
   handleNextQuestion,

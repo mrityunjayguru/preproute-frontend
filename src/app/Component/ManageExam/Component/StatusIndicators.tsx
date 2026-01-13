@@ -12,7 +12,7 @@ const Indicator = ({ icon, label }: any) => {
       <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
         <Image src={icon} alt={label} width={40} height={40} />
       </div>
-      <span className="text-xs font-poppins font-normal text-gray-800">{label}</span>
+      <span className="text-[10px] font-poppins font-normal text-gray-800">{label}</span>
     </div>
   );
 };

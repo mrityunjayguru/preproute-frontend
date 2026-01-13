@@ -11,7 +11,6 @@ function Analytics() {
   const router = useRouter();
   const examTypeMocks = useSelector((s: any) => s.exam?.exam) || [];
   
-console.log(examTypeMocks,"examdataexamdataexamdata")
   const fetchData = async () => {
     try {
       const payload: any = {};

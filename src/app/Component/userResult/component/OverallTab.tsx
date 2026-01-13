@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Pie, PieChart, ResponsiveContainer, Cell } from "recharts";
 import AnswerAccuracyGraph from "../Graph/AnswerAccuracyGraph";
 import { Button } from "@/components/ui/button";
@@ -12,9 +12,10 @@ import AIM from "@/assets/vectors/reportanalytics/kpis/target.svg";
 import PERCENTAGE from "@/assets/vectors/reportanalytics/kpis/percentage.svg";
 import DISCOUNT from "@/assets/vectors/reportanalytics/kpis/discount.svg";
 import { formatDateTime } from "@/Common/ComonDate";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { addfeedback } from "@/api/feedback";
+import { getsubTopic } from "@/api/subTopic";
 
 interface OverallTabProps {
   data: any;
@@ -52,6 +53,14 @@ const AvgTimeTooltip = ({ value }: { value: number }) => (
 
 const OverallTab = ({ data }: OverallTabProps) => {
   const dispatch=useDispatch<AppDispatch>()
+    const getData = async () => {
+      const payload:any={}
+      await dispatch(getsubTopic(payload));
+    };
+    
+    useEffect(() => {
+      getData();
+    }, []);
   const attemptedDate = useMemo(() => {
     const raw = data?.examdetail?.examDate;
     if (!raw) return "";
@@ -168,6 +177,144 @@ const [title,settitle]=useState("")
       : 0;
 
   const overallMinutes = sectionTime.overallMinutes || 0;
+  const topicData = useSelector((state: any) => state?.topic?.topic);
+
+const weakestSection = useMemo(() => {
+  const sections = data?.sectionWise || [];
+  if (!sections.length) return null;
+
+  let weakest = null;
+  let lowestAccuracy = Infinity;
+
+  sections.forEach((s: any) => {
+    const attempted = Number(s.attempted || 0);
+    const correct = Number(s.correct || 0);
+
+    if (attempted === 0) return;
+
+    const accuracy = correct / attempted; // 0 → 1
+
+    if (accuracy < lowestAccuracy) {
+      lowestAccuracy = accuracy;
+      weakest = {
+        name: s.sectionName,
+        accuracy: Math.round(accuracy * 100),
+        correct,
+        attempted,
+      };
+    }
+  });
+
+  return weakest;
+}, [data]);
+const weakTopics = useMemo(() => {
+  const topics = data?.typeWiseTime || [];
+  if (!topics.length) return [];
+
+  return topics
+    .map((t: any) => {
+      const total = Number(t.total || 0);
+      const attempted = Number(t.attempted || 0);
+      const correct = Number(t.correct || 0);
+
+      if (total === 0) return null;
+
+      const attemptRate = (attempted / total) * 100;
+      const accuracy = attempted ? (correct / attempted) * 100 : 0;
+
+      return {
+        topicId: t.topicId,
+        total,
+        attempted,
+        correct,
+        wrong: Number(t.wrong || 0),
+        avgTime: Number(t.avgTime || 0),
+        attemptRate: Math.round(attemptRate),
+        accuracy: Math.round(accuracy),
+      };
+    })
+    .filter(
+      (t) => t && t.attemptRate >= 70 && t.accuracy < 70
+    )
+    .sort((a, b) => a.accuracy - b.accuracy);
+}, [data]);
+
+    const subTopics = useSelector((state: any) => state?.subTopic?.subTopic || []);
+
+  const getTopicName = (topicId: string) => {
+    const topic = topicData?.find((t: any) => t._id === topicId);
+    return topic ? topic.topic : "Unknown Topic";
+  };
+  const getSubTopicName = (subtopicId: string) => {
+    const topic = subTopics?.find((t: any) => t._id === subtopicId);
+    return topic ? topic.subtopic : "Unknown Topic";
+  };
+
+  
+const weakSubtopics = useMemo(() => {
+  const details = Array.isArray(data?.details) ? data.details : [];
+  if (!details.length) return [];
+
+  const map: Record<string, any> = {};
+
+  details.forEach((q: any) => {
+    const subtopicId = q.subtopicId;
+    if (!subtopicId) return;
+
+    if (!map[subtopicId]) {
+      map[subtopicId] = {
+        subtopicId,
+        total: 0,
+        attempted: 0,
+        correct: 0,
+      };
+    }
+
+    map[subtopicId].total += 1;
+
+    // ✅ Count attempt only if user answered
+    if (q.usergiven) {
+      map[subtopicId].attempted += 1;
+
+      let isCorrect = false;
+
+      if (q.answerType === "Numeric") {
+        isCorrect =
+          Number(q.usergiven?.numericAnswer) ===
+          Number(q.correctAnswer);
+      }
+
+      if (isCorrect) {
+        map[subtopicId].correct += 1;
+      }
+    }
+  });
+
+  return Object.values(map)
+    .map((s: any) => {
+      const attemptRate =
+        s.total > 0
+          ? Math.round((s.attempted / s.total) * 100)
+          : 0;
+
+      const accuracy =
+        s.attempted > 0
+          ? Math.round((s.correct / s.attempted) * 100)
+          : 0;
+
+      return {
+        ...s,
+        attemptRate,
+        accuracy,
+      };
+    })
+    // ✅ Weak Area Condition
+   
+    .sort((a: any, b: any) => a.accuracy - b.accuracy);
+}, [data]);
+
+
+console.log(weakSubtopics,"weakSubtopicsweakSubtopics")
   return (
     <div className="w-full space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -428,7 +575,7 @@ const [title,settitle]=useState("")
               Focus Areas
             </p>
             <p className="text-xl font-normal text-gray-900 font-dm-sans">
-              {sectionTime.items[0]?.name || "Logical Reasoning"}
+              {weakestSection?.name} 
             </p>
             <p className="text-sm text-[#FF5635] font-normal mt-3 font-dm-sans">
               Insights:
@@ -439,28 +586,40 @@ const [title,settitle]=useState("")
             </p>
           </div>
 
-          <div className="rounded-[8px] bg-[#F0F9FF] p-6 font-dm-sans">
+          <div className="rounded-[8px] max-h-[250px] overflow-y-scroll bg-[#F0F9FF] p-6 font-dm-sans">
             <p className="text-[#FF5635] font-medium font-poppins mb-3">
               Topics
             </p>
             <ul className="list-disc pl-5 text-sm text-gray-800 font-dm-sans space-y-1">
-              <li>Core concepts</li>
-              <li>Frequently wrong question types</li>
-              <li>Time-consuming questions</li>
+           {weakTopics?.length > 0 ? (
+  weakTopics.map((val) => (
+    <li key={val.topicId}>
+      {getTopicName(val.topicId)}
+    </li>
+  ))
+) : (
+  <li>No data available</li>
+)}
+
+           
+            
             </ul>
           </div>
 
-          <div className="rounded-[8px] bg-[#F0F9FF]  p-6 font-dm-sans">
+          <div className="rounded-[8px] bg-[#F0F9FF]  p-6 font-dm-sans max-h-[250px] overflow-y-scroll">
             <p className="text-[#FF5635] font-medium font-poppins mb-3">
               Subtopics
             </p>
-            <ul className="list-disc pl-5 text-sm text-gray-800 font-dm-sans space-y-1">
-              <li>Concept clarity & basics</li>
-              <li>Common traps & errors</li>
-              <li>Step-by-step solving approach</li>
-              <li>Easy → medium practice</li>
-              <li>Time management per question</li>
-            </ul>
+          <ul className="list-disc pl-5 text-sm text-gray-800 font-dm-sans space-y-1">
+  {weakSubtopics.map((val, i) => {
+    return (
+      <li key={val.subtopicId || i}>
+        {getSubTopicName(val.subtopicId)}
+      </li>
+    );
+  })}
+</ul>
+
           </div>
         </div>
       </div>

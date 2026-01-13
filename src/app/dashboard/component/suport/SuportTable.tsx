@@ -13,6 +13,8 @@ import { getreport } from "@/api/Report";
 import SupportPopup from "./suportPopup";
 
 function SuportTable() {
+const truncate = (text: string, max = 30) =>
+  text?.length > max ? text.slice(0, max) + "..." : text;
 
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -30,27 +32,24 @@ function SuportTable() {
     fetchReport();
   }, [type]);
   
- const columns = [
-  { header: "Title", accessor: "title" },
+const columns = [
+  {
+    header: "Title",
+    accessor: (row: any) => truncate(row?.title || "-"),
+  },
   { header: "Message", accessor: "message" },
-
   {
     header: "Exam Detail",
     accessor: (row: any) => {
       const paperName = row?.questionPaper?.questionPapername || "-";
       const examName = row?.questionPaper?.exam?.examname || "-";
       const questionNo = row?.question?.questionNo || "-";
-
       return `${paperName} | ${examName} | Q.${questionNo}`;
     },
   },
   {
     header: "Email",
-    accessor: (row: any) => {
-      const paperName = row?.user?.email || "-";
-
-      return `${paperName}`;
-    },
+    accessor: (row: any) => row?.user?.email || "-",
   },
   {
     header: "Created On",
@@ -58,6 +57,7 @@ function SuportTable() {
       row.createdAt ? formatDateTime(row.createdAt) : "-",
   },
 ];
+
 
   const filteredData = data?.filter((item: any) =>
     item.title?.toLowerCase().includes(search.toLowerCase())
@@ -72,7 +72,6 @@ function SuportTable() {
     // await dispatch(handlesetUpdateBlog(val));
     // router.push("users/create");
 
-    console.log(val)
   };
   const [open, setOpen] = useState(false);
 const [selectedRow, setSelectedRow] = useState<any>(null);

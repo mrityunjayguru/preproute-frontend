@@ -33,9 +33,9 @@ export const createboockMark = createAsyncThunk<boolean, boockMarkPayload>(
 
       if (res.status === 200 || res.status === 201) {
         if(payload?.BookmarkStatus=="add"){
-        ToastSuccess("bookMarked");
+        ToastSuccess("Bookmarked");
         }else{
-        ToastSuccess("bookMarked Remove");
+        ToastSuccess("Bookmarked Remove");
 
         }
         return true;
