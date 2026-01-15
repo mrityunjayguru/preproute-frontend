@@ -12,6 +12,7 @@ interface subtopicRepo {
   getsubtopic: (payload: Payload) => Promise<AxiosResponse>;
   getSubTopicByTopicId: (payload: any) => Promise<AxiosResponse>;
   handlesetUpdatesubTopic: (payload: any) => Promise<AxiosResponse>;
+  deleteSubTopic: (payload: any) => Promise<AxiosResponse>;
 }
 
 export const subtopicRepo: subtopicRepo = {
@@ -27,5 +28,8 @@ export const subtopicRepo: subtopicRepo = {
   },
   handlesetUpdatesubTopic(payload) {
     return Repository.post(subTopic.update, payload);
+  },
+  deleteSubTopic(payload) {
+    return Repository.post(subTopic.deleteSubTopic, payload);
   },
 };

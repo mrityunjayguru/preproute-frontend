@@ -12,6 +12,7 @@ interface topicRepo {
   gettopic: (payload: Payload) => Promise<AxiosResponse>;
   getalltopicsbysectionid: (payload: any) => Promise<AxiosResponse>;
   handleUpdateData: (payload: any) => Promise<AxiosResponse>;
+  deleteTopic: (payload: any) => Promise<AxiosResponse>;
 }
 
 export const topicRepo: topicRepo = {
@@ -24,6 +25,9 @@ export const topicRepo: topicRepo = {
   },
   handleUpdateData(payload) {
     return Repository.post(topic.update, payload);
+  },
+  deleteTopic(payload) {
+    return Repository.post(topic.deleteTopic, payload);
   },
   getalltopicsbysectionid(payload) {
   return Repository.get(`${topic.getalltopicsbysectionid}?sectionid=${payload.id}`);

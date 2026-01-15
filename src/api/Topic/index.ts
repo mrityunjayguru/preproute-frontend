@@ -134,3 +134,33 @@ export const handleUpdateData= createAsyncThunk<boolean, Payload>(
   },
 );
 
+
+
+export const deleteTopic= createAsyncThunk<boolean, Payload>(
+  topic.create,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await topicRepo.deleteTopic(payload);
+      if (data.status === 200) {
+        GetMessage("success", "success");
+        // thunkAPI.dispatch(setvtopic(data.data.data));
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==409){
+        GetMessage("warning", err.response.data.message);
+      }
+       else if(err.status==400){
+        GetMessage("warning",err.response.data.message);
+      }
+     else if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);

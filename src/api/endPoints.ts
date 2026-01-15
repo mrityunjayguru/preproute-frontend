@@ -46,6 +46,7 @@ export const topic={
   create:"setUpexam/topic/create",
   get:"setUpexam/topic/get",
   update:"setUpexam/topic/update",
+  deleteTopic:"setUpexam/topic/delete",
   getalltopicsbysectionid:"topic/getalltopicsbysectionid"
 }
 export const subTopic={
@@ -54,6 +55,7 @@ export const subTopic={
   getallsubtopicsbytopicid:"subtopic/getallsubtopicsbytopicid",
   getSubTopicByTopicId:"setUpexam/subtopic/getSubTopicByTopicId",
   update:"setUpexam/subTopic/update",
+  deleteSubTopic:"setUpexam/subTopic/deleteSubTopic",
 }
 export const User={
     create:"user/create",

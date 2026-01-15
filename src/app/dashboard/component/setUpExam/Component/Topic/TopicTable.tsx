@@ -1,16 +1,18 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
+import Swal from "sweetalert2";
 
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { getsection } from "@/api/Section";
 import CommonTable from "@/Common/CommonTable";
 import { useSelector } from "react-redux";
-import { getTopic, handlesetUpdateTopc } from "@/api/Topic";
+import { deleteTopic, getTopic, handlesetUpdateTopc } from "@/api/Topic";
 import { formatDateTime } from "@/Common/ComonDate";
 import { Search } from "lucide-react";
-
+import { MdDeleteOutline } from "react-icons/md";
+import { confirmDelete } from "@/Common/confirmDelete";
 const TopicTable = () => {
   const dispatch = useDispatch<AppDispatch>();
   const sections = useSelector((state: any) => state?.topic?.topic);
@@ -35,6 +37,17 @@ const TopicTable = () => {
   const handleEdit=(val:any)=>{
     dispatch(handlesetUpdateTopc(val))
   }
+  const handleDelete=async(val:any)=>{
+    const payload:any={
+      id:val._id
+    }
+    let checkconform=await confirmDelete()
+    if(!checkconform) return
+    console.log(checkconform,"checkconformcheckconform")
+   await  dispatch(deleteTopic(payload))
+    getData();
+
+  }
   return (
      <div className="">
       <div className="flex justify-between items-center pb-3">
@@ -53,7 +66,7 @@ const TopicTable = () => {
       {/* CommonTable */}
         </div>
       </div>
-      <CommonTable data={sections} columns={columns} onEdit={handleEdit}/>
+      <CommonTable data={sections} columns={columns} onEdit={handleEdit}   onDelete={handleDelete}/>
     </div>
   );
 };

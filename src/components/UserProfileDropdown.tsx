@@ -30,7 +30,7 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
   // Construct image URL
   const imageUrl = user?.image
     ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${user.image}`
-    : undefined;
+    : USER;
 
   const initials = user?.username
     ? user.username
@@ -52,7 +52,7 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
           <AvatarImage src={imageUrl} alt={user?.username || "User"} />
           <AvatarFallback className="bg-gray-100 text-gray-600 font-medium">
           <Image
-           src={imageUrl }
+           src={imageUrl}
            alt={user?.username || "User"}
            width={40}
            height={40}

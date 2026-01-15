@@ -50,7 +50,6 @@ const Step2: React.FC<Step2Props> = ({
 
         nextStep();
     };
-
     return (
         <div className="w-full flex justify-center px-4">
             <div className="w-full max-w-[720px] bg-white rounded-2xl shadow-md border border-[#F0F0F0] px-6 sm:px-10 py-8">
@@ -122,13 +121,17 @@ const Step2: React.FC<Step2Props> = ({
                      <Button  onClick={prevStep} className="h-[43px] w-full max-w-[320px] bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins rounded-[2px] shadow-sm shadow-[#FF5635]/20 transition-all active:scale-95 cursor-pointer mr-4">
                               Back
                        </Button>
-                    <Button
-                        disabled={!selectedStream}
-                        onClick={handleNext}
-                        className="h-[43px] w-full max-w-[320px] bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins rounded-[2px] shadow-sm shadow-[#FF5635]/20 transition-all active:scale-95 cursor-pointer"
-                    >
-                        Next
-                    </Button>
+                   <Button
+  disabled={
+    !selectedStream ||
+    (selectedStream === "Other" && !otherStream.trim())
+  }
+  onClick={handleNext}
+  className="h-[43px] w-full max-w-[320px] bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins rounded-[2px] shadow-sm shadow-[#FF5635]/20 transition-all active:scale-95 cursor-pointer"
+>
+  Next
+</Button>
+
                 </div>
             </div>
         </div>

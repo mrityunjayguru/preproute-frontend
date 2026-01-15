@@ -110,11 +110,17 @@ export default function PricingPlans() {
     const discount = discountAmounts[plan._id] || 0;
 
     try {
+      const couponId = couponCodes
+  ? Object.values(couponCodes)[0]
+  : null;
+
       const payload: any = {
         amount: Number(plan.price - discount) * 100,
         currency: "INR",
         userId: user?._id,
         planId: plan._id,
+        coupon:couponId,
+
       };
       const response: any = await dispatch(createOrder(payload));
       if (!response?.payload?.success) return alert("Unable to create order.");
@@ -147,6 +153,7 @@ export default function PricingPlans() {
     }
   };
   const handleVerifyCoupon = async (plan: any) => {
+    // console.log(Object.values(couponCodes)[0],"couponCodescouponCodes")
     const code = couponCodes[plan._id];
 
     if (!code) {

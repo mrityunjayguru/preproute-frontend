@@ -12,113 +12,174 @@ interface InvoiceProps {
 export default function InvoicePrint({ invoice }: InvoiceProps) {
   const [isDownloading, setIsDownloading] = useState(false);
   const user = useSelector((state: any) => state?.Auth?.loginUser);
+console.log(invoice,"invoiceinvoiceinvoice")
   const handleDownloadPDF = () => {
     setIsDownloading(true);
 
     try {
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
-      
-      // --- 1. HEADER & BRANDING ---
+
+      // ---------------- HEADER ----------------
       doc.setFont("helvetica", "bold");
       doc.setFontSize(22);
-      doc.setTextColor(37, 99, 235); // Blue-600
-      doc.text("ThePrepRoute", 14, 20);
+      doc.setTextColor(236, 98, 67);
+      doc.text("thepreproute", 14, 20);
 
-      doc.setFontSize(10);
-      doc.setTextColor(100);
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      doc.text("Brillovate Private Limited", 14, 28);
+
+      doc.setFontSize(8);
       doc.setFont("helvetica", "normal");
-      doc.text("Brillovate Pvt. Ltd.", 14, 28);
       doc.text("GE AMBIKA AMBIKA, SHIV BAGAN, Ranchi-834001", 14, 33);
       doc.text("GSTIN: 20AANCB5092K1ZJ", 14, 38);
 
-      // Invoice Label
       doc.setFontSize(20);
-      doc.setTextColor(200);
+      doc.setFont("helvetica", "bold");
       doc.text("INVOICE", pageWidth - 14, 20, { align: "right" });
-      
-      // Status Badge (PAID)
-      doc.setFillColor(220, 252, 231); // Light Green
+
+      // PAID badge
+      doc.setFillColor(236, 98, 67);
       doc.roundedRect(pageWidth - 35, 25, 21, 8, 2, 2, "F");
       doc.setFontSize(10);
-      doc.setTextColor(22, 101, 52); // Dark Green
-      doc.setFont("helvetica", "bold");
+      doc.setTextColor(255, 255, 255);
       doc.text("PAID", pageWidth - 24.5, 30.5, { align: "center" });
 
-      // --- 2. INFO SECTION ---
+      // ---------------- INFO SECTION ----------------
       doc.setDrawColor(229, 231, 235);
-      doc.line(14, 45, pageWidth - 14, 45); // Horizontal line
+      doc.line(14, 45, pageWidth - 14, 45);
 
-      // Billed To
       doc.setFontSize(9);
       doc.setTextColor(150);
       doc.text("BILLED TO", 14, 55);
+
       doc.setFontSize(11);
       doc.setTextColor(0);
       doc.setFont("helvetica", "bold");
       doc.text(user?.username || "Valued Customer", 14, 62);
+
       doc.setFont("helvetica", "normal");
-      doc.setTextColor(100);
+      doc.setTextColor(80, 80, 80);
       doc.text(user?.email || "N/A", 14, 67);
       doc.text(user?.phone || "", 14, 72);
 
-      // Invoice Details
       doc.setFontSize(9);
       doc.setTextColor(150);
       doc.text("INVOICE DETAILS", pageWidth - 14, 55, { align: "right" });
-      doc.setTextColor(100);
+
       doc.setFontSize(10);
-      doc.text(`Invoice No: ${invoice?.otherdetsil?.invoiceNo || "N/A"}`, pageWidth - 14, 62, { align: "right" });
-      doc.text(`Order ID: ${invoice?.otherdetsil?.receipt}`, pageWidth - 14, 67, { align: "right" });
-      doc.text(`Date: ${new Date(invoice?.otherdetsil?.updatedAt).toLocaleDateString("en-IN")}`, pageWidth - 14, 72, { align: "right" });
+      doc.setTextColor(80, 80, 80);
+      doc.text(
+        `Invoice No: ${invoice?.otherdetsil?.invoiceNo }`,
+        pageWidth - 14,
+        62,
+        { align: "right" }
+      );
+      doc.text(
+        `Order ID: ${invoice?.otherdetsil?.receipt}`,
+        pageWidth - 14,
+        67,
+        { align: "right" }
+      );
+      doc.text(
+        `Date: ${new Date(
+          invoice?.otherdetsil?.updatedAt
+        ).toLocaleDateString("en-IN")}`,
+        pageWidth - 14,
+        72,
+        { align: "right" }
+      );
 
-      // --- 3. ITEMS TABLE ---
-      autoTable(doc, {
-        startY: 85,
-        head: [["Description", "Qty", "Price", "Amount"]],
-        body: [
-          [
-            { content: invoice?.plan?.title || "Plan Subscription", styles: { fontStyle: 'bold' } },
-            "1",
-            `INR ${invoice?.plan?.price}`,
-            `INR ${invoice?.amount}`
-          ]
-        ],
-        headStyles: {
-          fillColor: [248, 250, 252],
-          textColor: [71, 85, 105],
-          fontSize: 10,
+      // =================================================
+      // ✅ TABLE FIX STARTS HERE (NO UI CHANGE)
+      // =================================================
+
+      const tableStartY = 85; // safe fixed Y (no dependency)
+
+   autoTable(doc, {
+  startY: tableStartY,
+  theme: "grid",
+  margin: { left: 14, right: 14 },
+
+  body: [
+    [
+      { content: "Plan Purchased", styles: { fontStyle: "bold" } },
+      { content: `${invoice?.plan?.title}`, styles: { halign: "right" } },
+    ],
+    [
+      { content: "Validity", styles: { fontStyle: "bold" } },
+      { content: "Till Exam Date", styles: { halign: "right" } },
+    ],
+    [
+      { content: "Amount", styles: { fontStyle: "bold" } },
+      { content: `${invoice?.plan?.price}`, styles: { halign: "right" } },
+    ],
+    [
+      { content: "Discount", styles: { fontStyle: "bold" } },
+      { content: `${invoice?.couponDetail?.discountValue}`, styles: { halign: "right" } },
+    ],
+    [
+      {
+        content: "Total Payable",
+        styles: { fontStyle: "bold", fontSize: 11 },
+      },
+      {
+        content: `${invoice?.otherdetsil?.amount}`,
+        styles: {
+          halign: "right",
           fontStyle: "bold",
+          fontSize: 11,
         },
-        bodyStyles: {
-          fontSize: 10,
-          textColor: [30, 41, 59],
-        },
-        alternateRowStyles: {
-          fillColor: [255, 255, 255],
-        },
-        margin: { left: 14, right: 14 },
-      });
+      },
+    ],
+    [
+      {
+        content: "Included 18% GST",
+        colSpan: 2,
+        styles: { halign: "left", fontSize: 8 },
+      },
+    ],
+  ],
 
-      // --- 4. TOTAL SECTION ---
-      const finalY = (doc as any).lastAutoTable.finalY + 10;
-      
-      doc.setFontSize(12);
-      doc.setTextColor(100);
-      
-      
-      doc.setFontSize(16);
-      doc.setTextColor(37, 99, 235);
-      doc.setFont("helvetica", "bold");
-    
+  styles: {
+    fontSize: 9,
+    cellPadding: 4,
+    textColor: [30, 41, 59],
+    lineWidth: 0, // ❌ remove all borders by default
+  },
 
-      // --- 5. FOOTER ---
+  didParseCell(data) {
+    const lastRowIndex = data.table.body.length - 1;
+
+    // Highlight total row (optional – keep if you want)
+    if (data.row.index === 4) {
+      data.cell.styles.fillColor = [243, 244, 246];
+    }
+
+    // ✅ ONLY GST ROW HAS BORDER
+    // if (data.row.index === lastRowIndex) {
+    //   data.cell.styles.lineWidth = 0.5;
+    //   data.cell.styles.lineColor = [200, 200, 200];
+    // }
+  },
+});
+
+
+      // =================================================
+      // ✅ TABLE FIX ENDS HERE
+      // =================================================
+
+      // ---------------- FOOTER ----------------
       doc.setFontSize(9);
       doc.setTextColor(180);
-      doc.setFont("helvetica", "normal");
-      doc.text("Thank you for your business!", pageWidth / 2, 280, { align: "center" });
+      doc.text(
+        "Thank you for choosing us.",
+        pageWidth / 2,
+        280,
+        { align: "center" }
+      );
 
-      // Save the PDF
       doc.save(`Invoice_${invoice?.otherdetsil?.receipt}.pdf`);
     } catch (error) {
       console.error("PDF Generation Error:", error);
@@ -128,10 +189,7 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
   };
 
   return (
-    <button
-      onClick={handleDownloadPDF}
-      disabled={isDownloading}
-    >
+    <button onClick={handleDownloadPDF} disabled={isDownloading}>
       {isDownloading ? "Processing..." : "Download Invoice"}
     </button>
   );

@@ -4,10 +4,12 @@ import { Input } from "@/components/ui/input";
 
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { getsubTopic, setUpdateSubTopic } from "@/api/subTopic";
+import { deleteSubTopic, getsubTopic, setUpdateSubTopic } from "@/api/subTopic";
 import CommonTable from "@/Common/CommonTable";
 import { formatDateTime } from "@/Common/ComonDate";
 import { Search } from "lucide-react";
+import { confirmDelete } from "@/Common/confirmDelete";
+import { deleteTopic } from "@/api/Topic";
 
 const SubTopicTable = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -45,6 +47,18 @@ const SubTopicTable = () => {
     dispatch(setUpdateSubTopic(val))
   }
 
+    const handleDelete=async(val:any)=>{
+      const payload:any={
+        id:val._id
+      }
+      let checkconform=await confirmDelete()
+      if(!checkconform) return
+      console.log(checkconform,"checkconformcheckconform")
+     await  dispatch(deleteSubTopic(payload))
+      getData();
+  
+    }
+
   return (
       <div className="">
       <div className="flex justify-between items-center pb-3">
@@ -63,7 +77,7 @@ const SubTopicTable = () => {
  </div>
       </div>
       {/* CommonTable */}
-      <CommonTable data={filteredSubTopics} columns={columns}  onEdit={handleEdit}
+      <CommonTable data={filteredSubTopics} columns={columns}  onEdit={handleEdit} onDelete={handleDelete}
       
       />
     </div>
