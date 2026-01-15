@@ -470,7 +470,7 @@ export default function ExamUI() {
       await dispatch(userExamResult(examData));
       // window.open("", "_self");
       // window.close();
-      router.push("/analytics");
+      // router.push("/analytics");
     } catch (err) {
       console.error("Error submitting exam:", err);
     }

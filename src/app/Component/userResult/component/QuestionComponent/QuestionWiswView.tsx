@@ -172,7 +172,19 @@ const handleSubmitReport=(val:any)=>{
   }
   dispatch(createReport(payload))
 }
-console.log(question,"questionquestionquestion")
+ const formatSeconds = (seconds: number | string): string => {
+  const totalSeconds = Number(seconds);
+
+  if (isNaN(totalSeconds) || totalSeconds <= 0) {
+    return "0 Min 0 Sec";
+  }
+
+  const mins = Math.floor(totalSeconds / 60);
+  const secs = totalSeconds % 60;
+
+  return `${mins} Min ${secs.toFixed()} Sec`;
+};
+
   return (
   <>
 <Popup
@@ -210,7 +222,7 @@ console.log(question,"questionquestionquestion")
         <div>
           <p className="text-xs font-medium text-gray-500 mb-1">Average Time</p>
           <p className="text-lg font-medium text-[#005EB6]">
-            {question.avgTime || "1 Min 26 Sec"}
+            {formatSeconds(question.averageTime) || "1 Min 26 Sec"}
           </p>
         </div>
         <div>
