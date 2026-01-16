@@ -91,7 +91,7 @@ const handleOpen = (row: any) => {
 
       <div className="flex justify-between items-center pb-4 px-4">
         <h2 className="text-md font-poppins font-medium text-[#1570EF]">
-          support List
+          Support List
         </h2>
         {/* Search box */}
 <div className="w-[90%] md:w-[420px] bg-white rounded-lg flex items-center justify-between px-4 py-2 border border-gray-200 shadow-sm">
@@ -119,7 +119,7 @@ const handleOpen = (row: any) => {
     {/* <option value="">All</option> */}
     <option value="support">Support</option>
     <option value="report">Report</option>
-    <option value="feedback">feedback</option>
+    <option value="feedback">Feedback</option>
   </select>
 </div>
 

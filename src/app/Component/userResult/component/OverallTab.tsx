@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { addfeedback } from "@/api/feedback";
 import { getsubTopic } from "@/api/subTopic";
+import { capitalizeWords } from "@/Utils/Cappital";
 
 interface OverallTabProps {
   data: any;
@@ -310,7 +311,6 @@ const weakSubtopics = useMemo(() => {
 }, [data]);
 
 
-console.log(data,"weakSubtopicsweakSubtopics")
   return (
     <div className="w-full space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -318,7 +318,7 @@ console.log(data,"weakSubtopicsweakSubtopics")
           <h2 className="text-2xl font-normal font-poppins text-gray-900">
             {data?.examdetail?.examname || "Mock Exam"}{" "}
             <span className="text-[#FF5635]">
-              {data?.questionpaper?.questionPapername || ""}
+              {capitalizeWords(data?.questionpaper?.questionPapername) || ""}
             </span>
           </h2>
           <p className="text-sm text-gray-600 font-dm-sans">

@@ -5,6 +5,7 @@ import SectionWiseTab from "./SectionWiseTab";
 import TimeWiseTab from "./TimeWiseTab";
 import DifficultyWiseTab from "./DifficultyWiseTab";
 import { formatDateTime } from "@/Common/ComonDate";
+import { capitalizeWords } from "@/Utils/Cappital";
 
 /* -------------------- Helpers -------------------- */
 const avg = (arr: number[]) =>
@@ -125,7 +126,7 @@ console.log(filteredData,"datadatadatadatadata")
             {data?.examdetail?.examname}{" "}
             <span className="text-[#FF5635]">
               {" "}
-              {data?.questionpaper?.questionPapername}{" "}
+              {capitalizeWords(data?.questionpaper?.questionPapername)}{" "}
             </span>{" "}
           </h2>{" "}
           <p className="text-sm text-gray-600 font-dm-sans">

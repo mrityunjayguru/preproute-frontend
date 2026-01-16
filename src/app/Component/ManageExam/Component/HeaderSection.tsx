@@ -1,4 +1,5 @@
 "use client";
+import { capitalizeWords } from "@/Utils/Cappital";
 import React from "react";
 
 interface Props {
@@ -22,7 +23,7 @@ const HeaderSection: React.FC<Props> = ({
         <div className="flex items-center">
           <h1 className="text-lg font-normal text-gray-800 text-center md:text-left">
             {examName || "IPMAT-Indore"}{" "}
-            <span className="text-orange-500">{paperName || "Mock One"}</span>
+            <span className="text-orange-500">{capitalizeWords(paperName) || "Mock One"}</span>
           </h1>
         </div>
         <div />

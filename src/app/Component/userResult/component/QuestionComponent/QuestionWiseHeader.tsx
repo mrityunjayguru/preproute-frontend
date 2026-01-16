@@ -4,6 +4,7 @@ import React from "react";
 import { Trophy } from "lucide-react";
 import Image from "next/image";
 import RANKING from "@/assets/vectors/ranking.svg";
+import { capitalizeWords } from "@/Utils/Cappital";
 
 
 interface Props {
@@ -40,7 +41,7 @@ const QuestionWiseHeader: React.FC<Props> = ({
         <div>
            <h2 className="text-2xl font-normal font-poppins text-black">
 
-            {examName || "Exam Name"} <span className="text-[#FF5959]">{paperName}</span>
+            {examName || "Exam Name"} <span className="text-[#FF5959]">{capitalizeWords(paperName)}</span>
           </h2>
           <p className="text-sm text-gray-600 font-dm-sans">
              Attempted on {formatDateTime(data?.updatedAt)}

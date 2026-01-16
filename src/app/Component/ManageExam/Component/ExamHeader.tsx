@@ -34,12 +34,12 @@ function ExamHeader() {
         <Image src={logo} alt="Logo" className="w-auto " />
         {/* RIGHT: Calculator Button */}
         <div className="flex font-poppins gap-5 cursor-pointer">
-          <button
+          {/* <button
             className="cursor-pointer font-normal text-white"
             onClick={() => setOpenPopup(true)}
           >
             View Questions
-          </button>
+          </button> */}
           <button
             className=" cursor-pointer font-normal text-white hover:"
             onClick={() => setOpenPopup(true)}

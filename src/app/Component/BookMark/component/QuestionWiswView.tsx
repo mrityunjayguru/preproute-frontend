@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { createboockMark } from "@/api/boockMark";
 import { formatDateTime } from "@/Common/ComonDate";
+import RenderPreview from "@/Common/CommonLatex";
 
 /* ================= TYPES ================= */
 
@@ -101,7 +102,7 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
         : "-";
 
   /* ---------- Bookmark ---------- */
-
+// alert(JSO)
   // Check if question has options
   const hasOptions = question.options && question.options.length > 0;
 
@@ -138,7 +139,8 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
             </div>
             {/* Question Text in Header */}
             <div className="preview text-gray-900 text-base font-normal">
-              {renderPreview(question.questionText)}
+              {/* {renderPreview(question.questionText)} */}
+              <RenderPreview content={question.questionText}/>
             </div>
           </div>
           <div className="ml-4">
@@ -159,7 +161,11 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
             <div className="flex-1">
               <p className="text-[#94C740] font-medium mb-2 text-md font-dm-sans">Correct Answer</p>
               <div className="text-gray-900 font-poppins">
-                {correctText}
+                {/* {correctText} */}
+                {correctText?(
+              <RenderPreview content={correctText}/>
+                ):(null)}
+
               </div>
             </div>
             {/* <Button
@@ -192,7 +198,9 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
                         }`}
                     >
                       <div className="preview text-gray-800 text-sm font-poppins">
-                        {renderPreview(opt.text)}
+                        {/* {renderPreview(opt.text)} */}
+              <RenderPreview content={opt.text}/>
+
                       </div>
                       {isSelected && (
                         <span className="absolute top-2 right-2 text-xs text-[#FF5635] font-medium font-poppins">
@@ -212,7 +220,9 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
             <p className="text-[#005EB6] font-medium mb-2 font-dm-sans" >Solution</p>
             <div className="text-gray-800 font-poppins preview">
               {question.solution || question.hint ? (
-                renderPreview(question.solution || question.hint || "")
+                // renderPreview(question.solution || question.hint || "")
+              <RenderPreview content={question.solution || question.hint}/>
+
               ) : (
                 <span>No solution provided.</span>
               )}
