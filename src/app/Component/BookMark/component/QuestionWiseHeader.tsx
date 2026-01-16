@@ -40,7 +40,7 @@ const QuestionWiseHeader: React.FC<Props> = ({
             {examName || "Exam Name"} <span className="text-[#FF5959]">Mock One</span>
           </h2>
           <p className="text-sm text-gray-600 font-dm-sans">
-            Attempted on {formattedDate}
+            Attempted on {formatDateTime(data?.updatedAt)}
           </p>
         </div>
 

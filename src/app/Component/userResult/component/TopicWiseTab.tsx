@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import SectionWiseTab from "./SectionWiseTab";
 import TimeWiseTab from "./TimeWiseTab";
 import DifficultyWiseTab from "./DifficultyWiseTab";
+import { formatDateTime } from "@/Common/ComonDate";
 
 /* -------------------- Helpers -------------------- */
 const avg = (arr: number[]) =>
@@ -65,13 +66,13 @@ interface TopicWiseTabProps {
 
 const TopicWiseTab = ({ data }: TopicWiseTabProps) => {
   const topicData = useSelector((state: any) => state?.topic?.topic);
-  const [filterSection, setFilterSection] = useState("Section Wise");
-  const filterBy=["Section Wise","Time Wise","Topic Wise","Diffucilty"]
+  const [filterSection, setFilterSection] = useState("Section");
+  const filterBy=["Section","Time","Topic","Diffucilty"]
 
 
   const getTopicName = (topicId: string) => {
     const topic = topicData?.find((t: any) => t._id === topicId);
-    return topic ? topic.topic : "Unknown Topic";
+    return topic ? topic.topic : "Topic";
   };
   const sections = useMemo(() => {
     if (!data?.topicData) return [];
@@ -129,7 +130,8 @@ console.log(filteredData,"datadatadatadatadata")
           </h2>{" "}
           <p className="text-sm text-gray-600 font-dm-sans">
             {" "}
-            Attempted on {attemptedDate}{" "}
+                       Attempted on {formatDateTime(data?.updatedAt) || "-"}
+           
           </p>{" "}
         </div>{" "}
         <div className="text-[#FF5635]">Section-wise Analytics</div>{" "}
@@ -151,7 +153,7 @@ console.log(filteredData,"datadatadatadatadata")
         </select>{" "}
       </div>
       {/* Topics */}
-      {filterSection=="Topic Wise"?( <div className="space-y-8">
+      {filterSection=="Topic"?( <div className="space-y-8">
         {filteredData.map((topic: any) => (
           <div
             key={topic.topicId}
@@ -283,10 +285,10 @@ console.log(filteredData,"datadatadatadatadata")
         ))}
       </div>):(null)}
      
-     {filterSection=="Section Wise"?(
+     {filterSection=="Section"?(
       <SectionWiseTab data={data}/>
      ):(null)}
-   {filterSection=="Time Wise"?(
+   {filterSection=="Time"?(
       <TimeWiseTab data={data}/>
      ):(null)}
   {filterSection=="Diffucilty"?(

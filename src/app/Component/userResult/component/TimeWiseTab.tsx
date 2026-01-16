@@ -10,7 +10,7 @@ const TimeWiseTab: React.FC<TimeWiseTabProps> = ({ data }) => {
 
   const getTopicName = (topicId: string) => {
     const topic = topicData?.find((t: any) => t._id === topicId);
-    return topic ? topic.topic : "Unknown Topic";
+    return topic ? topic.topic : "Topic";
   };
 
   if (!data?.typeWiseTime?.length) {

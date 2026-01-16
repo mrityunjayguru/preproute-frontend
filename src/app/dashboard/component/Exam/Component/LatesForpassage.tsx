@@ -16,7 +16,7 @@ interface QuestionEditorProps {
 }
 
 interface TableToolbarPos {
-  top: number;
+  top: number
   left: number;
 }
 

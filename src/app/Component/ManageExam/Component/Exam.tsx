@@ -97,15 +97,19 @@ export default function ExamUI() {
   //   console.log(selectedSection,"lllllllllllllllllllllllll")
   // }
   // },[examProgress])
-  // console.log(examProgress,"examProgressexamProgress")
+  console.log(examProgress,"examProgressexamProgress")
   const activeSectionId: any =
     examProgress?.currentSection?.sectionId || selectedSection?.sectionId;
 
   let currentStatus:any = {};
   if (examProgress?.givenExam) {
     currentStatus = examProgress?.givenExam[activeSectionId] || {};
+    console.log(currentStatus,"llllllllllll")
+    console.log(activeSectionId,"activeSectionIdactiveSectionId")
   } else {
     currentStatus = sectionQuestionStatus[selectedSection?.sectionId] || {};
+    console.log(currentStatus,"zzzzzzzzzzzz")
+
   }
   const [questionStartTime, setQuestionStartTime] = useState<number | null>(
     null
@@ -303,7 +307,15 @@ export default function ExamUI() {
         setCurrentQuestionIndex((p) => p + 1);
         fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
       } else if (isSection && currentSectionIndex + 1 < examSections.length) {
+        // if(examInfo.switchable)
+     if(switchable){
+      handleSubmitSection()
+     }else{
         setsectionRestriction(true);
+
+     }
+
+     
       }
       setloder(false);
       return;
@@ -375,7 +387,12 @@ export default function ExamUI() {
         setCurrentQuestionIndex((p) => p + 1);
         fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
       } else if (isSection && currentSectionIndex + 1 < examSections.length) {
+         if(switchable){
+      handleSubmitSection()
+     }else{
         setsectionRestriction(true);
+
+     }
       }
       return
     }
@@ -470,7 +487,7 @@ export default function ExamUI() {
       await dispatch(userExamResult(examData));
       // window.open("", "_self");
       // window.close();
-      // router.push("/analytics");
+      router.push("/analytics");
     } catch (err) {
       console.error("Error submitting exam:", err);
     }
@@ -512,12 +529,14 @@ export default function ExamUI() {
     // console.log(question,"questionquestion")
     // console.log(currentStatus[currentQuestionIndex],"currentStatuscurrentStatus")
     // console.log(currentStatus[currentQuestionIndex])
-    if (question?.userAttempted) {
+    if (question?.userAttempted==true) {
       updateStatus(currentStatus[currentQuestionIndex]);
     } else {
       setMcqSelected("");
       setNumericalValue("");
 if(currentStatus[currentQuestionIndex]){
+  console.log(currentStatus,"currentStatuscurrentStatus")
+  // alert(currentStatus[currentQuestionIndex])
 updateStatus(currentStatus[currentQuestionIndex]);
 }else{
 updateStatus("visited");
@@ -755,7 +774,7 @@ updateStatus("visited");
       </div>
 
       <div className="h-[94vh] flex flex-col overflow-hidden">
-        <HeaderSection timeLeft={timeLeft} formatTime={formatTime} />
+        <HeaderSection timeLeft={timeLeft} formatTime={formatTime} examName= {examData[0]?.exam?.examname}  paperName={examData[0]?.questionPaper}/>
 
         <div className="flex flex-col justify-between lg:flex-row flex-1">
           <div className="flex flex-col w-full">

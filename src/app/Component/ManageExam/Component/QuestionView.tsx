@@ -36,7 +36,7 @@ const QuestionView: React.FC<Props> = ({
           className={`${question?.questionPessage === "Pass"
             ? "w-1/2 overflow-y-auto border border-border h-[calc(118vh-380px)] p-2 rounded-lg"
             : "w-full"
-            } question-preview leading-relaxed space-y-2`}
+            } question-preview leading-relaxed space-y-2 preview`}
         >
           <RenderPreview content={question?.questionText} />
         </div>
@@ -50,7 +50,10 @@ const QuestionView: React.FC<Props> = ({
         >
           {question?.questionPessage === "Pass" ? (
             <div className="pb-2 mb-2 px-2 font-poppins">
-              <p className="py-1">{question?.passage}</p>
+              <p className="py-1">
+
+                 <RenderPreview content={question?.passage} />
+              </p>
             </div>
           ) : null}
 

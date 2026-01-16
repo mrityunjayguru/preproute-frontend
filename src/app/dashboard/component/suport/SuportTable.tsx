@@ -119,6 +119,7 @@ const handleOpen = (row: any) => {
     {/* <option value="">All</option> */}
     <option value="support">Support</option>
     <option value="report">Report</option>
+    <option value="feedback">feedback</option>
   </select>
 </div>
 

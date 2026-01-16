@@ -20,6 +20,7 @@ import SummaryTabs from "./_components/SummaryTabs";
 import { QuestionPaperResult, setQuestionPaperResult } from "@/api/Users";
 import { useFormField } from "@/components/ui/form";
 import { givenExam } from "@/api/Exam";
+import { capitalizeWords } from "@/Utils/Cappital";
 
 function Analytics() {
   const examResult = useSelector((state: any) => state.question?.result?.data);
@@ -184,7 +185,7 @@ function Analytics() {
                 <SelectContent>
                   {questionPapers.map((val: any) => (
                     <SelectItem key={val?._id} value={val?._id}>
-                      {val?.name}
+                      {capitalizeWords(val?.name)}
                     </SelectItem>
                   ))}
                 </SelectContent>

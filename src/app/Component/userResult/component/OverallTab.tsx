@@ -93,78 +93,77 @@ const OverallTab = ({ data }: OverallTabProps) => {
     data?.totalStudents ?? data?.totalUsers ?? data?.totalCandidates ?? 0
   );
 
-  const sectionTime = useMemo(() => {
-    const details = Array.isArray(data?.details) ? data.details : [];
-    const sections = Array.isArray(data?.sectionDetails)
-      ? data.sectionDetails
-      : [];
-    const map: Record<string, { name: string; duration: number }> = {};
-    sections.forEach((s: any) => {
-      if (s?._id)
-        map[s._id] = {
-          name: s.section,
-          duration: Number(s.duration || 0),
-        };
-    });
+const sectionTime = useMemo(() => {
+  const sections = Array.isArray(data?.sectionWise)
+    ? data.sectionWise
+    : [];
 
-    const totals: Record<string, number> = {};
-    let overall = 0;
+  const examSections = Array.isArray(data?.examdetail?.sections)
+    ? data.examdetail.sections
+    : [];
 
-    details.forEach((q: any) => {
-      const secId =
-        typeof q?.section === "object" ? q?.section?._id : q?.section;
-      const secMeta = secId ? map[String(secId)] : undefined;
-      const key = secMeta?.name || "Overall Exam";
-      const time = Number(q?.usergiven?.timeTaken || 0);
-      if (!Number.isFinite(time) || time <= 0) return;
-      overall += time;
-      totals[key] = (totals[key] || 0) + time;
-    });
+  const COLORS = ["#FF8B00", "#00B8D9", "#6D5DFB"];
 
-    if (overall === 0) {
-      return {
-        overallMinutes: 0,
-        totalExamDuration: 0,
-        items: [] as any[],
-        pie: [] as any[],
-      };
+  // 🔹 Build sectionId → duration map (from examdetail)
+  const durationMap: Record<string, number> = {};
+  examSections.forEach((s: any) => {
+    if (s.sectionId) {
+      durationMap[s.sectionId] = Number(s.duration || 0);
+    }
+  });
+
+  let overallSeconds = 0;
+
+  const items = sections.map((s: any, idx: number) => {
+    let seconds = 0;
+
+    if (s.startTime && s.endTime) {
+      const start = new Date(s.startTime).getTime();
+      const end = new Date(s.endTime).getTime();
+
+      if (!isNaN(start) && !isNaN(end) && end > start) {
+        seconds = Math.floor((end - start) / 1000);
+      }
     }
 
-    const COLORS = ["#FF8B00", "#00B8D9", "#6D5DFB", "#FF5630"];
+    overallSeconds += seconds;
 
-    const items = Object.entries(totals)
-      .filter(([name]) => name !== "Overall Exam")
-      .map(([name, seconds]) => {
-        const secEntry = Object.values(map).find((m) => m.name === name);
-        return {
-          name,
-          seconds,
-          minutes: Math.round((seconds / 60) * 10) / 10,
-          totalDuration: secEntry ? secEntry.duration : 0,
-        };
-      })
-      .sort((a, b) => b.seconds - a.seconds);
-
-    const pie = items.map((i, idx) => ({
-      name: i.name,
-      value: i.minutes,
-      fill: COLORS[idx % COLORS.length],
-    }));
+    const totalDuration = durationMap[s.sectionId] || 0;
 
     return {
-      overallMinutes: Math.round((overall / 60) * 10) / 10,
-      totalExamDuration: Number(
-        data?.examdetail?.duration || data?.duration || 0
-      ),
-      items,
-      pie,
+      sectionId: s.sectionId,
+      name: s.sectionName,
+      seconds,
+      minutes: Math.round((seconds / 60) * 10) / 10,
+      totalDuration, // 🔹 from examdetail
+      totalQuestions: s.totalQuestions,
+      attempted: s.attempted,
+      totalPossibleMarks: s.totalPossibleMarks,
+      fill: COLORS[idx % COLORS.length],
     };
-  }, [data]);
+  });
+
+  const pie = items.map((i) => ({
+    name: i.name,
+    value: i.minutes,
+    fill: i.fill,
+  }));
+
+  return {
+    overallMinutes: Math.round((overallSeconds / 60) * 10) / 10,
+    totalExamDuration: Number(data?.examdetail?.fullExamduration || 0),
+    items,
+    pie,
+  };
+}, [data]);
+
+
+
 const [title,settitle]=useState("")
   const onSubmitFeedback = (e: React.FormEvent) => {
     const payload:any={
       title:title,
-      questionPaperId:data?._id
+      questionPaperId:data?.questionPaperID
     }
     dispatch(addfeedback(payload))
     settitle("")
@@ -233,9 +232,6 @@ const weakTopics = useMemo(() => {
         accuracy: Math.round(accuracy),
       };
     })
-    .filter(
-      (t) => t && t.attemptRate >= 70 && t.accuracy < 70
-    )
     .sort((a, b) => a.accuracy - b.accuracy);
 }, [data]);
 
@@ -243,11 +239,11 @@ const weakTopics = useMemo(() => {
 
   const getTopicName = (topicId: string) => {
     const topic = topicData?.find((t: any) => t._id === topicId);
-    return topic ? topic.topic : "Unknown Topic";
+    return topic ? topic.topic : "Topic";
   };
   const getSubTopicName = (subtopicId: string) => {
     const topic = subTopics?.find((t: any) => t._id === subtopicId);
-    return topic ? topic.subtopic : "Unknown Topic";
+    return topic ? topic.subtopic : "Topic";
   };
 
   
@@ -314,7 +310,7 @@ const weakSubtopics = useMemo(() => {
 }, [data]);
 
 
-console.log(weakSubtopics,"weakSubtopicsweakSubtopics")
+console.log(data,"weakSubtopicsweakSubtopics")
   return (
     <div className="w-full space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -474,14 +470,14 @@ console.log(weakSubtopics,"weakSubtopicsweakSubtopics")
                     Overall Exam
                   </div>
                   <div className="text-2xl font-bold text-[#005EB6] relative group font-dm-sans">
-                    {sectionTime.overallMinutes}
+                    {data?.examdetail.fullExamduration}
                     <span className="text-sm text-black font-normal">
-                      /{sectionTime.totalExamDuration || "-"}
+                      /{data?.examdetail.fullExamduration || "-"}
                     </span>
 
-                    <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50">
+                    {/* <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50">
                       <AverageTime value={overallMinutes} />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
 
@@ -506,9 +502,9 @@ console.log(weakSubtopics,"weakSubtopicsweakSubtopics")
                       </span>
 
                       {/* Tooltip */}
-                      <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50">
+                      {/* <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50">
                         <AvgTimeTooltip value={avgSectionTime} />
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 ))}
@@ -563,6 +559,7 @@ console.log(weakSubtopics,"weakSubtopicsweakSubtopics")
             </div>
           )}
         </div>
+        
       </div>
 
       <div className="space-y-4">

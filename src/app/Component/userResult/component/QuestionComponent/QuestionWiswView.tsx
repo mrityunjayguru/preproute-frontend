@@ -8,6 +8,7 @@ import { AppDispatch } from "@/store/store";
 import { createboockMark, getQuestionById } from "@/api/boockMark";
 import Popup from "@/app/Component/ManageExam/Component/Report";
 import { createReport } from "@/api/Users";
+import RenderPreview from "@/Common/CommonLatex";
 
 interface Option {
   _id: string;
@@ -238,7 +239,7 @@ const handleSubmitReport=(val:any)=>{
       {/* Topic Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-[#005EB6] text-lg font-medium font-dm-sans">
-          {question.topic || "Topic"} | {question.subtopic || "Subtopic"}
+          Topic {question?.topicdata?.topic || "Topic"} | Subtopic {question?.subtopicdata?.subtopic || "Subtopic"}
         </h2>
         <div className="flex gap-2">
           {status?( 
@@ -270,9 +271,12 @@ const handleSubmitReport=(val:any)=>{
           Question No. {question.questionNo}
         </p>
         <div className="preview text-gray-900 font-normal font-poppins leading-relaxed">
-          {renderPreview(question.questionText)}
+          {/* {RenderPreview(question.questionText)} */}
+                  <RenderPreview content={question.questionText}/>
+
         </div>
       </div>
+          <RenderPreview content={question?.passage} />
 
       <div
         className={`grid grid-cols-2 ${
@@ -317,7 +321,8 @@ const handleSubmitReport=(val:any)=>{
                     </p>
 
                     <p className="preview text-sm text-gray-800 font-poppins">
-                      {renderPreview(opt.text)}
+                  <RenderPreview content={opt.text}/>
+                      {/* {RenderPreview content(opt.text)} */}
                     </p>
 
                     {isSelected && (
@@ -337,9 +342,11 @@ const handleSubmitReport=(val:any)=>{
       <div className="rounded-xl bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] p-6 mb-8 mt-5">
         <p className="text-[#0056D2] font-medium font-dm-sans mb-3">Solution</p>
         <div className="preview text-gray-800 font-normal leading-relaxed font-poppins">
-          {renderPreview(
+          {/* {RenderPreview(
             question.solution || question.hint || "No solution provided."
-          )}
+          )} */}
+                  <RenderPreview content={question.solution || question.hint || "No solution provided."}/>
+
         </div>
       </div>
     </div>

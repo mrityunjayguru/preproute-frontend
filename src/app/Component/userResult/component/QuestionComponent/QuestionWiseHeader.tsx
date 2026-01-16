@@ -16,6 +16,7 @@ interface Props {
   data: any;
   examName?: string;
   attemptDate?: string;
+  paperName:any
 }
 
 const QuestionWiseHeader: React.FC<Props> = ({
@@ -26,6 +27,7 @@ const QuestionWiseHeader: React.FC<Props> = ({
   data,
   examName,
   attemptDate,
+  paperName
 }) => {
   // Format date if string
   const formattedDate = attemptDate ? formatDateTime(attemptDate) : "Unknown Date";
@@ -37,10 +39,12 @@ const QuestionWiseHeader: React.FC<Props> = ({
         {/* Left: Exam Name & Date */}
         <div>
            <h2 className="text-2xl font-normal font-poppins text-black">
-            {examName || "Exam Name"} <span className="text-[#FF5959]">Mock One</span>
+
+            {examName || "Exam Name"} <span className="text-[#FF5959]">{paperName}</span>
           </h2>
           <p className="text-sm text-gray-600 font-dm-sans">
-            Attempted on {formattedDate}
+             Attempted on {formatDateTime(data?.updatedAt)}
+           
           </p>
         </div>
 

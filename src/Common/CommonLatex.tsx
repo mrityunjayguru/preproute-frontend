@@ -27,6 +27,10 @@ const RenderPreview: React.FC<RenderPreviewProps> = ({ content }) => {
     // ================= TEXT NODE =================
     if (node.nodeType === Node.TEXT_NODE) {
       const raw = normalizeText(node.textContent || "");
+        if (raw.trim() === "×" || raw.trim() === "✕") {
+    return null;
+  }
+
       if (!raw) return null;
 
       const parts = raw.split(latexRegex);
@@ -73,6 +77,16 @@ const RenderPreview: React.FC<RenderPreviewProps> = ({ content }) => {
     // ================= ELEMENT NODE =================
     if (node.nodeType === Node.ELEMENT_NODE) {
       const el = node as Element;
+  if (
+    el.tagName === "BUTTON" ||
+    el.tagName === "SVG" ||
+    el.getAttribute("role") === "button" ||
+    el.getAttribute("contenteditable") === "false" ||
+    el.getAttribute("aria-label")?.toLowerCase().includes("close") ||
+    el.getAttribute("aria-label")?.toLowerCase().includes("remove")
+  ) {
+    return null;
+  }
       const tag = el.tagName.toLowerCase();
       const children = Array.from(el.childNodes).map((child, i) =>
         renderNode(child, `${key}-${tag}-${i}`)

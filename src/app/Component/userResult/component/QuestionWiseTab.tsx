@@ -316,6 +316,7 @@ export default function QuestionWiseTab({ data }: QuestionWiseTabProps) {
         data={data}
         examName={examResult?.examdetail?.examname}
         attemptDate={data?.fullExamEndTime || data?.createdAt} 
+         paperName={examResult?.questionpaper?.questionPapername}
       />
 
       <div className="flex flex-col lg:flex-row flex-1">
