@@ -73,6 +73,7 @@ export default function PricingPlans() {
   const palnAndpricing = useSelector(
     (state: any) => state?.palnAndpricing?.plandetail || []
   );
+  console.log(palnAndpricing,"palnAndpricingpalnAndpricing")
 
   /* ---------------- FETCH DATA ---------------- */
   const getData = async () => {
@@ -266,7 +267,6 @@ export default function PricingPlans() {
                 if (!plan) {
                   return null;
                 }
-
                 return (
                   <div
                     key={index}
@@ -292,6 +292,7 @@ export default function PricingPlans() {
                         <div className="flex flex-col">
                           <h3 className="text-base sm:text-lg font-medium text-[#FF5635]">
                             {plan?.title}
+                          
                           </h3>
                           <p className="text-xs sm:text-sm font-medium text-[#ff5635] mt-1">
                             {ui.subtitle}
@@ -308,9 +309,18 @@ export default function PricingPlans() {
                       </div>
 
                       <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-3 sm:my-4" />
+{ui?.examDetails?.length > 0 && (
+  <div className="px-4 sm:px-6 mb-3 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
+    {ui.examDetails.map((val: any) => val.examname).join(", ")}
+  </div>
+)}
+
+
 
                       {/* FEATURES */}
+                     
                       <ul className="px-4 sm:px-6 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
+                          
                         {features.map((feature, i) => (
                           <li
                             key={i}
