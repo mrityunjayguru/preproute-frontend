@@ -71,7 +71,7 @@ const SelectExamForm = () => {
   // Get selected exam type name (to decide dropdown)
   const selectedExamTypeName =
     examTypeData.find((t: any) => t._id === examType)?.examType || "";
-
+// alert(selectedExamTypeName)
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex-grow">
@@ -130,7 +130,7 @@ const SelectExamForm = () => {
                   </option>
                 ))}
               </select>
-            ) : selectedExamTypeName.toLowerCase() === "past year" ? (
+            ) : selectedExamTypeName.toLowerCase() === "pyqs" ? (
               <select
                 value={yearOrSet}
                 onChange={(e) => setYearOrSet(e.target.value)}
