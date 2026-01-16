@@ -6,7 +6,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { createboockMark } from "@/api/boockMark";
+import { createboockMark, getboockMark } from "@/api/boockMark";
 import { formatDateTime } from "@/Common/ComonDate";
 import RenderPreview from "@/Common/CommonLatex";
 
@@ -53,40 +53,16 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
   const formattedDate = attemptDate ? formatDateTime(attemptDate) : "Unknown Date";
 
   /* ---------- Render HTML + LaTeX ---------- */
-  const renderPreview = (content: string) => {
-    if (!content) return null;
-
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(content, "text/html");
-    const nodes = Array.from(doc.body.childNodes);
-
-    return nodes.map((node, i) => {
-      if (
-        node.nodeType === 1 &&
-        (node as HTMLElement).classList.contains("latex-span")
-      ) {
-        const rawTex = (node as HTMLElement).dataset.tex || "";
-        return <BlockMath key={i} math={rawTex} />;
-      }
-
-      if (node.nodeType === 1) {
-        return (
-          <span
-            key={i}
-            dangerouslySetInnerHTML={{
-              __html: (node as HTMLElement).outerHTML,
-            }}
-          />
-        );
-      }
-
-      if (node.nodeType === 3) {
-        return <span key={i}>{node.textContent}</span>;
-      }
-
-      return null;
-    });
-  };
+const handlebookMark=async(val:any,BookmarkStatus:any)=>{
+const payload:any={
+  questionId:val?._id,
+  BookmarkStatus
+}
+await dispatch(createboockMark(payload))
+    dispatch(getboockMark({}));
+ 
+// await getData()
+}
 
   if (!question) return null;
 
@@ -98,7 +74,7 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
     question.answerType === "Numeric"
       ? question.correctAnswer
       : correctOpt
-        ? renderPreview(correctOpt.text)
+        ? correctOpt.text
         : "-";
 
   /* ---------- Bookmark ---------- */
@@ -168,17 +144,13 @@ const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, pa
 
               </div>
             </div>
-            {/* <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleBookmark();
-              }}
+            <Button onClick={()=>handlebookMark(question,"remove")}
               variant="outline"
               className="text-md font-poppins cursor-pointer text-[#1E1E1E] font-normal rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white 
                  border border-[#E6F4FF]"
             >
               Remove Bookmark
-            </Button> */}
+            </Button>
           </div>
 
           {/* OPTIONS - Only show if question has options */}

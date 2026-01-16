@@ -218,7 +218,7 @@ export default function PricingPlans() {
             <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
               {palnAndpricing.map((ui: any, index: any) => {
                 /* -------- COMING SOON -------- */
-                if (ui.comingSoon) {
+                if (index==2) {
                   return (
                     <div
                       key={index}
@@ -228,9 +228,9 @@ export default function PricingPlans() {
                         <h3 className="text-lg sm:text-xl font-semibold text-gray-500">
                           {ui.title}
                         </h3>
-                        <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                        {/* <p className="text-xs sm:text-sm text-gray-500 mt-1">
                           Coming Soon
-                        </p>
+                        </p> */}
                       </div>
 
                       <div className="border-t border-gray-400 mx-4 sm:mx-6 my-3 sm:my-4" />
@@ -260,7 +260,7 @@ export default function PricingPlans() {
 
                 const plan = palnAndpricing[index];
                 const features =
-                  index === 0 ? CORE_FEATURES : FULL_ACCESS_FEATURES;
+                  index === 1 ? CORE_FEATURES : FULL_ACCESS_FEATURES;
 
                 // Skip rendering if plan data is not available
                 if (!plan) {
@@ -272,7 +272,7 @@ export default function PricingPlans() {
                     key={index}
                     className={`rounded-[8px]
                          border flex flex-col h-full transition-all
-                        ${index === 2
+                        ${index === 1
                         ? "bg-gradient-to-t from-[#FFECDF] to-white border-[#FFECDF] md:scale-110 z-10"
                         : "bg-gradient-to-t from-[#F0F9FF] to-white border-[#F0F9FF]"
                       }`}

@@ -239,7 +239,7 @@ const handleSubmitReport=(val:any)=>{
       {/* Topic Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-[#005EB6] text-lg font-medium font-dm-sans">
-          <span className="text-[#000] text-sm">Topic:</span> {question?.topicdata?.topic || "Topic"} | <span className="text-sn text-[#000]">Subtopic:</span> {question?.subtopicdata?.subtopic || "Subtopic"}
+          <span className="text-[#000] text-sm">Topic:</span> {question?.topicdata?.topic || "Topic"} | <span className="text-sm text-[#000]">Subtopic:</span> {question?.subtopicdata?.subtopic || "Subtopic"}
         </h2>
         <div className="flex gap-2">
           {status?( 
