@@ -303,6 +303,7 @@ export default function ExamUI() {
     setloder(true);
     if (!question || (!mcqSelected && !numericalValue)) {
       updateStatus("visited");
+      console.log("visitedvisitedvisitedvisitedvisitedvisitedvisited")
       if (currentQuestionIndex + 1 < totalNoOfQuestions) {
         setCurrentQuestionIndex((p) => p + 1);
         fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
@@ -314,12 +315,11 @@ export default function ExamUI() {
         setsectionRestriction(true);
 
      }
-
-     
       }
       setloder(false);
       return;
     }
+    console.log("trueeeeeeeeeeeeeeeee")
 
     const endTime = Date.now();
     const timeTaken = questionStartTime
@@ -615,6 +615,7 @@ updateStatus("visited");
     setShowPopup(false);
   };
   useEffect(() => {
+    console.log(sectionQuestionStatus,"sectionQuestionStatussectionQuestionStatus")
     if (!userLogin || !examData?.length) return;
     const payload: any = {
       userId: userLogin?._id,

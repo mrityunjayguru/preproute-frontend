@@ -93,26 +93,27 @@ const TimeWiseTab: React.FC<TimeWiseTabProps> = ({ data }) => {
           {/* 🔹 Delta Accuracy | Delta Time */}
           <div className="flex border-t">
             <div className="p-4 w-1/4 min-w-[200px] font-poppins">
-              Δ Accuracy | Δ Time
+              {/* Δ Accuracy | */}
+               Δ Total Time
             </div>
             <div className="flex-1 flex">
-              <div
+              {/* <div
                 className={`flex-1 p-4 text-center ${
-                  t.diffAccuracy > 0
+                  t.totalTime > 0
                     ? "text-green-600"
                     : "text-red-500"
                 }`}
               >
-                {t.diffAccuracy ? `${t.diffAccuracy}%` : "—"}
-              </div>
+                {t.diffAccuracy ? `${t.totalTime}%` : "—"}
+              </div> */}
               <div
                 className={`flex-1 p-4 text-center ${
-                  Number(t.diffTime) < 0
+                  Number(t.totalTime) < 0
                     ? "text-green-600"
                     : "text-red-500"
                 }`}
               >
-                {t.diffTime ? `${t.diffTime}s` : "—"}
+                {t.totalTime ? `${t.totalTime}s` : "—"}
               </div>
             </div>
           </div>

@@ -431,7 +431,7 @@ const weakSubtopics = useMemo(() => {
             Avg. Time/Question
           </p>
           <p className="text-xl font-normal text-gray-900 font-poppins">
-            {data?.avgTimePerQuestion || "1 Min 26 Sec"}
+            {data?.avgTimeMs || "1 Min 26 Sec"}
           </p>
         </div>
 

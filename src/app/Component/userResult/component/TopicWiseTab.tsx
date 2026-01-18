@@ -135,7 +135,7 @@ console.log(filteredData,"datadatadatadatadata")
            
           </p>{" "}
         </div>{" "}
-        <div className="text-[#FF5635]">Section-wise Analytics</div>{" "}
+        {/* <div className="text-[#FF5635]">Section-wise Analytics</div>{" "} */}
       </div>{" "}
       {/* Filter */}{" "}
       <div className="flex items-center gap-4 mb-6 mt-6">
