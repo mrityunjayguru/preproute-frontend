@@ -17,6 +17,7 @@ import { AppDispatch } from "@/store/store";
 import { addfeedback } from "@/api/feedback";
 import { getsubTopic } from "@/api/subTopic";
 import { capitalizeWords } from "@/Utils/Cappital";
+import MarksDistributionChart from "../Graph/MarksDistributionChart";
 
 interface OverallTabProps {
   data: any;
@@ -683,6 +684,7 @@ const weakSubtopics = useMemo(() => {
           </form>
         </div>
       </div>
+      <MarksDistributionChart/>
     </div>
   );
 };
