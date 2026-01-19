@@ -305,7 +305,7 @@ export default function MergedExamPage() {
 
               <div className="z-10 max-w-xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#FF5635] font-poppins">
-                  {selectedExamType?.examType} Exams
+                  {selectedExamType?.examType} 
                 </h2>
                 <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
                   Select the college to access{" "}

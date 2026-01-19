@@ -275,8 +275,11 @@ const handleSubmitReport=(val:any)=>{
                   <RenderPreview content={question.questionText}/>
 
         </div>
+        <div className="mt-5">
+            <RenderPreview content={question?.passage} />
+        </div>
+
       </div>
-          <RenderPreview content={question?.passage} />
 
       <div
         className={`grid grid-cols-2 ${
