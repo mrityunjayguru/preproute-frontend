@@ -71,9 +71,9 @@ export default function PricingPlans() {
 
   const user = useSelector((state: any) => state?.Auth?.loginUser);
   const palnAndpricing = useSelector(
-    (state: any) => state?.palnAndpricing?.plandetail || []
+    (state: any) => state?.palnAndpricing?.plandetail || [],
   );
-  console.log(palnAndpricing,"palnAndpricingpalnAndpricing")
+  console.log(palnAndpricing, "palnAndpricingpalnAndpricing");
 
   /* ---------------- FETCH DATA ---------------- */
   const getData = async () => {
@@ -111,17 +111,14 @@ export default function PricingPlans() {
     const discount = discountAmounts[plan._id] || 0;
 
     try {
-      const couponId = couponCodes
-  ? Object.values(couponCodes)[0]
-  : null;
+      const couponId = couponCodes ? Object.values(couponCodes)[0] : null;
 
       const payload: any = {
         amount: Number(plan.price - discount) * 100,
         currency: "INR",
         userId: user?._id,
         planId: plan._id,
-        coupon:couponId,
-
+        coupon: couponId,
       };
       const response: any = await dispatch(createOrder(payload));
       if (!response?.payload?.success) return alert("Unable to create order.");
@@ -219,7 +216,7 @@ export default function PricingPlans() {
             <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
               {palnAndpricing.map((ui: any, index: any) => {
                 /* -------- COMING SOON -------- */
-                if (index==2) {
+                if (index == 2) {
                   return (
                     <div
                       key={index}
@@ -272,10 +269,11 @@ export default function PricingPlans() {
                     key={index}
                     className={`rounded-[8px]
                          border flex flex-col h-full transition-all
-                        ${index === 1
-                        ? "bg-gradient-to-t from-[#FFECDF] to-white border-[#FFECDF] md:scale-110 z-10"
-                        : "bg-gradient-to-t from-[#F0F9FF] to-white border-[#F0F9FF]"
-                      }`}
+                        ${
+                          index === 1
+                            ? "bg-gradient-to-t from-[#FFECDF] to-white border-[#FFECDF] md:scale-110 z-10"
+                            : "bg-gradient-to-t from-[#F0F9FF] to-white border-[#F0F9FF]"
+                        }`}
                   >
                     <div className="relative flex flex-col h-full">
                       {/* BADGE */}
@@ -292,7 +290,6 @@ export default function PricingPlans() {
                         <div className="flex flex-col">
                           <h3 className="text-base sm:text-lg font-medium text-[#FF5635]">
                             {plan?.title}
-                          
                           </h3>
                           <p className="text-xs sm:text-sm font-medium text-[#ff5635] mt-1">
                             {ui.subtitle}
@@ -309,18 +306,20 @@ export default function PricingPlans() {
                       </div>
 
                       <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-3 sm:my-4" />
-{ui?.examDetails?.length > 0 && (
-  <div className="px-4 sm:px-6 mb-3 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
-    {ui.examDetails.map((val: any) => val.examname).join(", ")}
-  </div>
-)}
-
-
+                      <p className="text-[14px] text-gray-500 px-4 sm:px-6 mb-3  ">
+                        Included Exam
+                      </p>
+                      {ui?.examDetails?.length > 0 && (
+                        <div className=" border-b mx-4 sm:mx-6 pb-5 border-[#FF5635] px-4 sm:px-6 mb-3 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
+                          {ui.examDetails
+                            .map((val: any) => val.examname)
+                            .join(", ")}
+                        </div>
+                      )}
 
                       {/* FEATURES */}
-                     
+
                       <ul className="px-4 sm:px-6 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
-                          
                         {features.map((feature, i) => (
                           <li
                             key={i}
@@ -372,10 +371,11 @@ export default function PricingPlans() {
                         <button
                           onClick={() => handleCreatePayment(plan)}
                           disabled={plan.alreadyPurchased}
-                          className={`w-full sm:w-fit py-3 sm:py-3.5 px-8 sm:px-16 rounded-[8px] font-poppins text-sm sm:text-base transition-colors ${plan.alreadyPurchased
-                            ? "bg-gray-400 text-white cursor-not-allowed"
-                            : "bg-[#FF5635] hover:bg-[#e14c2f] text-white cursor-pointer"
-                            }`}
+                          className={`w-full sm:w-fit py-3 sm:py-3.5 px-8 sm:px-16 rounded-[8px] font-poppins text-sm sm:text-base transition-colors ${
+                            plan.alreadyPurchased
+                              ? "bg-gray-400 text-white cursor-not-allowed"
+                              : "bg-[#FF5635] hover:bg-[#e14c2f] text-white cursor-pointer"
+                          }`}
                         >
                           {plan.alreadyPurchased
                             ? "Get Started"

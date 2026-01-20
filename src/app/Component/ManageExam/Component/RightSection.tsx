@@ -150,7 +150,7 @@ const RightSection: React.FC<Props> = ({
           <div className="grid grid-cols-4 sm:grid-cols-5 gap-1.5 sm:gap-2">
             {Array.from({ length: totalNoOfQuestions }, (_, idx) => {
               const status = currentStatus[idx];
-
+                // console.log(status,"statusstatus")
               const isAnswered =
                 status === "answered" || status === "answered-review";
               const isReview =
