@@ -94,7 +94,7 @@ const TimeWiseTab: React.FC<TimeWiseTabProps> = ({ data }) => {
           <div className="flex border-t">
             <div className="p-4 w-1/4 min-w-[200px] font-poppins">
               {/* Δ Accuracy | */}
-               Δ Total Time
+               Total Time
             </div>
             <div className="flex-1 flex">
               {/* <div

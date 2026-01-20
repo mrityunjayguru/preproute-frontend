@@ -23,9 +23,6 @@ Repository.interceptors.request.use(
 
 );     
 
-
-
-
 Repository.interceptors.response.use(
   (response) => response,
   (error) => Promise.reject(error)
