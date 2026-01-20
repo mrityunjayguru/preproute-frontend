@@ -138,7 +138,7 @@ export default function ExamUI() {
     if (!sectionKey) return;
     setSectionQuestionStatus((prev) => ({
       ...prev,
-      [sectionKey]: { ...prev[sectionKey], [currentQuestionIndex]: status },
+      [sectionKey]: { ...prev[sectionKey], [currentQuestionIndex]: status?status:"visited" },
     }));
   }, [isSection, selectedSection, currentQuestionIndex]);
 
@@ -293,7 +293,12 @@ export default function ExamUI() {
 
   const handleNextQuestion = async () => {
     setloder(true);
-    await saveCurrentAnswer("answered");
+    if(mcqSelected || numericalValue){
+ await saveCurrentAnswer("answered");
+    }else{
+ await saveCurrentAnswer("visited");
+    }
+   
 
     if (currentQuestionIndex + 1 < totalNoOfQuestions) {
       setCurrentQuestionIndex((p) => p + 1);
@@ -353,10 +358,10 @@ export default function ExamUI() {
   };
 
   const handleSection = async (section: Section) => {
-    if (!switchable) {
-      setSectionShowPopup(true);
-      return;
-    }
+    // if (!switchable) {
+    //   setSectionShowPopup(true);
+    //   return;
+    // }
     await updateSectionTime(selectedSection?.sectionId, section.sectionId);
     setSelectedSection(section);
     setCurrentSectionIndex(examSections.findIndex((s) => s.sectionId === section.sectionId));
@@ -392,6 +397,7 @@ export default function ExamUI() {
       givenExam: sectionQuestionStatus,
       status: "in-progress",
     };
+    console.log(payload,"payloadpayload")
     dispatch(ManageExamProgress(payload));
   }, [sectionQuestionStatus, currentQuestionIndex, selectedSection]);
 

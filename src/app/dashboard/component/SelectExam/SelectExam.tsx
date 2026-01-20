@@ -36,7 +36,7 @@ const SelectExamForm = () => {
   const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
 
   // Generate mock sets from 1 to 50
-  const mockSets = Array.from({ length: 50 }, (_, i) => `Mocks ${i + 1}`);
+  const mockSets = Array.from({ length: 50 }, (_, i) => `Mock ${i + 1}`);
 
   const handleExamTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setExamType(e.target.value);

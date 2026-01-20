@@ -432,7 +432,7 @@ const weakSubtopics = useMemo(() => {
             Avg. Time/Question
           </p>
           <p className="text-xl font-normal text-gray-900 font-poppins">
-            {data?.avgTimeMs || "1 Min 26 Sec"}
+            {data?.averageTimePerAttempted || "1 Min 26 Sec"}
           </p>
         </div>
 
@@ -622,8 +622,13 @@ const weakSubtopics = useMemo(() => {
         </div>
       </div>
 
+        <h3 className="text-lg font-medium text-[#005EB6] font-poppins">
+            Over-all Ranking Data
+          </h3>
+      <MarksDistributionChart/>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <h3 className="text-lg font-medium text-[#005EB6] font-poppins">
             Over-all Ranking Data
           </h3>
@@ -659,7 +664,7 @@ const weakSubtopics = useMemo(() => {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         <div className="space-y-4 font-dm-sans rounded-[4px]">
           <h3 className="text-lg font-medium text-[#005EB6] font-poppins">
@@ -684,7 +689,6 @@ const weakSubtopics = useMemo(() => {
           </form>
         </div>
       </div>
-      <MarksDistributionChart/>
     </div>
   );
 };
