@@ -429,7 +429,7 @@ const weakSubtopics = useMemo(() => {
 
         <div className="rounded-[8px] bg-[#F0F9FF] border border-[#E6F4FF] py-5 px-4 flex  justify-center items-start flex-col">
           <p className="text-[#005EB6] font-medium font-dm-sans">
-            Avg. Time/Question
+            Avg. Time
           </p>
           <p className="text-xl font-normal text-gray-900 font-poppins">
             {data?.averageTimePerAttempted || "1 Min 26 Sec"}

@@ -58,13 +58,13 @@ const MarksVsStudentsChart = ({ data }) => {
           {peakData && (
             <ReferenceLine
               x={peakData.marks}
-              stroke="#ff7300"
+              stroke="#FF5635"
               strokeDasharray="3 3"
             >
               <Label
                 value="Peak"
                 position="top"
-                fill="#ff7300"
+                fill="#FF5635"
                 offset={10}
               />
             </ReferenceLine>
@@ -73,9 +73,9 @@ const MarksVsStudentsChart = ({ data }) => {
           <Line
             type="monotone" // Creates the smooth curve
             dataKey="students"
-            stroke="#ff7300"
+            stroke="#FF5635"
             strokeWidth={2}
-            dot={{ r: 4, stroke: '#ff7300', strokeWidth: 2, fill: '#fff' }} // Styles the data points
+            dot={{ r: 4, stroke: '#FF5635', strokeWidth: 2, fill: '#fff' }} // Styles the data points
             activeDot={{ r: 6 }}
           />
         </LineChart>

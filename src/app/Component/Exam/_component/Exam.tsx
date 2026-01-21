@@ -498,7 +498,7 @@ export default function MergedExamPage() {
 
                     {/* Mock name */}
                     <h3 className="text-lg sm:text-xl lg:text-2xl font-poppins font-medium text-[#727EA3] sm:mb-5 lg:mb-6">
-                      {selectedExamType?.examType} {examlength + idx + 1}
+                      {selectedExamType?.examType=="Mocks"?"Mock":selectedExamType?.examType} {examlength + idx + 1}
                     </h3>
 
                     {/* Coming Soon text */}
