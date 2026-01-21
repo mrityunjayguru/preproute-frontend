@@ -471,9 +471,9 @@ console.log(sectionTime,"sectionTimesectionTime")
                   </div>
                   <div className="text-2xl font-bold text-[#005EB6] relative group font-dm-sans">
                     {data?.examdetail.fullExamduration}
-                    <span className="text-sm text-black font-normal">
+                    {/* <span className="text-sm text-black font-normal">
                       /{data?.examdetail.fullExamduration || ""}
-                    </span>
+                    </span> */}
 
                     {/* <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50">
                       <AverageTime value={overallMinutes} />
@@ -497,9 +497,9 @@ console.log(sectionTime,"sectionTimesectionTime")
                       }}
                     >
                       {s.minutes}
-                      <span className="text-sm text-black font-normal">
+                      {/* <span className="text-sm text-black font-normal">
                         /{s.totalDuration || ""}
-                      </span>
+                      </span> */}
 
                       {/* Tooltip */}
                       {/* <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50">

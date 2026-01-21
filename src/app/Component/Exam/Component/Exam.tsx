@@ -377,7 +377,7 @@ export default function MergedExamPage() {
                         </svg>
                       </span>
                     </div>
-                    <p className="text-[14px] text-gray-500">Comming Soon</p>
+                    <p className="text-[14px] text-gray-500">Coming Soon</p>
 
                     <Button
                       disabled

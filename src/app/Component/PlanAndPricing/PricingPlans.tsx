@@ -41,12 +41,12 @@ const PRICING_UI = [
 const CORE_FEATURES = [
   "Selected Colleges Access",
   "Past Year Papers",
-  "Sectional Tests – QA, LRDI, VARC",
-  "Topic-wise Tests with Daily Practice",
+  // "Sectional Tests – QA, LRDI, VARC",
+  // "Topic-wise Tests with Daily Practice",
   "Level of Difficulty based Questions",
   "Community Access",
   "Bookmark Questions",
-  "Free Interview Preparation",
+  // "Free Interview Preparation",
 ];
 
 const FULL_ACCESS_FEATURES = [
@@ -73,7 +73,7 @@ export default function PricingPlans() {
   const palnAndpricing = useSelector(
     (state: any) => state?.palnAndpricing?.plandetail || [],
   );
-  console.log(palnAndpricing, "palnAndpricingpalnAndpricing");
+  // console.log(palnAndpricing, "palnAndpricingpalnAndpricing");
 
   /* ---------------- FETCH DATA ---------------- */
   const getData = async () => {
