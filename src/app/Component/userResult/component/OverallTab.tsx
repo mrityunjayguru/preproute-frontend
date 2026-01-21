@@ -310,7 +310,7 @@ const weakSubtopics = useMemo(() => {
    
     .sort((a: any, b: any) => a.accuracy - b.accuracy);
 }, [data]);
-
+console.log(sectionTime,"sectionTimesectionTime")
 
   return (
     <div className="w-full space-y-6">
@@ -473,7 +473,7 @@ const weakSubtopics = useMemo(() => {
                   <div className="text-2xl font-bold text-[#005EB6] relative group font-dm-sans">
                     {data?.examdetail.fullExamduration}
                     <span className="text-sm text-black font-normal">
-                      /{data?.examdetail.fullExamduration || "-"}
+                      /{data?.examdetail.fullExamduration || ""}
                     </span>
 
                     {/* <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50">
@@ -499,7 +499,7 @@ const weakSubtopics = useMemo(() => {
                     >
                       {s.minutes}
                       <span className="text-sm text-black font-normal">
-                        /{s.totalDuration || "-"}
+                        /{s.totalDuration || ""}
                       </span>
 
                       {/* Tooltip */}

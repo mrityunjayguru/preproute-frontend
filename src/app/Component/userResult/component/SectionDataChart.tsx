@@ -81,7 +81,7 @@ const AvgTimeTooltip = ({ value }: { value: number }) => (
                           >
                             {s.minutes}
                             <span className="text-sm text-black font-normal">
-                              /{s.totalDuration || "-"}
+                              /{s.totalDuration || ""}
                             </span>
       
                             {/* Tooltip */}
