@@ -18,6 +18,16 @@ const RenderPreview: React.FC<RenderPreviewProps> = ({ content }) => {
   const doc = parser.parseFromString(`<div id="__root__">${content}</div>`, "text/html");
   const root = doc.getElementById("__root__");
   if (!root) return null;
+const parseStyleString = (style: string | null): React.CSSProperties => {
+  if (!style) return {};
+  return style.split(";").reduce((acc, item) => {
+    const [key, value] = item.split(":");
+    if (!key || !value) return acc;
+    const jsKey = key.trim().replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+    acc[jsKey as keyof React.CSSProperties] = value.trim();
+    return acc;
+  }, {} as React.CSSProperties);
+};
 
   const normalizeText = (s: string) =>
     s.replace(/\u00A0/g, " ").replace(/\r/g, "");
@@ -93,18 +103,28 @@ const RenderPreview: React.FC<RenderPreviewProps> = ({ content }) => {
       );
 
       switch (tag) {
-        case "img": {
-          const src = el.getAttribute("src") || "";
-          const alt = el.getAttribute("alt") || "";
-          return (
-            <img
-              key={key}
-              src={src}
-              alt={alt}
-              style={{ maxWidth: "100%", margin: "0.4rem 0" }}
-            />
-          );
-        }
+    
+case "img": {
+  const src = el.getAttribute("src") || "";
+  const alt = el.getAttribute("alt") || "";
+
+  const inlineStyles = parseStyleString(el.getAttribute("style"));
+
+  return (
+    <img
+      key={key}
+      src={src}
+      alt={alt}
+      style={{
+        ...inlineStyles,      // ✅ editor-defined width/height
+        maxWidth: "100%",     // ✅ responsive safety
+        display: "block",
+        margin: inlineStyles.margin || "0.4rem 0",
+      }}
+    />
+  );
+}
+
 
         case "table":
           return (

@@ -120,9 +120,15 @@ const ExamForm: React.FC = () => {
     ]);
   };
 
-  const handleRemoveSection = (index: number) => {
-    setSectionsData(sectionsData.filter((_, i) => i !== index));
-  };
+const handleRemoveSection = (index: number) => {
+  const confirmed = window.confirm(
+    "Are you sure you want to remove this section?"
+  );
+
+  if (!confirmed) return;
+
+  setSectionsData(prev => prev.filter((_, i) => i !== index));
+};
 
   // Submit handler
   const handleSubmit = async () => {

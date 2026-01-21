@@ -564,3 +564,13 @@ div[class*="badge"] {
 ::-webkit-scrollbar-thumb:window-inactive {
   background: rgba(255, 255, 255, 0.3);
 }
+
+/* .preview-container-latex .preview-image {
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  display: block;
+  margin: 0.6rem auto;
+  object-fit: contain;
+} */
+

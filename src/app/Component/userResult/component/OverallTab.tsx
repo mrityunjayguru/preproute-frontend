@@ -105,7 +105,6 @@ const sectionTime = useMemo(() => {
     : [];
 
   const COLORS = ["#FF8B00", "#00B8D9", "#6D5DFB"];
-
   // 🔹 Build sectionId → duration map (from examdetail)
   const durationMap: Record<string, number> = {};
   examSections.forEach((s: any) => {

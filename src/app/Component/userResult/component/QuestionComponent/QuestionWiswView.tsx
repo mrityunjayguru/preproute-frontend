@@ -275,9 +275,12 @@ const handleSubmitReport=(val:any)=>{
                   <RenderPreview content={question.questionText}/>
 
         </div>
-        <div className="mt-5">
+        {question?.questionPessage=="pass"?(
+            <div className="mt-5">
             <RenderPreview content={question?.passage} />
         </div>
+        ):(null)}
+      
 
       </div>
 
