@@ -1,5 +1,5 @@
-import { X } from "lucide-react";
-import React, { useState, useCallback, useEffect } from "react";
+import { X, GripSelection } from "lucide-react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 
 // Utility for binary calculations
 const performCalculation = (prev, next, op) => {
@@ -22,17 +22,11 @@ const performCalculation = (prev, next, op) => {
 };
 
 const CalcButton = React.memo(
-  ({ label, className, onClick, isMemoryActive } : {
-    label: string,
-    className: string,
-    onClick: () => void,
-    isMemoryActive: boolean,
-  }) => (
-    <>
-      <button
-        onClick={onClick}
-        disabled={label === "MR" && !isMemoryActive}
-        className={`flex items-center justify-center p-3 text-xl font-medium 
+  ({ label, className, onClick, isMemoryActive }) => (
+    <button
+      onClick={onClick}
+      disabled={label === "MR" && !isMemoryActive}
+      className={`flex items-center justify-center p-3 text-xl font-medium 
       rounded-md transition duration-150 ease-in-out shadow-sm border-b-4 border-gray-500
       ${className}
       ${
@@ -40,48 +34,19 @@ const CalcButton = React.memo(
           ? "opacity-50 cursor-not-allowed"
           : " active:scale-[0.98] font-dm-sans"
       }`}
-      >
-        {label}
-      </button>
-    </>
+    >
+      {label}
+    </button>
   )
 );
 
 const CalculatorApp = ({ onClose, initialPosition }) => {
-  // -------------------- DRAG LOGIC --------------------
-  const [dragging, setDragging] = useState(false);
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [position, setPosition] = useState(initialPosition);
-
-  const handleMouseDown = (e) => {
-    setDragging(true);
-    setOffset({
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
-    });
-  };
-
-  const handleMouseMove = (e) => {
-    if (!dragging) return;
-    setPosition({
-      x: e.clientX - offset.x,
-      y: e.clientY - offset.y,
-    });
-  };
-
-  const handleMouseUp = () => setDragging(false);
-
-  useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-  });
-
-  // -----------------------------------------------------
+  // -------------------- STATE --------------------
+  const [position, setPosition] = useState(initialPosition || { x: 100, y: 100 });
+  const [size, setSize] = useState({ width: 350 }); // Static initial width
+  const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   const [displayValue, setDisplayValue] = useState("0");
   const [operator, setOperator] = useState(null);
@@ -90,6 +55,59 @@ const CalculatorApp = ({ onClose, initialPosition }) => {
   const [memoryValue, setMemoryValue] = useState(0);
 
   const isMemoryActive = memoryValue !== 0;
+
+  // -------------------- HANDLERS --------------------
+  
+  // Start Dragging (Header)
+  const handleMouseDown = (e) => {
+    if (e.button !== 0) return;
+    setIsDragging(true);
+    setDragOffset({
+      x: e.clientX - position.x,
+      y: e.clientY - position.y,
+    });
+  };
+
+  // Start Resizing (Bottom Right Handle)
+  const handleResizeDown = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setIsResizing(true);
+  };
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (isDragging) {
+        setPosition({
+          x: e.clientX - dragOffset.x,
+          y: e.clientY - dragOffset.y,
+        });
+      }
+
+      if (isResizing) {
+        // Maintain a static minimum width of 300px and max of 600px
+        const newWidth = Math.min(Math.max(300, e.clientX - position.x), 600);
+        setSize({ width: newWidth });
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      setIsResizing(false);
+    };
+
+    if (isDragging || isResizing) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging, isResizing, dragOffset, position]);
+
+  // -------------------- CALC LOGIC --------------------
 
   const clearCalculator = useCallback(() => {
     setDisplayValue("0");
@@ -242,165 +260,52 @@ const CalculatorApp = ({ onClose, initialPosition }) => {
   }, [displayValue, operator, previousValue, waitingForSecondOperand]);
 
   const buttons = [
-    {
-      label: "MC",
-      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
-      action: () => handleMemory("MC"),
-    },
-    {
-      label: "MR",
-      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
-      action: () => handleMemory("MR"),
-      isMemoryActive,
-    },
-    {
-      label: "MS",
-      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
-      action: () => handleMemory("MS"),
-    },
-    {
-      label: "M+",
-      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
-      action: () => handleMemory("M+"),
-    },
-    {
-      label: "M-",
-      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
-      action: () => handleMemory("M-"),
-    },
-
-    {
-      label: "←",
-      className: "bg-red-500 text-white font-bold cursor-pointer font-dm-sans border-b border-red-400 hover:bg-red-400",
-      action: handleBackspace,
-    },
-    {
-      label: "C",
-      className: "bg-red-500 text-white font-bold cursor-pointer font-dm-sans border-b border-red-400 hover:bg-red-400",
-      action: clearCalculator,
-    },
-    {
-      label: "±",
-      className: "bg-red-500 text-white font-bold cursor-pointer font-dm-sans border-b border-red-400 hover:bg-red-400",
-      action: toggleSign,
-    },
-    {
-      label: "√",
-      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
-      action: handleSquareRoot,
-    },
-    {
-      label: "%",
-      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
-      action: inputPercent,
-    },
-
-    {
-      label: "7",
-      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
-      action: () => inputDigit(7),
-    },
-    {
-      label: "8",
-      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
-      action: () => inputDigit(8),
-    },
-    {
-      label: "9",
-      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
-      action: () => inputDigit(9),
-    },  
-    {
-      label: "/",
-      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
-      action: () => handleOperator("/"),
-    },
-    {
-      label: "1/x",
-      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
-      action: handleReciprocal,
-    },
-
-    {
-      label: "4",
-      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
-      action: () => inputDigit(4),
-    },
-    {
-      label: "5",
-      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
-      action: () => inputDigit(5),
-    },
-    {
-      label: "6",
-      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
-      action: () => inputDigit(6),
-    },
-    {
-      label: "*",
-      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
-      action: () => handleOperator("*"),
-    },
-    {
-      label: "=",
-      className: "bg-green-600 text-white font-bold row-span-2 cursor-pointer font-dm-sans border-b border-green-400 hover:bg-green-500",
-      action: handleEquals,
-    },
-
-    {
-      label: "1",
-      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
-      action: () => inputDigit(1),
-    },
-    {
-      label: "2",
-      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
-      action: () => inputDigit(2),
-    },
-    {
-      label: "3",
-      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200 ",
-      action: () => inputDigit(3),
-    },
-    {
-      label: "-",
-      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
-      action: () => handleOperator("-"),
-    },
-
-    {
-      label: "0",
-      className: "col-span-2 bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
-      action: () => inputDigit(0),
-    },
-    {
-      label: ".",
-      className: "bg-white text-gray-900 font-bold cursor-pointer font-dm-sans border-b border-gray-400 hover:bg-gray-200",
-      action: inputDecimal,
-    },
-    {
-      label: "+",
-      className: "bg-gray-300 text-gray-700 cursor-pointer font-dm-sans  border-b border-gray-400 hover:bg-gray-200",
-      action: () => handleOperator("+"),
-    },
+    { label: "MC", className: "bg-gray-300 text-gray-700 border-gray-400 hover:bg-gray-200", action: () => handleMemory("MC") },
+    { label: "MR", className: "bg-gray-300 text-gray-700 border-gray-400 hover:bg-gray-200", action: () => handleMemory("MR"), isMemoryActive },
+    { label: "MS", className: "bg-gray-300 text-gray-700 border-gray-400 hover:bg-gray-200", action: () => handleMemory("MS") },
+    { label: "M+", className: "bg-gray-300 text-gray-700 border-gray-400 hover:bg-gray-200", action: () => handleMemory("M+") },
+    { label: "M-", className: "bg-gray-300 text-gray-700 border-gray-400 hover:bg-gray-200", action: () => handleMemory("M-") },
+    { label: "←", className: "bg-red-500 text-white border-red-400 hover:bg-red-400", action: handleBackspace },
+    { label: "C", className: "bg-red-500 text-white border-red-400 hover:bg-red-400", action: clearCalculator },
+    { label: "±", className: "bg-red-500 text-white border-red-400 hover:bg-red-400", action: toggleSign },
+    { label: "√", className: "bg-gray-300 text-gray-700 border-gray-400 hover:bg-gray-200", action: handleSquareRoot },
+    { label: "%", className: "bg-gray-300 text-gray-700 border-gray-400 hover:bg-gray-200", action: inputPercent },
+    { label: "7", className: "bg-white text-gray-900 border-gray-400 hover:bg-gray-200", action: () => inputDigit(7) },
+    { label: "8", className: "bg-white text-gray-900 border-gray-400 hover:bg-gray-200", action: () => inputDigit(8) },
+    { label: "9", className: "bg-white text-gray-900 border-gray-400 hover:bg-gray-200", action: () => inputDigit(9) },  
+    { label: "/", className: "bg-gray-300 text-gray-700 border-gray-400 hover:bg-gray-200", action: () => handleOperator("/") },
+    { label: "1/x", className: "bg-gray-300 text-gray-700 border-gray-400 hover:bg-gray-200", action: handleReciprocal },
+    { label: "4", className: "bg-white text-gray-900 border-gray-400 hover:bg-gray-200", action: () => inputDigit(4) },
+    { label: "5", className: "bg-white text-gray-900 border-gray-400 hover:bg-gray-200", action: () => inputDigit(5) },
+    { label: "6", className: "bg-white text-gray-900 border-gray-400 hover:bg-gray-200", action: () => inputDigit(6) },
+    { label: "*", className: "bg-gray-300 text-gray-700 border-gray-400 hover:bg-gray-200", action: () => handleOperator("*") },
+    { label: "=", className: "bg-green-600 text-white row-span-2 border-green-400 hover:bg-green-500", action: handleEquals },
+    { label: "1", className: "bg-white text-gray-900 border-gray-400 hover:bg-gray-200", action: () => inputDigit(1) },
+    { label: "2", className: "bg-white text-gray-900 border-gray-400 hover:bg-gray-200", action: () => inputDigit(2) },
+    { label: "3", className: "bg-white text-gray-900 border-gray-400 hover:bg-gray-200", action: () => inputDigit(3) },
+    { label: "-", className: "bg-gray-300 text-gray-700 border-gray-400 hover:bg-gray-200", action: () => handleOperator("-") },
+    { label: "0", className: "col-span-2 bg-white text-gray-900 border-gray-400 hover:bg-gray-200", action: () => inputDigit(0) },
+    { label: ".", className: "bg-white text-gray-900 border-gray-400 hover:bg-gray-200", action: inputDecimal },
+    { label: "+", className: "bg-gray-300 text-gray-700 border-gray-400 hover:bg-gray-200", action: () => handleOperator("+") },
   ];
 
   return (
     <div
-      className="fixed font-inter"
+      className="fixed select-none"
       style={{
         top: position.y,
         left: position.x,
+        width: size.width,
         zIndex: 9999,
       }}
     >
-      <div className="w-full max-w-[450px] font-poppins bg-white shadow-xl border border-gray-300 rounded-lg overflow-hidden">
+      <div className="relative w-full font-poppins bg-white shadow-xl right-28 border border-gray-300 rounded-lg overflow-hidden flex flex-col">
         {/* HEADER (DRAG HANDLE) */}
         <div
           onMouseDown={handleMouseDown}
-          className="flex justify-between items-center bg-[#005EB6] text-white p-2 cursor-move select-none"
+          className="flex justify-between items-center bg-[#005EB6] text-white p-2 cursor-move"
         >
-          <h1 className="text-sm font-medium ">Calculator</h1>
+          <h1 className="text-sm font-medium">Calculator</h1>
           <div className="flex items-center space-x-2">
             {isMemoryActive && (
               <div className="w-5 h-5 text-xs font-bold flex items-center justify-center rounded-sm bg-white text-blue-600">
@@ -409,9 +314,9 @@ const CalculatorApp = ({ onClose, initialPosition }) => {
             )}
             <div
               onClick={onClose}
-              className="w-6 h-6 text-sm flex items-center justify-center rounded-sm bg-white text-black cursor-pointer"
+              className="w-6 h-6 text-sm flex items-center justify-center rounded-sm bg-white text-black cursor-pointer hover:bg-gray-200"
             >
-              <X />
+              <X size={14} />
             </div>
           </div>
         </div>
@@ -421,8 +326,8 @@ const CalculatorApp = ({ onClose, initialPosition }) => {
           <div className="text-gray-500 text-xs h-3 text-right font-mono">
             {isMemoryActive ? "Memory Active" : ""}
           </div>
-          <div className="text-gray-900 text-4xl font-light tracking-wide text-right overflow-hidden">
-            {displayValue.length > 15
+          <div className="text-gray-900 text-4xl font-light tracking-wide text-right overflow-hidden whitespace-nowrap">
+            {displayValue.length > 12
               ? parseFloat(displayValue).toExponential(3)
               : displayValue}
           </div>
@@ -430,15 +335,25 @@ const CalculatorApp = ({ onClose, initialPosition }) => {
 
         {/* BUTTONS */}
         <div className="p-4 grid grid-cols-5 gap-1.5 font-dm-sans">
-          {buttons.map((btn) => (
+          {buttons.map((btn, idx) => (
             <CalcButton
-              key={btn.label}
+              key={`${btn.label}-${idx}`}
               label={btn.label}
               className={btn.className}
               onClick={btn.action}
               isMemoryActive={btn.isMemoryActive}
             />
           ))}
+        </div>
+
+        {/* RESIZE HANDLE */}
+        <div
+          onMouseDown={handleResizeDown}
+          className="absolute bottom-0 right-0 w-4 h-4 cursor-nwse-resize flex items-end justify-end p-0.5 text-gray-400 hover:text-gray-600"
+        >
+          <svg width="10" height="10" viewBox="0 0 10 10">
+            <path d="M10 0 L10 10 L0 10 Z" fill="currentColor" opacity="0.3" />
+          </svg>
         </div>
       </div>
     </div>

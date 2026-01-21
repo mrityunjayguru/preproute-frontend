@@ -8,7 +8,9 @@ import Image from "next/image";
 import DraggableWrapper from "@/Common/dfdf";
 import InstructionPopup from "./InstructionPopup";
 
-function ExamHeader() {
+function ExamHeader({examData}) {
+
+  let showcal=examData[0].exam?.iscalculater || false
   const [isOpen, setIsOpen] = useState(false);
   const [calcPosition, setCalcPosition] = useState({ x: 0, y: 0 });
   const [openPopup, setOpenPopup] = useState(false);
@@ -46,12 +48,13 @@ function ExamHeader() {
           >
             Instruction
           </button>
-          <button
+          {showcal?(  <button
             className="cursor-pointer font-normal text-white"
             onClick={toggleCalculator}
           >
             Calculator
-          </button>
+          </button>):(null)}
+        
         </div>
       </div>
       {/* <DraggableWrapper> */}

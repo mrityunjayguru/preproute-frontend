@@ -34,6 +34,8 @@ const ExamForm: React.FC = () => {
   const [examName, setExamName] = useState("");
   const [fullExamDuration, setFullExamDuration] = useState("");
   const [isSwitchable, setIsSwitchable] = useState("yes");
+  const [iscalculater, setIscalculater] = useState("yes");
+
   const [isSection, setIsSection] = useState("true");
   const [sectionsData, setSectionsData] = useState<SectionData[]>([
     {
@@ -68,6 +70,8 @@ const ExamForm: React.FC = () => {
       setExamName(updateExamData.examname || "");
       setIsSwitchable(updateExamData.switchable ? "yes" : "no");
       setIsSection(updateExamData.isSection ? "true" : "false");
+      setIscalculater(updateExamData.iscalculater ? "yes" : "no");
+
       setFullExamDuration(updateExamData.fullExamduration?.toString() || "");
 
       if (updateExamData.isSection) {
@@ -131,6 +135,7 @@ const ExamForm: React.FC = () => {
       examname: examName.trim(),
       switchable: isSwitchable === "yes",
       isSection: isSection === "true",
+      iscalculater:iscalculater=="yes",
       fullExamduration: Number(fullExamDuration) || undefined,
     };
 
@@ -256,6 +261,25 @@ const ExamForm: React.FC = () => {
           <RadioGroup
             onValueChange={setIsSwitchable}
             value={isSwitchable}
+            className="flex items-center gap-6 mt-2"
+          >
+            <div className="flex items-center gap-2">
+              <RadioGroupItem value="yes" id="switch-yes" />
+              <Label htmlFor="switch-yes">Yes</Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <RadioGroupItem value="no" id="switch-no" />
+              <Label htmlFor="switch-no">No</Label>
+            </div>
+          </RadioGroup>
+        </div>
+         <div>
+          <Label className="mb-4 block font-dm-sans text-md">
+            Calculator
+          </Label>
+          <RadioGroup
+            onValueChange={setIscalculater}
+            value={iscalculater}
             className="flex items-center gap-6 mt-2"
           >
             <div className="flex items-center gap-2">

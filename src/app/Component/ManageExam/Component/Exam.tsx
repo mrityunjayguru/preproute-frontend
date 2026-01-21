@@ -420,7 +420,7 @@ export default function ExamUI() {
       {showWarning && <TabSwitchWarning onClose={() => setShowWarning(false)} />}
       <Popup title="Submit Report" isOpen={showPopup} onClose={() => setShowPopup(false)} onSubmit={(val: any) => dispatch(createReport({ title: val, questionId: question._id }))} question={question} />
 
-      <div><ExamHeader /></div>
+      <div><ExamHeader examData={examData} /></div>
       <div className="h-[94vh] flex flex-col overflow-hidden">
         <HeaderSection timeLeft={timeLeft} formatTime={formatTime} examName={exam?.examname} paperName={examData[0]?.questionPaper} />
         <div className="flex flex-col justify-between lg:flex-row flex-1">
