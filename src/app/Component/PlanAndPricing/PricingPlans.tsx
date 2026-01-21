@@ -39,18 +39,8 @@ const PRICING_UI = [
 ];
 
 const CORE_FEATURES = [
-  "Selected Colleges Access",
-  "Past Year Papers",
-  // "Sectional Tests – QA, LRDI, VARC",
-  // "Topic-wise Tests with Daily Practice",
-  "Level of Difficulty based Questions",
-  "Community Access",
-  "Bookmark Questions",
-  // "Free Interview Preparation",
-];
 
-const FULL_ACCESS_FEATURES = [
-  "Full Access",
+   "Full Access",
   "Past Year Papers",
   "Sectional Tests – QA, LRDI, VARC",
   "Topic-wise Tests with Daily Practice",
@@ -58,6 +48,19 @@ const FULL_ACCESS_FEATURES = [
   "Community Access",
   "Bookmark Questions",
   "Free Interview Preparation",
+
+
+];
+
+const FULL_ACCESS_FEATURES = [
+   "Selected Colleges Access",
+  "Past Year Papers",
+  // "Sectional Tests – QA, LRDI, VARC",
+  // "Topic-wise Tests with Daily Practice",
+  "Level of Difficulty based Questions",
+  "Community Access",
+  "Bookmark Questions",
+  // "Free Interview Preparation",
 ];
 
 export default function PricingPlans() {
