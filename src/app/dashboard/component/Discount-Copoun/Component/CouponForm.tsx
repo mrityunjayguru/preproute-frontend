@@ -27,7 +27,7 @@ const schema = yup.object().shape({
     .number()
     .typeError("Must be a number")
     .min(0, "Minimum is 0")
-    .max(2000, "Maximum is 100")
+    .max(5000, "Maximum is 5000")
     .required("Discount value is required"),
   discountStart: yup.string().optional(),
   discountEnd: yup.string().optional(),

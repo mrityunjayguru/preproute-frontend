@@ -204,7 +204,7 @@ export default function PricingPlans() {
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium font-poppins text-[#FF5635] px-2">
                 Plans and Pricing
               </h2>
-              <p className="text-gray-600 text-xs sm:text-sm md:text-base max-w-2xl mx-auto text-dm-sans mt-2 sm:mt-3 px-4">
+              <p className="text-gray-600 text-xs my-5 sm:text-sm md:text-base max-w-2xl mx-auto text-dm-sans mt-2 sm:mt-3 px-4">
                 Practice mock exams from multiple colleges and prepare with
                 confidence.
               </p>
@@ -306,7 +306,7 @@ export default function PricingPlans() {
                       </div>
 
                       <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-3 sm:my-4" />
-                      <p className="text-[14px] text-gray-500 px-4 sm:px-6 mb-1  ">
+                      <p className="mx-4 sm:mx-6 px-4 sm:px-6 text-sm  sm:text-sm md:text-[13px] text-gray-600 font-dm-sans ">
                         Included Exam
                       </p>
                       {ui?.examDetails?.length > 0 && (
