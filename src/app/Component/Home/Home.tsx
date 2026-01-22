@@ -46,21 +46,21 @@ export default function HomePage() {
   ) {
     router.push("/Auth/register");
   }
-useEffect(() => {
-  if (typeof window === "undefined") return;
+// useEffect(() => {
+//   if (typeof window === "undefined") return;
 
-  const hash = window.location.hash;
-  if (hash) {
-    const id = hash.replace("#", "");
-    const el = document.getElementById(id);
+//   const hash = window.location.hash;
+//   if (hash) {
+//     const id = hash.replace("#", "");
+//     const el = document.getElementById(id);
 
-    if (el) {
-      setTimeout(() => {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 100);
-    }
-  }
-}, []);
+//     if (el) {
+//       setTimeout(() => {
+//         el.scrollIntoView({ behavior: "smooth", block: "start" });
+//       }, 100);
+//     }
+//   }
+// }, []);
   return (
     <main className=" bg-white text-[#0F1724]">
       <WhatsAppSocialApp />

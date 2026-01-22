@@ -75,8 +75,10 @@ export const Header: React.FC = () => {
   /* ---------- Active Helpers ---------- */
   const isActive = (href: string) => {
     if (href.includes("#")) return pathname === href.split("#")[0];
+
     return pathname.startsWith(href);
   };
+  // console.log(isActive,"lllllllllll")
 
   const activeClass = "text-[#FF5635]";
   const inactiveClass = "text-black hover:text-[#FF5635] transition-colors";
@@ -136,7 +138,12 @@ export const Header: React.FC = () => {
               <Link
                 key={link.href}
                 href={link.href}
-                className={isActive(link.href) ? activeClass : inactiveClass}
+              className={
+  link.href !== "/home#features" && isActive(link.href)
+    ? activeClass
+    : inactiveClass
+}
+
               >
                 {link.label}
               </Link>

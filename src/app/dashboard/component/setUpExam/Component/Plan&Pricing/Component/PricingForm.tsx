@@ -13,7 +13,7 @@ import {
   handlesetUpdatesubTopic,
 } from "@/api/subTopic";
 import { getexam } from "@/api/Exam";
-import { createPlanAndPricing, getPlanandPricing } from "@/api/Plan&Pricing";
+import { createPlanAndPricing, getPlanandPricing, handleUpdateData } from "@/api/Plan&Pricing";
 
 const PricingForm = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -57,9 +57,10 @@ console.log(updatedplan,"updatedplanupdatedplanupdatedplan")
   // Prefill form when editing
 useEffect(() => {
   if (updatedplan && updatedplan._id && exam.length > 0) {
+    // alert(updatedplan._id)
     setTitle(updatedplan.title);
     setPrice(updatedplan.price);
-
+seteditingId(updatedplan?._id)
     // 🔥 convert examId array → react-select format
     const selectedOptions = exam
       .filter((ex: any) => updatedplan.examId.includes(ex._id))
@@ -72,7 +73,7 @@ useEffect(() => {
   }
 }, [updatedplan?._id]);
 
-console.log(selected,"selectedselectedselected")
+// console.log(editingId,"selectedselectedselected")
   // Submit
   const handleSubmit = async () => {
     const examIdArray = selected.map((item: any) => item.value);
@@ -83,16 +84,22 @@ console.log(selected,"selectedselectedselected")
       price: price,
       examId: examIdArray, // ⭐ PASSED IN ARRAY FORMAT (ObjectIds)
     };
-
+if(editingId){
+  payload._id=editingId
+    await dispatch(handleUpdateData(payload));
+}else{
     await dispatch(createPlanAndPricing(payload));
+
+}
 
     setTitle("");
     setPrice("");
     setSelected([]);
     const data: any = null;
-    await dispatch(handlesetUpdatesubTopic(data));
+    // await dispatch(handlesetUpdatesubTopic(data));
     await getData()
     // await fetchSubTopics();
+    seteditingId(null)
   };
 
   // Options for react-select

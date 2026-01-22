@@ -129,7 +129,7 @@ export const Dashboard={
 export const PlnAndPricing={
   create:"PlanPricing/create",
   get:"PlanPricing/get",
-  update:"planAndPricing/update",
+  update:"PlanPricing/update",
   getallPlnAndPricingsbysectionid:"planAndPricing/getallPlnAndPricingsbysectionid"
 }
 const APIName = {

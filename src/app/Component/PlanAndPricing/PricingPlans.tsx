@@ -39,27 +39,24 @@ const PRICING_UI = [
 ];
 
 const CORE_FEATURES = [
-
-   "Full Access",
+  //  "Full Access",
   "Past Year Papers",
   "Sectional Tests – QA, LRDI, VARC",
   "Topic-wise Tests with Daily Practice",
-  "Level of Difficulty based Questions",
+  // "Level of Difficulty based Questions",
   "Community Access",
-  "Bookmark Questions",
+  // "Bookmark Questions",
   "Free Interview Preparation",
-
-
 ];
 
 const FULL_ACCESS_FEATURES = [
-   "Selected Colleges Access",
+  //  "Selected Colleges Access",
   "Past Year Papers",
   // "Sectional Tests – QA, LRDI, VARC",
   // "Topic-wise Tests with Daily Practice",
-  "Level of Difficulty based Questions",
+  // "Level of Difficulty based Questions",
   "Community Access",
-  "Bookmark Questions",
+  // "Bookmark Questions",
   // "Free Interview Preparation",
 ];
 
@@ -129,7 +126,7 @@ export default function PricingPlans() {
       const { order } = response.payload;
 
       const rzp = new (window as any).Razorpay({
-        key: "rzp_test_RpR02SnjfQgbaE",
+        key: "rzp_live_S6pQDzFW1zZG95",
         amount: order.amount,
         currency: order.currency,
         name: "PreeRoute",
@@ -229,9 +226,9 @@ export default function PricingPlans() {
                         <h3 className="text-lg sm:text-xl font-semibold text-gray-500">
                           {ui.title}
                         </h3>
-                        {/* <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                          Coming Soon
-                        </p> */}
+                       <p className="text-sm font-medium sm:text-sm text-gray-500 mt-1">
+                          CUTE
+                        </p> 
                       </div>
 
                       <div className="border-t border-gray-400 mx-4 sm:mx-6 my-3 sm:my-4" />
@@ -309,7 +306,7 @@ export default function PricingPlans() {
                       </div>
 
                       <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-3 sm:my-4" />
-                      <p className="text-[14px] text-gray-500 px-4 sm:px-6 mb-3  ">
+                      <p className="text-[14px] text-gray-500 px-4 sm:px-6 mb-1  ">
                         Included Exam
                       </p>
                       {ui?.examDetails?.length > 0 && (
