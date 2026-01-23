@@ -227,7 +227,7 @@ export default function PricingPlans() {
                           {ui.title}
                         </h3>
                        <p className="text-sm font-medium sm:text-sm text-gray-500 mt-1">
-                          CUTE
+                          CUET
                         </p> 
                       </div>
 
@@ -303,19 +303,82 @@ export default function PricingPlans() {
                             ₹{plan?.price}
                           </p>
                         </div>
-                      </div>
+                      </div>ag
 
                       <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-3 sm:my-4" />
-                      <p className="mx-4 sm:mx-6 px-4 sm:px-6 text-sm  sm:text-sm md:text-[13px] text-gray-600 font-dm-sans ">
+                      <p className="mx-4 sm:mx-6 px-4 sm:px-6 text-sm font-semibold sm:text-sm md:text-[13px] text-gray-600 font-dm-sans ">
                         Included Exam
                       </p>
-                      {ui?.examDetails?.length > 0 && (
+                  {index === 0 && (
+  <ul className="px-4 sm:px-6 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
+    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+      <span className="flex-1">IPMAT Indore 25</span>
+    </li>
+
+    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+      <span className="flex-1">IPMAT Rohtak 25</span>
+    </li>
+
+    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+      <span className="flex-1">JIPMAT 25</span>
+    </li>
+  </ul>
+)}
+
+{index === 1 && (
+  <ul className="px-4 sm:px-6 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
+    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+      <span className="flex-1">IPMAT Indore 25</span>
+    </li>
+
+    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+      <span className="flex-1">IPMAT Rohtak 25</span>
+    </li>
+
+    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+      <span className="flex-1">JIPMAT 25</span>
+    </li>
+
+    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+      <span className="flex-1">IIM B DBE 10</span>
+    </li>
+
+    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+      <span className="flex-1">SET 10</span>
+    </li>
+
+    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+      <span className="flex-1">NPAT 10</span>
+    </li>
+
+    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+      <span className="flex-1">Christ 10</span>
+    </li>
+
+    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+      <span className="flex-1">St. Xavier's 10</span>
+    </li>
+  </ul>
+)}
+<div className="border-b my-2 border-[#FF5635] mx-4"></div>
+                      {/* {ui?.examDetails?.length > 0 && (
                         <div className=" border-b mx-4 sm:mx-6 pb-5 border-[#FF5635] px-4 sm:px-6 mb-3 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
                           {ui.examDetails
                             .map((val: any) => val.examname)
                             .join(", ")}
                         </div>
-                      )}
+                      )} */}
 
                       {/* FEATURES */}
 

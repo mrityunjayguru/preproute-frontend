@@ -20,3 +20,16 @@ export default function ComingSoon() {
     </div>
   );
 }
+
+// import React from 'react'
+// import Community from '../Component/Community/Community'
+
+// function page() {
+//   return (
+//     <div>
+//       <Community/>
+//     </div>
+//   )
+// }
+
+export default page

@@ -122,14 +122,14 @@ if (isAttempted) {
 
 
   // Determine Correct Answer Text
-  let correctText: React.ReactNode = "-";
+  let correctText:any;
   if (question.answerType === "Numeric") {
     correctText = question.correctAnswer;
   } else {
     const correctOpt = question.options?.find((opt) => opt.isCorrect);
     correctText = correctOpt
-      ? renderPreview(correctOpt.text)
-      : renderPreview(question.correctAnswer);
+      ? correctOpt.text
+      : question.correctAnswer;
   }
 
   // Time formatting
@@ -295,7 +295,8 @@ const handleSubmitReport=(val:any)=>{
             Correct Answer
           </p>
           <div className="text-xl font-normal font-poppins text-gray-900">
-            {correctText}
+            {/* {correctText} */}
+            <RenderPreview content={correctText}/>
           </div>
         </div>
 

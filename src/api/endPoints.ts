@@ -132,6 +132,18 @@ export const PlnAndPricing={
   update:"PlanPricing/update",
   getallPlnAndPricingsbysectionid:"planAndPricing/getallPlnAndPricingsbysectionid"
 }
+export const forum={
+  getForums:"forum/get",
+  createForum:"forum/create",
+  updateForum:"",
+  deleteForum:"",
+  getComments:"forum/getCommentsTreeByPost",
+  addComment:"forum/comment",
+  likeComment:"forum/likeComment",
+  likePost:"forum/likePost",
+  singleForum:"forum/singlePost",
+  replyComment:"forum/replyComment"
+}
 const APIName = {
 ...UserAuth,
 };

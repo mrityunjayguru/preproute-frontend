@@ -21,8 +21,10 @@ import blog from "./Blog/index"
 import coupon from "./coupon/index"
 import bookMark from "./boockMark/index"
 import Report from "./Report/index"
+import forum from "./forum/index"
 const appReducer = combineReducers({
  school:school,
+ forum:forum,
  Report:Report,
  bookMark:bookMark,
  exam:exam,
