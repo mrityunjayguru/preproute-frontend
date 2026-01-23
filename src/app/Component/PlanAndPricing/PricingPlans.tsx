@@ -303,7 +303,7 @@ export default function PricingPlans() {
                             ₹{plan?.price}
                           </p>
                         </div>
-                      </div>ag
+                      </div>
 
                       <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-3 sm:my-4" />
                       <p className="mx-4 sm:mx-6 px-4 sm:px-6 text-sm font-semibold sm:text-sm md:text-[13px] text-gray-600 font-dm-sans ">
