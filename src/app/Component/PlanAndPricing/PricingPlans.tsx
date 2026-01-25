@@ -129,7 +129,7 @@ export default function PricingPlans() {
         key: "rzp_live_S6pQDzFW1zZG95",
         amount: order.amount,
         currency: order.currency,
-        name: "PreeRoute",
+        name: "thepreproute",
         description: plan.title,
         order_id: order.id,
         handler: () => router.push("/Profile"),
@@ -226,9 +226,9 @@ export default function PricingPlans() {
                         <h3 className="text-lg sm:text-xl font-semibold text-gray-500">
                           {ui.title}
                         </h3>
-                       <p className="text-sm font-medium sm:text-sm text-gray-500 mt-1">
+                        <p className="text-sm font-medium sm:text-sm text-gray-500 mt-1">
                           CUET
-                        </p> 
+                        </p>
                       </div>
 
                       <div className="border-t border-gray-400 mx-4 sm:mx-6 my-3 sm:my-4" />
@@ -309,69 +309,69 @@ export default function PricingPlans() {
                       <p className="mx-4 sm:mx-6 px-4 sm:px-6 text-sm font-semibold sm:text-sm md:text-[13px] text-gray-600 font-dm-sans ">
                         Included Exam
                       </p>
-                  {index === 0 && (
-  <ul className="px-4 sm:px-6 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
-    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-      <span className="flex-1">IPMAT Indore 25</span>
-    </li>
+                      {index === 0 && (
+                        <ul className="px-4 sm:px-6 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
+                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+                            <span className="flex-1">IPMAT Indore 25</span>
+                          </li>
 
-    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-      <span className="flex-1">IPMAT Rohtak 25</span>
-    </li>
+                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+                            <span className="flex-1">IPMAT Rohtak 25</span>
+                          </li>
 
-    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-      <span className="flex-1">JIPMAT 25</span>
-    </li>
-  </ul>
-)}
+                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+                            <span className="flex-1">JIPMAT 25</span>
+                          </li>
+                        </ul>
+                      )}
 
-{index === 1 && (
-  <ul className="px-4 sm:px-6 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
-    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-      <span className="flex-1">IPMAT Indore 25</span>
-    </li>
+                      {index === 1 && (
+                        <ul className="px-4 sm:px-6 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
+                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+                            <span className="flex-1">IPMAT Indore 25</span>
+                          </li>
 
-    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-      <span className="flex-1">IPMAT Rohtak 25</span>
-    </li>
+                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+                            <span className="flex-1">IPMAT Rohtak 25</span>
+                          </li>
 
-    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-      <span className="flex-1">JIPMAT 25</span>
-    </li>
+                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+                            <span className="flex-1">JIPMAT 25</span>
+                          </li>
 
-    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-      <span className="flex-1">IIM B DBE 10</span>
-    </li>
+                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+                            <span className="flex-1">IIM B DBE 10</span>
+                          </li>
 
-    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-      <span className="flex-1">SET 10</span>
-    </li>
+                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+                            <span className="flex-1">SET 10</span>
+                          </li>
 
-    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-      <span className="flex-1">NPAT 10</span>
-    </li>
+                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+                            <span className="flex-1">NPAT 10</span>
+                          </li>
 
-    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-      <span className="flex-1">Christ 10</span>
-    </li>
+                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+                            <span className="flex-1">Christ 10</span>
+                          </li>
 
-    <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-      <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-      <span className="flex-1">St. Xavier's 10</span>
-    </li>
-  </ul>
-)}
-<div className="border-b my-2 border-[#FF5635] mx-4"></div>
+                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
+                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
+                            <span className="flex-1">St. Xavier's 10</span>
+                          </li>
+                        </ul>
+                      )}
+                      <div className="border-b my-2 border-[#FF5635] mx-4"></div>
                       {/* {ui?.examDetails?.length > 0 && (
                         <div className=" border-b mx-4 sm:mx-6 pb-5 border-[#FF5635] px-4 sm:px-6 mb-3 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
                           {ui.examDetails
