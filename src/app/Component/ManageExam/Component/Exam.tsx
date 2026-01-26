@@ -335,7 +335,7 @@ export default function ExamUI() {
   };
 
   const handleClearResponse = async () => {
-    await dispatch(clearQuestionResponce({ questionPaperId: question._id }));
+    await dispatch(clearQuestionResponce({ questionPaperId: question }));
     setMcqSelected(null);
     setNumericalValue("");
     updateStatus("visited");
