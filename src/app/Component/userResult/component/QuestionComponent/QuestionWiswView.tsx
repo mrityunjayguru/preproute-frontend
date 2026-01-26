@@ -163,6 +163,7 @@ const [reporttoggle,setReportToggle]=useState(false)
 const handlereport=()=>{
 setReportToggle(true)
 }
+console.log(question,"llllllllllllllll")
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
 
 const handleSubmitReport=(val:any)=>{
@@ -275,8 +276,9 @@ const handleSubmitReport=(val:any)=>{
                   <RenderPreview content={question.questionText}/>
 
         </div>
-        {question?.questionPessage=="pass"?(
+        {question?.questionPessage=="Pass" || question?.questionPessage=="pass"?(
             <div className="mt-5">
+            
             <RenderPreview content={question?.passage} />
         </div>
         ):(null)}

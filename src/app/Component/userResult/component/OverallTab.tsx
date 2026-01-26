@@ -309,7 +309,10 @@ const weakSubtopics = useMemo(() => {
    
     .sort((a: any, b: any) => a.accuracy - b.accuracy);
 }, [data]);
-console.log(sectionTime,"sectionTimesectionTime")
+const start = new Date(data?.fullExamStartTime).getTime();
+const end = new Date(data?.fullExamEndTime).getTime();
+const spentMinutes = ((end - start) / 60000).toFixed(2);
+
 
   return (
     <div className="w-full space-y-6">
@@ -470,7 +473,7 @@ console.log(sectionTime,"sectionTimesectionTime")
                     Overall Exam
                   </div>
                   <div className="text-2xl font-bold text-[#005EB6] relative group font-dm-sans">
-                    {data?.examdetail.fullExamduration}
+                    {spentMinutes}/<span className="text-[#000]">{data?.examdetail.fullExamduration}</span>
                     {/* <span className="text-sm text-black font-normal">
                       /{data?.examdetail.fullExamduration || ""}
                     </span> */}

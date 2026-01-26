@@ -4,7 +4,7 @@ import USER from "@/assets/vectors/user.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { addComment, getComments, likeComment } from "@/api/forum";
-
+import hert from "@/assets/images/hert.png";
 const CommentTree = ({ comment }: any) => {
   const dispatch = useDispatch<AppDispatch>();
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
@@ -55,7 +55,7 @@ const CommentTree = ({ comment }: any) => {
   };
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 bg-[#fff]">
       {/* COMMENT CARD */}
       <div className="flex gap-3">
         <img
@@ -67,7 +67,7 @@ const CommentTree = ({ comment }: any) => {
           className="w-9 h-9 rounded-full object-cover"
         />
 
-        <div className="flex-1 bg-gray-50 rounded-xl px-4 py-3">
+        <div className="flex-1  rounded-xl px-4 py-3">
           {/* Header */}
           <div className="flex justify-between">
             <div className="text-sm">
@@ -80,19 +80,28 @@ const CommentTree = ({ comment }: any) => {
           </div>
 
           {/* Content */}
-          <p className="text-sm text-gray-700 mt-1">{comment.content}</p>
+          <p className="text-sm font-[400] text-[#000000] mt-1">{comment.content}</p>
 
           {/* Actions */}
           <div className="flex gap-4 mt-2 text-xs text-gray-500">
             {/* Like */}
-            <div
-              onClick={() => handleLikeComment(comment)}
-              className={`cursor-pointer flex items-center gap-1 px-2 py-0.5 rounded-full shadow
-                ${comment.isLiked ? "text-blue-600 bg-blue-50" : "bg-white"}
-              `}
-            >
-              🙂 {comment.likeCount || 0}
-            </div>
+          <div
+  onClick={() => handleLikeComment(comment)}
+  className={`cursor-pointer flex items-center gap-1 px-2 py-1 rounded-full shadow transition
+    ${comment?.isLiked ? "bg-blue-50 text-blue-600" : "bg-blue-600 text-gray-600"}
+  `}
+>
+  <img
+    src={comment?.isLiked ? hert.src : hert.src}
+    alt="like"
+    className="w-4 h-4 object-contain"
+  />
+
+  <span className="text-xs text-[#fff] font-medium">
+    {comment?.likeCount ?? 0}
+  </span>
+</div>
+
 
             {/* Reply Toggle */}
             <div

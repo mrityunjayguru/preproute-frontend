@@ -29,7 +29,7 @@ const Discussion = () => {
 
     // console.log("like clicked",post)
   };
-    useEffect(() => {
+  useEffect(() => {
     if (!post._id) return;
 
     const socket = getSocket();
@@ -40,12 +40,12 @@ const Discussion = () => {
 
     // listen for new comment
     socket.on("new-comment", (comment) => {
-      console.log(comment,"commentcomment")
-const payload:any={
+      console.log(comment, "commentcomment");
+      const payload: any = {
         postId: post._id,
-}
+      };
       dispatch(singleForum(payload));
-       dispatch(getComments(payload));
+      dispatch(getComments(payload));
     });
 
     return () => {
@@ -54,12 +54,12 @@ const payload:any={
     };
   }, [post._id, dispatch]);
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-24 min-h-screen p-6 bg-[#fff]">
       {/* ================= POST ================= */}
       {post && (
-        <div className="bg-white border rounded-lg p-5 shadow-sm">
+        <div className=" p-5 ">
           {/* Title */}
-          <h1 className="text-2xl font-semibold text-gray-800">{post.title}</h1>
+          <h1 className="text-2xl font-semibold text-[#005EB6]">{post.title}</h1>
 
           {/* User */}
           <div className="flex items-center gap-3 mt-3">
@@ -73,7 +73,7 @@ const payload:any={
             />
 
             <div>
-              <p className="text-sm font-medium">{post.user?.username}</p>
+              <p className="text-sm text-[#000000] font-medium">{post.user?.username}</p>
               <p className="text-xs text-gray-500">
                 {new Date(post.createdAt).toLocaleString()}
               </p>
@@ -91,7 +91,7 @@ const payload:any={
           </div>
 
           {/* Description */}
-          <p className="mt-4 text-gray-700 leading-relaxed">
+          <p className="mt-4 text-sm font-[400] text-[#000000] leading-relaxed">
             {/* {post.description} */}
             <RenderPreview content={post.description} />
           </p>
@@ -116,7 +116,7 @@ const payload:any={
           </div>
 
           {/* ================= COMMENTS ================= */}
-          {showComments && (
+          {true && (
             <div className="mt-6">
               <h2 className="text-lg font-semibold mb-4">Discussion</h2>
               <MainCommentBox />

@@ -223,15 +223,15 @@ export default function PricingPlans() {
                       className="bg-gray-100 rounded-[8px] flex flex-col min-h-[400px] sm:min-h-[450px] md:min-h-[500px]"
                     >
                       <div className="text-center p-4 sm:p-6 font-poppins">
-                        <h3 className="text-lg sm:text-xl font-semibold text-gray-500">
-                          {ui.title}
-                        </h3>
-                        <p className="text-sm font-medium sm:text-sm text-gray-500 mt-1">
+                        <p className="text-xl font-[500]  text-[#727EA3] mt-1">
                           CUET
                         </p>
+                        <h3 className="text-sm sm:text-xl font-normal text-[#727EA3]">
+                          Coming Soon
+                        </h3>
                       </div>
 
-                      <div className="border-t border-gray-400 mx-4 sm:mx-6 my-3 sm:my-4" />
+                      <div className="border-t border-gray-400 mx-4 sm:mx-6 my-1 sm:my-4" />
 
                       <div className="flex-1 flex items-center justify-center text-gray-400 relative px-4 sm:px-6 py-6 sm:py-8">
                         <div className="relative w-full h-full max-w-[150px] sm:max-w-[180px] md:max-w-[200px] max-h-[150px] sm:max-h-[180px] md:max-h-[200px]">
@@ -305,71 +305,72 @@ export default function PricingPlans() {
                         </div>
                       </div>
 
-                      <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-3 sm:my-4" />
-                      <p className="mx-4 sm:mx-6 px-4 sm:px-6 text-sm font-semibold sm:text-sm md:text-[13px] text-gray-600 font-dm-sans ">
-                        Included Exam
-                      </p>
+                      <div className="border-t border-[##727EA3] mx-4 sm:mx-6 my-1 " />
+                      <div className="text-[#000] flex justify-between mx-4 px-4">
+                        <p className="text-xs font-normal sm:text-sm md:text-[13px] font-dm-sans">
+                          Included Exam
+                        </p>
+                        <p className="text-xs font-normal sm:text-sm md:text-[13px] font-dm-sans">
+                          No. of Mocks
+                        </p>
+                      </div>
+
+                      <div className="border-t border-[#727EA3] mx-4 sm:mx-6 my-1" />
+
                       {index === 0 && (
-                        <ul className="px-4 sm:px-6 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
-                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-                            <span className="flex-1">IPMAT Indore 25</span>
-                          </li>
-
-                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-                            <span className="flex-1">IPMAT Rohtak 25</span>
-                          </li>
-
-                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-                            <span className="flex-1">JIPMAT 25</span>
-                          </li>
-                        </ul>
+                        <div className=" flex justify-between mx-4 px-4 text-[#FF5635] items-start">
+                          {/* Left side - Exams */}
+                          <div>
+                            <p className="  text-xs sm:text-sm md:text-[13px] font-dm-sans">
+                              {["IPMAT Indore", "IPMAT Rohtak"].join(", ")}
+                            </p>
+                            <p className="  text-xs sm:text-sm md:text-[13px] font-dm-sans">
+                              JIPMAT
+                            </p>
+                          </div>
+                          {/* Right side - No of Mocks */}
+                          <div className="text-xs sm:text-sm md:text-[13px] font-dm-sans ">
+                            25
+                          </div>
+                        </div>
                       )}
 
                       {index === 1 && (
-                        <ul className="px-4 sm:px-6 text-xs sm:text-sm md:text-[13px] text-gray-700 font-dm-sans">
-                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-                            <span className="flex-1">IPMAT Indore 25</span>
-                          </li>
+                        <>
+                          <div className=" flex justify-between mx-4 px-4 text-[#FF5635] items-start">
+                            {/* Left side - Exams */}
+                            <div>
+                              <p className="  text-xs sm:text-sm md:text-[13px] font-dm-sans">
+                                {["IPMAT Indore", "IPMAT Rohtak"].join(", ")}
+                              </p>
+                              <p className="  text-xs sm:text-sm md:text-[13px] font-dm-sans">
+                                JIPMAT
+                              </p>
+                            </div>
+                            {/* Right side - No of Mocks */}
+                            <div className="text-xs sm:text-sm md:text-[13px] font-dm-sans ">
+                              25
+                            </div>
+                          </div>
+                          <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-1" />
 
-                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-                            <span className="flex-1">IPMAT Rohtak 25</span>
-                          </li>
-
-                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-                            <span className="flex-1">JIPMAT 25</span>
-                          </li>
-
-                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-                            <span className="flex-1">IIM B DBE 10</span>
-                          </li>
-
-                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-                            <span className="flex-1">SET 10</span>
-                          </li>
-
-                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-                            <span className="flex-1">NPAT 10</span>
-                          </li>
-
-                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-                            <span className="flex-1">Christ 10</span>
-                          </li>
-
-                          <li className="flex items-start gap-1.5 sm:gap-2 leading-relaxed">
-                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-                            <span className="flex-1">St. Xavier's 10</span>
-                          </li>
-                        </ul>
+                          <div className=" flex justify-between mx-4 px-4 text-[#FF5635] items-start">
+                            {/* Left side - Exams */}
+                            <div>
+                              <p className="  text-xs sm:text-sm md:text-[13px] font-dm-sans">
+                                IIM-B DBE, SET, NPAT, Christ
+                              </p>
+                              <p className="  text-xs sm:text-sm md:text-[13px] font-dm-sans">
+                                {" "}
+                                St.Xavier’s
+                              </p>
+                            </div>
+                            {/* Right side - No of Mocks */}
+                            <div className="text-xs sm:text-sm md:text-[13px] font-dm-sans ">
+                              10
+                            </div>
+                          </div>
+                        </>
                       )}
                       <div className="border-b my-2 border-[#FF5635] mx-4"></div>
                       {/* {ui?.examDetails?.length > 0 && (
@@ -388,8 +389,8 @@ export default function PricingPlans() {
                             key={i}
                             className="flex items-start gap-1.5 sm:gap-2 leading-relaxed"
                           >
-                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF5635] mt-0.5 sm:mt-1 shrink-0" />
-                            <span className="flex-1">{feature}</span>
+                            <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#000000] mt-0.5 sm:mt-1 shrink-0" />
+                            <span className="text-[#000000] font-[400] text-sm flex-1">{feature}</span>
                           </li>
                         ))}
                       </ul>

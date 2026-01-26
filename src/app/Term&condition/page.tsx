@@ -99,7 +99,7 @@ export default function Page() {
               <ul className="list-disc pl-6 space-y-1">
                 <li className="text-sm text-gray-800 font-dm-sans">All prices are displayed within the app</li>
                 <li className="text-sm text-gray-800 font-dm-sans">Payments are processed through secure third-party gateways</li>
-                <li className="text-sm text-gray-800 font-dm-sans">Purchases may be non-refundable unless required by law</li>
+                <li className="text-sm text-gray-800 font-dm-sans">Purchases are non refundable, for any further queries, contact: <span className="font-bold">support@thepreproute.com</span></li>
                 <li className="text-sm text-gray-800 font-dm-sans">Plan benefits may vary depending on product type (limited colleges, full access, mock sets, etc.)</li>
               </ul>
             </div>

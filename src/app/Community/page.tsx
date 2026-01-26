@@ -32,4 +32,4 @@ export default function ComingSoon() {
 //   )
 // }
 
-// export default page
+export default page
