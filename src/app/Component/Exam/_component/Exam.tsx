@@ -28,6 +28,7 @@ import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import LOCK from "@/assets/vectors/lock.svg";
 import LOCK2 from "@/assets/vectors/lock-2.svg";
 import { capitalizeWords } from "@/Utils/Cappital";
+import { ToastError, ToastWarning } from "@/Utils/toastUtils";
 
 const MockExamCard = ({ exam, handleExam, index }: any) => {
   const examById = useSelector((s: any) => s.exam?.examById) || [];
@@ -151,7 +152,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
                 className="px-10 h-11 rounded-[8px] 
                            bg-[#FF5635] text-white 
                            hover:bg-black transition cursor-pointer font-poppins"
-                onClick={() => handleExam(exam, "start")}
+                onClick={() => handleExam(exam, "start",index)}
               >
                 Start
               </Button>
@@ -231,7 +232,19 @@ export default function MergedExamPage() {
     dispatch(getCommonQuestionBeExamId(payload));
   };
 
-  const handleExam = async (examData: any, type: any) => {
+  const handleExam = async (examData: any, type: any,i:any) => {
+if (
+  i > 0 &&
+  examById[i - 1]?.hasGivenExam==false ||
+  examById[i - 1]?.userSummary?.target === 0
+) {
+ ToastError("Please complete previous mock exam first");
+  
+  return;
+}
+
+
+  
     if (!localStorage.getItem("token")) return router.push("/Auth/signin");
     const payload: any = null;
     dispatch(handleGivenExam(payload));
