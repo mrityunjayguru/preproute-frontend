@@ -145,14 +145,14 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
         align: "right",
       });
 
-      doc.setFillColor(230, 230, 230);
-      doc.roundedRect(14, startY + 5, pageWidth - 28, 3, 2, 2, "F");
-      doc.setFillColor(34, 197, 94);
-      doc.roundedRect(14, startY + 5, 14, 3, 2, 2, "F");
-      doc.circle(28, startY + 6.5, 3, "F");
+      // doc.setFillColor(230, 230, 230);
+      // doc.roundedRect(14, startY + 5, pageWidth - 28, 3, 2, 2, "F");
+      // doc.setFillColor(34, 197, 94);
+      // doc.roundedRect(14, startY + 5, 14, 3, 2, 2, "F");
+      // doc.circle(28, startY + 6.5, 3, "F");
 
       // GST Rate
-      const rateY = startY + 18;
+      const rateY = startY + 10;
       doc.setFontSize(10);
       doc.setTextColor(120);
       doc.text("GST Slab/Rate", 14, rateY);
@@ -162,16 +162,16 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
       doc.setTextColor(0);
       doc.text(`${gstRate} %`, pageWidth - 14, rateY, { align: "right" });
 
-      doc.setFillColor(230, 230, 230);
-      doc.roundedRect(14, rateY + 5, pageWidth - 28, 3, 2, 2, "F");
+      // doc.setFillColor(230, 230, 230);
+      // doc.roundedRect(14, rateY + 5, pageWidth - 28, 3, 2, 2, "F");
 
-      const barWidth = ((pageWidth - 28) * gstRate) / 30;
-      doc.setFillColor(34, 197, 94);
-      doc.roundedRect(14, rateY + 5, barWidth, 3, 2, 2, "F");
-      doc.circle(14 + barWidth, rateY + 6.5, 3, "F");
+      // const barWidth = ((pageWidth - 28) * gstRate) / 30;
+      // doc.setFillColor(34, 197, 94);
+      // doc.roundedRect(14, rateY + 5, barWidth, 3, 2, 2, "F");
+      // doc.circle(14 + barWidth, rateY + 6.5, 3, "F");
 
       // Base Price
-      const baseY = rateY + 20;
+      const baseY = rateY + 10;
       doc.setFontSize(10);
       doc.setTextColor(120);
       doc.text("Amount Excluding GST (Base Price)", 14, baseY);
