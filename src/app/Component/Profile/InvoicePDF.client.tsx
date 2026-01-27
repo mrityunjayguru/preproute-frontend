@@ -136,12 +136,12 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
       // Amount Including GST
       doc.setFontSize(10);
       doc.setTextColor(120);
-      doc.text("Amount Including GST", 14, startY);
+      doc.text("Base Price", 14, startY);
 
       resetTextSpacing(doc);
       doc.setFontSize(12);
       doc.setTextColor(0);
-      doc.text(`${amountInclGST}`, pageWidth - 14, startY, {
+      doc.text(`${basePrice}`, pageWidth - 14, startY, {
         align: "right",
       });
 
@@ -155,7 +155,7 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
       const rateY = startY + 10;
       doc.setFontSize(10);
       doc.setTextColor(120);
-      doc.text("GST Slab/Rate", 14, rateY);
+      doc.text("GST Slab Rate", 14, rateY);
 
       resetTextSpacing(doc);
       doc.setFontSize(12);
@@ -174,12 +174,12 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
       const baseY = rateY + 10;
       doc.setFontSize(10);
       doc.setTextColor(120);
-      doc.text("Amount Excluding GST (Base Price)", 14, baseY);
+      doc.text("GST Amount",14, baseY);
 
       resetTextSpacing(doc);
       doc.setFontSize(12);
       doc.setTextColor(0);
-      doc.text(`${basePrice}`, pageWidth - 14, baseY, {
+      doc.text(`${gstAmount}`, pageWidth - 14, baseY, {
         align: "right",
       });
 
@@ -187,13 +187,13 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
       const gstY = baseY + 10;
       doc.setFontSize(10);
       doc.setTextColor(120);
-      doc.text("Total GST Amount", 14, gstY);
+      doc.text("Subtotal", 14, gstY);
 
       resetTextSpacing(doc);
       doc.setFontSize(12);
-      doc.setTextColor(0);
+      doc.setTextColor(236, 98, 67);
     doc.text(
-        `${gstAmount}`,
+        `${amountInclGST}`,
         pageWidth - 14,
         gstY,
         { align: "right" }
