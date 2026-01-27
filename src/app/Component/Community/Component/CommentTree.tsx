@@ -5,13 +5,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { addComment, getComments, likeComment } from "@/api/forum";
 import hert from "@/assets/images/hert.png";
+import Popup from "../../ManageExam/Component/Report";
+import { createReport } from "@/api/Users";
 const CommentTree = ({ comment }: any) => {
   const dispatch = useDispatch<AppDispatch>();
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
-
+  const [commentId,setCommentId]=useState<any>(null)
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [commentData, setCommentData] = useState<any>(null);
+  const [report,setReport]=useState(false);
   const [val, setVal] = useState("");
 
   const imageUrl = userLogin?.image
@@ -53,9 +56,34 @@ const CommentTree = ({ comment }: any) => {
     setShowReplyInput(false);
     setShowReplies(true);
   };
+  
+const handleReport = (comment:any) => {
+  setCommentId(comment)
+setReport(true)
+  // Implement report functionality here
+}
+const handleSubmitReport=async(val:any)=>{
+  // console.log("report value",commentId)
+  const payload:any={
+    title:val,
+    commentId:commentId?._id,
+    userId:userLogin?._id,
+    type:"commentReport"
+  }
+  await dispatch(createReport(payload))
+  setReport(false)
+}
 
   return (
-    <div className="mt-4 bg-[#fff]">
+<>
+<Popup
+  isOpen={report}
+  onClose={() => setReport(false)}
+  onSubmit={handleSubmitReport}
+  title="Report Comment"
+  question=""
+/>
+<div className="mt-4 bg-[#fff]">
       {/* COMMENT CARD */}
       <div className="flex gap-3">
         <img
@@ -76,7 +104,9 @@ const CommentTree = ({ comment }: any) => {
                 · {new Date(comment.createdAt).toLocaleString()}
               </span>
             </div>
-            <MoreHorizontal size={16} className="text-gray-400" />
+            {/* <MoreHorizontal size={16} className="text-gray-400" /> */}
+
+            <span onClick={()=>handleReport(comment)} className="cursor-pointer">Report</span>
           </div>
 
           {/* Content */}
@@ -142,6 +172,9 @@ const CommentTree = ({ comment }: any) => {
         </div>
       )}
     </div>
+</>
+
+    
   );
 };
 

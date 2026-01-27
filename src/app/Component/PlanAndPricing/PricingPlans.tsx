@@ -46,7 +46,7 @@ const CORE_FEATURES = [
   // "Level of Difficulty based Questions",
   "Community Access",
   // "Bookmark Questions",
-  "Free Interview Preparation",
+  "Interview Preparation Support",
 ];
 
 const FULL_ACCESS_FEATURES = [
@@ -321,15 +321,15 @@ export default function PricingPlans() {
                         <div className=" flex justify-between mx-4 px-4 text-[#FF5635] items-start">
                           {/* Left side - Exams */}
                           <div>
-                            <p className="  text-xs sm:text-sm md:text-[13px] font-dm-sans">
-                              {["IPMAT Indore", "IPMAT Rohtak"].join(", ")}
-                            </p>
-                            <p className="  text-xs sm:text-sm md:text-[13px] font-dm-sans">
+                             <p className="  text-sm sm:text-sm md:text-[13px] font-dm-sans">
+                              IPMAT Indore, IPMAT Rohtak
+                              </p>
+                            <p className="  text-sm sm:text-sm md:text-[13px] font-dm-sans">
                               JIPMAT
                             </p>
                           </div>
                           {/* Right side - No of Mocks */}
-                          <div className="text-xs sm:text-sm md:text-[13px] font-dm-sans ">
+                          <div className="text-sm sm:text-sm md:text-[13px] font-dm-sans ">
                             25
                           </div>
                         </div>
@@ -340,15 +340,15 @@ export default function PricingPlans() {
                           <div className=" flex justify-between mx-4 px-4 text-[#FF5635] items-start">
                             {/* Left side - Exams */}
                             <div>
-                              <p className="  text-xs sm:text-sm md:text-[13px] font-dm-sans">
+                              <p className="  text-sm sm:text-sm md:text-[13px] font-dm-sans">
                                 {["IPMAT Indore", "IPMAT Rohtak"].join(", ")}
                               </p>
-                              <p className="  text-xs sm:text-sm md:text-[13px] font-dm-sans">
+                              <p className="  text-sm sm:text-sm md:text-[13px] font-dm-sans">
                                 JIPMAT
                               </p>
                             </div>
                             {/* Right side - No of Mocks */}
-                            <div className="text-xs sm:text-sm md:text-[13px] font-dm-sans ">
+                            <div className="text-sm sm:text-sm md:text-[13px] font-dm-sans ">
                               25
                             </div>
                           </div>
@@ -357,16 +357,16 @@ export default function PricingPlans() {
                           <div className=" flex justify-between mx-4 px-4 text-[#FF5635] items-start">
                             {/* Left side - Exams */}
                             <div>
-                              <p className="  text-xs sm:text-sm md:text-[13px] font-dm-sans">
+                              <p className="  text-sm sm:text-sm md:text-[13px] font-dm-sans">
                                 IIM-B DBE, SET, NPAT, Christ
                               </p>
-                              <p className="  text-xs sm:text-sm md:text-[13px] font-dm-sans">
+                              <p className="  text-sm sm:text-sm md:text-[13px] font-dm-sans">
                                 {" "}
                                 St.Xavier’s
                               </p>
                             </div>
                             {/* Right side - No of Mocks */}
-                            <div className="text-xs sm:text-sm md:text-[13px] font-dm-sans ">
+                            <div className="text-sm sm:text-sm md:text-[13px] font-dm-sans ">
                               10
                             </div>
                           </div>
@@ -400,7 +400,7 @@ export default function PricingPlans() {
                         <div className="relative w-full my-2">
                           <input
                             type="text"
-                            placeholder="Have a coupon code"
+                            placeholder="Got a coupon? Enter it here"
                             value={couponCodes[plan._id] || ""}
                             onChange={(e) =>
                               setCouponCodes((prev) => ({
@@ -408,7 +408,7 @@ export default function PricingPlans() {
                                 [plan._id]: e.target.value,
                               }))
                             }
-                            className="border py-2 pl-3 pr-20 rounded w-full focus:outline-none font-poppins text-sm font-normal"
+                            className="border border-[#FF5635] text-[#727EA3] py-2 pl-3 pr-20 rounded w-full focus:outline-none font-poppins text-sm font-normal"
                           />
 
                           <button
@@ -418,7 +418,7 @@ export default function PricingPlans() {
                px-3 py-1.5 text-xs font-medium
                text-white bg-[#FF5635] rounded-[8px] font-poppins"
                           >
-                            Verify
+                            Apply
                           </button>
                         </div>
                         {couponErrors[plan._id] && (

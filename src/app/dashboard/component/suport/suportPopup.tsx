@@ -15,13 +15,23 @@ const SupportPopup: React.FC<SupportPopupProps> = ({
   if (!isOpen || !data) return null;
 
   const type = data?.type?.toLowerCase();
+  const isCommentReport = type === "commentreport";
 
+  // ---------- Normal Data ----------
+  const normalTitle = data?.title || "-";
+  const normalMessage = data?.message || "-";
+  const normalEmail = data?.user?.email || "-";
+  const normalCreatedAt = data?.createdAt;
+
+  // ---------- Comment Report Data ----------
+  const commentContent = data?.comment?.content || "-";
+  const commentEmail = data?.comment?.user?.email || "-";
+  const commentCreatedAt = data?.comment?.createdAt;
+
+  // ---------- Exam Detail ----------
   const paperName = data?.questionPaper?.questionPapername || "-";
   const examName = data?.questionPaper?.exam?.examname || "-";
   const questionNo = data?.question?.questionNo || "-";
-  const email = data?.user?.email || "-";
-
-  const isSupport = type === "suport";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -39,24 +49,23 @@ const SupportPopup: React.FC<SupportPopupProps> = ({
         {/* Body */}
         <div className="p-6 space-y-4 text-sm">
           {/* Title */}
-        <div className="min-w-0">
-  <span className="font-medium">Title:</span>
-  <p className="text-gray-700 break-words">
-    {data?.title || "-"}
-  </p>
-</div>
-
+          <div>
+            <span className="font-medium">Title:</span>
+            <p className="text-gray-700 break-words">
+              {isCommentReport ? commentContent : normalTitle}
+            </p>
+          </div>
 
           {/* Message */}
           <div>
             <span className="font-medium">Message:</span>
             <p className="text-gray-700 whitespace-pre-wrap">
-              {data?.message || "-"}
+              {isCommentReport ? commentContent : normalMessage}
             </p>
           </div>
 
-          {/* Exam Detail (hidden for support) */}
-          {!isSupport && (
+          {/* Exam Detail (❌ hidden for commentReport) */}
+          {!isCommentReport && (
             <div>
               <span className="font-medium">Exam Detail:</span>
               <p className="text-gray-700">
@@ -68,15 +77,21 @@ const SupportPopup: React.FC<SupportPopupProps> = ({
           {/* User Email */}
           <div>
             <span className="font-medium">User Email:</span>
-            <p className="text-gray-700">{email}</p>
+            <p className="text-gray-700">
+              {isCommentReport ? commentEmail : normalEmail}
+            </p>
           </div>
 
           {/* Created On */}
           <div>
             <span className="font-medium">Created On:</span>
             <p className="text-gray-700">
-              {data?.createdAt
-                ? new Date(data.createdAt).toLocaleString()
+              {(isCommentReport ? commentCreatedAt : normalCreatedAt)
+                ? new Date(
+                    isCommentReport
+                      ? commentCreatedAt
+                      : normalCreatedAt
+                  ).toLocaleString()
                 : "-"}
             </p>
           </div>
