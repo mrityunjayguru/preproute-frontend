@@ -448,7 +448,7 @@ if (
 
             {examById ? (
               <div className="flex items-center py-8 gap-4 w-full">
-                <p className="text-[#727EA3] font-dm-sans">Change Collage </p>
+                <p className="text-[#727EA3] font-dm-sans">Change college</p>
                 <Select
                   options={examOptions}
                   value={

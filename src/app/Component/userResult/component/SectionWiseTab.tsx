@@ -82,7 +82,7 @@ const SectionWiseTab: React.FC<DifficultyWiseTabProps> = ({ data }) => {
             <div className="flex-1 flex text-[#005EB6]">
               {section.difficulties.map((d: any, i: number) => (
                 <div key={i} className="flex-1 p-4 text-center">
-                  {d.accuracy}%
+                  {d.accuracy}
                 </div>
               ))}
             </div>
