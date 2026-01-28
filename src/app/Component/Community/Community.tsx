@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MessageCircle, HelpCircle, Users } from "lucide-react";
 import Image from "next/image";
 import Iconcommunity from "@/assets/images/community.png";
+
 const tabs = [
   { id: "forum", label: "Forum", icon: MessageCircle },
   { id: "my-doubts", label: "My Doubts", icon: HelpCircle },
@@ -16,13 +17,14 @@ const tabs = [
 
 const Community = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const forum = useSelector((state: any) => state.forum.forums);
-  const [activeTab, setActiveTab] = useState("forum");
   const router = useRouter();
+
+  const forum = useSelector((state: any) => state.forum.forums || []);
+  const [activeTab, setActiveTab] = useState("forum");
 
   useEffect(() => {
     dispatch(getForums({}));
-  }, []);
+  }, [dispatch]);
 
   const handleDiscussion = async (item: any) => {
     const payload = { postId: item?._id };
@@ -44,9 +46,7 @@ const Community = () => {
             Ask. Discuss. Learn Together.
           </p>
         </div>
-        <div>
-          <Image src={Iconcommunity} alt="community" />
-        </div>
+        <Image src={Iconcommunity} alt="community" />
       </div>
 
       {/* ===== TABS ===== */}
@@ -88,14 +88,14 @@ const Community = () => {
       {/* ===== TABLE ===== */}
       <div className="bg-white rounded-md shadow">
         {/* Header */}
-        <div className="grid grid-cols-12 bg-[#005EB6] text-[#fff] px-4 py-3 font-semibold rounded-t-md">
+        <div className="grid grid-cols-12 bg-[#005EB6] text-white px-4 py-3 font-semibold rounded-t-md">
           <div className="col-span-6">Forum</div>
           <div className="col-span-3">Topic</div>
           <div className="col-span-3">Posted by</div>
         </div>
 
         {/* Rows */}
-        {forum?.length ? (
+        {forum.length > 0 ? (
           forum.map((item: any) => (
             <div
               key={item._id}
@@ -103,32 +103,39 @@ const Community = () => {
               className="grid grid-cols-12 px-4 py-2 border-b hover:bg-gray-50 cursor-pointer transition"
             >
               {/* Forum Title */}
-              <div className="col-span-6 text-[#000000] line-clamp-2">
-                {item?.title}
+              <div className="col-span-6 text-black line-clamp-2">
+                {item?.title || "—"}
               </div>
 
-              {/* Topic */}
-              <div className="col-span-3 text-[#000000] font-medium">
-                {item?.topic || "—"}
+              {/* Topic (FIXED: object → name) */}
+              <div className="col-span-3 text-black font-medium">
+                {item?.topic?.name || "—"}
               </div>
 
               {/* Posted By */}
               <div className="col-span-3 flex items-center gap-3">
                 <img
                   className="w-10 h-10 rounded-full object-cover"
-                  src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item?.user?.image}`}
+                  src={
+                    item?.user?.image
+                      ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${item.user.image}`
+                      : "/avatar.png"
+                  }
                   alt="user"
                 />
                 <div>
-                  <p className="text-sm text-[#000000] font-medium">
-                    {item?.user?.username}
+                  <p className="text-sm text-black font-medium">
+                    {item?.user?.username || "Unknown"}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {new Date(item?.createdAt).toLocaleDateString()}{" "}
-                    {new Date(item?.createdAt).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                    {item?.createdAt
+                      ? `${new Date(item.createdAt).toLocaleDateString()} ${new Date(
+                          item.createdAt
+                        ).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}`
+                      : ""}
                   </p>
                 </div>
               </div>
