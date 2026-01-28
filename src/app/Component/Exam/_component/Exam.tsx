@@ -167,6 +167,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
 // perticuler Exam section
 export default function MergedExamPage() {
   const searchParams = useSearchParams();
+  const [mockDate,setMockDate]=useState("")
   const isMock: any = searchParams.get("isMock") === "true";
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
@@ -178,6 +179,23 @@ export default function MergedExamPage() {
   const loginUser = useSelector((s: any) => s.Auth?.loginUser);
   const [selectedExam, setSelectedExam] = useState<any>(null);
   const examdata = useSelector((s: any) => s.exam?.exam) || [];
+  const formatMockDate = (date: string) => {
+  return new Date(date).toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+
+useEffect(() => {
+  if (selectedExam?.mockDate) {
+    const date=formatMockDate(selectedExam.mockDate);
+    setMockDate(date);
+    // setMockDate(selectedExam.mockDate);
+  }else{
+    setMockDate("");
+  }
+}, [selectedExam]);
 
   useEffect(() => {
     const payload: any = {
@@ -186,15 +204,17 @@ export default function MergedExamPage() {
     dispatch(getCommonexam(payload));
   }, []);
 
-  useEffect(() => {
-    if (examById.length > 0) {
-      const payload: any = {
-        examname: examById[0]?.exam?.examname,
-        _id: examById[0]?.exam?._id,
-      };
-      setSelectedExam(payload);
-    }
-  }, [examById]);
+ useEffect(() => {
+  if (examById.length > 0) {
+    const payload: any = {
+      examname: examById[0]?.exam?.examname,
+      _id: examById[0]?.exam?._id,
+      mockDate: examById[0]?.exam?.mockDate, // ✅ ADD THIS
+    };
+    setSelectedExam(payload);
+  }
+}, [examById]);
+
 
   useEffect(() => {
     setSelectedExam(null);
@@ -516,8 +536,9 @@ if (
 
                     {/* Coming Soon text */}
                     <p className="text-sm text-gray-400 mb-4 font-poppins">
-                      Coming Soon
-                    </p>
+  {idx === 0 ? (<>Available On <br /> <strong> {mockDate}</strong></>) : "Coming Soon"}
+</p>
+
                   </div>
                 ))}
             </div>

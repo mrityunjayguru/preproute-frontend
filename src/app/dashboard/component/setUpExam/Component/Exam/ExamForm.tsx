@@ -12,7 +12,7 @@ import {
   createexam,
   getexam,
   handlesetUpdateExam,
-  handleUpdateExam
+  handleUpdateExam,
 } from "@/api/Exam";
 import { getsection } from "@/api/Section";
 
@@ -35,7 +35,7 @@ const ExamForm: React.FC = () => {
   const [fullExamDuration, setFullExamDuration] = useState("");
   const [isSwitchable, setIsSwitchable] = useState("yes");
   const [iscalculater, setIscalculater] = useState("yes");
-
+  const [mockDate, setMockDate] = useState("");
   const [isSection, setIsSection] = useState("true");
   const [sectionsData, setSectionsData] = useState<SectionData[]>([
     {
@@ -67,11 +67,14 @@ const ExamForm: React.FC = () => {
   // Prefill form in update mode
   useEffect(() => {
     if (updateExamData && updateExamData._id) {
+      const formattedDate = updateExamData?.mockDate
+        ? new Date(updateExamData.mockDate).toISOString().split("T")[0]
+        : "";
       setExamName(updateExamData.examname || "");
       setIsSwitchable(updateExamData.switchable ? "yes" : "no");
       setIsSection(updateExamData.isSection ? "true" : "false");
       setIscalculater(updateExamData.iscalculater ? "yes" : "no");
-
+      setMockDate(formattedDate || "");
       setFullExamDuration(updateExamData.fullExamduration?.toString() || "");
 
       if (updateExamData.isSection) {
@@ -83,7 +86,7 @@ const ExamForm: React.FC = () => {
             duration: s.duration?.toString() || "",
             correctMark: s.correctMark?.toString() || "",
             negativeMark: s.negativeMark?.toString() || "",
-          })) || []
+          })) || [],
         );
       } else {
         setNoOfQuestions(updateExamData.noOfQuestions?.toString() || "");
@@ -99,7 +102,7 @@ const ExamForm: React.FC = () => {
   const handleFieldChange = (
     index: number,
     field: keyof SectionData,
-    value: string | string[]
+    value: string | string[],
   ) => {
     const updated = [...sectionsData];
     (updated[index] as any)[field] = value;
@@ -120,15 +123,15 @@ const ExamForm: React.FC = () => {
     ]);
   };
 
-const handleRemoveSection = (index: number) => {
-  const confirmed = window.confirm(
-    "Are you sure you want to remove this section?"
-  );
+  const handleRemoveSection = (index: number) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to remove this section?",
+    );
 
-  if (!confirmed) return;
+    if (!confirmed) return;
 
-  setSectionsData(prev => prev.filter((_, i) => i !== index));
-};
+    setSectionsData((prev) => prev.filter((_, i) => i !== index));
+  };
 
   // Submit handler
   const handleSubmit = async () => {
@@ -141,7 +144,8 @@ const handleRemoveSection = (index: number) => {
       examname: examName.trim(),
       switchable: isSwitchable === "yes",
       isSection: isSection === "true",
-      iscalculater:iscalculater=="yes",
+      mockDate: mockDate,
+      iscalculater: iscalculater == "yes",
       fullExamduration: Number(fullExamDuration) || undefined,
     };
 
@@ -204,6 +208,7 @@ const handleRemoveSection = (index: number) => {
       setCorrectMark("");
       setNegativeMark("");
       setEditingId(null);
+      setMockDate("");
     } catch (err) {
       console.error(err);
       alert("Error saving exam!");
@@ -211,7 +216,29 @@ const handleRemoveSection = (index: number) => {
       setLoading(false);
     }
   };
-
+const handleCancleSubmit=()=>{
+   const data: any = null;
+     dispatch(handlesetUpdateExam(data));
+      setExamName("");
+      setFullExamDuration("");
+      setIsSwitchable("yes");
+      setIsSection("true");
+      setSectionsData([
+        {
+          sectionId: "",
+          topic: [],
+          noOfQuestions: "",
+          duration: "",
+          correctMark: "",
+          negativeMark: "",
+        },
+      ]);
+      setNoOfQuestions("");
+      setCorrectMark("");
+      setNegativeMark("");
+      setEditingId(null);
+      setMockDate("");
+}
   return (
     <div className="p-6 mb-6 font-dm-sans">
       {/* Basic Info */}
@@ -279,10 +306,8 @@ const handleRemoveSection = (index: number) => {
             </div>
           </RadioGroup>
         </div>
-         <div>
-          <Label className="mb-4 block font-dm-sans text-md">
-            Calculator
-          </Label>
+        <div>
+          <Label className="mb-4 block font-dm-sans text-md">Calculator</Label>
           <RadioGroup
             onValueChange={setIscalculater}
             value={iscalculater}
@@ -297,6 +322,18 @@ const handleRemoveSection = (index: number) => {
               <Label htmlFor="switch-no">No</Label>
             </div>
           </RadioGroup>
+        </div>
+        {/* next mock date */}
+
+        <div>
+          <Label className="mb-4 block font-dm-sans text-md">
+            Next Mock date
+          </Label>
+          <Input
+            value={mockDate}
+            onChange={(e) => setMockDate(e.target.value)}
+            type="date"
+          />
         </div>
       </div>
 
@@ -326,7 +363,9 @@ const handleRemoveSection = (index: number) => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <Label className="mb-4 block font-dm-sans text-md">Select Section</Label>
+                    <Label className="mb-4 block font-dm-sans text-md">
+                      Select Section
+                    </Label>
                     <Select
                       options={sections.map((s: any) => ({
                         value: s._id,
@@ -345,27 +384,31 @@ const handleRemoveSection = (index: number) => {
                     />
                   </div>
                   <div>
-                    <Label className="mb-4 block font-dm-sans text-md">Select Topics</Label>
+                    <Label className="mb-4 block font-dm-sans text-md">
+                      Select Topics
+                    </Label>
                     <Select
                       closeMenuOnSelect={false}
                       isMulti
                       components={makeAnimated()}
                       options={topicOptions}
                       value={topicOptions.filter((o: any) =>
-                        item.topic?.includes(o.value)
+                        item.topic?.includes(o.value),
                       )}
                       onChange={(selected: any) =>
                         handleFieldChange(
                           index,
                           "topic",
-                          selected.map((s: any) => s.value)
+                          selected.map((s: any) => s.value),
                         )
                       }
                       placeholder="Select Relevant Topic(s)"
                     />
                   </div>
                   <div>
-                    <Label className="mb-4 block font-dm-sans text-md">No. of Questions</Label>
+                    <Label className="mb-4 block font-dm-sans text-md">
+                      No. of Questions
+                    </Label>
                     <Input
                       type="number"
                       value={item.noOfQuestions}
@@ -373,7 +416,7 @@ const handleRemoveSection = (index: number) => {
                         handleFieldChange(
                           index,
                           "noOfQuestions",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       placeholder="Ex. 20"
@@ -384,7 +427,9 @@ const handleRemoveSection = (index: number) => {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                   <div>
-                    <Label className="mb-4 block font-dm-sans text-md">Section Duration (In Minutes)</Label>
+                    <Label className="mb-4 block font-dm-sans text-md">
+                      Section Duration (In Minutes)
+                    </Label>
                     <Input
                       type="number"
                       value={item.duration}
@@ -396,7 +441,9 @@ const handleRemoveSection = (index: number) => {
                     />
                   </div>
                   <div>
-                    <Label className="mb-4 block font-dm-sans text-md">Correct Marks</Label>
+                    <Label className="mb-4 block font-dm-sans text-md">
+                      Correct Marks
+                    </Label>
                     <Input
                       type="number"
                       value={item.correctMark}
@@ -404,11 +451,13 @@ const handleRemoveSection = (index: number) => {
                         handleFieldChange(index, "correctMark", e.target.value)
                       }
                       placeholder="Ex. 4"
-                      className="max-w-md px-4 py-2 border border-[#D0D5DD] bg-white rounded-[2px] font-dm-sans font-normal focus:ring-none "  
+                      className="max-w-md px-4 py-2 border border-[#D0D5DD] bg-white rounded-[2px] font-dm-sans font-normal focus:ring-none "
                     />
                   </div>
                   <div>
-                    <Label className="mb-4 block font-dm-sans text-md">Negative Marks</Label>
+                    <Label className="mb-4 block font-dm-sans text-md">
+                      Negative Marks
+                    </Label>
                     <Input
                       type="number"
                       value={item.negativeMark}
@@ -416,7 +465,7 @@ const handleRemoveSection = (index: number) => {
                         handleFieldChange(index, "negativeMark", e.target.value)
                       }
                       placeholder="Ex. -1"
-                      className="max-w-md px-4 py-2 border border-[#D0D5DD] bg-white rounded-[2px] font-dm-sans font-normal focus:ring-none "  
+                      className="max-w-md px-4 py-2 border border-[#D0D5DD] bg-white rounded-[2px] font-dm-sans font-normal focus:ring-none "
                     />
                   </div>
                 </div>
@@ -437,7 +486,9 @@ const handleRemoveSection = (index: number) => {
         // Non-section based exam
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mt-4">
           <div>
-            <Label className="mb-4 block font-dm-sans text-md">No. of Questions</Label>
+            <Label className="mb-4 block font-dm-sans text-md">
+              No. of Questions
+            </Label>
             <Input
               type="number"
               value={noOfQuestions}
@@ -447,7 +498,9 @@ const handleRemoveSection = (index: number) => {
             />
           </div>
           <div>
-            <Label className="mb-4 block font-dm-sans text-md">Correct Mark</Label>
+            <Label className="mb-4 block font-dm-sans text-md">
+              Correct Mark
+            </Label>
             <Input
               type="number"
               value={correctMark}
@@ -457,7 +510,9 @@ const handleRemoveSection = (index: number) => {
             />
           </div>
           <div>
-            <Label className="mb-4 block font-dm-sans text-md">Negative Mark</Label>
+            <Label className="mb-4 block font-dm-sans text-md">
+              Negative Mark
+            </Label>
             <Input
               type="number"
               value={negativeMark}
@@ -473,10 +528,16 @@ const handleRemoveSection = (index: number) => {
         <Button
           onClick={handleSubmit}
           disabled={loading}
-                     className="h-10 bg-[#FF5635] text-white px-10 font-normal font-poppins cursor-pointer"
-
+          className="h-10 bg-[#FF5635] text-white px-10 font-normal font-poppins cursor-pointer"
         >
           {loading ? "Saving..." : editingId ? "Update Exam" : "Create Exam"}
+        </Button>
+         <Button
+          onClick={handleCancleSubmit}
+          disabled={loading}
+          className="h-10 mx-4 bg-[#FF5635] text-white px-10 font-normal font-poppins cursor-pointer"
+        >
+          Cancle
         </Button>
       </div>
     </div>

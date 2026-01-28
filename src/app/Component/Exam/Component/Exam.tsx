@@ -149,7 +149,7 @@ export default function MergedExamPage() {
   const loginUser = useSelector((s: any) => s.Auth?.loginUser);
   const [selectedExam, setSelectedExam] = useState<any>(null);
   const examdata = useSelector((s: any) => s.exam?.exam) || [];
-
+console.log(examById,"examByIdexamById")
   useEffect(() => {
     const payload: any = {
       userId: loginUser?._id,
