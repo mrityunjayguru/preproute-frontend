@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { CheckUserExists, VerifyOtp } from "@/api/Auth/UserAuth";
+import { CheckUserExists, resetPassword, VerifyOtp } from "@/api/Auth/UserAuth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Eye, EyeOff, KeyRound } from "lucide-react";
@@ -65,6 +65,7 @@ const Page = () => {
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
 
+
     if (password !== confirmPassword) {
       alert("Passwords do not match");
       return;
@@ -76,8 +77,7 @@ const Page = () => {
       password,
     };
 
-    // 👉 Call RESET PASSWORD API here
-    console.log("Reset payload:", payload);
+    await dispatch(resetPassword(payload));
 
     router.push("/Auth/signin");
   };
