@@ -330,7 +330,7 @@ export default function PricingPlans() {
                           </div>
                           {/* Right side - No of Mocks */}
                           <div className="text-sm sm:text-sm md:text-[13px] font-dm-sans ">
-                            25
+                            25 <span className="">Each</span>
                           </div>
                         </div>
                       )}
@@ -349,7 +349,7 @@ export default function PricingPlans() {
                             </div>
                             {/* Right side - No of Mocks */}
                             <div className="text-sm sm:text-sm md:text-[13px] font-dm-sans ">
-                              25
+                              25 <span className="">Each</span>
                             </div>
                           </div>
                           <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-1" />
@@ -367,7 +367,7 @@ export default function PricingPlans() {
                             </div>
                             {/* Right side - No of Mocks */}
                             <div className="text-sm sm:text-sm md:text-[13px] font-dm-sans ">
-                              10
+                              10 <span className="">Each</span>
                             </div>
                           </div>
                         </>
