@@ -122,8 +122,8 @@ const Signin = () => {
                 {/* REMEMBER + FORGOT */}
                 <div onClick={navigatePassword} className="flex items-center justify-between text-xs text-gray-500">
                   <label className="flex items-center gap-2 cursor-pointer group">
-                    <input type="checkbox" className="w-4 h-4 rounded-sm border-gray-300 text-[#FF5635] focus:ring-[#FF5635]" />
-                    <span className="group-hover:text-gray-700 transition-colors">Remember</span>
+                    {/* <input type="checkbox" className="w-4 h-4 rounded-sm border-gray-300 text-[#FF5635] focus:ring-[#FF5635]" /> */}
+                    <span className="group-hover:text-gray-700 transition-colors"></span>
                   </label>
                   <span className="text-[#FF5635] font-medium cursor-pointer hover:underline">
                     Forgot password?

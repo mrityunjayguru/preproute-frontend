@@ -76,7 +76,8 @@ export const Order={
 }
 export const Report={
   create:"razorpay/createOrder",
-  get:"user/getreport"
+  get:"user/getreport",
+  conversation:"forum/conversation"
 
 }
 
@@ -142,7 +143,8 @@ export const forum={
   likeComment:"forum/likeComment",
   likePost:"forum/likePost",
   singleForum:"forum/singlePost",
-  replyComment:"forum/replyComment"
+  replyComment:"forum/replyComment",
+  blockCommunity:"Auth/blockCommunity"
 }
 const APIName = {
 ...UserAuth,

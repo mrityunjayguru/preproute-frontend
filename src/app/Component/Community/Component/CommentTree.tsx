@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { MoreHorizontal } from "lucide-react";
+import { LogIn, MoreHorizontal } from "lucide-react";
 import USER from "@/assets/vectors/user.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
@@ -41,6 +41,8 @@ const CommentTree = ({ comment }: any) => {
 
   // ➕ Submit Reply
   const handleSubmit = async () => {
+    
+    if(userLogin?.community) return 
     if (!val.trim()) return;
 
     const payload = {
@@ -149,6 +151,8 @@ const handleSubmitReport=async(val:any)=>{
         <div className="flex gap-3 mt-3 ml-12">
           <img src={imageUrl} className="w-8 h-8 rounded-full" />
           <input
+          disabled={userLogin?.community}
+
             value={val}
             onChange={(e) => setVal(e.target.value)}
             placeholder="Write a reply..."

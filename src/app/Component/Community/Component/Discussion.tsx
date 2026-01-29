@@ -30,17 +30,16 @@ const Discussion = () => {
     // console.log("like clicked",post)
   };
   useEffect(() => {
-    if (!post._id) return;
+    if (!post?._id) return;
 
     const socket = getSocket();
     socket.connect();
 
     // join post room
-    socket.emit("join-post", post._id);
+    socket.emit("join-post", post?._id);
 
     // listen for new comment
     socket.on("new-comment", (comment) => {
-      console.log(comment, "commentcomment");
       const payload: any = {
         postId: post._id,
       };
@@ -50,9 +49,9 @@ const Discussion = () => {
 
     return () => {
       socket.off("new-comment");
-      socket.emit("leave-room", post._id);
+      socket.emit("leave-room", post?._id);
     };
-  }, [post._id, dispatch]);
+  }, [post?._id, dispatch]);
   return (
     <div className="max-w-4xl mx-24 min-h-screen p-6 bg-[#fff]">
       {/* ================= POST ================= */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { getreport } from "@/api/Report";
+import { conversation, getreport } from "@/api/Report";
 import CommonTable from "@/Common/CommonTable";
 import { formatDateTime } from "@/Common/ComonDate";
 import { AppDispatch } from "@/store/store";
@@ -17,7 +17,7 @@ function SuportTable() {
   const [type, setType] = useState("report");
   const [open, setOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<any>(null);
-
+  const [chat,setChat]=useState<any>(null)
   const truncate = (text: string, max = 30) =>
     text?.length > max ? text.slice(0, max) + "..." : text;
 
@@ -99,7 +99,17 @@ function SuportTable() {
     return baseColumns;
   }, [type]);
 
-  const handleEdit = (row: any) => {
+  const handleEdit = async(row: any) => { 
+    if(row?.commentId){
+  //  alert(row?.commentId)
+
+ const payload:any={
+      id:row?.commentId
+    }  
+   let responce:any=await dispatch(conversation(payload))
+   console.log(responce.payload)
+   setChat(responce.payload)
+    }
     setSelectedRow(row);
     setOpen(true);
   };
@@ -110,6 +120,7 @@ function SuportTable() {
         isOpen={open}
         onClose={() => setOpen(false)}
         data={selectedRow}
+        chat={chat} 
       />
 
       <div className="flex justify-between items-center pb-4 px-4">

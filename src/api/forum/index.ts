@@ -218,5 +218,19 @@ export const likeComment = createAsyncThunk<boolean, Payload>(
     }
   }
 );
+export const blockCommunity = createAsyncThunk<boolean, Payload>(
+  forum.blockCommunity,
+  async (payload) => {
+    try {
+      await ForumRepo.blockCommunity(payload);
+      ToastSuccess("User blocked successfully");
+      return true;
+    } catch (err: any) {
+      ToastWarning("Failed to block user");
+      return false;
+    }
+  }
+);
+
 
 

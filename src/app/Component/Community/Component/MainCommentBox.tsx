@@ -17,6 +17,7 @@ const MainCommentBox = () => {
     ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${userLogin.image}`
     : USER;
 const commentPost=async()=>{
+    if(userLogin?.community) return 
   const payload:any={
     content:comment,
     postId:postdetail?.[0]?._id
@@ -37,6 +38,7 @@ const commentPost=async()=>{
       <div className="flex-1 flex items-center gap-2 border rounded-full px-4 py-2 bg-white">
         <input
           value={comment}
+          disabled={userLogin?.community}
           onChange={(e) => setComment(e.target.value)}
           placeholder="add comment"
           className="flex-1 text-sm outline-none"

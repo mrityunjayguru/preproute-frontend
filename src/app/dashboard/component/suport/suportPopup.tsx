@@ -1,17 +1,25 @@
 import React from "react";
 import { X } from "lucide-react";
+import ChatThread from "./ChatThread";
+import { Button } from "@/components/ui/button";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { blockCommunity } from "@/api/forum";
 
 interface SupportPopupProps {
   isOpen: boolean;
   onClose: () => void;
   data: any;
+  chat: any;
 }
 
 const SupportPopup: React.FC<SupportPopupProps> = ({
   isOpen,
   onClose,
   data,
+  chat,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
   if (!isOpen || !data) return null;
 
   const type = data?.type?.toLowerCase();
@@ -32,10 +40,15 @@ const SupportPopup: React.FC<SupportPopupProps> = ({
   const paperName = data?.questionPaper?.questionPapername || "-";
   const examName = data?.questionPaper?.exam?.examname || "-";
   const questionNo = data?.question?.questionNo || "-";
-
+  const blockUser=()=>{
+    const payload:any={
+      userId:data?.comment?.userId,
+    }
+    dispatch(blockCommunity(payload))
+  }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white w-full max-w-2xl rounded-xl shadow-lg relative">
+      <div className="bg-white w-full max-w-3xl rounded-xl shadow-lg relative">
         {/* Header */}
         <div className="flex justify-between items-center border-b px-6 py-4">
           <h2 className="text-lg font-semibold capitalize">
@@ -47,7 +60,7 @@ const SupportPopup: React.FC<SupportPopupProps> = ({
         </div>
 
         {/* Body */}
-        <div className="p-6 space-y-4 text-sm">
+        <div className="p-6 space-y-5 text-sm max-h-[70vh] overflow-y-auto">
           {/* Title */}
           <div>
             <span className="font-medium">Title:</span>
@@ -64,7 +77,7 @@ const SupportPopup: React.FC<SupportPopupProps> = ({
             </p>
           </div>
 
-          {/* Exam Detail (❌ hidden for commentReport) */}
+          {/* Exam Detail */}
           {!isCommentReport && (
             <div>
               <span className="font-medium">Exam Detail:</span>
@@ -95,6 +108,20 @@ const SupportPopup: React.FC<SupportPopupProps> = ({
                 : "-"}
             </p>
           </div>
+
+          {/* 🔥 Conversation Thread */}
+          {chat && (
+            <div>
+              <h3 className="font-semibold text-base mb-2">
+                Conversation
+              </h3>
+
+              <ChatThread comment={chat} />
+              <div>
+            <Button onClick={blockUser} className="cursor-pointer">Block User</Button>
+        </div>
+            </div>
+          )}
         </div>
 
         {/* Footer */}
