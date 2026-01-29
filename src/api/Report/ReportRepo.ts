@@ -10,6 +10,7 @@ interface Payload {
 interface ReportRepo {
   createReport: (payload: Payload) => Promise<AxiosResponse>;
   getReport: (payload: Payload) => Promise<AxiosResponse>;
+  conversation: (payload: Payload) => Promise<AxiosResponse>;
 }
 
 export const ReportRepo: ReportRepo = {
@@ -23,6 +24,9 @@ export const ReportRepo: ReportRepo = {
   },
     getReport(payload) {
     return Repository.post(Report.get, payload);
+  },
+  conversation(payload) {
+    return Repository.post(Report.conversation, payload);
   },
 
 };

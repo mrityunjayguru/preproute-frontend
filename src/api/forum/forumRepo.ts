@@ -18,6 +18,7 @@ interface ForumRepo {
   likeComment: (payload: Payload) => Promise<AxiosResponse>;
   likePost: (payload: Payload) => Promise<AxiosResponse>;
   replyComment: (payload: Payload) => Promise<AxiosResponse>;
+  blockCommunity: (payload: Payload) => Promise<AxiosResponse>;
   
 }
 
@@ -57,5 +58,8 @@ export const ForumRepo: ForumRepo = {
   },
   replyComment(payload) {
     return Repository.post(forum.replyComment, payload);
+  },
+   blockCommunity(payload) {
+    return Repository.post(forum.blockCommunity, payload);
   },
 };

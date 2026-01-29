@@ -91,3 +91,27 @@ export const getreport= createAsyncThunk<boolean, ReportPayload>(
     return false;
   }
 );
+
+
+export const conversation= createAsyncThunk<boolean, ReportPayload>(
+  topic.get,
+  async (payload, thunkAPI) => {
+    try {
+      const res = await ReportRepo.conversation(payload);
+
+      if (res.status === 200) {
+        return res.data.data;
+      }
+    } catch (err: any) {
+      const status = err?.response?.status;
+
+      if (status === 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+      } else {
+        GetMessage("error", "Something went wrong");
+      }
+    }
+    return false;
+  }
+);
