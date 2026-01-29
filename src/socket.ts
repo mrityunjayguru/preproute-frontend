@@ -4,7 +4,7 @@ let socket: Socket | null = null;
 
 export const getSocket = () => {
   if (!socket) {
-    socket = io("http://localhost:3200", {
+    socket = io("https://testbackend.thepreproute.coma", {
       transports: ["websocket"],
       autoConnect: false,
     });
