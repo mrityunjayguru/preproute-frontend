@@ -14,22 +14,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserProfileDropdown } from "@/components/UserProfileDropdown";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import logo from "../assets/images/logo.svg";
 import { getCommonExamType, handleSelectedExamType } from "@/api/ExamType";
 import { handleLogout } from "@/api/Auth/UserAuth";
 import { resetQuestionByExamID } from "@/api/Exam";
 import { resetQuestion } from "@/api/Question";
-import {
-  ChevronDownIcon,
-  LayoutDashboard,
-  MenuIcon,
-} from "lucide-react";
+import { ChevronDownIcon, LayoutDashboard, MenuIcon } from "lucide-react";
 
 export const Header: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -94,10 +86,7 @@ export const Header: React.FC = () => {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:py-5">
         {/* Logo */}
         <div className="flex items-center gap-12">
-          <div
-            className="cursor-pointer"
-            onClick={() => router.push("/home")}
-          >
+          <div className="cursor-pointer" onClick={() => router.push("/home")}>
             <Image src={logo} alt="Logo" className="h-8 w-auto" />
           </div>
 
@@ -106,17 +95,15 @@ export const Header: React.FC = () => {
             {/* Practice */}
             <DropdownMenu open={examMenuOpen} onOpenChange={setExamMenuOpen}>
               <DropdownMenuTrigger
-                className={`flex items-center gap-1 cursor-pointer outline-none ${isPracticeActive ? activeClass : inactiveClass
-                  }`}
+                className={`flex items-center gap-1 cursor-pointer outline-none ${
+                  isPracticeActive ? activeClass : inactiveClass
+                }`}
               >
                 Practice
                 <ChevronDownIcon className="h-4 w-4 text-[#FF5635]" />
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent
-                align="start"
-                className="w-56"
-              >
+              <DropdownMenuContent align="start" className="w-56">
                 {examTypeData.map((exam: any) => (
                   <DropdownMenuItem
                     key={exam._id}
@@ -138,58 +125,61 @@ export const Header: React.FC = () => {
               <Link
                 key={link.href}
                 href={link.href}
-              className={
-  link.href !== "/home#features" && isActive(link.href)
-    ? activeClass
-    : inactiveClass
-}
-
+                className={
+                  link.href !== "/home#features" && isActive(link.href)
+                    ? activeClass
+                    : inactiveClass
+                }
               >
                 {link.label}
               </Link>
             ))}
 
             {/* Resources */}
-          <div
-  onMouseEnter={() => setResourcesMenuOpen(true)}
-  onMouseLeave={() => setResourcesMenuOpen(false)}
->
-  <DropdownMenu open={resourcesMenuOpen}>
-    <DropdownMenuTrigger
-      className={`flex items-center gap-1 cursor-pointer outline-none ${
-        isResourcesActive ? activeClass : inactiveClass
-      }`}
-    >
-      Resources
-      <ChevronDownIcon className="h-4 w-4 text-[#FF5635]" />
-    </DropdownMenuTrigger>
+            <div
+              onMouseEnter={() => setResourcesMenuOpen(true)}
+              onMouseLeave={() => setResourcesMenuOpen(false)}
+            >
+              <DropdownMenu open={resourcesMenuOpen}>
+                <DropdownMenuTrigger
+                  className={`flex items-center gap-1 cursor-pointer outline-none ${
+                    isResourcesActive ? activeClass : inactiveClass
+                  }`}
+                >
+                  Resources
+                  <ChevronDownIcon className="h-4 w-4 text-[#FF5635]" />
+                </DropdownMenuTrigger>
 
-    <DropdownMenuContent align="start" className="w-48">
-      {token && (
-        <DropdownMenuItem asChild>
-          <Link
-            href="/bookMark"
-            onClick={() => setResourcesMenuOpen(false)}
-          >
-            Bookmark
-          </Link>
-        </DropdownMenuItem>
-      )}
+                <DropdownMenuContent align="start" className="w-48">
+                  {token && (
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href="/bookMark"
+                        onClick={() => setResourcesMenuOpen(false)}
+                      >
+                        Bookmark
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
 
-      <DropdownMenuItem
-        asChild
-        className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
-      >
-        <Link href="/blog">Blogs</Link>
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
-</div>
+                  <DropdownMenuItem
+                    asChild
+                    className="cursor-pointer transition-colors hover:bg-orange-50 hover:text-[#FF5635]"
+                  >
+                    <Link href="/blog">Blogs</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
 
-      {token?( <Link href="/analytics" className={isActive("/analytics") ? activeClass : inactiveClass}>
+            {token ? (
+              <Link
+                href="/analytics"
+                className={isActive("/analytics") ? activeClass : inactiveClass}
+              >
                 Analytics
-              </Link>):(null)}
-            
+              </Link>
+            ) : null}
           </nav>
         </div>
 
@@ -211,15 +201,15 @@ export const Header: React.FC = () => {
             <>
               {(userLogin?.role === "Admin" ||
                 userLogin?.role === "Expert") && (
-                  <Button
-                    variant="outline"
-                    onClick={() => router.push("/dashboard/home")}
-                    className="hidden lg:flex border-[#FF5635] text-[#FF5635] cursor-pointer"
-                  >
-                    <LayoutDashboard className="mr-2 h-4 w-4" />
-                    Dashboard
-                  </Button>
-                )}
+                <Button
+                  variant="outline"
+                  onClick={() => router.push("/dashboard/home")}
+                  className="hidden lg:flex border-[#FF5635] text-[#FF5635] cursor-pointer"
+                >
+                  <LayoutDashboard className="mr-2 h-4 w-4" />
+                  Dashboard
+                </Button>
+              )}
               <UserProfileDropdown
                 user={userLogin}
                 onLogout={handleLogoutClick}
@@ -239,7 +229,9 @@ export const Header: React.FC = () => {
               <div className="space-y-3 pt-6">
                 {/* Practice Menu - Mobile */}
                 <div className="px-4">
-                  <p className="text-sm font-semibold text-gray-900 mb-2">Practice</p>
+                  <p className="text-sm font-semibold text-gray-900 mb-2">
+                    Practice
+                  </p>
                   <div className="space-y-1 pl-2">
                     {examTypeData.map((exam: any) => (
                       <button
@@ -262,10 +254,11 @@ export const Header: React.FC = () => {
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`block px-4 py-2 rounded-lg ${isActive(link.href)
-                      ? "text-[#FF5635] font-semibold"
-                      : "text-gray-700 hover:text-[#FF5635]"
-                      }`}
+                    className={`block px-4 py-2 rounded-lg ${
+                      isActive(link.href)
+                        ? "text-[#FF5635] font-semibold"
+                        : "text-gray-700 hover:text-[#FF5635]"
+                    }`}
                   >
                     {link.label}
                   </Link>
@@ -273,7 +266,9 @@ export const Header: React.FC = () => {
 
                 {/* Resources Menu - Mobile */}
                 <div className="px-4">
-                  <p className="text-sm font-semibold text-gray-900 mb-2">Resources</p>
+                  <p className="text-sm font-semibold text-gray-900 mb-2">
+                    Resources
+                  </p>
                   <div className="space-y-1 pl-2">
                     <Link
                       href="/resources"
@@ -322,21 +317,23 @@ export const Header: React.FC = () => {
                 )}
 
                 {/* Dashboard Button - Mobile */}
-                {token && (userLogin?.role === "Admin" || userLogin?.role === "Expert") && (
-                  <div className="px-4 pt-4 border-t">
-                    <Button
-                      onClick={() => {
-                        router.push("/dashboard/home");
-                        setMobileOpen(false);
-                      }}
-                      className="w-full border-[#FF5635] text-[#FF5635]"
-                      variant="outline"
-                    >
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
-                      Dashboard
-                    </Button>
-                  </div>
-                )}
+                {token &&
+                  (userLogin?.role === "Admin" ||
+                    userLogin?.role === "Expert") && (
+                    <div className="px-4 pt-4 border-t">
+                      <Button
+                        onClick={() => {
+                          router.push("/dashboard/home");
+                          setMobileOpen(false);
+                        }}
+                        className="w-full border-[#FF5635] text-[#FF5635]"
+                        variant="outline"
+                      >
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        Dashboard
+                      </Button>
+                    </div>
+                  )}
               </div>
             </SheetContent>
           </Sheet>

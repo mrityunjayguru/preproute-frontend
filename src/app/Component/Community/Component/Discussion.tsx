@@ -10,12 +10,13 @@ import { AppDispatch } from "@/store/store";
 import { getComments, likePost, singleForum } from "@/api/forum";
 import RenderPreview from "@/Common/CommonLatex";
 import { getSocket } from "@/socket";
+import USER from "@/assets/vectors/user.svg";
 
 const Discussion = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const postdetail = useSelector((state: any) => state.forum.singleForum);
-  const comments = useSelector((state: any) => state.forum.comments);
+  const comments = useSelector((state: any) => state?.forum?.comments);
 
   const post = postdetail?.[0];
   const [showComments, setShowComments] = useState(false);
@@ -66,7 +67,7 @@ const Discussion = () => {
               src={
                 post.user?.image
                   ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${post.user.image}`
-                  : "/default-avatar.png"
+                  : USER
               }
               className="w-10 h-10 rounded-full"
             />
