@@ -358,10 +358,10 @@ export default function ExamUI() {
   };
 
   const handleSection = async (section: Section) => {
-    // if (!switchable) {
-    //   setSectionShowPopup(true);
-    //   return;
-    // }
+    if (!switchable) {
+      setSectionShowPopup(true);
+      return;
+    }
     await updateSectionTime(selectedSection?.sectionId, section.sectionId);
     setSelectedSection(section);
     setCurrentSectionIndex(examSections.findIndex((s) => s.sectionId === section.sectionId));
