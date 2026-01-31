@@ -168,7 +168,7 @@ const onSubmitFeedback = (e: React.FormEvent) => {
   const wordCount = title.trim().split(/\s+/).length;
 
   if (wordCount < 20) {
-    alert("Title must contain at least 20 words");
+    alert("Feedback must contain at least 20 words");
     return;
   }
 
