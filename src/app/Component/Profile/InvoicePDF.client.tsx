@@ -141,7 +141,7 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
       resetTextSpacing(doc);
       doc.setFontSize(12);
       doc.setTextColor(0);
-      doc.text(`${basePrice}`, pageWidth - 14, startY, {
+      doc.text(`INR ${basePrice}`, pageWidth - 14, startY, {
         align: "right",
       });
 
