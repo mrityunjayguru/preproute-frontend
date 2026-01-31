@@ -342,7 +342,7 @@ if (
                 </h2>
                 <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
                   Select the college to access{" "}
-                  {selectedExamType?.examType?.toLowerCase()} exams designed in
+                  {selectedExamType?.examType} exams designed in
                   accordance with the syllabus and exam pattern.
                 </p>
               </div>
