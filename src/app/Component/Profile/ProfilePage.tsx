@@ -127,7 +127,7 @@ export default function ProfilePage() {
                   {user?.username || "User Name"}!
                 </span>
                 <p className="text-xs text-[#727EA3]">
-                  Nikname :{user?.nickname || "N/A"}
+                  Nickname: {user?.nickname || "N/A"}
                 </p>
                 <p className="text-xs text-[#FF5635]">
                   {user?.email} {user?.phone && `| +91 ${user.phone}`}
@@ -155,28 +155,28 @@ export default function ProfilePage() {
           {/* 🔹 USER DETAILS */}
           <div className="bg-white rounded-xl p-4 sm:p-6 md:p-8 font-poppins grid grid-cols-1 md:grid-cols-2 gap-x-6 md:gap-x-10 gap-y-4 text-sm">
             <div className="flex justify-between border-b pb-2">
-              <span className="text-[#727EA3]">Parent Contact:</span>
+              <span className="text-[#727EA3]">Parent’s Contact:</span>
               <span className="">{user?.parentPhone || "—"}</span>
             </div>
 
             <div className="flex justify-between border-b pb-2">
               <span className="text-[#727EA3]">Attempt Year:</span>
-              <span className="">{user?.profile.year}</span>
+              <span className="">{user?.profile.year || "—"}</span>
             </div>
 
-            <div className="flex border-b pb-2 gap-24">
+            <div className="flex justify-between  border-b pb-2 gap-24">
               <span className="text-[#727EA3]">Stream:{}</span>
               <span className="">
                 {user?.profile?.stream == "Other"
                   ? user?.profile?.otherStream
-                  : user?.profile?.stream}
+                  : user?.profile?.stream || "—"}
               </span>
             </div>
 
             <div className="flex justify-between border-b pb-2">
               <span className="text-[#727EA3]">Preparing For:</span>
               <span className=" text-right">
-                {user?.examdetail?.map((exam: any) => exam.examname).join(", ")}
+                {user?.examdetail?.map((exam: any) => exam.examname).join(", ") || "—"}
               </span>
             </div>
           </div>

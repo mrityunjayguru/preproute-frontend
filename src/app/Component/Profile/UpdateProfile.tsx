@@ -243,7 +243,7 @@ export default function UpdateProfile() {
                     htmlFor="parentPhone"
                     className="text-sm font-normal font-poppins text-gray-700 mb-1 block"
                   >
-                    Parent Phone
+                    Parent’s Phone
                   </Label>
                   <Input
                     id="parentPhone"
@@ -252,7 +252,7 @@ export default function UpdateProfile() {
                     value={formData.parentPhone}
                     onChange={handleInput}
                     className="w-full rounded-[2px] font-dm-sans"
-                    placeholder="Parent Phone"
+                    placeholder="Parent’s Phone"
                   />
                 </div>
               </div>

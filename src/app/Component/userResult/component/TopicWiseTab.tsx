@@ -68,7 +68,7 @@ interface TopicWiseTabProps {
 const TopicWiseTab = ({ data }: TopicWiseTabProps) => {
   const topicData = useSelector((state: any) => state?.topic?.topic);
   const [filterSection, setFilterSection] = useState("Section");
-  const filterBy=["Section","Time","Topic","Diffucilty"]
+  const filterBy=["Section","Time","Topic","Difficulty"]
 
 
   const getTopicName = (topicId: string) => {
@@ -292,7 +292,7 @@ console.log(filteredData,"datadatadatadatadata")
    {filterSection=="Time"?(
       <TimeWiseTab data={data}/>
      ):(null)}
-  {filterSection=="Diffucilty"?(
+  {filterSection=="Difficulty"?(
       <DifficultyWiseTab data={data}/>
      ):(null)}
       
