@@ -80,7 +80,7 @@ const UserForm: React.FC = () => {
       return;
     }
 
-    const payload: any = { username: name, email, phone };
+    const payload: any = { username: name, email, phone,password };
     if (!editingId) payload.password = password;
 
     try {
