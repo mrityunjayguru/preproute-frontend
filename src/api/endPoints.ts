@@ -107,7 +107,8 @@ export const Question={
     update:"setUpexam/question/updateQuestion",
     userQuestiongetQuestionById:"/user/getQuestionById",
     userExamResult:"/user/analysis",
-    clearQuestionResponce:"/user/clearQuestionResponce"
+    clearQuestionResponce:"/user/clearQuestionResponce",
+    questionByQuestionPaperId:"setUpexam/Question/questionByQuestionPaperId"
 }
 export const questionPaper={
   create:"setUpexam/questionpaper/create",

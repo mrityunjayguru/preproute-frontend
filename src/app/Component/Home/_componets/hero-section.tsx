@@ -78,7 +78,7 @@ let mockExam=examTypeData.find((item:any)=>item.examType==="Mocks");
             onClick={() => handlenavigate("/Exam/Mocks")}
             className="cursor-pointer px-6 sm:px-10 py-2 sm:py-3 border border-[#FF5635] text-[#FF5635] rounded-[4px] font-semibold transition-transform duration-200 hover:scale-105 text-sm sm:text-base lg:text-base"
           >
-            View All Exam
+           View All Exams
           </button>
         </div>
         {/* SECTION 2: Tagline Text */}

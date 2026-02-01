@@ -161,15 +161,26 @@ const sectionTime = useMemo(() => {
 
 
 const [title,settitle]=useState("")
-  const onSubmitFeedback = (e: React.FormEvent) => {
-    const payload:any={
-      title:title,
-      questionPaperId:data?.questionPaperID
-    }
-    dispatch(addfeedback(payload))
-    settitle("")
-    e.preventDefault();
+const onSubmitFeedback = (e: React.FormEvent) => {
+  e.preventDefault();
+
+  // trim extra spaces & split into words
+  const wordCount = title.trim().split(/\s+/).length;
+
+  if (wordCount < 20) {
+    alert("Feedback must contain at least 20 words");
+    return;
+  }
+
+  const payload: any = {
+    title,
+    questionPaperId: data?.questionPaperID,
   };
+
+  dispatch(addfeedback(payload));
+  settitle("");
+};
+
 
   const avgSectionTime =
     sectionTime.items.length > 0
@@ -625,7 +636,7 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
       </div>
 
         <h3 className="text-lg font-medium text-[#005EB6] font-poppins">
-            Over-all Ranking Data
+            Overall Ranking Data
           </h3>
       <MarksDistributionChart/>
 

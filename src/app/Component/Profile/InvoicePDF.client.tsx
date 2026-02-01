@@ -39,7 +39,7 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
       doc.setFontSize(8);
       doc.setFont("helvetica", "normal");
       doc.text(
-        "GE AMBIKA AMBIKA, SHIV BAGAN, Ranchi-834001",
+        "GE, AMBIKA ENCLAVE, SHIV BAGAN, MACKEY ROAD, UPPER BAZAAR, RANCHI, JHARKHAND - 834001",
         14,
         33
       );
@@ -141,7 +141,7 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
       resetTextSpacing(doc);
       doc.setFontSize(12);
       doc.setTextColor(0);
-      doc.text(`${basePrice}`, pageWidth - 14, startY, {
+      doc.text(`INR ${basePrice}`, pageWidth - 14, startY, {
         align: "right",
       });
 
@@ -160,7 +160,7 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
       resetTextSpacing(doc);
       doc.setFontSize(12);
       doc.setTextColor(0);
-      doc.text(`${gstRate} %`, pageWidth - 14, rateY, { align: "right" });
+      doc.text(`INR ${gstRate}%`, pageWidth - 14, rateY, { align: "right" });
 
       // doc.setFillColor(230, 230, 230);
       // doc.roundedRect(14, rateY + 5, pageWidth - 28, 3, 2, 2, "F");
@@ -179,7 +179,7 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
       resetTextSpacing(doc);
       doc.setFontSize(12);
       doc.setTextColor(0);
-      doc.text(`${gstAmount}`, pageWidth - 14, baseY, {
+      doc.text(`INR ${gstAmount}`, pageWidth - 14, baseY, {
         align: "right",
       });
 
@@ -193,7 +193,7 @@ export default function InvoicePrint({ invoice }: InvoiceProps) {
       doc.setFontSize(12);
       doc.setTextColor(236, 98, 67);
     doc.text(
-        `${amountInclGST}`,
+        `INR ${amountInclGST}`,
         pageWidth - 14,
         gstY,
         { align: "right" }

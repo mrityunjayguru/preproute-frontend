@@ -280,7 +280,7 @@ if (!/^\d{10}$/.test(parentPhone)) {
           {/* Parent Phone */}
           <div>
             <Label className="text-sm font-normal font-poppins text-[#1A1D1F]">
-              Parent Phone{" "}
+              Parent’s Phone{" "}
               <span className="text-xs text-[#FF5635]">(Optional)</span>
             </Label>
             <Input
