@@ -108,7 +108,7 @@ export const Question={
     userQuestiongetQuestionById:"/user/getQuestionById",
     userExamResult:"/user/analysis",
     clearQuestionResponce:"/user/clearQuestionResponce",
-    questionByQuestionPaperId:"setUpexam/Question/questionByQuestionPaperId"
+    questionByQuestionPaperId:"setUpexam/question/questionByQuestionPaperId"
 }
 export const questionPaper={
   create:"setUpexam/questionpaper/create",
