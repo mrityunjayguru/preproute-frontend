@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setQuestion,setResult,setSingleQuestion} from '../../store/seatUpexam/question';
+import { setQuestion,setResult,setSingleQuestion,settopicDestribution} from '../../store/seatUpexam/question';
 import APIName, { Question} from '../endPoints';
 import { QuestionRepo } from './QuestionRepo';
 import Swal from 'sweetalert2';
@@ -167,6 +167,28 @@ export const resetQuestion= createAsyncThunk<boolean, Payload>(
     try {
     
         thunkAPI.dispatch(setSingleQuestion(payload));
+        return true;
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
+
+export const questionByQuestionPaperId= createAsyncThunk<boolean, Payload>(
+  Question.get,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await QuestionRepo.questionByQuestionPaperId(payload);
+      console.log(data.data.data,"datadatadatadata")
+        thunkAPI.dispatch(settopicDestribution(data.data.data));
         return true;
     } catch (err:any) {
       if(err.status==401){

@@ -7,6 +7,7 @@ import {
   createQuestion,
   getQuestionById,
   handleUpdateQuestion,
+  questionByQuestionPaperId,
 } from "@/api/Question";
 import { getTopic } from "@/api/Topic";
 import { getSubTopicByTopicId } from "@/api/subTopic";
@@ -19,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import Footer from "@/app/layouts/_component/footer";
 import OptionWithEditot from "./Component/OptionWithEditot";
 import LatesForpassage from "./Component/LatesForpassage";
+import SummaryTable from "./Component/Distirbution";
 
 type AnswerType = "Numeric" | "MCQ";
 
@@ -263,8 +265,19 @@ console.log(passage,"passagepassagepassage")
     };
     dispatch(getQuestionById(payload));
   };
-
+  const [open,setOpen]=useState(false);
+const handleToggledistribution=async()=>{
+  const payload:any={
+    questionPaperId:selectedExamDetail[0]?._id
+  }
+await dispatch(questionByQuestionPaperId(payload))
+setOpen(true)
+}
   return (
+   <>
+
+<SummaryTable open={open} onClose={() => setOpen(false)} />
+
     <div className="min-h-screen ">
       <div className="w-full mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mb-8">
         {/* Header */}
@@ -302,6 +315,13 @@ console.log(passage,"passagepassagepassage")
                 </button>
               ))}
           </div>
+<div className="flex gap-2">
+    <button
+            onClick={handleToggledistribution}
+            className="px-10 py-2 w-fit bg-[#FF5635] text-white font-medium rounded-md font-dm-sans hover:bg-[#FF5632] disabled:opacity-50 cursor-pointer"
+          >
+          Question Distribution
+          </button>
 
           <button
             onClick={handleSubmit}
@@ -310,6 +330,7 @@ console.log(passage,"passagepassagepassage")
           >
             {loader ? "Processing..." : "Save & Process"}
           </button>
+</div>
         </div>
 
         {/* Main Content Grid */}
@@ -604,6 +625,7 @@ console.log(passage,"passagepassagepassage")
       </div>
       <Footer/>
     </div>
+   </>
   );
 };
 
