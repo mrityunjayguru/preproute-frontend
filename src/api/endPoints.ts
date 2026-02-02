@@ -19,7 +19,8 @@ export const coupon={
   create:"coupon/create",
   get:"coupon/get",
   update:"coupon/update",
-  verifyCouponCode:"coupon/verifyCouponCode"
+  verifyCouponCode:"coupon/verifyCouponCode",
+  purchasedUser:"coupon/purchasedCoupon"
 
 }
 export const blog={

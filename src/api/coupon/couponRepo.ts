@@ -12,6 +12,7 @@ interface couponRepo {
   getcoupon: (payload: Payload) => Promise<AxiosResponse>;
   updatecoupon:(payload: Payload) => Promise<AxiosResponse>;
   verifyCouponCode:(payload: Payload) => Promise<AxiosResponse>;
+  purchasedUser:(payload: Payload) => Promise<AxiosResponse>;
 }
 
 export const couponRepo: couponRepo = {
@@ -26,5 +27,8 @@ export const couponRepo: couponRepo = {
   },
   verifyCouponCode(payload) {
     return Repository.post(coupon.verifyCouponCode, payload);
+  },
+  purchasedUser(payload) {
+    return Repository.post(coupon.purchasedUser, payload);
   }
 };

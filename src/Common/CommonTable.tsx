@@ -12,7 +12,8 @@ import { Button } from "@/components/ui/button";
 import { FaRegEdit } from "react-icons/fa";
 import Image from "next/image";
 import EDIT from "@/assets/vectors/edit-text 1.svg";
-import { MdDeleteOutline } from "react-icons/md";
+import { MdDeleteOutline, MdVisibility } from "react-icons/md";
+import { FaCloudDownloadAlt } from "react-icons/fa";
 
 interface Column<T> {
   header: string;
@@ -24,6 +25,8 @@ interface CommonTableProps<T> {
   columns: Column<T>[];
   onEdit?: (row: T) => void;
   onDelete: (row: T) => void;
+  onDownload?: (row: T) => void;
+  onView?: (row: T) => void;
 }
 
 // Helper function to access nested properties using dot notation
@@ -36,9 +39,11 @@ function CommonTable<T extends Record<string, any>>({
   columns,
   onEdit,
   onDelete,
+  onDownload,
+  onView
 }: CommonTableProps<T>) {
   return (
-    <div className="rounded-[10px] overflow-x-auto">
+    <div className="rounded-[10px]  overflow-x-auto">
       <Table className="bg-gradient-to-t from-[#F0F9FF] to-white  border border-[#E6F4FF] px-5 py-5">
         <TableHeader className="bg-[#FF5635] text-white font-poppins font-medium text-sm">
           <TableRow>
@@ -101,6 +106,32 @@ function CommonTable<T extends Record<string, any>>({
                       >
                         <MdDeleteOutline size={18} />
                       </button>
+                    )}
+{onView && (
+                      <button
+                        onClick={() => onView(row)}
+                        className="text-green-600 pl-2 cursor-pointer hover:text-green-800"
+                      >
+                        <MdVisibility size={18} />
+                      </button>
+                    )}
+
+                    
+                       {onDownload && (
+                    <button
+  disabled={row.purchasedStatus !== "Completed"}
+  onClick={() => onDownload(row)}
+  className={`pl-2 transition
+    ${
+      row.purchasedStatus === "Completed"
+        ? "text-green-600 hover:text-green-800 cursor-pointer"
+        : "text-gray-400 cursor-not-allowed pointer-events-none"
+    }
+  `}
+>
+  <FaCloudDownloadAlt size={18} />
+</button>
+
                     )}
                   </TableCell>
                 )}

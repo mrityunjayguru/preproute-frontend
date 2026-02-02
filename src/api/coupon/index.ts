@@ -5,12 +5,9 @@ import {
   setcoupon,
   setsinglecoupon,
   updateCoupon,
+  setPurchasedCoupon,
 } from "@/store/coupon";
-import {
-  ToastSuccess,
-  ToastError,
-  ToastWarning,
-} from "@/Utils/toastUtils";
+import { ToastSuccess, ToastError, ToastWarning } from "@/Utils/toastUtils";
 
 interface Payload {
   [key: string]: any;
@@ -30,7 +27,6 @@ export const addcoupon = createAsyncThunk<boolean, Payload>(
 
       ToastWarning("Unexpected response from server");
       return false;
-
     } catch (err: any) {
       const status = err.response?.status;
       const message = err.response?.data?.message;
@@ -50,9 +46,8 @@ export const addcoupon = createAsyncThunk<boolean, Payload>(
       ToastError(message || "Something went wrong");
       return false;
     }
-  }
+  },
 );
-
 
 /* ================= Get Coupons ================= */
 export const getcoupon = createAsyncThunk<boolean, Payload>(
@@ -80,7 +75,7 @@ export const getcoupon = createAsyncThunk<boolean, Payload>(
       }
       return false;
     }
-  }
+  },
 );
 
 /* ================= Single Coupon (Local State) ================= */
@@ -94,7 +89,7 @@ export const singlecoupon = createAsyncThunk<boolean, Payload>(
       ToastWarning("Something went wrong");
       return false;
     }
-  }
+  },
 );
 
 /* ================= Update Coupon ================= */
@@ -111,7 +106,6 @@ export const updatecoupon = createAsyncThunk<boolean, Payload>(
 
       ToastWarning("Unexpected response from server");
       return false;
-
     } catch (err: any) {
       const status = err.response?.status;
       const message = err.response?.data?.message;
@@ -132,9 +126,8 @@ export const updatecoupon = createAsyncThunk<boolean, Payload>(
       ToastError(message || "Something went wrong");
       return false;
     }
-  }
+  },
 );
-
 
 /* ================= Set Update Coupon (Redux Only) ================= */
 export const setUpdatecoupon = createAsyncThunk<boolean, Payload>(
@@ -147,34 +140,49 @@ export const setUpdatecoupon = createAsyncThunk<boolean, Payload>(
       ToastWarning("Something went wrong");
       return false;
     }
-  }
+  },
 );
 export const verifyCouponCode = createAsyncThunk(
- coupon.update,
+  coupon.update,
   async (payload: any, thunkAPI) => {
     try {
       const response = await couponRepo.verifyCouponCode(payload);
 
       if (response.status === 200) {
-        const val:any={
-          data:response.data.data,
-          status:true
-        }
+        const val: any = {
+          data: response.data.data,
+          status: true,
+        };
         return val; // ✅ return coupon
       }
 
       return thunkAPI.rejectWithValue("Invalid coupon");
     } catch (err: any) {
-        const val:any={
-          data:err.response?.data?.message ,
-          status:false
-        }
-        return val;
-   
+      const val: any = {
+        data: err.response?.data?.message,
+        status: false,
+      };
+      return val;
     }
-  }
+  },
 );
 
-
-
-
+export const purchasedUser = createAsyncThunk(
+  coupon.update,
+  async (payload: any, thunkAPI) => {
+    try {
+      const response = await couponRepo.purchasedUser(payload);
+      if (response.status === 200) {
+        thunkAPI.dispatch(setPurchasedCoupon(response.data.data));
+        return true;
+      }
+      return thunkAPI.rejectWithValue("Invalid coupon");
+    } catch (err: any) {
+      const val: any = {
+        data: err.response?.data?.message,
+        status: false,
+      };
+      return val;
+    }
+  },
+);

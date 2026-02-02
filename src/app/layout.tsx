@@ -1,8 +1,8 @@
 "use client";
 
 import "./globals.css";
-import { usePathname } from "next/navigation";
 import Script from "next/script";
+import { usePathname } from "next/navigation";
 
 import ReduxProvider from "@/store/ReduxProvider";
 import AdminLayout from "./layouts/AdminLayout";
@@ -10,9 +10,14 @@ import UserLayout from "./layouts/userLayout";
 
 import localFont from "next/font/local";
 import { Poppins, DM_Sans } from "next/font/google";
-
 import { Toaster } from "react-hot-toast";
-import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
+
+declare global {
+  interface Window {
+    dataLayer: Record<string, any>[];
+  }
+}
 
 /* ===================== FONTS ===================== */
 const artegra = localFont({
@@ -31,6 +36,21 @@ const dmSans = DM_Sans({
   weight: ["400", "500", "700"],
   variable: "--font-dm-sans",
 });
+
+/* ===================== PAGE VIEW TRACKER (SPA FIX) ===================== */
+function PageViewTracker() {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: "page_view",
+      page_path: pathname,
+    });
+  }, [pathname]);
+
+  return null;
+}
 
 /* ===================== ROOT LAYOUT ===================== */
 export default function RootLayout({
@@ -55,18 +75,11 @@ export default function RootLayout({
               w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
               var f=d.getElementsByTagName(s)[0],
               j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
-              j.async=true;
-              j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+              j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
               f.parentNode.insertBefore(j,f);
               })(window,document,'script','dataLayer','GTM-MVRFXP3L');
             `,
           }}
-        />
-
-        {/* ===================== FONT AWESOME ===================== */}
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
         />
       </head>
 
@@ -85,6 +98,7 @@ export default function RootLayout({
 
         {/* ===================== APP ===================== */}
         <ReduxProvider>
+          <PageViewTracker />
           <LayoutComponent>
             {children}
             <Toaster />

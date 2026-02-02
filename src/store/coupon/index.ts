@@ -3,12 +3,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface couponState {
 coupon:any,
 singlecoupon:any,
-updateCoupon:any
+updateCoupon:any,
+purchasedCoupon:any
 }
 const initialState: couponState = {
   coupon: null,
   singlecoupon:null,
-  updateCoupon:null
+  updateCoupon:null,
+  purchasedCoupon:null
 };
 export const couponSlice = createSlice({
   name: 'userData',
@@ -23,8 +25,11 @@ export const couponSlice = createSlice({
      updateCoupon: (state, action: PayloadAction<any>) => {
       state.updateCoupon = action.payload; // Set login user data
     },
+      setPurchasedCoupon: (state, action: PayloadAction<any>) => {
+      state.purchasedCoupon = action.payload; // Set login user data
+    },
   },
 });
-export const {setcoupon,setsinglecoupon ,updateCoupon} = couponSlice.actions;
+export const {setcoupon,setsinglecoupon ,updateCoupon,setPurchasedCoupon} = couponSlice.actions;
 
 export default couponSlice.reducer;

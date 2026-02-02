@@ -8,7 +8,7 @@ const ExamsSection = (props: Props) => {
     "IPMAT Indore",
     "IPMAT Rohtak",
     "JIPMAT",
-    "IIM B-(UG)",
+    "CUET",
     "IIM B-(BBA-DBE)",
     "NPAT",
     "SET",
