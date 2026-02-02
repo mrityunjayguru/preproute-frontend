@@ -58,7 +58,7 @@ export const getUsers = createAsyncThunk<boolean, Payload>(
       const data = await UserRepo.getUser(payload);
       if (data.status === 200) {
         thunkAPI.dispatch(setuser(data.data.data));
-        return true;
+        return data;
       }
     } catch (err: any) {
       if (err.status == 401) {

@@ -18,6 +18,7 @@ import { addfeedback } from "@/api/feedback";
 import { getsubTopic } from "@/api/subTopic";
 import { capitalizeWords } from "@/Utils/Cappital";
 import MarksDistributionChart from "../Graph/MarksDistributionChart";
+import { ToastError } from "@/Utils/toastUtils";
 
 interface OverallTabProps {
   data: any;
@@ -158,8 +159,6 @@ const sectionTime = useMemo(() => {
   };
 }, [data]);
 
-
-
 const [title,settitle]=useState("")
 const onSubmitFeedback = (e: React.FormEvent) => {
   e.preventDefault();
@@ -167,8 +166,8 @@ const onSubmitFeedback = (e: React.FormEvent) => {
   // trim extra spaces & split into words
   const wordCount = title.trim().split(/\s+/).length;
 
-  if (wordCount < 20) {
-    alert("Feedback must contain at least 20 words");
+  if (wordCount < 2) {
+    ToastError("Feedback must contain at least 1 words");
     return;
   }
 
@@ -340,7 +339,7 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
           </p>
         </div>
 
-        <div className="w-full md:w-[220px] rounded-[8px] bg-gradient-to-t from-[#FFECDF] to-white drop-shadow-xs p-4 flex items-center justify-between">
+        {/* <div className="w-full md:w-[220px] rounded-[8px] bg-gradient-to-t from-[#FFECDF] to-white drop-shadow-xs p-4 flex items-center justify-between">
           <div>
             <p className="text-sm font-medium font-poppins text-gray-900">
               My Rank
@@ -355,7 +354,7 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
           <div className="w-7 h-7 rounded-full   text-[#FF5635] text-sm">
             <Image src={RANKING} alt="ranking" width={24} height={24} />
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* KPI Cards */}
@@ -397,7 +396,7 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
           </p>
         </div>
 
-        <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] py-3 px-4 flex  justify-between flex-col">
+        {/* <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] py-3 px-4 flex  justify-between flex-col">
           <div className="flex items-center justify-between mb-3">
             <span className="text-black font-medium font-dm-sans">
               Percentile
@@ -407,7 +406,7 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
           <p className="text-[28px] font-normal font-dm-sans text-[#FF5635]">
             {data?.percentile ? `${data.percentile}%ile` : "0%ile"}
           </p>
-        </div>
+        </div> */}
       </div>
 
       {/* Statistics Cards */}
@@ -635,10 +634,10 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
         </div>
       </div>
 
-        <h3 className="text-lg font-medium text-[#005EB6] font-poppins">
+        {/* <h3 className="text-lg font-medium text-[#005EB6] font-poppins">
             Overall Ranking Data
-          </h3>
-      <MarksDistributionChart/>
+          </h3> */}
+      {/* <MarksDistributionChart/> */}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* <div className="space-y-4">

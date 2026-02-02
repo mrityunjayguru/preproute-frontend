@@ -19,7 +19,8 @@ export const coupon={
   create:"coupon/create",
   get:"coupon/get",
   update:"coupon/update",
-  verifyCouponCode:"coupon/verifyCouponCode"
+  verifyCouponCode:"coupon/verifyCouponCode",
+  purchasedUser:"coupon/purchasedCoupon"
 
 }
 export const blog={
@@ -108,7 +109,7 @@ export const Question={
     userQuestiongetQuestionById:"/user/getQuestionById",
     userExamResult:"/user/analysis",
     clearQuestionResponce:"/user/clearQuestionResponce",
-    questionByQuestionPaperId:"setUpexam/Question/questionByQuestionPaperId"
+    questionByQuestionPaperId:"setUpexam/question/questionByQuestionPaperId"
 }
 export const questionPaper={
   create:"setUpexam/questionpaper/create",

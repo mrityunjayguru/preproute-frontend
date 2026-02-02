@@ -87,6 +87,8 @@ export default function PricingPlans() {
     getData();
   }, []);
 
+
+
   /* ---------------- CHECK IF PLAN IS PURCHASED ---------------- */
   const isPlanPurchased = (planId: string | undefined) => {
     if (
@@ -111,7 +113,8 @@ export default function PricingPlans() {
     const discount = discountAmounts[plan._id] || 0;
 
     try {
-      const couponId = couponCodes ? Object.values(couponCodes)[0] : null;
+      // const couponId = couponCodes ? Object.values(couponCodes)[0] : null;
+const couponId = couponCodes[plan._id] || null;
 
       const payload: any = {
         amount: Number(plan.price - discount) * 100,
