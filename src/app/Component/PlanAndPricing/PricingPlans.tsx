@@ -397,8 +397,9 @@ const couponId = couponCodes[plan._id] || null;
                           </li>
                         ))}
                       </ul>
-                      <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-4 sm:my-6" />
+                      <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-2  " />
                       {/* BUTTON */}
+                      <p className="text-gray-700 mb-3 mx-7 text-sm font-normal flex justify-start">* Mocks will be available in phases</p>
                       <div className="w-full px-4 sm:px-6 pb-4 sm:pb-6 mt-auto flex justify-center items-center flex-col">
                         <div className="relative w-full my-2">
                           <input

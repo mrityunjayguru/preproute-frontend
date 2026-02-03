@@ -15,12 +15,16 @@ import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import SocialMedia from "../Home/_componets/social-media";
 import USERDATA from "@/assets/vectors/user-profile.svg";
 import InvoicePrint from "./InvoicePDF.client";
+import { handleSelectedExamType } from "@/api/ExamType";
+import { resetQuestionByExamID } from "@/api/Exam";
+import { resetQuestion } from "@/api/Question";
 
 export default function ProfilePage() {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+  const examTypeData =
+    useSelector((state: any) => state.examType.examType) || [];
   const user = useSelector((state: any) => state?.Auth?.loginUser);
   const getuserData = async () => {
     const payload: any = { _id: user?._id };
@@ -73,7 +77,14 @@ export default function ProfilePage() {
     }
   };
 
-
+ const handleIPmatExam=()=>{
+let mockExam=examTypeData.find((item:any)=>item.examType==="Mocks");
+  dispatch(handleSelectedExamType(mockExam));
+        const payload: any = null;
+        dispatch(resetQuestionByExamID(payload));
+        dispatch(resetQuestion(payload));
+   router.push("/Exam/Mocks");
+  }
 
   console.log(user, "useruseruser");
   return (
@@ -223,10 +234,11 @@ export default function ProfilePage() {
                 user.purchaseDetails.map((item: any, index: number) => (
                   <div
                     key={item?.orderId || index}
-                    className="bg-gradient-to-t from-[#F0F9FF] to-white 
+                    className="bg-gradient-to-t flex justify-between from-[#F0F9FF] to-white 
        border border-[#E6F4FF] rounded-xl p-6"
                   >
-                    <div className="flex justify-between items-start">
+                   <div>
+                     <div className="flex justify-between items-start">
                       <div>
                         <h4 className="text-[#ff5635] font-semibold text-2xl">
                           {item?.plan?.title}
@@ -236,13 +248,9 @@ export default function ProfilePage() {
                         </p>
                       </div>
 
-                      <Button className="text-white bg-black text-sm">
-                        <Download className="h-5 w-5" />
-                        <InvoicePrint invoice={item} />
-                      </Button>
+                     
                     </div>
-
-                    <div className="text-[14px] space-y-1 font-poppins">
+                    <div className="text-[14px]  space-y-1 font-poppins">
                       <p>
                         <span className="text-[#1A1D1F]">Created on:</span>{" "}
                         {item?.otherdetsil?.orderedAt
@@ -261,6 +269,21 @@ export default function ProfilePage() {
                         </span>
                       </p>
                     </div>
+                   </div>
+
+ <div className="flex flex-col  ">
+                        <Button className="text-white bg-black text-sm">
+                        <Download className="h-5 w-5" />
+                        <InvoicePrint invoice={item} />
+                      </Button>
+           <button
+            onClick={handleIPmatExam}
+            className="px-6 cursor-pointer sm:px-8 mt-6 lg:px-10 p-8 sm:py-3 bg-[#FF5635] text-white rounded-[4px] shadow-md font-semibold transition-transform duration-200 hover:scale-105 text-sm sm:text-base lg:text-base"
+          >
+            Start Your Prep
+          </button>
+                      </div>
+
                   </div>
                 ))}
             </div>

@@ -26,7 +26,7 @@ const QuestionView: React.FC<Props> = ({
   return (
     <div className="bg-white rounded-lg flex-1">
       <div
-        className={`w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 mt-3 font-poppins ${question?.questionPessage === "Pass"
+        className={`w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 mt-3 h-[75vh]  overflow-y-auto font-poppins ${question?.questionPessage === "Pass"
           ? "flex gap-2 items-start "
           : "flex flex-col"
           }`}
@@ -44,8 +44,8 @@ const QuestionView: React.FC<Props> = ({
         {/* 🟦 Current Input Section */}
         <div
           className={`${question?.questionPessage === "Pass"
-            ? " border-gray-300 w-1/2 h-[calc(118vh-380px)] overflow-y-auto"
-            : "w-full max-h-[calc(100vh-280px)] overflow-y-auto"
+            ? " border-gray-300 w-1/2 h-[calc(118vh-380px)]"
+            : "w-full max-h-[calc(100vh-280px)] "
             } font-poppins py-2`}
         >
           {question?.questionPessage === "Pass" ? (
