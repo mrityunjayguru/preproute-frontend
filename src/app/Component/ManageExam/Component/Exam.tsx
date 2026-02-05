@@ -411,7 +411,7 @@ export default function ExamUI() {
   }, [question, numericalValue, mcqSelected, handleKeyPress]);
 
   if (!examData?.length) return <div className="p-8 text-center">No exam data found.</div>;
-
+console.log(examData,"examDataexamData")
   return (
     <>
       {showSubmitPopup && <SubmitExamPopup onClose={() => setShowSubmitPopup(false)} onConfirm={handleSubmitFullExam} />}

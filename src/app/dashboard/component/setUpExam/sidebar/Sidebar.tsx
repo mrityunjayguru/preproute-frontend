@@ -7,6 +7,9 @@ import SubTopic from "../Component/SubTopic/SubTopic";
 import ExamTypes from "../ExamType/ExamType";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CreateExamPage from "../Component/Exam/Exam";
+import SectionalExam from "../Component/sectionalExam/SectionalExam";
+import TopicWiseExam from "../Component/topicWiseExam/TopicWiseExam";
+import { useSelector } from "react-redux";
 
 
 const tabItems = [
@@ -18,13 +21,25 @@ const tabItems = [
     label: "Add Sub Topics",
     bannerText: "Add Sub Topic",
   },
-  { value: "exam", label: "Add Exam", bannerText: "Add Exam" },
+
 ];
 
-const Sidebar = () => {
-  const [activeTab, setActiveTab] = useState("sections");
 
+const Sidebar = () => {
+  const examTypeData =
+      useSelector((state: any) => state.examType.examType) || [];
+
+  const [activeTab, setActiveTab] = useState("sections");
   const currentTab = tabItems.find((t) => t.value === activeTab);
+const dynamicExamTabs = examTypeData.map((item: any) => ({
+  value: item.examType.toLowerCase().replace(" ", "-"),
+  label: `Add Exam (${item.examType})`,
+  examType: item.examType,
+  subMenus: item.subMenus || [],
+  id:item._id
+}));
+
+const allTabs = [...tabItems, ...dynamicExamTabs];
 
   return (
     <>
@@ -51,7 +66,7 @@ const Sidebar = () => {
           <div className="col-span-3  ">
             <div className="bg-[#F9FAFC] py-4 rounded-[5px]">
               <TabsList className="flex flex-col h-auto w-full bg-transparent p-0 cursor-pointer">
-                {tabItems.map((tab) => {
+                {allTabs.map((tab) => {
                   return (
                     <TabsTrigger
                       key={tab.value}
@@ -72,7 +87,7 @@ const Sidebar = () => {
           <div className="col-span-1 lg:col-span-9 space-y-6">
             {/* Content Area */}
             <div className="mt-0  cursor-pointer">
-              {tabItems.map((tab) => (
+              {allTabs.map((tab) => (
                 <TabsContent
                   key={tab.value}
                   value={tab.value}
@@ -82,9 +97,11 @@ const Sidebar = () => {
                   {tab.value === "sections" && <ExamTypes />}
                   {tab.value === "topics" && <SetUpSection />}
                   {tab.value === "subtopics" && <Topic />}
-
-                  {tab.value === "exam" && <CreateExamPage />}
-                  {tab.value === "examtype" && <SubTopic />}
+                  {tab.value === "mocks" && <CreateExamPage data={tab}  />}
+                  {tab.value === "pyqs" && <CreateExamPage data={tab} />}
+                  {tab.value === "sectional" && <SectionalExam data={tab}  />}
+                  {tab.value === "topic-wise" && <TopicWiseExam data={tab}  />}
+                  {tab.value === "examtype" && <SubTopic  />}
                 </TabsContent>
               ))}
             </div>

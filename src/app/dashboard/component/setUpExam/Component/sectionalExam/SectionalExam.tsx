@@ -2,8 +2,7 @@ import React from 'react';
 import ExamForm from './ExamForm';
 import ExamTable from './ExamTable';
 
-const CreateExamPage: React.FC<{ data?: any }> = ({ data }) => {
-  // console.log(data,"datadatadatadata")
+const SectionalExam: React.FC<{ data?: any }> = ({ data }) => {
   return (
     <div className="flex-1 bg-[#ffffff]">
       <ExamForm data={data} />
@@ -12,4 +11,4 @@ const CreateExamPage: React.FC<{ data?: any }> = ({ data }) => {
   );
 };
 
-export default CreateExamPage;
+export default SectionalExam;

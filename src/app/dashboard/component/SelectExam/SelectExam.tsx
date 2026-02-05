@@ -19,7 +19,8 @@ const SelectExamForm = () => {
   const [examName, setExamName] = useState("");
   const [examType, setExamType] = useState("");
   const [yearOrSet, setYearOrSet] = useState("");
-
+  const [selectedSectionId, setSelectedSectionId] = useState("");
+ const [selectedExam, setSelectedExam] = useState<any>(null);
   const examTypeData =
     useSelector((state: any) => state.examType.examType) || [];
   const exam = useSelector((state: any) => state?.exam?.exam) || [];
@@ -28,7 +29,7 @@ const SelectExamForm = () => {
   useEffect(() => {
     const payload: any = {};
     dispatch(getExamType(payload));
-    dispatch(getexam(payload));
+   
   }, [dispatch]);
 
   // Generate last 10 years dynamically
@@ -42,7 +43,12 @@ const SelectExamForm = () => {
     setExamType(e.target.value);
     setExamName("");
     setYearOrSet("");
+    const payload:any={
+      examtypeId: e.target.value,
+    }
+     dispatch(getexam(payload));
   };
+
 
   const handleExamChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setExamName(e.target.value);
@@ -58,8 +64,12 @@ const SelectExamForm = () => {
     const payload: any = {
       examid: examName,
       examTypeId: examType,
+      examformat:selectedExamTypeName.toLowerCase(),
       questionPapername: yearOrSet, // can be year or set name
     };
+    if(selectedSectionId){
+      Object.assign(payload,{sectionId:selectedSectionId})
+    }
     let responce: any = await dispatch(createQuestionPaper(payload));
     // await dispatch(handlesetSelectedExam(payload));
     if (responce.payload == true) {
@@ -71,7 +81,8 @@ const SelectExamForm = () => {
   // Get selected exam type name (to decide dropdown)
   const selectedExamTypeName =
     examTypeData.find((t: any) => t._id === examType)?.examType || "";
-// alert(selectedExamTypeName)
+
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex-grow">
@@ -104,7 +115,14 @@ const SelectExamForm = () => {
             {/* Exam Dropdown */}
             <select
               value={examName}
-              onChange={handleExamChange}
+              onChange={(e) => {
+    const examId = e.target.value;
+    setExamName(examId);
+
+    const foundExam = exam.find((ex: any) => ex._id === examId);
+    setSelectedExam(foundExam);
+    setSelectedSectionId(""); // reset section
+  }}
               className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] focus:outline-none"
             >
               <option value="">Choose Exam</option>
@@ -116,8 +134,33 @@ const SelectExamForm = () => {
                 ))}
             </select>
 
+{/* make section exam */}
+<div>
+  {selectedExamTypeName.toLowerCase() === "sectional"?(
+<>
+{selectedExam?.sections?.length > 0 && (
+  <select
+    value={selectedSectionId}
+    onChange={(e) => setSelectedSectionId(e.target.value)}
+    className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] focus:outline-none"
+  >
+    <option value="">Choose Section</option>
+
+    {selectedExam.sections.map((sec: any) => (
+      <option key={sec.sectionId} value={sec.sectionId}>
+        {sec.sectionInfo?.section}
+      </option>
+    ))}
+  </select>
+)}
+
+</>
+
+  ):(null)}
+</div>
+
             {/* Conditional Dropdown */}
-            {selectedExamTypeName.toLowerCase() === "mocks" ? (
+            {selectedExamTypeName.toLowerCase() === "mocks" || selectedExamTypeName.toLowerCase() === "sectional" ? (
               <select
                 value={yearOrSet}
                 onChange={(e) => setYearOrSet(e.target.value)}

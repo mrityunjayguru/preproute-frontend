@@ -12,6 +12,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
 } from "@/components/ui/dropdown-menu";
 import { UserProfileDropdown } from "@/components/UserProfileDropdown";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -19,7 +22,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import logo from "../assets/images/logo.svg";
 import { getCommonExamType, handleSelectedExamType } from "@/api/ExamType";
 import { handleLogout } from "@/api/Auth/UserAuth";
-import { resetQuestionByExamID } from "@/api/Exam";
+import { getCommonexam, resetQuestionByExamID } from "@/api/Exam";
 import { resetQuestion } from "@/api/Question";
 import { ChevronDownIcon, LayoutDashboard, MenuIcon } from "lucide-react";
 
@@ -45,14 +48,24 @@ export const Header: React.FC = () => {
   }, [dispatch, userLogin?._id]);
 
   const handleExamClick = (exam: any) => {
+    const payload:any=null
     dispatch(handleSelectedExamType(exam));
-    dispatch(resetQuestionByExamID(null));
-    dispatch(resetQuestion(null));
+    dispatch(resetQuestionByExamID(payload));
+    dispatch(resetQuestion(payload));
+
+       const payload2: any = {
+      userId: userLogin?._id,
+      examTypeId:exam?._id,
+    };
+    dispatch(getCommonexam(payload2));
+    
+
     router.push("/Exam/Mocks");
   };
 
   const handleLogoutClick = async () => {
-    await dispatch(handleLogout(null));
+    const payload:any=null
+    await dispatch(handleLogout(payload));
     localStorage.removeItem("token");
     router.push("/home");
     // window.location.reload();
@@ -80,7 +93,22 @@ export const Header: React.FC = () => {
     pathname.startsWith("/resources") ||
     pathname.startsWith("/instructions") ||
     pathname.startsWith("/blog");
+ const handleSubExamClick = async(exam: any, sub: any) => {
 
+   const payload2:any=null
+    dispatch(handleSelectedExamType(exam));
+    dispatch(resetQuestionByExamID(payload2));
+    dispatch(resetQuestion(payload2));
+
+    const payload: any = {
+      userId: userLogin?._id,
+      examTypeId:exam?._id,
+      subExamTypeId:sub?._id,
+    };
+   await dispatch(getCommonexam(payload));
+    router.push("/Exam/Mocks");
+    
+  };
   return (
     <header className="sticky top-0 z-20 w-full bg-white sm:px-6 md:px-8 lg:px-10 xl:px-12">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:py-5">
@@ -103,21 +131,40 @@ export const Header: React.FC = () => {
                 <ChevronDownIcon className="h-4 w-4 text-[#FF5635]" />
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent align="start" className="w-56">
-                {examTypeData.map((exam: any) => (
+          
+      <DropdownMenuContent align="start" className="w-56">
+        {examTypeData.map((exam: any) => (
+          exam.subMenuExists && exam.subMenus?.length ? (
+            // ✅ SUB MENU
+            <DropdownMenuSub key={exam._id}>
+              <DropdownMenuSubTrigger className="cursor-pointer hover:bg-orange-50 hover:text-[#FF5635]">
+                {exam.examType}
+              </DropdownMenuSubTrigger>
+
+              <DropdownMenuSubContent className="w-48">
+                {exam.subMenus.map((sub: any) => (
                   <DropdownMenuItem
-                    key={exam._id}
-                    onSelect={(e) => {
-                      e.preventDefault();
-                      handleExamClick(exam);
-                      setExamMenuOpen(false);
-                    }}
+                    key={sub._id}
+                    onClick={() => handleSubExamClick(exam, sub)}
                     className="cursor-pointer hover:bg-orange-50 hover:text-[#FF5635]"
                   >
-                    {exam.examType}
+                    {sub.subExamType}
                   </DropdownMenuItem>
                 ))}
-              </DropdownMenuContent>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          ) : (
+            // ✅ NO SUB MENU
+            <DropdownMenuItem
+              key={exam._id}
+              onClick={() => handleExamClick(exam)}
+              className="cursor-pointer hover:bg-orange-50 hover:text-[#FF5635]"
+            >
+              {exam.examType}
+            </DropdownMenuItem>
+          )
+        ))}
+      </DropdownMenuContent>
             </DropdownMenu>
 
             {/* Main Links */}

@@ -7,13 +7,17 @@ import CommonTable from "@/Common/CommonTable";
 import { formatDateTime } from "@/Common/ComonDate";
 import { Search } from "lucide-react";
 
-const ExamTable: React.FC<{ data?: any }> = ({ data }) => {
+interface ExamTableProps {
+  data: any;
+}
+
+const ExamTable: React.FC<ExamTableProps> = ({data}) => {
   const [search, setSearch] = useState("");
   const dispatch = useDispatch<AppDispatch>();
   const exam = useSelector((state: any) => state?.exam?.exam) || [];
 
   const getData = async () => {
-    const payload: any = {
+     const payload: any = {
       examtypeId: data?.id, // Pass the exam type ID to fetch relevant exams
     };
     await dispatch(getexam(payload));

@@ -27,8 +27,7 @@ interface SectionData {
   negativeMark: string;
 }
 
-const ExamForm: React.FC<{ data?: any }> = ({ data }) => {
-  // console.log(data,"datadatadatadatadata")
+const ExamForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const updateExamData = useSelector((state: any) => state?.exam?.updateexam);
   const sections = useSelector((state: any) => state?.section?.section) || [];
@@ -84,12 +83,7 @@ const ExamForm: React.FC<{ data?: any }> = ({ data }) => {
     dispatch(getExamType(payload));
     
   }, [dispatch]);
-useEffect(()=>{
- const foundExamTypes = examTypeOptions.filter((e: any) =>
-      data.id?.includes(e.value),
-    );
-    setSelectedExamTypes(foundExamTypes);
-},[data])
+
   // Prefill form in update mode
   useEffect(() => {
     if (updateExamData && updateExamData._id) {
@@ -106,7 +100,6 @@ useEffect(()=>{
    const foundExamTypes = examTypeOptions.filter((e: any) =>
       updateExamData.examType?.includes(e.value),
     );
-    // console.log(updateExamData,"updateExamDataupdateExamData")
     setSelectedExamTypes(foundExamTypes);
   if (updateExamData.subexamType?.length) {
       const mappedSubs = updateExamData?.subexamType?.map((s: any) => {
@@ -211,7 +204,7 @@ useEffect(()=>{
       isSection: isSection === "true",
       mockDate: mockDate,
       iscalculater: iscalculater == "yes",
-       examType:[data.id],
+       examType: selectedExamTypes.map((e) => e.value),
       subexamType: selectedSubExamTypes.map((s) => ({
         examTypeId: s.examTypeId,
         subExamTypeId: s.subExamTypeId,
@@ -323,7 +316,7 @@ const handleCancleSubmit=()=>{
     <div className="p-6 mb-6 font-dm-sans">
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        {/* <div>
+        <div>
   <Label className="mb-2 block">Exam Type (Multiple)</Label>
       <Select
         isMulti
@@ -335,7 +328,7 @@ const handleCancleSubmit=()=>{
         }}
         placeholder="Select Exam Types"
       />
-</div> */}
+</div>
    {selectedExamTypes.map((exam) =>
         exam.subMenuExists ? (
           <div key={exam.value} className="">
@@ -373,7 +366,7 @@ const handleCancleSubmit=()=>{
             className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none "
           />
         </div>
-        <div>
+        {/* <div>
           <Label className="mb-4 block font-dm-sans text-md">
             Exam Duration (In Minutes)
           </Label>
@@ -384,7 +377,7 @@ const handleCancleSubmit=()=>{
             placeholder="0"
             className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none "
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Toggles */}
