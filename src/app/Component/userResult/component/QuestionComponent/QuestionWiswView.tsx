@@ -25,10 +25,12 @@ interface Question {
   answerType: string;
   options: Option[];
   userAttempted:Boolean,
+  averageTime:any,
   usergiven?: {
     userAnswer: string;
     numericAnswer?: string;
     timeTaken?: number;
+    passage:any;
   }[];
   correctAnswer: string;
   hint?: string;
@@ -38,6 +40,9 @@ interface Question {
   subtopic?: string;
   difficulty?: string;
   avgTime?: string;
+  subtopicdata:any;
+  topicdata:any;
+  questionPessage:any;
 }
 
 interface Props {
@@ -232,7 +237,7 @@ const handleSubmitReport=(val:any)=>{
             Difficulty Level
           </p>
           <p className="text-lg font-medium text-[#005EB6]">
-            {question.difficulty || "Easy"}
+            {question?.questionType || "Easy"}
           </p>
         </div>
       </div>
