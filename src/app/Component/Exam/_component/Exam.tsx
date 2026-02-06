@@ -457,7 +457,7 @@ if (
                     <span className="text-[#009DFF] font-thin">|</span>{" "}
                   </span>
                   <span className="text-[#FF5635] font-medium font-poppins text-xl sm:text-xl md:text-2xl">
-                    {selectedExam?.examname || "Mock Tests"}
+                    {selectedExam?.examname }
                   </span>
                 </h2>
                 <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">

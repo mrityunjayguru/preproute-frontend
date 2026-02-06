@@ -322,7 +322,7 @@ console.log(examById,"examByIdexamById")
               <span className="text-black">
                 {selectedExamType?.examType} -{" "}
               </span>
-              {selectedExam?.examname || "Mock Tests"}
+              {selectedExam?.examname }
             </h1>
 
             <p className="text-black text-sm md:text-base max-w-2xl">
