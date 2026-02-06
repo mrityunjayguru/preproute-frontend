@@ -224,7 +224,6 @@ useEffect(() => {
   }, [selectedExamType]);
   // Handle dropdown
   const handleSelectExam = async(option: any) => {
-    console.log(option,"optionoption")
     if (!option) return;
     dispatch(handleSetSelectedExam(option.value ||option._id ));
     const exam = option.value ;
@@ -239,7 +238,6 @@ useEffect(() => {
 if(sectionId){
   payload.sectionId=sectionId
 }
-console.log(payload,"payloadpayload")
 
    await dispatch(getCommonQuestionBeExamId(payload));
   };
@@ -301,7 +299,6 @@ if (
       router.push("/analytics");
     }
   };
-console.log(examdata[0]?.sectionDetails,"examdataexamdataexamdata")
   const examOptions = examdata.map((ex: any) => ({
     label: ex.examname,
     value: ex,
@@ -324,7 +321,6 @@ console.log(examdata[0]?.sectionDetails,"examdataexamdataexamdata")
   setSectionId(val._id)
   handleSelectExam(selectedExam)
  }
-  console.log(selectedExam,"selectedExamTypeselectedExamTypeselectedExamType")
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">

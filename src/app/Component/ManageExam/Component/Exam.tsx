@@ -84,6 +84,7 @@ export default function ExamUI() {
   // --- Derived State ---
   const exam = useMemo(() => examData?.[0]?.exam || {}, [examData]);
   const examSections: Section[] = useMemo(() => exam?.sections || [], [exam]);
+  
   const activeSectionId = examProgress?.currentSection?.sectionId || selectedSection?.sectionId;
 
   const currentStatus = useMemo(() => {
@@ -397,7 +398,6 @@ export default function ExamUI() {
       givenExam: sectionQuestionStatus,
       status: "in-progress",
     };
-    console.log(payload,"payloadpayload")
     dispatch(ManageExamProgress(payload));
   }, [sectionQuestionStatus, currentQuestionIndex, selectedSection]);
 
