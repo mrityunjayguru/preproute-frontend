@@ -18,10 +18,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UserProfileDropdown } from "@/components/UserProfileDropdown";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 
 import logo from "../assets/images/logo.svg";
 import { getCommonExamType, handleSelectedExamType } from "@/api/ExamType";
-import { handleLogout } from "@/api/Auth/UserAuth";
+import { googleLogin, handleLogout } from "@/api/Auth/UserAuth";
 import { getCommonexam, resetQuestionByExamID } from "@/api/Exam";
 import { resetQuestion } from "@/api/Question";
 import { ChevronDownIcon, LayoutDashboard, MenuIcon } from "lucide-react";
@@ -58,7 +60,7 @@ export const Header: React.FC = () => {
       examTypeId:exam?._id,
     };
     dispatch(getCommonexam(payload2));
-    if(exam.examType.toLowerCase()=="topic wise"){
+    if(exam.examType.toLowerCase()=="topic wise"){ 
     console.log(exam)
     router.push("/Exam/topicExam");
     }else if(exam.examType.toLowerCase()=="sectional"){
@@ -116,6 +118,23 @@ export const Header: React.FC = () => {
     router.push("/Exam/Mocks");
     
   };
+
+const loginWithGoogle = useGoogleLogin({
+  flow: "auth-code",
+
+  onSuccess: async ({ code }) => {
+    // 👉 Backend को code भेजो
+    const response: any = await dispatch(googleLogin({ code,isCode:true }));
+     if (response.payload === true) {
+        router.push("/home");
+      }
+  },
+
+  onError: () => {
+    console.log("Google login error");
+  },
+});
+
   return (
     <header className="sticky top-0 z-20 w-full bg-white sm:px-6 md:px-8 lg:px-10 xl:px-12">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:py-5">
@@ -245,7 +264,7 @@ export const Header: React.FC = () => {
                 Register
               </Link>
               <Button
-                onClick={() => router.push("/Auth/signin")}
+                onClick={() => loginWithGoogle()}
                 className="rounded-full bg-[#FF5635] text-white cursor-pointer"
               >
                 Login

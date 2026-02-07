@@ -3,6 +3,7 @@
 import "./globals.css";
 import Script from "next/script";
 import { usePathname } from "next/navigation";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import ReduxProvider from "@/store/ReduxProvider";
 import AdminLayout from "./layouts/AdminLayout";
@@ -61,6 +62,8 @@ export default function RootLayout({
   const pathname = usePathname();
   const isDashboard = pathname.startsWith("/dashboard");
   const LayoutComponent = isDashboard ? AdminLayout : UserLayout;
+const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
+
 
   return (
     <html lang="en">
@@ -97,6 +100,7 @@ export default function RootLayout({
         </noscript>
 
         {/* ===================== APP ===================== */}
+        <GoogleOAuthProvider clientId={clientId}>
         <ReduxProvider>
           <PageViewTracker />
           <LayoutComponent>
@@ -104,6 +108,7 @@ export default function RootLayout({
             <Toaster />
           </LayoutComponent>
         </ReduxProvider>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

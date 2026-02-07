@@ -4,8 +4,10 @@ import Signin from "../_components/sign-in";
 
 export default function Page() {
   return (
-    <GoogleOAuthProvider clientId="363773266637-7ttqp94hll57lr31791sfte7bkg91fqv.apps.googleusercontent.com">
+    // </GoogleOAuthProvider> 
+    // // <GoogleOAuthProvider clientId="533997342885-too63u5vs1nr44fr4qklvashlnvqve9g.apps.googleusercontent.com"> 
+     <>
       <Signin />
-    </GoogleOAuthProvider>
+     </>
   );
 }
