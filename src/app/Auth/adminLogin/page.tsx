@@ -103,7 +103,7 @@ export default function Page() {
             </div>
 
             {/* Footer */}
-            <div className="text-center text-sm text-gray-500 mt-6">
+            {/* <div className="text-center text-sm text-gray-500 mt-6">
               Already Signed Up?{" "}
               <a
                 onClick={() => router.push("/Auth/signin")}
@@ -111,7 +111,7 @@ export default function Page() {
               >
                 Login
               </a>
-            </div>
+            </div> */}
             
           </div>
         </div>

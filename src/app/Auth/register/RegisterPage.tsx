@@ -146,7 +146,7 @@ export default function RegisterPage() {
             </Button>
           </div>
 
-          <div className="text-center text-sm text-gray-500 mt-6">
+          {/* <div className="text-center text-sm text-gray-500 mt-6">
             Already Signed Up?{" "}
             <a
               onClick={() => router.push("/Auth/signin")}
@@ -154,7 +154,7 @@ export default function RegisterPage() {
             >
               Login
             </a>
-          </div>
+          </div> */}
           <div className="flex justify-center my-1">
             <GoogleLogin
               onSuccess={handleGoogleSuccess}

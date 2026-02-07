@@ -136,7 +136,7 @@ export default function Step1({ nextStep, updateForm, formData }: any) {
             </div>
 
             {/* Already Registered */}
-            <div className="text-center text-sm text-gray-500 mt-6">
+            {/* <div className="text-center text-sm text-gray-500 mt-6">
               Already Signed Up?{" "}
               <a
                 onClick={() => router.push("/Auth/signin")}
@@ -144,7 +144,7 @@ export default function Step1({ nextStep, updateForm, formData }: any) {
               >
                 Login
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

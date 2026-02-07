@@ -202,9 +202,9 @@ const loginWithGoogle = useGoogleLogin({
         <div className="flex items-center gap-3">
           {!token ? (
             <div className="hidden lg:flex items-center gap-3">
-              <Link href="/Auth/register" className="text-[#FF5635]">
+              {/* <Link href="/Auth/register" className="text-[#FF5635]">
                 Register
-              </Link>
+              </Link> */}
               <Button
                 onClick={loginWithGoogle}
                 className="rounded-full bg-[#FF5635] text-white cursor-pointer"
