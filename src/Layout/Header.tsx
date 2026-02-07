@@ -379,7 +379,7 @@ const loginWithGoogle = useGoogleLogin({
                     </Link>
                     <Button
                       onClick={() => {
-                        router.push("/Auth/signin");
+                        loginWithGoogle()
                         setMobileOpen(false);
                       }}
                       className="w-full rounded-full bg-[#FF5635] text-white"

@@ -101,12 +101,12 @@ const loginWithGoogle = useGoogleLogin({
               <p  className="text-sm text-[#6F767E] mb-8 font-dm-sans">
                 Welcome Back, Enter your details to sign in to your account
               </p>
-<Button
+{/* <Button
   onClick={() => loginWithGoogle()}
   className="w-full bg-[#FF5635] text-white"
 >
   Login with Google
-</Button>
+</Button> */}
 
               {/* FORM */}
               <form onSubmit={handleSubmit} className="space-y-5 font-dm-sans">
