@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter, usePathname } from "next/navigation";
 import { AppDispatch } from "@/store/store";
 import { Button } from "@/components/ui/button";
+import { useGoogleLogin } from "@react-oauth/google";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +19,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import logo from "../assets/images/logo.svg";
 import { getCommonExamType, handleSelectedExamType } from "@/api/ExamType";
-import { handleLogout } from "@/api/Auth/UserAuth";
+import { googleLogin, handleLogout } from "@/api/Auth/UserAuth";
 import { resetQuestionByExamID } from "@/api/Exam";
 import { resetQuestion } from "@/api/Question";
 import { ChevronDownIcon, LayoutDashboard, MenuIcon } from "lucide-react";
@@ -80,7 +81,21 @@ export const Header: React.FC = () => {
     pathname.startsWith("/resources") ||
     pathname.startsWith("/instructions") ||
     pathname.startsWith("/blog");
+const loginWithGoogle = useGoogleLogin({
+  flow: "auth-code",
 
+  onSuccess: async ({ code }) => {
+    // 👉 Backend को code भेजो
+    const response: any = await dispatch(googleLogin({ code,isCode:true }));
+     if (response.payload === true) {
+        router.push("/home");
+      }
+  },
+
+  onError: () => {
+    console.log("Google login error");
+  },
+});
   return (
     <header className="sticky top-0 z-20 w-full bg-white sm:px-6 md:px-8 lg:px-10 xl:px-12">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:py-5">
@@ -191,7 +206,7 @@ export const Header: React.FC = () => {
                 Register
               </Link>
               <Button
-                onClick={() => router.push("/Auth/signin")}
+                onClick={loginWithGoogle}
                 className="rounded-full bg-[#FF5635] text-white cursor-pointer"
               >
                 Login
@@ -306,7 +321,7 @@ export const Header: React.FC = () => {
                     </Link>
                     <Button
                       onClick={() => {
-                        router.push("/Auth/signin");
+                        loginWithGoogle();
                         setMobileOpen(false);
                       }}
                       className="w-full rounded-full bg-[#FF5635] text-white"

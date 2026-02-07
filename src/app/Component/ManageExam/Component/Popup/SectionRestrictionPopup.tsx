@@ -13,16 +13,14 @@ export default function SectionRestrictionPopup({ onClose, examname }: Props) {
       <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center ">
         <div className=" rounded-lg p-4 text-left space-y-2 font-dm-sans text-lg">
           <p className="text-[#FF5635] font-medium">
-           The {examname}  exam does not allow you to switch between sections {" "}
+           In IPMAT Indore, you cannot move to the next section until the timer ends {" "}
             <span className="text-gray-900 font-medium">
               or submit early—and neither do we. 
               <br/> 
-           Think of this as your mental training ground. By following these rules here,
-            you’ll be fully prepared for the real exam.
-
+         On our platform, you can proceed earlier by clicking Save & Next after attempting the last question of the section
             </span>
           </p>
-          <p className="font-medium">
+          {/* <p className="font-medium">
             <span className="text-[#FF5635] font-medium">
             Good news:
             </span>
@@ -31,7 +29,7 @@ export default function SectionRestrictionPopup({ onClose, examname }: Props) {
 You can submit the mock test once you reach the final section, 
 even before the timer runs out.
             </span>
-          </p>
+          </p> */}
         </div>
 
         <button
