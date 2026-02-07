@@ -117,9 +117,11 @@ export const questionPaper={
   handleUploadImage:"setUpexam/questionpaper/uploadImage",
   getQuestionBeExamId:"setUpexam/questionpaper/getQuestionBeExamId",
   getUserQuestionData:"setUpexam/questionpaper/userExam",
+  getQuestionPaperById:"setUpexam/questionpaper/getById",
   createUserExam:"/user/exam",
   update:"setUpexam/questionpaper/update",
   getCommonQuestionBeExamId:"unauth/QuestionByExamId",
+  getCommonTopicQuestionBeExamId:"unauth/topicWiseExamById",
   getCommonexam:"unauth/commonExam",
   ManageExamProgress:"user/examProgress"
 

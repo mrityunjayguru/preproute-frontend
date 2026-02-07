@@ -8,6 +8,7 @@ singleexamType:any;
 selectedExamType:any;
 examDetail:any;
 selectedQuestionPaper:any;
+topicExam:any;
 }
 
 // Initial state for the slice
@@ -17,7 +18,8 @@ const initialState: UserDataState = {
   singleexamType:null,
   selectedExamType:null,
   examDetail:null,
-  selectedQuestionPaper:null
+  selectedQuestionPaper:null,
+  topicExam:null
 };
 
 // Create the user data slice
@@ -43,11 +45,14 @@ export const examTypeSlicc = createSlice({
     setSelectedQuestionPaper: (state, action: PayloadAction<any>) => {
       state.selectedQuestionPaper = action.payload; // Set login user data
     },
+    setTopicExam: (state, action: PayloadAction<any>) => {
+      state.topicExam = action.payload; // Set login user data
+    },
   },
 });
 
 // Export actions
-export const {setexamType,setSelectedexamType,setUpdateexamType,setSingleexamType,setExamBeExamTypeId,setSelectedQuestionPaper} = examTypeSlicc.actions;
+export const {setexamType,setSelectedexamType,setUpdateexamType,setSingleexamType,setExamBeExamTypeId,setSelectedQuestionPaper,setTopicExam} = examTypeSlicc.actions;
 
 // Export reducer
 export default examTypeSlicc.reducer;

@@ -168,7 +168,6 @@ const [reporttoggle,setReportToggle]=useState(false)
 const handlereport=()=>{
 setReportToggle(true)
 }
-console.log(question,"llllllllllllllll")
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
 
 const handleSubmitReport=(val:any)=>{

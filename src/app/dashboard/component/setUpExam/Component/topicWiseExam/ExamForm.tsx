@@ -27,7 +27,11 @@ interface SectionData {
   negativeMark: string;
 }
 
-const ExamForm: React.FC = () => {
+interface ExamFormProps {
+  data?: any;
+}
+
+const ExamForm: React.FC<ExamFormProps> = ({data}) => {
   const dispatch = useDispatch<AppDispatch>();
   const updateExamData = useSelector((state: any) => state?.exam?.updateexam);
   const sections = useSelector((state: any) => state?.section?.section) || [];
@@ -83,7 +87,12 @@ const ExamForm: React.FC = () => {
     dispatch(getExamType(payload));
     
   }, [dispatch]);
-
+useEffect(()=>{
+   const foundExamTypes = examTypeOptions.filter((e: any) =>
+      data.id?.includes(e.value),
+    );
+    setSelectedExamTypes(foundExamTypes);
+},[data])
   // Prefill form in update mode
   useEffect(() => {
     if (updateExamData && updateExamData._id) {
@@ -97,10 +106,10 @@ const ExamForm: React.FC = () => {
       setMockDate(formattedDate || "");
       setFullExamDuration(updateExamData.fullExamduration?.toString() || "");
       // setSelectedExamType(updateExamData.examType)
-   const foundExamTypes = examTypeOptions.filter((e: any) =>
-      updateExamData.examType?.includes(e.value),
-    );
-    setSelectedExamTypes(foundExamTypes);
+  //  const foundExamTypes = examTypeOptions.filter((e: any) =>
+  //     updateExamData.examType?.includes(e.value),
+  //   );
+  //   setSelectedExamTypes(foundExamTypes);
   if (updateExamData.subexamType?.length) {
       const mappedSubs = updateExamData?.subexamType?.map((s: any) => {
         const parent = examTypeOptions.find(
@@ -117,6 +126,7 @@ const ExamForm: React.FC = () => {
       });
       setSelectedSubExamTypes(mappedSubs);
     }
+    console.log(updateExamData,"updateExamDataupdateExamData")
       if (updateExamData.isSection) {
         setSectionsData(
           updateExamData.sections?.map((s: any) => ({
@@ -129,13 +139,11 @@ const ExamForm: React.FC = () => {
           })) || [],
         );
       } else {
-        setNoOfQuestions(updateExamData.noOfQuestions?.toString() || "");
+      
+      }
+  setNoOfQuestions(updateExamData.noOfQuestions?.toString() || "");
         setCorrectMark(updateExamData.correctMark?.toString() || "");
         setNegativeMark(updateExamData.negativeMark?.toString() || "");
- 
-        
-      }
-
       setEditingId(updateExamData._id);
     }
   }, [updateExamData]);
@@ -204,7 +212,7 @@ const ExamForm: React.FC = () => {
       isSection: isSection === "true",
       mockDate: mockDate,
       iscalculater: iscalculater == "yes",
-       examType: selectedExamTypes.map((e) => e.value),
+       examType: [data.id],
       subexamType: selectedSubExamTypes.map((s) => ({
         examTypeId: s.examTypeId,
         subExamTypeId: s.subExamTypeId,
@@ -212,7 +220,7 @@ const ExamForm: React.FC = () => {
       fullExamduration: Number(fullExamDuration) || undefined,
     };
 // console.log(selectedExamType,"selectedExamTypeselectedExamType")
-// console.log(selectedSubExamType,"selectedSubExamTypeselectedSubExamType")
+console.log(sectionsData,"selectedSubExamTypeselectedSubExamType")
 
     try {
       setLoading(true);
@@ -316,7 +324,7 @@ const handleCancleSubmit=()=>{
     <div className="p-6 mb-6 font-dm-sans">
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div>
+        {/* <div>
   <Label className="mb-2 block">Exam Type (Multiple)</Label>
       <Select
         isMulti
@@ -328,7 +336,7 @@ const handleCancleSubmit=()=>{
         }}
         placeholder="Select Exam Types"
       />
-</div>
+</div> */}
    {selectedExamTypes.map((exam) =>
         exam.subMenuExists ? (
           <div key={exam.value} className="">
@@ -366,7 +374,7 @@ const handleCancleSubmit=()=>{
             className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none "
           />
         </div>
-        <div>
+        {/* <div>
           <Label className="mb-4 block font-dm-sans text-md">
             Exam Duration (In Minutes)
           </Label>
@@ -377,7 +385,7 @@ const handleCancleSubmit=()=>{
             placeholder="0"
             className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none "
           />
-        </div>
+        </div> */}
       </div>
 
       {/* Toggles */}

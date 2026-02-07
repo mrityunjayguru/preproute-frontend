@@ -1,13 +1,12 @@
 import { AxiosInstance } from "axios";
 import axios from "axios";
 // const baseUrl="http://147.93.19.155:3200/api/"
-// const baseUrl="http://localhost:3200/api/"
- const baseUrl="https://testbackend.thepreproute.com/api/"
+  //  const baseUrl="http://localhost:3200/api/"
+const baseUrl = "https://testbackend.thepreproute.com/api/";
 //  const baseUrl="https://prodbackend.thepreproute.com/api/"
 
-
 const Repository: AxiosInstance = axios.create({
-  baseURL:baseUrl,
+  baseURL: baseUrl,
 });
 // Add a request interceptor to set the Authorization header
 Repository.interceptors.request.use(
@@ -18,14 +17,13 @@ Repository.interceptors.request.use(
     }
     return config;
   },
-   
-  (error) => Promise.reject(error)
 
-);     
+  (error) => Promise.reject(error),
+);
 
 Repository.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 export default Repository;

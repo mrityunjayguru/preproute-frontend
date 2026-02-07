@@ -27,7 +27,12 @@ interface SectionData {
   negativeMark: string;
 }
 
-const ExamForm: React.FC = () => {
+interface ExamFormProps {
+  data?: any;
+}
+
+const ExamForm: React.FC<ExamFormProps> = ({data}) => {
+  console.log(data,"datadata")
   const dispatch = useDispatch<AppDispatch>();
   const updateExamData = useSelector((state: any) => state?.exam?.updateexam);
   const sections = useSelector((state: any) => state?.section?.section) || [];
@@ -83,7 +88,12 @@ const ExamForm: React.FC = () => {
     dispatch(getExamType(payload));
     
   }, [dispatch]);
-
+useEffect(()=>{
+   const foundExamTypes = examTypeOptions.filter((e: any) =>
+      data.id?.includes(e.value),
+    );
+    setSelectedExamTypes(foundExamTypes);
+},[data])
   // Prefill form in update mode
   useEffect(() => {
     if (updateExamData && updateExamData._id) {
@@ -204,7 +214,7 @@ const ExamForm: React.FC = () => {
       isSection: isSection === "true",
       mockDate: mockDate,
       iscalculater: iscalculater == "yes",
-       examType: selectedExamTypes.map((e) => e.value),
+      examType:[data.id],
       subexamType: selectedSubExamTypes.map((s) => ({
         examTypeId: s.examTypeId,
         subExamTypeId: s.subExamTypeId,
@@ -316,7 +326,7 @@ const handleCancleSubmit=()=>{
     <div className="p-6 mb-6 font-dm-sans">
       {/* Basic Info */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div>
+        {/* <div>
   <Label className="mb-2 block">Exam Type (Multiple)</Label>
       <Select
         isMulti
@@ -328,7 +338,7 @@ const handleCancleSubmit=()=>{
         }}
         placeholder="Select Exam Types"
       />
-</div>
+</div> */}
    {selectedExamTypes.map((exam) =>
         exam.subMenuExists ? (
           <div key={exam.value} className="">

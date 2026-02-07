@@ -58,9 +58,16 @@ export const Header: React.FC = () => {
       examTypeId:exam?._id,
     };
     dispatch(getCommonexam(payload2));
-    
-
+    if(exam.examType.toLowerCase()=="topic wise"){
+    console.log(exam)
+    router.push("/Exam/topicExam");
+    }else if(exam.examType.toLowerCase()=="sectional"){
+    router.push("/Exam/sectionalExam");
+    }else{
     router.push("/Exam/Mocks");
+
+    }
+
   };
 
   const handleLogoutClick = async () => {

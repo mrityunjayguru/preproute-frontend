@@ -52,11 +52,28 @@ export default function QuestionWiseTab({ data }: QuestionWiseTabProps) {
   const [sectionQuestionStatus, setSectionQuestionStatus] = useState<
     Record<string, Record<number, string>>
   >({});
+  const [examSections,setexamSections]=useState([])
   const [timeLeft, setTimeLeft] = useState(1);
   const [isTimeUp, setIsTimeUp] = useState(false);
   const examResult = useSelector((state: any) => state.question?.result?.data);
   const exam = examResult || {};
-  const examSections: Section[] = examResult?.examdetail?.sections || [];
+  // const examSections: Section[] = examResult?.examdetail?.sections || [];
+useEffect(() => {
+  if (!examResult) return;
+
+  const sections = examResult?.examdetail?.sections || [];
+
+  // If sectional, filter only the selected section
+  if (examResult?.questionpaper?.examformet === "sectional") {
+    const selectedSectionId = examResult?.questionpaper?.sectionId;
+    setexamSections(
+      sections.filter((s: any) => s.sectionId === selectedSectionId)
+    );
+  } else {
+    setexamSections(sections);
+  }
+}, [examResult]);
+
   const currentStatus =
     sectionQuestionStatus[selectedSection?.sectionId || "no-section"] || {};
   const [questionStartTime, setQuestionStartTime] = useState<number | null>(
@@ -83,7 +100,8 @@ export default function QuestionWiseTab({ data }: QuestionWiseTabProps) {
 
     // Load first question
     if (examInfo?.examdetail?.isSection) {
-      const firstSection: any = examSections[0];
+      let  firstSection: any = examSections[0];
+
       if (firstSection) {
         setSelectedSection(firstSection);
         setTotalNoOfQuestions(firstSection.noOfQuestions);

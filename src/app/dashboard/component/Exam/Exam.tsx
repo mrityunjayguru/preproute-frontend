@@ -67,7 +67,7 @@ useEffect(() => {
 
   const exam = selectedExamDetail[0];
 
-  if (exam.examformet === "sectional") {
+  if (exam.examformet === "sectional" || exam.examformet === "topic wise" ) {
     const sectionId = exam.sectionId;
 
     const section =

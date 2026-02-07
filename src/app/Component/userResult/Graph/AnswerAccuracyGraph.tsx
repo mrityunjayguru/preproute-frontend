@@ -48,32 +48,42 @@ const AccuracyTooltip = ({
 const AnswerAccuracyGraph = () => {
   const examResult = useSelector((state: any) => state.question?.result?.data);
 
-  const data: SectionData[] = useMemo(() => {
-    if (!examResult) return [];
+const data: SectionData[] = useMemo(() => {
+  if (!examResult) return [];
 
-    const { sectionDetails = [], sectionWise = [] } = examResult;
+  const { sectionDetails = [], sectionWise = [], questionpaper } = examResult;
 
-    return sectionDetails.map((section: any) => {
-      const stats = sectionWise.find((s: any) => s.sectionId === section._id);
+  // If sectional, filter only the selected section
+  let filteredSections = sectionDetails;
+  if (questionpaper?.examformet === "sectional") {
+    const sectionId = questionpaper?.sectionId;
+    filteredSections = sectionDetails.filter((s: any) => s._id === sectionId);
+  }
 
-      const total = stats?.totalQuestions || 1;
-      const correctCount = stats?.correct || 0;
-      const wrongCount = stats?.wrong || 0;
-      const attempted = stats?.attempted || 0;
-      const unattemptedCount = total - attempted;
+  return filteredSections.map((section: any) => {
+    const stats = sectionWise.find((s: any) => s.sectionId === section._id);
 
-      return {
-        name: section.section,
-        total,
-        correctCount,
-        wrongCount,
-        unattemptedCount,
-        correct: Math.round((correctCount / total) * 100),
-        wrong: Math.round((wrongCount / total) * 100),
-        unattempted: Math.round((unattemptedCount / total) * 100),
-      };
-    });
-  }, [examResult]);
+    const total = stats?.totalQuestions || 1;
+    const correctCount = stats?.correct || 0;
+    const wrongCount = stats?.wrong || 0;
+    const attempted = stats?.attempted || 0;
+    const unattemptedCount = total - attempted;
+
+    return {
+      name: section.section,
+      total,
+      correctCount,
+      wrongCount,
+      unattemptedCount,
+      correct: Math.round((correctCount / total) * 100),
+      wrong: Math.round((wrongCount / total) * 100),
+      unattempted: Math.round((unattemptedCount / total) * 100),
+    };
+  });
+}, [examResult]);
+
+
+  console.log(data,"datadata")
 
   return (
     <div className="rounded-[8px] p-6">

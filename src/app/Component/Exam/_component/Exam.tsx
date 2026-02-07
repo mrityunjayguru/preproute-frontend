@@ -512,18 +512,7 @@ if (
                   }}
                 />
               </div>
-           <div className="flex justify-center items-center gap-3">
-  {examdata[0]?.sectionDetails?.map((sec: any) => (
-    <button
-      key={sec.sectionId}
-      className=" py-2 cursor-pointer px-4 rounded-lg border border-gray-300 
-                 bg-[#FF5635] text-[#fff] "
-      onClick={() => getExamBySection(sec)}
-    >
-      {sec?.section}
-    </button>
-  ))}
-</div>
+     
 
            </div>
            </>

@@ -35,7 +35,10 @@ const ExamCard = ({ exam }: any) => {
       examid: val.examid,
       examTypeId: val.examTypeId,
       questionPapername: val.questionPapername, // can be year or set name
-      sectionId:val?.sectionId || null
+      sectionId:val?.sectionId || null,
+      oterdetail:{
+        ...val
+      }
     };
     await dispatch(handleSelectedExamDetail(payload));
     router.push("manageExam");
