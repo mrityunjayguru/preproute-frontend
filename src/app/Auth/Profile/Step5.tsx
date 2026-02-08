@@ -4,11 +4,15 @@ import { Button } from "@/components/ui/button";
 import { useSelector, useDispatch } from "react-redux";
 import { getCommonexam } from "@/api/Exam";
 import { AppDispatch } from "@/store/store";
+import { getCollege } from "@/api/college";
 
 export default function Step5({ nextStep, prevStep, updateForm, formData }: any) {
   const dispatch = useDispatch<AppDispatch>();
   const examdata = useSelector((state: any) => state?.exam?.exam) || [];
-
+ const colleges = useSelector(
+    (state: any) => state?.college.college
+ || []
+  );
   const [selectedExams, setSelectedExams] = useState<string[]>(formData.exams || []);
 
   // 🔹 Fetch exams on mount
@@ -17,6 +21,8 @@ export default function Step5({ nextStep, prevStep, updateForm, formData }: any)
       try {
         const payload:any={}
         await dispatch(getCommonexam(payload));
+        await dispatch(getCollege(payload));
+
       } catch (error) {
         console.error("Failed to fetch exams:", error);
       }
@@ -43,8 +49,8 @@ export default function Step5({ nextStep, prevStep, updateForm, formData }: any)
 
       {/* 🔹 Dynamically generated exam options */}
       <div className="grid grid-cols-2 gap-3 w-full">
-        {examdata.length > 0 ? (
-          examdata.map((exam: any) => (
+        {colleges.length > 0 ? (
+          colleges.map((exam: any) => (
             <label
               key={exam._id}
               className={`flex items-center justify-between border rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-50 ${

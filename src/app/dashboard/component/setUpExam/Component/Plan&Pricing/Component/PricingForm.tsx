@@ -14,10 +14,15 @@ import {
 } from "@/api/subTopic";
 import { getexam } from "@/api/Exam";
 import { createPlanAndPricing, getPlanandPricing, handleUpdateData } from "@/api/Plan&Pricing";
+import { getCollege } from "@/api/college";
 
 const PricingForm = () => {
   const dispatch = useDispatch<AppDispatch>();
-
+  const colleges = useSelector(
+    (state: any) => state?.college.college
+ || []
+  );
+  
   const topics = useSelector((state: any) => state?.topic?.topic) || [];
   const exam = useSelector((state: any) => state?.exam?.exam) || [];
   const updatedplan=useSelector((state:any)=>state?.palnAndpricing?.updatePlan)
@@ -28,7 +33,6 @@ const PricingForm = () => {
   const [price, setPrice] = useState<string>("");
   const [selected, setSelected] = useState<any[]>([]);
   const [editingId, seteditingId] = useState<string | null>(null);
-console.log(updatedplan,"updatedplanupdatedplanupdatedplan")
   // Fetch Topics
   //   const fetchTopics = async () => {
   //     const payload: any = {};
@@ -46,8 +50,9 @@ console.log(updatedplan,"updatedplanupdatedplanupdatedplan")
 
   const getData = async () => {
     const payload: any = {};
-    await dispatch(getexam(payload));
-    await dispatch(getPlanandPricing(payload));
+        await dispatch(getCollege(payload));
+        await dispatch(getPlanandPricing(payload));
+    
   };
 
   useEffect(() => {
@@ -62,7 +67,7 @@ useEffect(() => {
     setPrice(updatedplan.price);
 seteditingId(updatedplan?._id)
     // 🔥 convert examId array → react-select format
-    const selectedOptions = exam
+    const selectedOptions = colleges
       .filter((ex: any) => updatedplan.examId.includes(ex._id))
       .map((ex: any) => ({
         label: ex.examname,
@@ -103,11 +108,10 @@ if(editingId){
   };
 
   // Options for react-select
-  const options: any = exam.map((topic: any) => ({
+  const options: any = colleges.map((topic: any) => ({
     label: topic.examname,
     value: topic._id, // ⭐ ObjectId passed correctly
   }));
-console.log(selected,"")
 
   return (
     <div className=" px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mb-8">

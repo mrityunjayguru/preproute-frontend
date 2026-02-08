@@ -43,6 +43,13 @@ export const section={
   update:"setUpexam/section/update",
 
 }
+export const college={
+  create:"setUpexam/college/create",
+  get:"setUpexam/college/get",
+  getSectionByExamId:"college/getallsectionsbyexamid",
+  update:"setUpexam/college/update",
+
+}
 export const topic={
   create:"setUpexam/topic/create",
   get:"setUpexam/topic/get",

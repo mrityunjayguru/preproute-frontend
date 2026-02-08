@@ -49,7 +49,7 @@ export const Header: React.FC = () => {
     dispatch(getCommonExamType(payload));
   }, [dispatch, userLogin?._id]);
 
-  const handleExamClick = (exam: any) => {
+  const handleExamClick = async (exam: any) => {
     const payload:any=null
     dispatch(handleSelectedExamType(exam));
     dispatch(resetQuestionByExamID(payload));
@@ -59,9 +59,8 @@ export const Header: React.FC = () => {
       userId: userLogin?._id,
       examTypeId:exam?._id,
     };
-    dispatch(getCommonexam(payload2));
+   await dispatch(getCommonexam(payload2));
     if(exam.examType.toLowerCase()=="topic wise"){ 
-    console.log(exam)
     router.push("/Exam/topicExam");
     }else if(exam.examType.toLowerCase()=="sectional"){
     router.push("/Exam/sectionalExam");

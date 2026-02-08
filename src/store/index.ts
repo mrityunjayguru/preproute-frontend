@@ -22,6 +22,7 @@ import coupon from "./coupon/index"
 import bookMark from "./boockMark/index"
 import Report from "./Report/index"
 import forum from "./forum/index"
+import college from "./seatUpexam/college/index"
 const appReducer = combineReducers({
  school:school,
  forum:forum,
@@ -45,7 +46,8 @@ const appReducer = combineReducers({
  staffToclass:staffToclass,
  dashboard:dashboard,
  question:question,
- palnAndpricing:palnAndpricing
+ palnAndpricing:palnAndpricing,
+ college:college
 });
 
 // Create a root reducer with reset functionality

@@ -8,284 +8,226 @@ import { getExamType } from "@/api/ExamType";
 import { createQuestionPaper } from "@/api/QuestionPaper";
 import Footer from "@/app/layouts/_component/footer";
 import { getSubTopicByTopicId } from "@/api/subTopic";
+import { getCollege } from "@/api/college";
 
 const SelectExamForm = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  const [examName, setExamName] = useState("");
-  const [examType, setExamType] = useState("");
-  const [yearOrSet, setYearOrSet] = useState("");
-  const [test,setTest]=useState("")
+  const [examTypeId, setExamTypeId] = useState("");
+  const [subExamTypeId, setSubExamTypeId] = useState("");
+  const [examId, setExamId] = useState("");
   const [selectedExam, setSelectedExam] = useState<any>(null);
+
+  const [yearOrSet, setYearOrSet] = useState("");
   const [selectedSectionId, setSelectedSectionId] = useState("");
   const [selectedTopicId, setSelectedTopicId] = useState("");
   const [selectedSubTopicId, setSelectedSubTopicId] = useState("");
   const [level, setLevel] = useState("");
-
   const [subtopic, setSubtopic] = useState<any[]>([]);
 
   const examTypeData =
     useSelector((state: any) => state.examType.examType) || [];
-  const exam = useSelector((state: any) => state?.exam?.exam) || [];
+  const examList = useSelector((state: any) => state.exam.exam) || [];
+  const college =useSelector((state:any)=>state.college.college)
+  const selectedExamType = examTypeData.find(
+    (e: any) => e._id === examTypeId,
+  );
 
-  const selectedExamTypeName =
-    examTypeData.find((t: any) => t._id === examType)?.examType || "";
-
-  // ================= FETCH =================
+  // ================= FETCH EXAM TYPES =================
   useEffect(() => {
-    const payload: any = {};
-    dispatch(getExamType(payload));
+    dispatch(getExamType({}));
   }, [dispatch]);
 
-  // ================= YEARS / MOCKS =================
+  // ================= YEARS / MOCK SETS =================
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
   const mockSets = Array.from({ length: 50 }, (_, i) => `Mock ${i + 1}`);
-  const topicTest = Array.from({ length: 10 }, (_, i) => `Test ${i + 1}`);
-
+  const topicTests = Array.from({ length: 10 }, (_, i) => `Test ${i + 1}`);
 
   // ================= HANDLERS =================
   const handleExamTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const val = e.target.value;
-    setExamType(val);
-    setExamName("");
-    setYearOrSet("");
+    const id = e.target.value;
+    setExamTypeId(id);
+    setSubExamTypeId("");
+    setExamId("");
     setSelectedExam(null);
+    setYearOrSet("");
     setSelectedSectionId("");
     setSelectedTopicId("");
     setSelectedSubTopicId("");
     setLevel("");
     setSubtopic([]);
-    dispatch(getexam({ examtypeId: val }));
+     dispatch(
+      getexam({
+        examtypeId: id,
+      }),
+    );
+  };
+
+  const handleSubExamTypeChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const id = e.target.value;
+    setSubExamTypeId(id);
+
+    dispatch(
+      getexam({
+        examtypeId: examTypeId,
+        subExamTypeId: id,
+      }),
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const payload: any = {
-      examid: examName,
-      examTypeId: examType,
-      examformat: selectedExamTypeName.toLowerCase(),
+      examid: examId,
+      examTypeId,
+      examformat: selectedExamType?.examType?.toLowerCase(),
     };
 
-    // ✅ ONLY non-topic-wise gets questionPapername
-    if (selectedExamTypeName) {
-      payload.questionPapername = yearOrSet;
-    }
-
+    if (subExamTypeId) payload.subExamTypeId = subExamTypeId;
+    if (yearOrSet) payload.questionPapername = yearOrSet;
     if (selectedSectionId) payload.sectionId = selectedSectionId;
     if (selectedTopicId) payload.topicId = selectedTopicId;
     if (selectedSubTopicId) payload.subTopicId = selectedSubTopicId;
     if (level) payload.level = level.toLowerCase();
 
-    const response: any = await dispatch(createQuestionPaper(payload));
-
-    if (response.payload === true) {
+    const res: any = await dispatch(createQuestionPaper(payload));
+    if (res.payload === true) {
       await dispatch(handleSelectedExamDetail(payload));
       router.push("manageExam");
     }
   };
 
-  // ================= DERIVED DATA =================
+  // ================= DERIVED =================
   const sections = selectedExam?.sections || [];
-
   const topics =
     sections.find((s: any) => s.sectionDetail?._id === selectedSectionId)
       ?.topics || [];
 
-  // ================= SUBTOPIC FETCH =================
+  // ================= SUBTOPIC =================
   useEffect(() => {
     if (!selectedTopicId) return;
 
-    const fetchSubTopic = async () => {
-      const payload: any = { topicId: selectedTopicId };
-      const res: any = await dispatch(getSubTopicByTopicId(payload));
-      setSubtopic(res?.payload || []);
-    };
-
-    fetchSubTopic();
+    dispatch(getSubTopicByTopicId({ topicId: selectedTopicId })).then(
+      (res: any) => setSubtopic(res.payload || []),
+    );
   }, [selectedTopicId, dispatch]);
+
+  // useEffect(()=>{
+  //   const payload:any={
+  //     examTypes:subExamTypeId
+  //   }
+  //   if(examTypeId){
+  //     payload.examTypeId=examTypeId
+  //   }
+  //   if(subExamTypeId){
+  //     payload.examTypeId=subExamTypeId
+  //   }
+  //    dispatch(getCollege(payload));
+  // },[subExamTypeId,examTypeId])
+
 
   // ================= UI =================
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex-grow">
-        <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mb-8">
-          <div className="bg-[#F0F9FF] rounded-lg px-8 py-6 text-start font-poppins font-medium">
+        <div className="mx-auto px-6 mb-8">
+          <div className="bg-[#F0F9FF] rounded-lg px-8 py-6">
             <h1 className="text-[#FF5635] text-2xl font-poppins">
               Create Exam
             </h1>
           </div>
         </div>
 
-        <div className="mx-auto flex justify-center items-center">
+        <div className="flex justify-center">
           <form
             onSubmit={handleSubmit}
-            className="w-full max-w-md rounded-[8px] p-6"
+            className="w-full max-w-md p-6"
           >
             {/* Exam Type */}
             <select
-              value={examType}
+              value={examTypeId}
               onChange={handleExamTypeChange}
-              className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF]"
+              className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border"
             >
               <option value="">Choose Exam Type</option>
-              {examTypeData.map((type: any) => (
-                <option key={type._id} value={type._id}>
-                  {type.examType}
+              {examTypeData.map((t: any) => (
+                <option key={t._id} value={t._id}>
+                  {t.examType}
                 </option>
               ))}
             </select>
 
+            {/* Sub Exam Type (CUET / IPMAT) */}
+            {selectedExamType?.subMenuExists && (
+              <select
+                value={subExamTypeId}
+                onChange={handleSubExamTypeChange}
+                className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border"
+              >
+                <option value="">Choose Sub Exam</option>
+                {selectedExamType.subMenus.map((s: any) => (
+                  <option key={s._id} value={s._id}>
+                    {s.subExamType}
+                  </option>
+                ))}
+              </select>
+            )}
+
             {/* Exam */}
             <select
-              value={examName}
+              value={examId}
               onChange={(e) => {
                 const id = e.target.value;
-                setExamName(id);
-                setSelectedExam(exam.find((ex: any) => ex._id === id));
-                setSelectedSectionId("");
-                setSelectedTopicId("");
-                setSelectedSubTopicId("");
-                setLevel("");
+                setExamId(id);
+                setSelectedExam(examList.find((x: any) => x._id === id));
               }}
-              className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF]"
+              className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border"
             >
               <option value="">Choose Exam</option>
-              {exam.map((ex: any) => (
+              {examList.map((ex: any) => (
                 <option key={ex._id} value={ex._id}>
                   {ex.examname}
                 </option>
               ))}
             </select>
 
-            {/* Section */}
-            {(selectedExamTypeName.toLowerCase() === "sectional" ||
-              selectedExamTypeName.toLowerCase() === "topic wise") &&
-              sections.length > 0 && (
-                <select
-                  value={selectedSectionId}
-                  onChange={(e) => {
-                    setSelectedSectionId(e.target.value);
-                    setSelectedTopicId("");
-                    setSelectedSubTopicId("");
-                    setLevel("");
-                  }}
-                  className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF]"
-                >
-                  <option value="">Choose Section</option>
-                  {sections.map((sec: any) => (
-                    <option
-                      key={sec.sectionDetail._id}
-                      value={sec.sectionDetail._id}
-                    >
-                      {sec.sectionDetail.section}
-                    </option>
-                  ))}
-                </select>
-              )}
-
-            {/* Topic */}
-            {selectedExamTypeName.toLowerCase() === "topic wise" &&
-              selectedSectionId && (
-                <select
-                  value={selectedTopicId}
-                  onChange={(e) => {
-                    setSelectedTopicId(e.target.value);
-                    setSelectedSubTopicId("");
-                    setLevel("");
-                  }}
-                  className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF]"
-                >
-                  <option value="">Choose Topic</option>
-                  {topics.map((t: any) => (
-                    <option key={t._id} value={t._id}>
-                      {t.topic}
-                    </option>
-                  ))}
-                </select>
-              )}
-
-            {/* Sub Topic */}
-            {selectedTopicId && (
+            {/* Mock / Year */}
+            {selectedExamType?.examType === "PYQs" ? (
               <select
-                value={selectedSubTopicId}
-                onChange={(e) => {
-                  setSelectedSubTopicId(e.target.value);
-                  setLevel("");
-                }}
-                className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF]"
+                value={yearOrSet}
+                onChange={(e) => setYearOrSet(e.target.value)}
+                className="w-full mb-4 px-4 py-2 rounded-[8px] border"
               >
-                <option value="">Choose Subtopic</option>
-                {subtopic.map((st: any) => (
-                  <option key={st._id} value={st._id}>
-                    {st.subtopic}
+                <option value="">Select Year</option>
+                {years.map((y) => (
+                  <option key={y} value={y}>
+                    {y}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <select
+                value={yearOrSet}
+                onChange={(e) => setYearOrSet(e.target.value)}
+                className="w-full mb-4 px-4 py-2 rounded-[8px] border"
+              >
+                <option value="">Select Mock</option>
+                {mockSets.map((m) => (
+                  <option key={m} value={m}>
+                    {m}
                   </option>
                 ))}
               </select>
             )}
 
-            {/* Level */}
-            {selectedTopicId && (
-              <select
-                value={level}
-                onChange={(e) => setLevel(e.target.value)}
-                className="w-full mb-6 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF]"
-              >
-                <option value="">Choose Level</option>
-                <option value="Basic">Basic</option>
-                <option value="Advanced">Advanced</option>
-                <option value="Expert">Expert</option>
-              </select>
-            )}
-               {selectedTopicId && (
-               <select
-                  value={yearOrSet}
-                  onChange={(e) => setYearOrSet(e.target.value)}
-                  className="w-full mb-6 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF]"
-                >
-                  <option value="">Choose Test</option>
-                  {topicTest.map((set) => (
-                    <option key={set} value={set}>
-                      {set}
-                    </option>
-                  ))}
-                </select>
-            )}
-            {/* ❌ MOCK / YEAR REMOVED FOR TOPIC WISE */}
-            {selectedExamTypeName.toLowerCase() !== "topic wise" &&
-              (selectedExamTypeName.toLowerCase() === "pyqs" ? (
-                <select
-                  value={yearOrSet}
-                  onChange={(e) => setYearOrSet(e.target.value)}
-                  className="w-full mb-6 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF]"
-                >
-                  <option value="">Select Year</option>
-                  {years.map((yr) => (
-                    <option key={yr} value={yr}>
-                      {yr}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <select
-                  value={yearOrSet}
-                  onChange={(e) => setYearOrSet(e.target.value)}
-                  className="w-full mb-6 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF]"
-                >
-                  <option value="">Select Mock Set</option>
-                  {mockSets.map((set) => (
-                    <option key={set} value={set}>
-                      {set}
-                    </option>
-                  ))}
-                </select>
-              ))}
-
             <button
               type="submit"
-              className="w-full py-2 bg-[#FF5635] text-white rounded-[8px] font-poppins"
+              className="w-full py-2 bg-[#FF5635] text-white rounded-[8px]"
             >
               Submit
             </button>

@@ -37,13 +37,15 @@ const ExamForm: React.FC<ExamFormProps> = ({data}) => {
   const updateExamData = useSelector((state: any) => state?.exam?.updateexam);
   const sections = useSelector((state: any) => state?.section?.section) || [];
   const topics = useSelector((state: any) => state?.topic?.topic) || [];
-
+  const collegeList = useSelector((state: any) => state.college.college);
   const [examName, setExamName] = useState("");
   const [fullExamDuration, setFullExamDuration] = useState("");
   const [isSwitchable, setIsSwitchable] = useState("yes");
   const [iscalculater, setIscalculater] = useState("yes");
   const [mockDate, setMockDate] = useState("");
   const [isSection, setIsSection] = useState("true");
+    const [selectedCollege, setSelectedCollege] = useState<any>(null);
+  
   const [sectionsData, setSectionsData] = useState<SectionData[]>([
     {
       sectionId: "",
@@ -80,7 +82,10 @@ const ExamForm: React.FC<ExamFormProps> = ({data}) => {
     value: t._id,
     label: t.topic,
   }));
-
+const collegeData = collegeList.map((val: any) => ({
+  label: val.examname,
+  value: val._id,
+}));
   // Load sections
   useEffect(() => {
     const payload: any = {};
@@ -111,6 +116,10 @@ useEffect(()=>{
       updateExamData.examType?.includes(e.value),
     );
     setSelectedExamTypes(foundExamTypes);
+      const collegeformet=collegeData.filter((e: any) =>
+      updateExamData.collegeId?.includes(e?.value),
+    );
+    setSelectedCollege(collegeformet)
   if (updateExamData.subexamType?.length) {
       const mappedSubs = updateExamData?.subexamType?.map((s: any) => {
         const parent = examTypeOptions.find(
@@ -131,7 +140,9 @@ useEffect(()=>{
         setSectionsData(
           updateExamData.sections?.map((s: any) => ({
             sectionId: s.sectionId || "",
-            topic: s.topic || [],
+          topic: Array.isArray(s.topics)
+          ? s.topics.map((t: any) => t._id)
+         : [],
             noOfQuestions: s.noOfQuestions?.toString() || "",
             duration: s.duration?.toString() || "",
             correctMark: s.correctMark?.toString() || "",
@@ -209,7 +220,8 @@ useEffect(()=>{
     }
 
     const payload: any = {
-      examname: examName.trim(),
+      examname: selectedCollege.label,
+      collegeId:selectedCollege.value,
       switchable: isSwitchable === "yes",
       isSection: isSection === "true",
       mockDate: mockDate,
@@ -261,9 +273,10 @@ useEffect(()=>{
       } else {
         await dispatch(createexam(payload));
       }
-      const data: any = null;
-      await dispatch(getexam(data));
-      dispatch(handlesetUpdateExam(data));
+      const data1: any = null;
+      const payload1: any = {examtypeId: data?.id};
+      await dispatch(getexam(payload1));
+      dispatch(handlesetUpdateExam(data1));
 
       // Reset form
       setExamName("");
@@ -367,14 +380,19 @@ const handleCancleSubmit=()=>{
         ) : null,
       )}
 
-        <div className="flex-1">
-          <Label className=" block font-dm-sans text-md">Exam Name</Label>
-          <Input
-            value={examName}
-            onChange={(e) => setExamName(e.target.value)}
-            placeholder="Enter Exam Name (Ex. IPMAT, NPAT etc)"
-            className="max-w-md px-4 py-2 border border-[#D0D5DD] rounded-[2px] font-dm-sans font-normal focus:ring-none "
-          />
+          <div className="flex-1">
+  <Label className="block font-dm-sans text-md mb-1">
+    Exam Name
+  </Label>
+  <Select
+    options={collegeData}
+    value={selectedCollege}
+    onChange={(option: any) => setSelectedCollege(option)}
+    placeholder="Select College"
+    isClearable
+    className="max-w-md"
+    classNamePrefix="react-select"
+  />
         </div>
         {/* <div>
           <Label className="mb-4 block font-dm-sans text-md">

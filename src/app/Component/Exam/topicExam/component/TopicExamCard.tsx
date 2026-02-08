@@ -42,7 +42,7 @@ const TopicBlock = ({ topic, hasAccess }: any) => {
         onClick={() => setOpen(!open)}
       >
         <div className="font-semibold">
-          Exam Topic {topic?.topicName}
+           {topic?.topicName}
           <span className="text-sm font-normal">
             {" "} | Sub Topics {countSubTopics}
           </span>
