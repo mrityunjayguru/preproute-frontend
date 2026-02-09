@@ -51,6 +51,7 @@ interface Props {
   paperName: string;
   currentQuestionIndex: number;
   sectionQuestions: Question[];
+  examResult:any;
   getQuestionByNumberId: (idx: number) => void;
 }
 
@@ -61,6 +62,7 @@ const QuestionWiswView: React.FC<Props> = ({
   currentQuestionIndex,
   sectionQuestions,
   getQuestionByNumberId,
+  examResult,
 }) => {
   // Render HTML/LaTeX content
   const dispatch=useDispatch<AppDispatch>()

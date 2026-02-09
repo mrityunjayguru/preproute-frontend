@@ -340,6 +340,7 @@ useEffect(() => {
       <div className="flex flex-col lg:flex-row flex-1">
         <QuestionWiswView
           question={question}
+          examResult={examResult}
           examName={examResult?.examdetail?.examname}
           paperName={examResult?.questionpaper?.questionPapername}
           currentQuestionIndex={currentQuestionIndex}
@@ -350,6 +351,7 @@ useEffect(() => {
         <QuestionWiseRightSection
           question={question}
           userLogin=""
+           examResult={examResult}
           totalNoOfQuestions={totalNoOfQuestions}
           currentStatus={currentStatus}
           currentQuestionIndex={currentQuestionIndex}

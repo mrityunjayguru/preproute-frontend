@@ -48,25 +48,24 @@ function Analytics() {
   // Exam Types
   const examTypes = useMemo(
     () => givenAllExam.map((item: any) => item.examType),
-    [givenAllExam]
+    [givenAllExam],
   );
+  console.log(examTypes,"examTypesexamTypes")
 
   // Selected ExamType Object
   const selectedExamType = useMemo(
     () =>
       givenAllExam.find(
-        (item: any) => item.examType._id === selectedExamTypeId
+        (item: any) => item.examType._id === selectedExamTypeId,
       ),
-    [givenAllExam, selectedExamTypeId]
+    [givenAllExam, selectedExamTypeId],
   );
 
   // Exams
   const exams = selectedExamType?.exams || [];
 
   // Selected Exam Object
-  const selectedExam = exams.find(
-    (ex: any) => ex._id === selectedExamId
-  );
+  const selectedExam = exams.find((ex: any) => ex._id === selectedExamId);
 
   const isSectional = selectedExamType?.examType?.name === "Sectional";
 
@@ -108,7 +107,7 @@ function Analytics() {
       selectedQuestion
     ) {
       const selectedQP = questionPapers.find(
-        (q: any) => q._id === selectedQuestion
+        (q: any) => q._id === selectedQuestion,
       );
 
       dispatch(
@@ -118,7 +117,7 @@ function Analytics() {
           selectedExamId,
           questionPaperID: selectedQuestion,
           sectionId: isSectional ? selectedQP?.sectionId : undefined,
-        })
+        }),
       );
     }
   }, [
@@ -192,7 +191,7 @@ function Analytics() {
                 <SelectContent>
                   {exams.map((ex: any) => (
                     <SelectItem key={ex._id} value={ex._id}>
-                      {ex.name}
+                      {ex.subjectName || ex.name }
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -232,9 +231,7 @@ function Analytics() {
 
         {givenAllExam.length === 0 && (
           <div className="flex justify-center my-10">
-            <p className="text-xl font-medium">
-              No exams attempted yet.
-            </p>
+            <p className="text-xl font-medium">No exams attempted yet.</p>
           </div>
         )}
       </div>

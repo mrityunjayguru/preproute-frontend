@@ -55,7 +55,7 @@ export const Header: React.FC = () => {
     dispatch(resetQuestionByExamID(payload));
     dispatch(resetQuestion(payload));
 
-       const payload2: any = {
+      const payload2: any = {
       userId: userLogin?._id,
       examTypeId:exam?._id,
     };
@@ -66,9 +66,7 @@ export const Header: React.FC = () => {
     router.push("/Exam/sectionalExam");
     }else{
     router.push("/Exam/Mocks");
-
     }
-
   };
 
   const handleLogoutClick = async () => {
@@ -114,7 +112,13 @@ export const Header: React.FC = () => {
       subExamTypeId:sub?._id,
     };
    await dispatch(getCommonexam(payload));
+   if(sub?.subExamType=="CUET"){
+    router.push("/Exam/CUET");
+
+   }else{
     router.push("/Exam/Mocks");
+
+   }
     
   };
 

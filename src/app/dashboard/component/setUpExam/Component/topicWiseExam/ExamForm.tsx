@@ -139,12 +139,11 @@ useEffect(()=>{
       });
       setSelectedSubExamTypes(mappedSubs);
     }
-    console.log(updateExamData,"updateExamDataupdateExamData")
       if (updateExamData.isSection) {
         setSectionsData(
           updateExamData.sections?.map((s: any) => ({
             sectionId: s.sectionId || "",
-          topic: Array.isArray(s.topics)
+           topic: Array.isArray(s.topics)
           ? s.topics.map((t: any) => t._id)
          : [],
             noOfQuestions: s.noOfQuestions?.toString() || "",

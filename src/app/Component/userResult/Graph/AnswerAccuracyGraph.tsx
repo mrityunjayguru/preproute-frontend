@@ -83,11 +83,9 @@ const data: SectionData[] = useMemo(() => {
 }, [examResult]);
 
 
-  console.log(data,"datadata")
 
   return (
     <div className="rounded-[8px] p-6">
-      {/* Header */}
       <div className="flex flex-col gap-3 mb-4 font-poppins">
         <h3 className="text-lg font-medium text-[#005EB6]">Answer Accuracy</h3>
 

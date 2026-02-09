@@ -1,239 +1,277 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { getexam, handleSelectedExamDetail } from "@/api/Exam";
 import { getExamType } from "@/api/ExamType";
 import { createQuestionPaper } from "@/api/QuestionPaper";
-import Footer from "@/app/layouts/_component/footer";
 import { getSubTopicByTopicId } from "@/api/subTopic";
-import { getCollege } from "@/api/college";
+import Footer from "@/app/layouts/_component/footer";
+
+// Reusable Select Component
+const FormSelect = ({ value, onChange, options, placeholder, labelKey = "label", valueKey = "value" }: any) => (
+  <select
+    value={value}
+    onChange={onChange}
+    className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border focus:outline-none focus:ring-2 focus:ring-[#FF5635]/20"
+  >
+    <option value="">{placeholder}</option>
+    {options?.map((opt: any) => (
+      <option key={opt[valueKey]} value={opt[valueKey]}>
+        {opt[labelKey]}
+      </option>
+    ))}
+  </select>
+);
 
 const SelectExamForm = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  const [examTypeId, setExamTypeId] = useState("");
-  const [subExamTypeId, setSubExamTypeId] = useState("");
-  const [examId, setExamId] = useState("");
+  // ================= STATE =================
+  const [formData, setFormData] = useState({
+    examTypeId: "",
+    subExamTypeId: "",
+    examId: "",
+    selectedSectionId: "",
+    level: "",
+    selectedTopicId: "",
+    subTopicId: "", // ✅ Added
+    testName: "",
+    year: "",
+  });
+
   const [selectedExam, setSelectedExam] = useState<any>(null);
 
-  const [yearOrSet, setYearOrSet] = useState("");
-  const [selectedSectionId, setSelectedSectionId] = useState("");
-  const [selectedTopicId, setSelectedTopicId] = useState("");
-  const [selectedSubTopicId, setSelectedSubTopicId] = useState("");
-  const [level, setLevel] = useState("");
-  const [subtopic, setSubtopic] = useState<any[]>([]);
-
-  const examTypeData =
-    useSelector((state: any) => state.examType.examType) || [];
+  // ================= STORE =================
+  const examTypeData = useSelector((state: any) => state.examType.examType) || [];
   const examList = useSelector((state: any) => state.exam.exam) || [];
-  const college =useSelector((state:any)=>state.college.college)
-  const selectedExamType = examTypeData.find(
-    (e: any) => e._id === examTypeId,
-  );
+  const subTopicData = useSelector((state: any) => state.subTopic.subTopic) || [];
 
-  // ================= FETCH EXAM TYPES =================
+  // ================= DERIVED DATA =================
+  const selectedExamType = useMemo(() => 
+    examTypeData.find((e: any) => e._id === formData.examTypeId), 
+  [examTypeData, formData.examTypeId]);
+
+  const examFormat = selectedExamType?.examType?.toLowerCase();
+  
+  const isCUET = useMemo(() => {
+    const sub = selectedExamType?.subMenus?.find((s: any) => s._id === formData.subExamTypeId);
+    return sub?.subExamType?.toLowerCase() === "cuet";
+  }, [selectedExamType, formData.subExamTypeId]);
+
+  const sections = selectedExam?.sections || [];
+  
+  const topicsBySection = useMemo(() => 
+    sections.find((s: any) => s.sectionDetail?._id === formData.selectedSectionId)?.topics || [],
+  [sections, formData.selectedSectionId]);
+
+  // ================= FETCHING =================
   useEffect(() => {
     dispatch(getExamType({}));
   }, [dispatch]);
 
-  // ================= YEARS / MOCK SETS =================
+  useEffect(() => {
+    if (formData.selectedTopicId) {
+      dispatch(getSubTopicByTopicId({ topicId: formData.selectedTopicId }));
+    }
+  }, [formData.selectedTopicId, dispatch]);
+
+  // ================= CONSTANTS =================
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 10 }, (_, i) => currentYear - i);
-  const mockSets = Array.from({ length: 50 }, (_, i) => `Mock ${i + 1}`);
-  const topicTests = Array.from({ length: 10 }, (_, i) => `Test ${i + 1}`);
+  const years = Array.from({ length: 10 }, (_, i) => ({ val: currentYear - i, lbl: currentYear - i }));
+  const mocks = Array.from({ length: 10 }, (_, i) => ({ val: `Mock ${i + 1}`, lbl: `Mock ${i + 1}` }));
+  const tests = Array.from({ length: 10 }, (_, i) => ({ val: `Test ${i + 1}`, lbl: `Test ${i + 1}` }));
 
   // ================= HANDLERS =================
-  const handleExamTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const id = e.target.value;
-    setExamTypeId(id);
-    setSubExamTypeId("");
-    setExamId("");
-    setSelectedExam(null);
-    setYearOrSet("");
-    setSelectedSectionId("");
-    setSelectedTopicId("");
-    setSelectedSubTopicId("");
-    setLevel("");
-    setSubtopic([]);
-     dispatch(
-      getexam({
-        examtypeId: id,
-      }),
-    );
+  const updateForm = (updates: Partial<typeof formData>) => {
+    setFormData(prev => ({ ...prev, ...updates }));
   };
 
-  const handleSubExamTypeChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
+  const handleExamTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const id = e.target.value;
-    setSubExamTypeId(id);
+    setFormData({
+      examTypeId: id, subExamTypeId: "", examId: "", selectedSectionId: "",
+      level: "", selectedTopicId: "", subTopicId: "", testName: "", year: ""
+    });
+    setSelectedExam(null);
+    dispatch(getexam({ examtypeId: id }));
+  };
 
-    dispatch(
-      getexam({
-        examtypeId: examTypeId,
-        subExamTypeId: id,
-      }),
-    );
+  const handleSubExamTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const id = e.target.value;
+    updateForm({ subExamTypeId: id, examId: "" });
+    setSelectedExam(null);
+    dispatch(getexam({ examtypeId: formData.examTypeId, subExamTypeId: id }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const payload: any = {
-      examid: examId,
-      examTypeId,
-      examformat: selectedExamType?.examType?.toLowerCase(),
+      examid: formData.examId,
+      examTypeId: formData.examTypeId,
+      examformat: examFormat,
     };
 
-    if (subExamTypeId) payload.subExamTypeId = subExamTypeId;
-    if (yearOrSet) payload.questionPapername = yearOrSet;
-    if (selectedSectionId) payload.sectionId = selectedSectionId;
-    if (selectedTopicId) payload.topicId = selectedTopicId;
-    if (selectedSubTopicId) payload.subTopicId = selectedSubTopicId;
-    if (level) payload.level = level.toLowerCase();
+    if (formData.subExamTypeId) payload.subExamTypeId = formData.subExamTypeId;
+if(formData.subExamTypeId){
+  payload.subExamTypeId=formData.subExamTypeId
+}
+    switch (examFormat) {
+      case "sectional":
+        payload.sectionId = formData.selectedSectionId;
+        payload.questionPapername = formData.testName;
+        break;
+      case "topic wise":
+        payload.sectionId = formData.selectedSectionId;
+        payload.level = formData.level.toLowerCase();
+        payload.topicId = formData.selectedTopicId;
+        payload.subTopicId = formData.subTopicId; // ✅ Passed subTopicId
+        payload.questionPapername = formData.testName;
+        break;
+      case "mocks":
+        payload.questionPapername = formData.testName;
+        break;
+      case "pyqs":
+        payload.questionPapername = formData.year;
+        break;
+    }
 
     const res: any = await dispatch(createQuestionPaper(payload));
     if (res.payload === true) {
-      await dispatch(handleSelectedExamDetail(payload));
+      dispatch(handleSelectedExamDetail(payload));
       router.push("manageExam");
     }
   };
 
-  // ================= DERIVED =================
-  const sections = selectedExam?.sections || [];
-  const topics =
-    sections.find((s: any) => s.sectionDetail?._id === selectedSectionId)
-      ?.topics || [];
-
-  // ================= SUBTOPIC =================
-  useEffect(() => {
-    if (!selectedTopicId) return;
-
-    dispatch(getSubTopicByTopicId({ topicId: selectedTopicId })).then(
-      (res: any) => setSubtopic(res.payload || []),
-    );
-  }, [selectedTopicId, dispatch]);
-
-  // useEffect(()=>{
-  //   const payload:any={
-  //     examTypes:subExamTypeId
-  //   }
-  //   if(examTypeId){
-  //     payload.examTypeId=examTypeId
-  //   }
-  //   if(subExamTypeId){
-  //     payload.examTypeId=subExamTypeId
-  //   }
-  //    dispatch(getCollege(payload));
-  // },[subExamTypeId,examTypeId])
-
-
-  // ================= UI =================
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex-grow">
-        <div className="mx-auto px-6 mb-8">
+      <main className="flex-grow">
+        <div className="mx-auto px-6 mb-8 mt-4">
           <div className="bg-[#F0F9FF] rounded-lg px-8 py-6">
-            <h1 className="text-[#FF5635] text-2xl font-poppins">
-              Create Exam
-            </h1>
+            <h1 className="text-[#FF5635] text-2xl font-poppins font-semibold">Create Exam</h1>
           </div>
         </div>
 
         <div className="flex justify-center">
-          <form
-            onSubmit={handleSubmit}
-            className="w-full max-w-md p-6"
-          >
-            {/* Exam Type */}
-            <select
-              value={examTypeId}
+          <form onSubmit={handleSubmit} className="w-full max-w-md p-6">
+            
+            <FormSelect 
+              value={formData.examTypeId}
               onChange={handleExamTypeChange}
-              className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border"
-            >
-              <option value="">Choose Exam Type</option>
-              {examTypeData.map((t: any) => (
-                <option key={t._id} value={t._id}>
-                  {t.examType}
-                </option>
-              ))}
-            </select>
+              options={examTypeData}
+              placeholder="Choose Exam Type"
+              labelKey="examType"
+              valueKey="_id"
+            />
 
-            {/* Sub Exam Type (CUET / IPMAT) */}
             {selectedExamType?.subMenuExists && (
-              <select
-                value={subExamTypeId}
+              <FormSelect 
+                value={formData.subExamTypeId}
                 onChange={handleSubExamTypeChange}
-                className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border"
-              >
-                <option value="">Choose Sub Exam</option>
-                {selectedExamType.subMenus.map((s: any) => (
-                  <option key={s._id} value={s._id}>
-                    {s.subExamType}
-                  </option>
-                ))}
-              </select>
+                options={selectedExamType.subMenus}
+                placeholder="Choose Sub Exam"
+                labelKey="subExamType"
+                valueKey="_id"
+              />
             )}
 
-            {/* Exam */}
-            <select
-              value={examId}
-              onChange={(e) => {
-                const id = e.target.value;
-                setExamId(id);
-                setSelectedExam(examList.find((x: any) => x._id === id));
-              }}
-              className="w-full mb-4 px-4 py-2 rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border"
-            >
-              <option value="">Choose Exam</option>
-              {examList.map((ex: any) => (
-                <option key={ex._id} value={ex._id}>
-                  {ex.examname}
-                </option>
-              ))}
-            </select>
+            {formData.examTypeId && (
+              <FormSelect 
+                value={formData.examId}
+                onChange={(e: any) => {
+                  const id = e.target.value;
+                  updateForm({ examId: id });
+                  setSelectedExam(examList.find((x: any) => x._id === id));
+                }}
+                options={examList}
+                placeholder={isCUET ? "Choose Subject" : "Choose Exam"}
+                labelKey={isCUET ? "subjectName" : "examname"}
+                valueKey="_id"
+              />
+            )}
 
-            {/* Mock / Year */}
-            {selectedExamType?.examType === "PYQs" ? (
-              <select
-                value={yearOrSet}
-                onChange={(e) => setYearOrSet(e.target.value)}
-                className="w-full mb-4 px-4 py-2 rounded-[8px] border"
-              >
-                <option value="">Select Year</option>
-                {years.map((y) => (
-                  <option key={y} value={y}>
-                    {y}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <select
-                value={yearOrSet}
-                onChange={(e) => setYearOrSet(e.target.value)}
-                className="w-full mb-4 px-4 py-2 rounded-[8px] border"
-              >
-                <option value="">Select Mock</option>
-                {mockSets.map((m) => (
-                  <option key={m} value={m}>
-                    {m}
-                  </option>
-                ))}
-              </select>
+            {(examFormat === "sectional" || examFormat === "topic wise") && (
+              <FormSelect 
+                value={formData.selectedSectionId}
+                onChange={(e: any) => updateForm({ selectedSectionId: e.target.value, level: "", selectedTopicId: "", subTopicId: "" })}
+                options={sections.map((s: any) => ({ val: s.sectionDetail._id, lbl: s.sectionDetail.section }))}
+                placeholder="Choose Section"
+                labelKey="lbl"
+                valueKey="val"
+              />
+            )}
+
+            {examFormat === "topic wise" && formData.selectedSectionId && (
+              <>
+                <FormSelect 
+                  value={formData.level}
+                  onChange={(e: any) => updateForm({ level: e.target.value, selectedTopicId: "", subTopicId: "" })}
+                  options={[{val: "Basic", lbl: "Basic"}, {val: "Advance", lbl: "Advance"}, {val: "Expert", lbl: "Expert"}]}
+                  placeholder="Choose Level"
+                  labelKey="lbl"
+                  valueKey="val"
+                />
+                
+                {formData.level && (
+                  <FormSelect 
+                    value={formData.selectedTopicId}
+                    onChange={(e: any) => updateForm({ selectedTopicId: e.target.value, subTopicId: "" })}
+                    options={topicsBySection.map((t: any) => ({ val: t._id, lbl: t.topic }))}
+                    placeholder="Choose Topic"
+                    labelKey="lbl"
+                    valueKey="val"
+                  />
+                )}
+
+                {/* ✅ Sub Topic Selection */}
+                {formData.selectedTopicId && (
+                  <FormSelect 
+                    value={formData.subTopicId}
+                    onChange={(e: any) => updateForm({ subTopicId: e.target.value })}
+                    options={subTopicData.map((st: any) => ({ val: st._id, lbl: st.subtopic }))}
+                    placeholder="Choose Sub-Topic"
+                    labelKey="lbl"
+                    valueKey="val"
+                  />
+                )}
+              </>
+            )}
+
+            {(examFormat === "mocks" || examFormat === "sectional" || examFormat === "topic wise") && (
+              <FormSelect 
+                value={formData.testName}
+                onChange={(e: any) => updateForm({ testName: e.target.value })}
+                options={examFormat === "topic wise" ? tests : mocks}
+                placeholder={examFormat === "topic wise" ? "Choose Test" : "Choose Mock"}
+                labelKey="lbl"
+                valueKey="val"
+              />
+            )}
+
+            {examFormat === "pyqs" && (
+              <FormSelect 
+                value={formData.year}
+                onChange={(e: any) => updateForm({ year: e.target.value })}
+                options={years}
+                placeholder="Choose Year"
+                labelKey="lbl"
+                valueKey="val"
+              />
             )}
 
             <button
               type="submit"
-              className="w-full py-2 bg-[#FF5635] text-white rounded-[8px]"
+              disabled={!formData.examId}
+              className="w-full py-3 mt-2 bg-[#FF5635] text-white rounded-[8px] font-semibold hover:bg-[#e44d2f] transition-all disabled:opacity-50"
             >
               Submit
             </button>
           </form>
         </div>
-      </div>
+      </main>
       <Footer />
     </div>
   );

@@ -7,6 +7,7 @@ interface Props {
   formatTime: (seconds: number) => string;
   examName?: string;
   paperName?: string;
+  examData:any
 }
 
 const HeaderSection: React.FC<Props> = ({
@@ -14,7 +15,9 @@ const HeaderSection: React.FC<Props> = ({
   formatTime,
   examName,
   paperName,
+  examData,
 }) => {
+  console.log(examData[0]?.exam?.subjectName,"examDataexamData")
   return (
     <div className="bg-white  border-b-[0.1px]">
       {/* Top Header Row */}
@@ -22,7 +25,7 @@ const HeaderSection: React.FC<Props> = ({
         {/* Exam Title */}
         <div className="flex items-center">
           <h1 className="text-lg font-normal text-gray-800 text-center md:text-left">
-            {examName || "IPMAT-Indore"}{" "}
+            {examName || "IPMAT-Indore"}{" "} {examData[0]?.exam?.subjectName} {" "}
             <span className="text-orange-500">{capitalizeWords(paperName) || "Mock One"}</span>
           </h1>
         </div>
