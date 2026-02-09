@@ -7,54 +7,52 @@ import USER from "@/assets/vectors/user.svg";
 
 const MainCommentBox = () => {
   const dispatch = useDispatch<AppDispatch>();
-   const postdetail = useSelector(
-      (state: any) => state.forum.singleForum
-    );
-      const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
-    
+  const postdetail = useSelector(
+    (state: any) => state.forum.singleForum
+  );
+  const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
+
   const [comment, setComment] = useState("");
   const imageUrl = userLogin?.image
     ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${userLogin.image}`
-    : USER;
-const commentPost=async()=>{
-    if(userLogin?.community) return 
-  const payload:any={
-    content:comment,
-    postId:postdetail?.[0]?._id
+    : USER.src;
+  const commentPost = async () => {
+    if (userLogin?.community) return
+    const payload: any = {
+      content: comment,
+      postId: postdetail?.[0]?._id
+    }
+    await dispatch(addComment(payload))
+    setComment("")
+    await dispatch(getComments(payload))
   }
-  await dispatch(addComment(payload))
-  setComment("")
-  await dispatch(getComments(payload))
-}
   return (
-    <div className="flex gap-3 mt-6">
+    <div className="flex flex-col md:flex-row gap-3 mb-6">
       {/* Avatar */}
       <img
         src={imageUrl}
-        className="w-9 h-9 rounded-full object-cover"
+        className="w-10 h-10 rounded-full object-cover hidden md:block"
       />
 
       {/* Input */}
-      <div className="flex-1 flex items-center gap-2 border rounded-full px-4 py-2 bg-white">
+      <div className="flex-1 flex flex-col md:flex-row items-center gap-3 w-full">
         <input
           value={comment}
           disabled={userLogin?.community}
           onChange={(e) => setComment(e.target.value)}
-          placeholder="add comment"
-          className="flex-1 text-sm outline-none"
+          placeholder="Add a comment..."
+          className="flex-1 text-sm outline-none border border-gray-300 rouneded-[2px] px-4 py-2.5 focus:border-[#005EB6] w-full"
         />
 
         <button
-        onClick={commentPost}
+          onClick={commentPost}
           disabled={!comment.trim()}
-          className={`text-sm px-3 py-1 rounded-full transition
-            ${
-              comment.trim()
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed"
+          className={`text-sm w-full md:w-[200px] px-6 py-2.5 font-medium transition ${comment.trim()
+            ? "bg-[#005EB6] text-white hover:bg-[#004A8F]"
+            : "bg-gray-200 text-gray-400 cursor-not-allowed"
             }`}
         >
-          Reply
+          Post
         </button>
       </div>
     </div>

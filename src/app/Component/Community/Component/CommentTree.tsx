@@ -4,17 +4,24 @@ import USER from "@/assets/vectors/user.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { addComment, getComments, likeComment } from "@/api/forum";
-import hert from "@/assets/images/hert.png";
+import hert from "@/assets/images/hert.png"; // Keeping existing if needed, though likely unused now
+import Heart from "@/assets/vectors/heart.svg";
+import Image from "next/image";
 import Popup from "../../ManageExam/Component/Report";
 import { createReport } from "@/api/Users";
+import Report from "@/assets/vectors/warning.svg";
+
+import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
+import SocialMedia from "../../Home/_componets/social-media";
+
 const CommentTree = ({ comment }: any) => {
   const dispatch = useDispatch<AppDispatch>();
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
-  const [commentId,setCommentId]=useState<any>(null)
+  const [commentId, setCommentId] = useState<any>(null)
   const [showReplyInput, setShowReplyInput] = useState(false);
   const [showReplies, setShowReplies] = useState(false);
   const [commentData, setCommentData] = useState<any>(null);
-  const [report,setReport]=useState(false);
+  const [report, setReport] = useState(false);
   const [val, setVal] = useState("");
 
   const imageUrl = userLogin?.image
@@ -41,8 +48,8 @@ const CommentTree = ({ comment }: any) => {
 
   // ➕ Submit Reply
   const handleSubmit = async () => {
-    
-    if(userLogin?.community) return 
+
+    if (userLogin?.community) return
     if (!val.trim()) return;
 
     const payload = {
@@ -58,109 +65,138 @@ const CommentTree = ({ comment }: any) => {
     setShowReplyInput(false);
     setShowReplies(true);
   };
-  
-const handleReport = (comment:any) => {
-  setCommentId(comment)
-setReport(true)
-  // Implement report functionality here
-}
-const handleSubmitReport=async(val:any)=>{
-  // console.log("report value",commentId)
-  const payload:any={
-    title:val,
-    commentId:commentId?._id,
-    userId:userLogin?._id,
-    type:"commentReport"
+
+  const handleReport = (comment: any) => {
+    setCommentId(comment)
+    setReport(true)
+    // Implement report functionality here
   }
-  await dispatch(createReport(payload))
-  setReport(false)
-}
+  const handleSubmitReport = async (val: any) => {
+    // console.log("report value",commentId)
+    const payload: any = {
+      title: val,
+      commentId: commentId?._id,
+      userId: userLogin?._id,
+      type: "commentReport"
+    }
+    await dispatch(createReport(payload))
+    setReport(false)
+  }
 
   return (
-<>
-<Popup
-  isOpen={report}
-  onClose={() => setReport(false)}
-  onSubmit={handleSubmitReport}
-  title="Report Comment"
-  question=""
-/>
-<div className="mt-4 bg-[#fff]">
-      {/* COMMENT CARD */}
-      <div className="flex gap-3">
-        <img
-          src={
-            comment?.user?.image
-              ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${comment.user.image}`
-              : USER
-          }
-          className="w-9 h-9 rounded-full object-cover"
-        />
-
-        <div className="flex-1  rounded-xl px-4 py-3">
-          {/* Header */}
-          <div className="flex justify-between">
-            <div className="text-sm">
-              <span className="font-semibold">{comment.user?.username}</span>
-              <span className="text-xs text-gray-500 ml-2">
-                · {new Date(comment.createdAt).toLocaleString()}
-              </span>
+    <>
+      <Popup
+        isOpen={report}
+        onClose={() => setReport(false)}
+        onSubmit={handleSubmitReport}
+        title="Report Comment"
+        question=""
+      />
+      <div className={`bg-white py-6 mb-6 ${comment.length >= 2 ? "border-b border-gray-100" : ""}`}>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+            {/* Left: User Avatar and Info */}
+            <div className="flex gap-3 items-start w-full md:w-auto">
+              <img
+                src={
+                  comment?.user?.image
+                    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}${comment.user.image}`
+                    : USER.src
+                }
+                className="w-10 h-10 rounded-full object-cover"
+              />
+              <div className="min-w-[120px]">
+                <p className="font-medium text-sm text-[#1A1D1F]">
+                  {comment.user?.username}
+                </p>
+                <p className="text-xs text-[#6B7280]">
+                  {new Date(comment.createdAt).toLocaleDateString('en-US', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                  }).replace(',', '')}
+                </p>
+              </div>
             </div>
-            {/* <MoreHorizontal size={16} className="text-gray-400" /> */}
 
-            <span onClick={()=>handleReport(comment)} className="cursor-pointer">Report</span>
+            {/* Right: Actions */}
+            <div className="flex flex-row md:flex-col items-center md:items-end gap-3 w-full md:w-auto justify-between md:justify-start">
+              <button
+                onClick={() => handleLikeComment(comment)}
+                className={`flex items-center gap-2  cursor-pointer transition ${comment?.isLiked ? "text-[#005EB6]" : "text-[#6B7280]"}`}
+              >
+                <div className={`p-1.5 rounded-full flex items-center justify-center ${comment?.isLiked ? "bg-[#5071FF]" : "bg-gray-100"}`}>
+                  <Image
+                    src={Heart}
+                    alt="Like"
+                    height={14}
+                    width={14}
+                    className={comment?.isLiked ? "" : "invert opacity-50"}
+                  />
+                </div>
+                <span className="text-sm">{comment?.likeCount ?? 0} Likes</span>
+              </button>
+
+              <button
+                onClick={() => handleReport(comment)}
+                className="text-xs  text-[#6B7280] hover:text-red-500 transition cursor-pointer flex items-center gap-2"
+              >
+                <span className="text-sm">
+                  <Image
+                    src={Report}
+                    alt="Report"
+                    height={15}
+                    width={15}
+                  />
+                </span>
+                <span className="text-sm">Report this topic</span>
+              </button>
+            </div>
           </div>
 
-          {/* Content */}
-          <p className="text-sm font-[400] text-[#000000] mt-1">{comment.content}</p>
+          {/* Bottom: Content */}
+          <div className="pl-[52px]">
+            {comment.isBestAnswer && (
+              <span className="inline-block bg-[#D4F4DD] text-[#22C55E] text-xs font-medium px-3 py-1 rounded-sm mb-3">
+                Best Answer
+              </span>
+            )}
 
-          {/* Actions */}
-          <div className="flex gap-4 mt-2 text-xs text-gray-500">
-            {/* Like */}
-          <div
-  onClick={() => handleLikeComment(comment)}
-  className={`cursor-pointer flex items-center gap-1 px-2 py-1 rounded-full shadow transition
-    ${comment?.isLiked ? "bg-blue-50 text-blue-600" : "bg-blue-600 text-gray-600"}
-  `}
->
-  <img
-    src={comment?.isLiked ? hert.src : hert.src}
-    alt="like"
-    className="w-4 h-4 object-contain"
-  />
+            <p className="text-sm text-[#374151] leading-relaxed mb-2">
+              {comment.content}
+            </p>
 
-  <span className="text-xs text-[#fff] font-medium">
-    {comment?.likeCount ?? 0}
-  </span>
-</div>
-
-
-            {/* Reply Toggle */}
-            <div
-              onClick={() => handleReplyClick(comment)}
-              className="cursor-pointer hover:text-blue-600"
-            >
-              Reply {comment.replyCount > 0 && `(${comment.replyCount})`}
-            </div>
+            {comment.link && (
+              <a
+                href={comment.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-[#005EB6] hover:underline block"
+              >
+                {comment.link}
+              </a>
+            )}
           </div>
         </div>
       </div>
 
       {/* Reply Input */}
       {showReplyInput && (
-        <div className="flex gap-3 mt-3 ml-12">
-          <img src={imageUrl} className="w-8 h-8 rounded-full" />
+        <div className="flex flex-col md:flex-row gap-3 mb-6 ml-4 md:ml-14">
+          <img src={imageUrl} className="w-8 h-8 rounded-full object-cover hidden md:block" />
           <input
-          disabled={userLogin?.community}
-
+            disabled={userLogin?.community}
             value={val}
             onChange={(e) => setVal(e.target.value)}
             placeholder="Write a reply..."
-            className="flex-1 border rounded-full px-4 py-2 text-sm outline-none"
+            className="flex-1 border border-gray-300 rounded-md px-4 py-2 text-sm outline-none focus:border-[#005EB6] w-full"
           />
           <button
             onClick={handleSubmit}
-            className="border rounded-full px-4 text-sm"
+            className="bg-[#005EB6] text-white px-6 py-2 rounded-md text-sm font-medium hover:bg-[#004A8F] transition w-full md:w-auto"
           >
             Reply
           </button>
@@ -169,16 +205,15 @@ const handleSubmitReport=async(val:any)=>{
 
       {/* Nested Replies (hidden until click) */}
       {showReplies && comment.replies?.length > 0 && (
-        <div className="ml-12 mt-3 space-y-3">
+        <div className="ml-4 md:ml-14 space-y-4 mb-6">
           {comment.replies.map((reply: any) => (
             <CommentTree key={reply._id} comment={reply} />
           ))}
         </div>
       )}
-    </div>
-</>
-
-    
+ 
+      
+    </>
   );
 };
 

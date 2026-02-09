@@ -57,7 +57,7 @@ export const Header: React.FC = () => {
 
       const payload2: any = {
       userId: userLogin?._id,
-      examTypeId:exam?._id,
+      examTypeId: exam?._id,
     };
    await dispatch(getCommonexam(payload2));
     if(exam.examType.toLowerCase()=="topic wise"){ 
@@ -70,7 +70,7 @@ export const Header: React.FC = () => {
   };
 
   const handleLogoutClick = async () => {
-    const payload:any=null
+    const payload: any = null
     await dispatch(handleLogout(payload));
     localStorage.removeItem("token");
     router.push("/home");
@@ -99,17 +99,17 @@ export const Header: React.FC = () => {
     pathname.startsWith("/resources") ||
     pathname.startsWith("/instructions") ||
     pathname.startsWith("/blog");
- const handleSubExamClick = async(exam: any, sub: any) => {
+  const handleSubExamClick = async (exam: any, sub: any) => {
 
-   const payload2:any=null
+    const payload2: any = null
     dispatch(handleSelectedExamType(exam));
     dispatch(resetQuestionByExamID(payload2));
     dispatch(resetQuestion(payload2));
 
     const payload: any = {
       userId: userLogin?._id,
-      examTypeId:exam?._id,
-      subExamTypeId:sub?._id,
+      examTypeId: exam?._id,
+      subExamTypeId: sub?._id,
     };
    await dispatch(getCommonexam(payload));
    if(sub?.subExamType=="CUET"){
@@ -122,16 +122,16 @@ export const Header: React.FC = () => {
     
   };
 
-const loginWithGoogle = useGoogleLogin({
-  flow: "auth-code",
+  const loginWithGoogle = useGoogleLogin({
+    flow: "auth-code",
 
-  onSuccess: async ({ code }) => {
-    // 👉 Backend को code भेजो
-    const response: any = await dispatch(googleLogin({ code,isCode:true }));
-     if (response.payload === true) {
+    onSuccess: async ({ code }) => {
+      // 👉 Backend को code भेजो
+      const response: any = await dispatch(googleLogin({ code, isCode: true }));
+      if (response.payload === true) {
         router.push("/home");
       }
-  },
+    },
 
   onError: () => {
     console.log("Google login error");
@@ -156,48 +156,47 @@ const loginWithGoogle = useGoogleLogin({
             {/* Practice */}
             <DropdownMenu open={examMenuOpen} onOpenChange={setExamMenuOpen}>
               <DropdownMenuTrigger
-                className={`flex items-center gap-1 cursor-pointer outline-none ${
-                  isPracticeActive ? activeClass : inactiveClass
-                }`}
+                className={`flex items-center gap-1 cursor-pointer outline-none ${isPracticeActive ? activeClass : inactiveClass
+                  }`}
               >
                 Practice
                 <ChevronDownIcon className="h-4 w-4 text-[#FF5635]" />
               </DropdownMenuTrigger>
 
-          
-      <DropdownMenuContent align="start" className="w-56">
-        {examTypeData.map((exam: any) => (
-          exam.subMenuExists && exam.subMenus?.length ? (
-            // ✅ SUB MENU
-            <DropdownMenuSub key={exam._id}>
-              <DropdownMenuSubTrigger className="cursor-pointer hover:bg-orange-50 hover:text-[#FF5635]">
-                {exam.examType}
-              </DropdownMenuSubTrigger>
 
-              <DropdownMenuSubContent className="w-48">
-                {exam.subMenus.map((sub: any) => (
-                  <DropdownMenuItem
-                    key={sub._id}
-                    onClick={() => handleSubExamClick(exam, sub)}
-                    className="cursor-pointer hover:bg-orange-50 hover:text-[#FF5635]"
-                  >
-                    {sub.subExamType}
-                  </DropdownMenuItem>
+              <DropdownMenuContent align="start" className="w-56">
+                {examTypeData.map((exam: any) => (
+                  exam.subMenuExists && exam.subMenus?.length ? (
+                    // ✅ SUB MENU
+                    <DropdownMenuSub key={exam._id}>
+                      <DropdownMenuSubTrigger className="cursor-pointer hover:bg-orange-50 hover:text-[#FF5635]">
+                        {exam.examType}
+                      </DropdownMenuSubTrigger>
+
+                      <DropdownMenuSubContent className="w-48">
+                        {exam.subMenus.map((sub: any) => (
+                          <DropdownMenuItem
+                            key={sub._id}
+                            onClick={() => handleSubExamClick(exam, sub)}
+                            className="cursor-pointer hover:bg-orange-50 hover:text-[#FF5635]"
+                          >
+                            {sub.subExamType}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuSubContent>
+                    </DropdownMenuSub>
+                  ) : (
+                    // ✅ NO SUB MENU
+                    <DropdownMenuItem
+                      key={exam._id}
+                      onClick={() => handleExamClick(exam)}
+                      className="cursor-pointer hover:bg-orange-50 hover:text-[#FF5635]"
+                    >
+                      {exam.examType}
+                    </DropdownMenuItem>
+                  )
                 ))}
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
-          ) : (
-            // ✅ NO SUB MENU
-            <DropdownMenuItem
-              key={exam._id}
-              onClick={() => handleExamClick(exam)}
-              className="cursor-pointer hover:bg-orange-50 hover:text-[#FF5635]"
-            >
-              {exam.examType}
-            </DropdownMenuItem>
-          )
-        ))}
-      </DropdownMenuContent>
+              </DropdownMenuContent>
             </DropdownMenu>
 
             {/* Main Links */}
@@ -222,9 +221,8 @@ const loginWithGoogle = useGoogleLogin({
             >
               <DropdownMenu open={resourcesMenuOpen}>
                 <DropdownMenuTrigger
-                  className={`flex items-center gap-1 cursor-pointer outline-none ${
-                    isResourcesActive ? activeClass : inactiveClass
-                  }`}
+                  className={`flex items-center gap-1 cursor-pointer outline-none ${isResourcesActive ? activeClass : inactiveClass
+                    }`}
                 >
                   Resources
                   <ChevronDownIcon className="h-4 w-4 text-[#FF5635]" />
@@ -253,12 +251,21 @@ const loginWithGoogle = useGoogleLogin({
             </div>
 
             {token ? (
-              <Link
-                href="/analytics"
-                className={isActive("/analytics") ? activeClass : inactiveClass}
-              >
-                Analytics
-              </Link>
+              <>
+
+                <Link
+                  href="/analytics"
+                  className={isActive("/analytics") ? activeClass : inactiveClass}
+                >
+                  Analytics
+                </Link>
+                <Link
+                  href="/user-dashboard"
+                  className={isActive("/user-dashboard") ? activeClass : inactiveClass}
+                >
+                  User Dashboard
+                </Link>
+              </>
             ) : null}
           </nav>
         </div>
@@ -281,15 +288,15 @@ const loginWithGoogle = useGoogleLogin({
             <>
               {(userLogin?.role === "Admin" ||
                 userLogin?.role === "Expert") && (
-                <Button
-                  variant="outline"
-                  onClick={() => router.push("/dashboard/home")}
-                  className="hidden lg:flex border-[#FF5635] text-[#FF5635] cursor-pointer"
-                >
-                  <LayoutDashboard className="mr-2 h-4 w-4" />
-                  Dashboard
-                </Button>
-              )}
+                  <Button
+                    variant="outline"
+                    onClick={() => router.push("/dashboard/home")}
+                    className="hidden lg:flex border-[#FF5635] text-[#FF5635] cursor-pointer"
+                  >
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Button>
+                )}
               <UserProfileDropdown
                 user={userLogin}
                 onLogout={handleLogoutClick}
@@ -334,11 +341,10 @@ const loginWithGoogle = useGoogleLogin({
                     key={link.href}
                     href={link.href}
                     onClick={() => setMobileOpen(false)}
-                    className={`block px-4 py-2 rounded-lg ${
-                      isActive(link.href)
-                        ? "text-[#FF5635] font-semibold"
-                        : "text-gray-700 hover:text-[#FF5635]"
-                    }`}
+                    className={`block px-4 py-2 rounded-lg ${isActive(link.href)
+                      ? "text-[#FF5635] font-semibold"
+                      : "text-gray-700 hover:text-[#FF5635]"
+                      }`}
                   >
                     {link.label}
                   </Link>
@@ -373,6 +379,19 @@ const loginWithGoogle = useGoogleLogin({
                     </Link>
                   </div>
                 </div>
+
+                <div className="px-4">
+                  <div className="space-y-1">
+                    <Link
+                      href="/user-dashboard"
+                      onClick={() => setMobileOpen(false)}
+                      className="block px-3 py-2 text-sm text-gray-700 hover:text-[#FF5635] hover:bg-orange-50 rounded-lg transition-colors"
+                    >
+                      User Dashboard
+                    </Link>
+                  </div>
+                </div>
+
 
                 {/* Auth Buttons - Mobile */}
                 {!token && (
