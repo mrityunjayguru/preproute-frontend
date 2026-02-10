@@ -114,7 +114,7 @@ const SelectExamForm = () => {
       examTypeId: formData.examTypeId,
       examformat: examFormat,
     };
-
+console.log(formData,"selectedSectionId")
     if (formData.subExamTypeId) payload.subExamTypeId = formData.subExamTypeId;
 if(formData.subExamTypeId){
   payload.subExamTypeId=formData.subExamTypeId
@@ -138,6 +138,7 @@ if(formData.subExamTypeId){
         payload.questionPapername = formData.year;
         break;
     }
+console.log(payload,";;;;;;;;;;;;;;;;;;;;;;")
 
     const res: any = await dispatch(createQuestionPaper(payload));
     if (res.payload === true) {

@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import Pagination from "@/Common/Pagination";
 import DownloadUserPDF from "./DownloadUserPDF";
+import UserProfilePopup from "./UserProfilePopup";
 
 function userTable() {
   const router = useRouter();
@@ -21,7 +22,8 @@ function userTable() {
   const [userpassword, setuserpassword] = useState<any>("");
   const [totalPages, setTotalPages] = useState(0);
   const [selectedUser, setSelectedUser] = useState<any>(null);
-
+  const [userdata,setuserData]=useState(null)
+  const [userpopup,setuserPopup]=useState(false)
   let limit = 10;
   const fetchUsers = async () => {
     const payload: any = {
@@ -70,11 +72,20 @@ function userTable() {
     // console.log("Downloaded user data:", val);
     setSelectedUser(val);
   };
-  const handleDelete=()=>{
-    console.log("Deleted user data:");
+  const handleViewData=(val:any)=>{
+    console.log(val,"valvalval")
+    setuserPopup(true)
+    setuserData(val)
+  
   }
   return (
   <>
+ {userpopup && (
+        <UserProfilePopup
+          user={userdata}
+          onClose={() => setuserPopup(false)}
+        />
+      )}
     {selectedUser && (
   <DownloadUserPDF
     invoice={{
@@ -126,6 +137,7 @@ function userTable() {
         columns={columns}
         onEdit={handleEdit}
         onDownload={handleDownload}
+        onView={handleViewData}
       />
       <div className="flex justify-end">
         <Pagination

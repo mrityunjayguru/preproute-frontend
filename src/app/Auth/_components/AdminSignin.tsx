@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import React, { useState } from "react";
@@ -17,9 +16,8 @@ import IMG2 from "@/assets/vectors/auth-vectore/second.svg";
 import IMG1 from "@/assets/vectors/auth-vectore/first.svg";
 import { Footer as UserFooter } from "@/Layout/Footer";
 import Link from "next/link";
-import { useGoogleLogin } from "@react-oauth/google";
 
-const Signin = () => {
+const AdminSignin = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
@@ -56,24 +54,6 @@ const Signin = () => {
     router.push("/Auth/resetPassword");
   };
 
-const loginWithGoogle = useGoogleLogin({
-  flow: "auth-code",
-
-  onSuccess: async ({ code }) => {
-    // 👉 Backend को code भेजो
-    const response: any = await dispatch(googleLogin({ code,isCode:true }));
-     if (response.payload === true) {
-        router.push("/home");
-      }
-  },
-
-  onError: () => {
-    console.log("Google login error");
-  },
-});
-
-
-
   return (
     <section className="w-full min-h-screen bg-[#FAFAFA] flex flex-col justify-between items-center overflow-hidden">
       <div className=""></div>
@@ -92,6 +72,7 @@ const loginWithGoogle = useGoogleLogin({
             <Image src={IMG1} alt="Student thinking" width={320} height={320} className="drop-shadow-md" />
           </div>
 
+          {/* LOGIN CARD */}
           <div className="flex justify-center">
             <div className="w-full max-w-md bg-white rounded-2xl drop-shadow-lg shadow-gray-200/50 border border-gray-100 p-6 sm:p-10">
               {/* TITLE */}
@@ -100,20 +81,14 @@ const loginWithGoogle = useGoogleLogin({
                 <h2 className="text-xl font-medium font-poppins text-[#1A1D1F]">Login</h2>
               </div>
 
-              <p  className="text-sm text-[#6F767E] mb-8 font-dm-sans">
+              <p className="text-sm text-[#6F767E] mb-8 font-dm-sans">
                 Welcome Back, Enter your details to sign in to your account
               </p>
-{/* <Button
-  onClick={() => loginWithGoogle()}
-  className="w-full bg-[#FF5635] text-white"
->
-  Login with Google
-</Button> */}
 
               {/* FORM */}
               <form onSubmit={handleSubmit} className="space-y-5 font-dm-sans">
                 {/* EMAIL */}
-                {/* <div className="space-y-1.5">
+                <div className="space-y-1.5">
                   <label className="text-xs font-medium text-gray-700">Account Name</label>
                   <Input
                     type="email"
@@ -122,10 +97,10 @@ const loginWithGoogle = useGoogleLogin({
                     onChange={(e) => setEmail(e.target.value)}
                     className="h-11 rounded-[4px] border-[#E6E6E6] focus:border-[#FF5635] transition-all"
                   />
-                </div> */}
+                </div>
 
                 {/* PASSWORD */}
-                {/* <div className="space-y-1.5">
+                <div className="space-y-1.5">
                   <label className="text-xs font-medium text-gray-700">Password</label>
                   <div className="relative">
                     <Input
@@ -143,28 +118,29 @@ const loginWithGoogle = useGoogleLogin({
                       {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
-                </div> */}
+                </div>
 
                 {/* REMEMBER + FORGOT */}
-                {/* <div onClick={navigatePassword} className="flex items-center justify-between text-xs text-gray-500">
+                <div onClick={navigatePassword} className="flex items-center justify-between text-xs text-gray-500">
                   <label className="flex items-center gap-2 cursor-pointer group">
+                    {/* <input type="checkbox" className="w-4 h-4 rounded-sm border-gray-300 text-[#FF5635] focus:ring-[#FF5635]" /> */}
                     <span className="group-hover:text-gray-700 transition-colors"></span>
                   </label>
                   <span className="text-[#FF5635] font-medium cursor-pointer hover:underline">
                     Forgot password?
                   </span>
-                </div> */}
+                </div>
 
                 {/* SUBMIT */}
-                {/* <Button
+                <Button
                   type="submit"
                   className="w-full cursor-pointer h-11 rounded-[4px] bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins shadow-sm shadow-[#FF5635]/20 transition-all font-medium"
                 >
                   Sign In
-                </Button> */}
+                </Button>
 
                 {/* SIGN UP */}
-                {/* <div>
+                <div>
                   <Link href={"/Auth/register"}>
                     <p className="text-sm text-center text-gray-500 font-dm-sans">
                       Don&apos;t have an account yet?{" "}
@@ -173,14 +149,14 @@ const loginWithGoogle = useGoogleLogin({
                       </span>
                     </p>
                   </Link>
-                </div> */}
+                </div>
 
                 {/* DIVIDER */}
-                {/* <div className="flex items-center gap-3 my-4 font-dm-sans text-gray-300">
+                <div className="flex items-center gap-3 my-4 font-dm-sans text-gray-300">
                   <div className="flex-1 h-px bg-gray-200" />
                   <span className="text-xs text-gray-400 font-medium uppercase tracking-wider">or</span>
                   <div className="flex-1 h-px bg-gray-200" />
-                </div> */}
+                </div>
 
                 {/* GOOGLE LOGIN */}
                 <div className="flex-1 justify-center items-center font-poppins">
@@ -204,4 +180,4 @@ const loginWithGoogle = useGoogleLogin({
   );
 };
 
-export default Signin;
+export default AdminSignin;

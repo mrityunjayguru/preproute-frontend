@@ -53,6 +53,7 @@ const Sidebar = () => {
   useEffect(() => {
     getData();
   }, []);
+  console.log(allTabs,"tabItemstabItems")
   return (
     <>
       <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 mb-8">
@@ -114,6 +115,7 @@ const Sidebar = () => {
                   {tab.value === "pyqs" && <CreateExamPage data={tab} />}
                   {tab.value === "sectional" && <SectionalExam data={tab} />}
                   {tab.value === "topic-wise" && <TopicWiseExam data={tab} />}
+                  {tab.value === "daily-practice" && <TopicWiseExam data={tab} />}
                   {tab.value === "examtype" && <SubTopic />}
                 </TabsContent>
               ))}

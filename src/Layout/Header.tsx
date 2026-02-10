@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter, usePathname } from "next/navigation";
 import { AppDispatch } from "@/store/store";
 import { Button } from "@/components/ui/button";
+import { useGoogleLogin } from "@react-oauth/google";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,8 +19,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UserProfileDropdown } from "@/components/UserProfileDropdown";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useGoogleLogin } from "@react-oauth/google";
-import { GoogleLogin } from "@react-oauth/google";
 
 import logo from "../assets/images/logo.svg";
 import { getCommonExamType, handleSelectedExamType } from "@/api/ExamType";
@@ -274,9 +273,9 @@ export const Header: React.FC = () => {
         <div className="flex items-center gap-3">
           {!token ? (
             <div className="hidden lg:flex items-center gap-3">
-              <Link href="/Auth/register" className="text-[#FF5635]">
+              {/* <Link href="/Auth/register" className="text-[#FF5635]">
                 Register
-              </Link>
+              </Link> */}
               <Button
                 onClick={() => loginWithGoogle()}
                 className="rounded-full bg-[#FF5635] text-white cursor-pointer"

@@ -307,7 +307,7 @@ if (!/^\d{10}$/.test(parentPhone)) {
         </div>
 
         {/* Login */}
-        <p className="text-center text-sm text-[#6F767E] mt-6 font-dm-sans">
+        {/* <p className="text-center text-sm text-[#6F767E] mt-6 font-dm-sans">
           Already Signed Up?{" "}
           <span
             onClick={() => router.push("/Auth/signin")}
@@ -315,7 +315,7 @@ if (!/^\d{10}$/.test(parentPhone)) {
           >
             Login
           </span>
-        </p>
+        </p> */}
       </div>
     </div>
   );
