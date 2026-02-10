@@ -16,6 +16,7 @@ googlelogin: (payload: Payload) => Promise<AxiosResponse>;
 checkUser: (payload: Payload) => Promise<AxiosResponse>;
 VerifyOtp: (payload: Payload) => Promise<AxiosResponse>;
 resetPassword: (payload: Payload) => Promise<AxiosResponse>;
+userDashboard: (payload: Payload) => Promise<AxiosResponse>;
 }
 
 export const AuthRepo: AuthRepo = {
@@ -45,5 +46,8 @@ export const AuthRepo: AuthRepo = {
   },
   resetPassword(payload) {
     return Repository.post(APIName.resetPassword,payload);
+  },
+  userDashboard(payload) {
+    return Repository.post(APIName.userDashboard,payload);
   },
 };

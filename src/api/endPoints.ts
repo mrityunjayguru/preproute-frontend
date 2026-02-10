@@ -12,6 +12,7 @@ const UserAuth={
   checkUser:"Auth/checUser",
   VerifyOtp:"Auth/VerifyOtp",
   resetPassword:"Auth/resetPassword",
+  userDashboard:"user/userDashboard",
   AdminLogin:"Auth/adminLogin",
   exam:"statusmaster",
 }
@@ -34,7 +35,8 @@ export const examType={
   get:"setUpexam/examType/get",
   update:"setUpexam/examType/update",
   getCommonExamType:"UnAuth/examType",
-  getExamBeExamTypeId:"setUpexam/examType/getById"
+  getExamBeExamTypeId:"setUpexam/examType/getById",
+  getExamBeSectionTypeId:"setUpexam/questionpaper/dailyPraticesExam"
 }
 export const section={
   create:"setUpexam/section/create",

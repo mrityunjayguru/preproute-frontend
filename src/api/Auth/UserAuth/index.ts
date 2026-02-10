@@ -1,6 +1,6 @@
 // AuthThunks.ts
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { setAuth, setYear, setSubject, setExam } from "../../../store/Auth/index";
+import { setAuth, setYear, setSubject, setExam,setDashboard } from "../../../store/Auth/index";
 import APIName from "../../endPoints";
 import { AuthRepo } from "./AuthRepo";
 import { ToastError, ToastSuccess, ToastWarning } from "@/Utils/toastUtils";
@@ -276,3 +276,34 @@ export const resetPassword = createAsyncThunk<boolean, Payload>(
   }
 );
 
+
+
+
+export const userDashboard = createAsyncThunk<boolean, Payload>(
+  APIName.checkUser,
+  async (payload,thunkAPI) => {
+    try {
+     let data= await AuthRepo.userDashboard(payload);
+     if(data.status==200){
+     thunkAPI.dispatch(setDashboard(data.data.data || []))
+     }
+      return true;
+    } catch (err: any) {
+      const status = err.response?.status;
+      const data = err.response?.data;
+
+      if (status === 404) {
+          ToastError("Invalid Otp");
+        return false;
+      }
+
+      if (status === 401) {
+        ToastError(data?.message || "Unauthorized");
+        return false;
+      }
+
+      ToastWarning("Something went wrong");
+      return false;
+    }
+  }
+);

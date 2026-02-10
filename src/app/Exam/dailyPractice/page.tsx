@@ -1,10 +1,10 @@
+import DailyPractice from '@/app/Component/Exam/dailyPractice/Exam'
 import React from 'react'
-import UserDashboard from '../Component/Profile/compoenent/userDashboard'
 
 function page() {
   return (
     <div>
-      <UserDashboard/>
+      <DailyPractice/>
     </div>
   )
 }

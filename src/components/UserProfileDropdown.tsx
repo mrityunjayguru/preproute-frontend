@@ -51,12 +51,12 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
         <Avatar className="h-9 w-9 border border-gray-200">
           <AvatarImage src={imageUrl} alt={user?.username || "User"} />
           <AvatarFallback className="bg-gray-100 text-gray-600 font-medium">
-          <Image
-           src={imageUrl}
-           alt={user?.username || "User"}
-           width={40}
-           height={40}
-           />
+            <Image
+              src={imageUrl}
+              alt={user?.username || "User"}
+              width={40}
+              height={40}
+            />
           </AvatarFallback>
         </Avatar>
         <ChevronDown
@@ -80,24 +80,38 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
           </p>
         </div>
         <DropdownMenuSeparator className="my-1" />
-        <DropdownMenuItem asChild className="cursor-pointer  px-3 py-1 rounded-md text-sm font-dm-sans">
+        <DropdownMenuItem
+          asChild
+          className="cursor-pointer  px-3 py-1 rounded-md text-sm font-dm-sans"
+        >
           <Link href="/Profile" className="w-full">
-             Profile & Subscription
+            Profile & Subscription
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild className="cursor-pointer  px-3 py-1 rounded-md text-sm font-dm-sans">
+            <DropdownMenuItem
+          asChild
+          className="cursor-pointer  px-3 py-1 rounded-md text-sm font-dm-sans"
+        >
+            <Link href="/user-dashboard" className="w-full">
+            User Dashboard
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          asChild
+          className="cursor-pointer  px-3 py-1 rounded-md text-sm font-dm-sans"
+        >
           <Link href="/support" className="w-full">
-             Support
+            Support
           </Link>
         </DropdownMenuItem>
-        
+
         <div className="p-2">
-            <Button 
-                onClick={onLogout}
-                className="w-fit bg-[#FF5635] hover:bg-[#e44c2f] text-white rounded-full h-9 text-sm font-medium px-4 font-dm-sans cursor-pointer"
-            >
-                Logout
-            </Button>
+          <Button
+            onClick={onLogout}
+            className="w-fit bg-[#FF5635] hover:bg-[#e44c2f] text-white rounded-full h-9 text-sm font-medium px-4 font-dm-sans cursor-pointer"
+          >
+            Logout
+          </Button>
         </div>
       </DropdownMenuContent>
     </DropdownMenu>

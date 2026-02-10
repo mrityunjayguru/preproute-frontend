@@ -131,6 +131,28 @@ export const getExamBeExamTypeId = createAsyncThunk<boolean, Payload>(
 );
 
 
+export const getExamBeSectionTypeId = createAsyncThunk<boolean, Payload>(
+  examType.get,
+  async (payload, thunkAPI) => {
+    try {
+       const data = await examTypeRepo.getExamBeSectionTypeId(payload);
+      if (data.status === 200) {
+        thunkAPI.dispatch(setExamBeExamTypeId(data.data.data));
+        return true;
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
 
 export const handleUpdateExamType = createAsyncThunk<boolean, Payload>(
   examType.get,

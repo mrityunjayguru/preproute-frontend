@@ -131,6 +131,10 @@ if(formData.subExamTypeId){
         payload.subTopicId = formData.subTopicId; // ✅ Passed subTopicId
         payload.questionPapername = formData.testName;
         break;
+          case "daily practice":
+        payload.sectionId = formData.selectedSectionId;
+        payload.questionPapername = formData.testName;
+        break;
       case "mocks":
         payload.questionPapername = formData.testName;
         break;
@@ -138,7 +142,6 @@ if(formData.subExamTypeId){
         payload.questionPapername = formData.year;
         break;
     }
-console.log(payload,";;;;;;;;;;;;;;;;;;;;;;")
 
     const res: any = await dispatch(createQuestionPaper(payload));
     if (res.payload === true) {
@@ -204,6 +207,16 @@ console.log(payload,";;;;;;;;;;;;;;;;;;;;;;")
                 valueKey="val"
               />
             )}
+  {(examFormat === "daily practice") && (
+              <FormSelect 
+                value={formData.selectedSectionId}
+                onChange={(e: any) => updateForm({ selectedSectionId: e.target.value, level: "", selectedTopicId: "", subTopicId: "" })}
+                options={sections.map((s: any) => ({ val: s.sectionDetail._id, lbl: s.sectionDetail.section }))}
+                placeholder="Choose Section"
+                labelKey="lbl"
+                valueKey="val"
+              />
+            )}
 
             {examFormat === "topic wise" && formData.selectedSectionId && (
               <>
@@ -241,7 +254,7 @@ console.log(payload,";;;;;;;;;;;;;;;;;;;;;;")
               </>
             )}
 
-            {(examFormat === "mocks" || examFormat === "sectional" || examFormat === "topic wise") && (
+            {(examFormat === "mocks" || examFormat === "sectional" || examFormat === "topic wise"  || examFormat === "daily practice") && (
               <FormSelect 
                 value={formData.testName}
                 onChange={(e: any) => updateForm({ testName: e.target.value })}

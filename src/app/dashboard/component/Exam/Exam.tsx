@@ -96,7 +96,7 @@ const Exam: React.FC = () => {
     setIsSection(examDetail?.isSection ?? true);
     
     // Determine Sections Data
-    if (examformet === "sectional" || examformet === "topic wise") {
+    if (examformet === "sectional" || examformet === "topic wise" || examformet === "daily practice") {
       const section = examDetail?.sections?.find((val: any) => val.sectionId === sectionId);
       setSectionsData(section ? [section] : []);
     } else {

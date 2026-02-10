@@ -63,7 +63,11 @@ export const Header: React.FC = () => {
     router.push("/Exam/topicExam");
     }else if(exam.examType.toLowerCase()=="sectional"){
     router.push("/Exam/sectionalExam");
-    }else{
+    }
+    else if(exam.examType.toLowerCase()=="daily practice"){
+    router.push("/user-dashboard");
+    }
+    else{
     router.push("/Exam/Mocks");
     }
   };
@@ -228,7 +232,7 @@ export const Header: React.FC = () => {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="start" className="w-48">
-                  {token && (
+                  {/* {token && (
                     <DropdownMenuItem asChild>
                       <Link
                         href="/bookMark"
@@ -237,7 +241,7 @@ export const Header: React.FC = () => {
                         Bookmark
                       </Link>
                     </DropdownMenuItem>
-                  )}
+                  )} */}
 
                   <DropdownMenuItem
                     asChild
@@ -258,12 +262,12 @@ export const Header: React.FC = () => {
                 >
                   Analytics
                 </Link>
-                <Link
+                {/* <Link
                   href="/user-dashboard"
                   className={isActive("/user-dashboard") ? activeClass : inactiveClass}
                 >
                   User Dashboard
-                </Link>
+                </Link> */}
               </>
             ) : null}
           </nav>
