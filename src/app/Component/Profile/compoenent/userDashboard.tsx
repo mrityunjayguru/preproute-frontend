@@ -130,14 +130,7 @@ const UserDashboard = () => {
 
                     {/* Social Shots */}
                     <SocialShots />
-                    <div className="my-5">
-                    <section className="bg-[#FF5635] text-white py-6">
-                          <div className="flex justify-between items-center px-28">
-                            <Image src={FOOTERLOGO} alt="logo" width={180} />
-                            <SocialMedia />
-                          </div>
-                        </section>
-                    </div>
+                    
                 </div>
 
                 <style jsx global>{`
@@ -150,6 +143,14 @@ const UserDashboard = () => {
           }
         `}</style>
             </div>
+            <div className="my-5">
+                    <section className="bg-[#FF5635] text-white py-6">
+                          <div className="flex justify-between items-center px-28">
+                            <Image src={FOOTERLOGO} alt="logo" width={180} />
+                            <SocialMedia />
+                          </div>
+                        </section>
+                    </div>
         </div>
     );
 };

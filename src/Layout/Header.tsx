@@ -147,12 +147,17 @@ export const Header: React.FC = () => {
 //     ux_mode: "redirect",
 //     redirect_uri: "http://localhost:3200/api/auth/google/callback",
 //   });
+const preventredirect=()=>{
+  if(!token){
+   router.push("/home")
+  }
+}
   return (
     <header className="sticky top-0 z-20 w-full bg-white sm:px-6 md:px-8 lg:px-10 xl:px-12">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:py-5">
         {/* Logo */}
         <div className="flex items-center gap-12">
-          <div className="cursor-pointer" onClick={() => router.push("/home")}>
+          <div className="cursor-pointer" onClick={preventredirect}>
             <Image src={logo} alt="Logo" className="h-8 w-auto" />
           </div>
 

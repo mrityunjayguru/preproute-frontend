@@ -21,14 +21,18 @@ const ManageTopicExam = () => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  const topicExamData = useSelector((state: any) => state?.examType?.examDetail);
-  const singleQuestion = useSelector((state: any) => state?.question?.singleQuestion);
+  const topicExamData = useSelector(
+    (state: any) => state?.examType?.examDetail,
+  );
+  const singleQuestion = useSelector(
+    (state: any) => state?.question?.singleQuestion,
+  );
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
-console.log(topicExamData,"topicExamDatatopicExamData")
+  console.log(topicExamData, "topicExamDatatopicExamData");
   const exam = topicExamData?.[0];
-  
+
   const question = singleQuestion?.[0];
-console.log(question,"questionquestion")
+  console.log(question, "questionquestion");
   /* ================= TOTAL QUESTIONS ================= */
   const totalQuestions = useMemo(() => {
     return Number(exam?.examDetail?.sections?.[0]?.noOfQuestions || 0);
@@ -50,7 +54,7 @@ console.log(question,"questionquestion")
       getQuestionById({
         questionPaperId: exam._id,
         questionNo,
-      })
+      }),
     );
 
     setBookmarkStatus(response?.payload?.data?.status || false);
@@ -158,7 +162,7 @@ console.log(question,"questionquestion")
   /* ================= SCORE ================= */
   const correctCount = Object.values(answers).filter((a) => a.isCorrect).length;
   const wrongCount = Object.values(answers).filter(
-    (a) => a.isSubmitted && !a.isCorrect
+    (a) => a.isSubmitted && !a.isCorrect,
   ).length;
 
   const percentage = totalQuestions
@@ -173,11 +177,21 @@ console.log(question,"questionquestion")
           <h2 className="text-3xl font-bold mb-6">Exam Completed 🎉</h2>
 
           <div className="space-y-4 text-lg">
-            <p>Total Questions: <b>{totalQuestions}</b></p>
-            <p className="text-green-600">Correct: <b>{correctCount}</b></p>
-            <p className="text-red-500">Wrong: <b>{wrongCount}</b></p>
-            <p className="text-blue-600">Score: <b>{percentage}%</b></p>
-            <p>Time Taken: <b>{formatTime(seconds)}</b></p>
+            <p>
+              Total Questions: <b>{totalQuestions}</b>
+            </p>
+            <p className="text-green-600">
+              Correct: <b>{correctCount}</b>
+            </p>
+            <p className="text-red-500">
+              Wrong: <b>{wrongCount}</b>
+            </p>
+            <p className="text-blue-600">
+              Score: <b>{percentage}%</b>
+            </p>
+            <p>
+              Time Taken: <b>{formatTime(seconds)}</b>
+            </p>
           </div>
 
           <button
@@ -204,10 +218,9 @@ console.log(question,"questionquestion")
 
       <div className="min-h-screen bg-[#F4F9FF] p-6 font-sans">
         <div className="max-w-6xl mx-auto">
-
           {/* HEADER */}
-          <div className="flex justify-between items-center mb-6">
-            <div className="text-2xl font-bold">
+          <div className="flex justify-between cursor-pointer items-center mb-6">
+            <div className="text-2xl font-bold" onClick={()=>router.push("/home")}>
               the<span className="text-[#FF5A3C]">prep</span>route
             </div>
             <button
@@ -221,16 +234,13 @@ console.log(question,"questionquestion")
           {/* QUESTION CARD */}
           <div className="bg-white rounded-2xl shadow-sm border p-8 mb-6">
             {exam?.questionPapername}
-  <h1 className="text-lg font-semibold">
-  {exam?.topicDetail?.topic || "Topic"} -{" "}
-  {exam?.subTopicDetail?.subTopic || "Sub Topic"}
-
-</h1>
- <h1 className="text-lg font-semibold">
-level {question?.questionType}
-  
-</h1>
-
+            <h1 className="text-lg font-semibold">
+              {exam?.topicDetail?.topic || "Topic"} -{" "}
+              {exam?.subTopicDetail?.subTopic || "Sub Topic"}
+            </h1>
+            <h1 className="text-lg font-semibold">
+              level {question?.questionType}
+            </h1>
 
             <div className="flex justify-between mb-6">
               <p className="text-[#FF5A3C] font-medium">
@@ -244,11 +254,12 @@ level {question?.questionType}
             {/* OPTIONS */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
               {question?.options?.map((opt: any) => {
-                const correctOption = question.options?.find((o: any) => o.isCorrect);
+                const correctOption = question.options?.find(
+                  (o: any) => o.isCorrect,
+                );
                 const isSelected = currentAnswer.selected === opt._id;
                 const showCorrect =
-                  currentAnswer.isSubmitted &&
-                  opt._id === correctOption?._id;
+                  currentAnswer.isSubmitted && opt._id === correctOption?._id;
                 const showWrong =
                   currentAnswer.isSubmitted &&
                   isSelected &&
@@ -263,10 +274,10 @@ level {question?.questionType}
                         showCorrect
                           ? "border-green-500 bg-green-50"
                           : showWrong
-                          ? "border-red-500 bg-red-50"
-                          : isSelected
-                          ? "border-[#FF5A3C]"
-                          : "border-gray-200 hover:border-gray-300"
+                            ? "border-red-500 bg-red-50"
+                            : isSelected
+                              ? "border-[#FF5A3C]"
+                              : "border-gray-200 hover:border-gray-300"
                       }
                     `}
                   >
@@ -278,7 +289,6 @@ level {question?.questionType}
 
             {/* NAVIGATION WITH QUESTION NUMBERS */}
             <div className="flex justify-between items-center mt-8 pt-6 border-t">
-
               {/* PREV */}
               <button
                 disabled={questionNo === 1}
@@ -303,10 +313,10 @@ level {question?.questionType}
                           q === questionNo
                             ? "bg-blue-600 text-white"
                             : ans?.isSubmitted
-                            ? ans?.isCorrect
-                              ? "bg-green-500 text-white"
-                              : "bg-red-500 text-white"
-                            : "border border-gray-300 text-gray-600"
+                              ? ans?.isCorrect
+                                ? "bg-green-500 text-white"
+                                : "bg-red-500 text-white"
+                              : "border border-gray-300 text-gray-600"
                         }
                       `}
                     >
@@ -366,9 +376,7 @@ level {question?.questionType}
               {question?.hint ? (
                 <RenderPreview content={question.hint} />
               ) : (
-                <p className="text-center text-gray-400">
-                  No hint available
-                </p>
+                <p className="text-center text-gray-400">No hint available</p>
               )}
             </div>
           )}
