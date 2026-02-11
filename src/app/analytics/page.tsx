@@ -2,21 +2,14 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Image from "next/image";
+import Select from "react-select";
 
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import SocialMedia from "../Component/Home/_componets/social-media";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 import SummaryTabs from "./_components/SummaryTabs";
 import { QuestionPaperResult } from "@/api/Users";
-import { givenExam } from "@/api/Exam";
+import { getUserWithTarget, givenExam } from "@/api/Exam";
 import { capitalizeWords } from "@/Utils/Cappital";
 import { AppDispatch } from "@/store/store";
 
@@ -25,116 +18,153 @@ function Analytics() {
 
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
   const examResult = useSelector((state: any) => state?.question?.result?.data);
-  const givenAllExam =
-    useSelector((state: any) => state?.exam?.givenAllExam) || [];
+  const givenAllExam = useSelector((state: any) => state?.exam?.givenAllExam) || [];
 
+  /* ===========================
+      STATES
+  ============================ */
+  const [userdata, setUserdata] = useState<any[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState("");
   const [selectedExamTypeId, setSelectedExamTypeId] = useState("");
   const [selectedExamId, setSelectedExamId] = useState("");
   const [selectedQuestion, setselectedQuestion] = useState("");
 
   /* ===========================
-     FETCH GIVEN EXAMS
+      FETCH USERS OR EXAMS
   ============================ */
   useEffect(() => {
-    if (userLogin?._id) {
+    if (userLogin?.role === "Admin") {
+      fetchUsers();
+    } else if (userLogin?._id) {
       dispatch(givenExam({ userId: userLogin._id }));
     }
-  }, [dispatch, userLogin?._id]);
+  }, [userLogin]);
+
+  const fetchUsers = async () => {
+    const response: any = await dispatch(getUserWithTarget({}));
+    setUserdata(response?.payload || []);
+  };
+
+  useEffect(() => {
+    if (userLogin?.role === "Admin" && selectedUserId) {
+      dispatch(givenExam({ userId: selectedUserId }));
+    }
+  }, [selectedUserId]);
 
   /* ===========================
-     DERIVED DATA (NO UI CHANGE)
+      DERIVED DATA
   ============================ */
+  const examTypes = useMemo(() => {
+    return givenAllExam
+      .filter((item: any) => item?.examType?._id)
+      .map((item: any) => ({
+        value: item.examType._id,
+        label: item.examType.name,
+      }));
+  }, [givenAllExam]);
 
-  // Exam Types
-  const examTypes = useMemo(
-    () => givenAllExam.map((item: any) => item.examType),
-    [givenAllExam],
-  );
-  console.log(examTypes,"examTypesexamTypes")
-
-  // Selected ExamType Object
-  const selectedExamType = useMemo(
-    () =>
+  const selectedExamType = useMemo(() => {
+    if (!selectedExamTypeId) return null;
+    return (
       givenAllExam.find(
-        (item: any) => item.examType._id === selectedExamTypeId,
-      ),
-    [givenAllExam, selectedExamTypeId],
+        (item: any) => String(item?.examType?._id) === String(selectedExamTypeId)
+      ) || null
+    );
+  }, [givenAllExam, selectedExamTypeId]);
+
+  const exams = useMemo(() => {
+    const list = selectedExamType?.exams || [];
+    return list.map((ex: any) => ({
+      value: ex._id,
+      label: ex.subjectName || ex.name,
+    }));
+  }, [selectedExamType]);
+
+  const selectedExam = (selectedExamType?.exams || []).find(
+    (ex: any) => String(ex?._id) === String(selectedExamId)
   );
-
-  // Exams
-  const exams = selectedExamType?.exams || [];
-
-  // Selected Exam Object
-  const selectedExam = exams.find((ex: any) => ex._id === selectedExamId);
 
   const isSectional = selectedExamType?.examType?.name === "Sectional";
 
-  /**
-   * 🔥 QUESTION PAPERS LOGIC
-   * UI SAME – DATA SWITCHES AUTOMATICALLY
-   */
   const questionPapers = useMemo(() => {
     if (!selectedExam) return [];
+    let papers: any[] = [];
 
-    // NON-SECTIONAL (Mocks etc.)
     if (!isSectional) {
-      return selectedExam?.questionPapers || [];
-    }
-
-    // SECTIONAL → merge all section question papers
-    const papers: any[] = [];
-    selectedExam?.sections?.forEach((section: any) => {
-      section?.questionPapers?.forEach((qp: any) => {
-        papers.push({
-          ...qp,
-          sectionId: section.sectionId,
-          sectionName: section.sectionName,
+      papers = selectedExam?.questionPapers || [];
+    } else {
+      selectedExam?.sections?.forEach((section: any) => {
+        section?.questionPapers?.forEach((qp: any) => {
+          papers.push({
+            ...qp,
+            sectionId: section.sectionId,
+            sectionName: section.sectionName,
+          });
         });
       });
-    });
+    }
 
-    return papers;
+    return papers.map((val: any) => ({
+      value: val._id,
+      label: isSectional 
+        ? `${capitalizeWords(val.name)} (${val.sectionName})` 
+        : capitalizeWords(val.name),
+      sectionId: val.sectionId
+    }));
   }, [selectedExam, isSectional]);
 
   /* ===========================
-     FETCH RESULT
+      FETCH RESULT
   ============================ */
   useEffect(() => {
-    if (
-      userLogin?._id &&
-      selectedExamTypeId &&
-      selectedExamId &&
-      selectedQuestion
-    ) {
+    const userId = userLogin?.role === "Admin" ? selectedUserId : userLogin?._id;
+
+    if (userId && selectedExamTypeId && selectedExamId && selectedQuestion) {
       const selectedQP = questionPapers.find(
-        (q: any) => q._id === selectedQuestion,
+        (q: any) => String(q?.value) === String(selectedQuestion)
       );
 
       dispatch(
         QuestionPaperResult({
-          userId: userLogin._id,
+          userId,
           selectedExamTypeId,
           selectedExamId,
           questionPaperID: selectedQuestion,
           sectionId: isSectional ? selectedQP?.sectionId : undefined,
-        }),
+        })
       );
     }
-  }, [
-    userLogin,
-    selectedExamTypeId,
-    selectedExamId,
-    selectedQuestion,
-    questionPapers,
-    isSectional,
-    dispatch,
-  ]);
+  }, [selectedUserId, userLogin, selectedExamTypeId, selectedExamId, selectedQuestion, questionPapers, isSectional, dispatch]);
 
   /* ===========================
-     UI (UNCHANGED)
+      REACT SELECT CUSTOM STYLES
   ============================ */
+  const customStyles = {
+    control: (base: any) => ({
+      ...base,
+      minHeight: '42px',
+      borderRadius: '4px',
+      borderColor: '#e5e7eb', // border color
+      boxShadow: 'none',
+      '&:hover': {
+        borderColor: '#d1d5db',
+      },
+      fontSize: '14px',
+      fontFamily: 'Poppins, sans-serif',
+    }),
+    placeholder: (base: any) => ({
+      ...base,
+      color: '#9ca3af',
+    }),
+    indicatorSeparator: () => ({ display: 'none' }),
+    menu: (base: any) => ({
+      ...base,
+      zIndex: 50,
+    }),
+  };
+
   return (
-    <div className="min-h-screen bg-white flex flex-col justify-between ">
+    <div className="min-h-screen bg-white flex flex-col justify-between">
       <div className="mx-auto w-full px-6 sm:px-8 md:px-12 lg:px-28">
         <div className="relative bg-[#F0F9FF] rounded-2xl px-6 sm:px-8 py-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
@@ -146,83 +176,67 @@ function Analytics() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full lg:w-[620px]">
-            {/* Exam Type */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full lg:w-[700px]">
+            {userLogin?.role === "Admin" && (
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-gray-900 font-poppins">Select User</p>
+                <Select
+                  options={userdata.map(u => ({ value: u._id, label: u.email }))}
+                  value={userdata.map(u => ({ value: u._id, label: u.email })).find(o => o.value === selectedUserId) || null}
+                  onChange={(opt: any) => {
+                    setSelectedUserId(opt?.value || "");
+                    setSelectedExamTypeId("");
+                    setSelectedExamId("");
+                    setselectedQuestion("");
+                  }}
+                  placeholder="Select User"
+                  isSearchable
+                  styles={customStyles}
+                />
+              </div>
+            )}
+
             <div className="space-y-2">
-              <p className="text-xs font-medium text-gray-900 font-poppins">
-                Select Exam Type
-              </p>
+              <p className="text-xs font-medium text-gray-900 font-poppins">Select Exam Type</p>
               <Select
-                value={selectedExamTypeId}
-                onValueChange={(val) => {
-                  setSelectedExamTypeId(val);
+                options={examTypes}
+                value={examTypes.find(o => o.value === selectedExamTypeId) || null}
+                onChange={(opt: any) => {
+                  setSelectedExamTypeId(opt?.value || "");
                   setSelectedExamId("");
                   setselectedQuestion("");
                 }}
-              >
-                <SelectTrigger className="w-full px-4 py-2 rounded-[4px] bg-white border">
-                  <SelectValue placeholder="Select Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {examTypes.map((type: any) => (
-                    <SelectItem key={type._id} value={type._id}>
-                      {type.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder="Select Type"
+                isSearchable
+                styles={customStyles}
+              />
             </div>
 
-            {/* Exam */}
             <div className="space-y-2">
-              <p className="text-xs font-medium text-gray-900 font-poppins">
-                Select Exam
-              </p>
+              <p className="text-xs font-medium text-gray-900 font-poppins">Select Exam</p>
               <Select
-                value={selectedExamId}
-                onValueChange={(val) => {
-                  setSelectedExamId(val);
+                options={exams}
+                value={exams.find(o => o.value === selectedExamId) || null}
+                onChange={(opt: any) => {
+                  setSelectedExamId(opt?.value || "");
                   setselectedQuestion("");
                 }}
-              >
-                <SelectTrigger className="w-full px-4 py-2 rounded-[4px] bg-white border">
-                  <SelectValue placeholder="Select Exam" />
-                </SelectTrigger>
-                <SelectContent>
-                  {exams.map((ex: any) => (
-                    <SelectItem key={ex._id} value={ex._id}>
-                      {ex.subjectName || ex.name }
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder="Select Exam"
+                isSearchable
+                styles={customStyles}
+              />
             </div>
 
-            {/* Question Paper */}
             <div className="space-y-2">
-              <p className="text-xs font-medium text-gray-900 font-poppins">
-                Question Paper
-              </p>
+              <p className="text-xs font-medium text-gray-900 font-poppins">Question Paper</p>
               <Select
-                value={selectedQuestion}
-                onValueChange={setselectedQuestion}
-              >
-                <SelectTrigger className="w-full px-4 py-2 rounded-[4px] bg-white border">
-                  <SelectValue placeholder="Select Year or Number" />
-                </SelectTrigger>
-                <SelectContent>
-                  {questionPapers.map((val: any) => (
-                    <SelectItem key={val._id} value={val._id}>
-                      {capitalizeWords(val.name)}
-                      {isSectional && (
-                        <span className="text-xs text-gray-500 ml-1">
-                          ({val.sectionName})
-                        </span>
-                      )}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                options={questionPapers}
+                value={questionPapers.find(o => o.value === selectedQuestion) || null}
+                onChange={(opt: any) => setselectedQuestion(opt?.value || "")}
+                placeholder="Select Year or Number"
+                isSearchable
+                styles={customStyles}
+              />
             </div>
           </div>
         </div>
@@ -237,7 +251,7 @@ function Analytics() {
       </div>
 
       <section className="w-full bg-[#FF5635] text-white py-6 mt-16">
-        <div className="mx-auto flex justify-between items-center px-28">
+        <div className="mx-auto flex justify-between items-center px-6 sm:px-8 md:px-12 lg:px-28">
           <Image src={FOOTERLOGO} alt="logo" width={160} />
           <SocialMedia />
         </div>

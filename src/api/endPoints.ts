@@ -138,7 +138,8 @@ export const questionPaper={
   getCommonQuestionBeExamId:"unauth/QuestionByExamId",
   getCommonTopicQuestionBeExamId:"unauth/topicWiseExamById",
   getCommonexam:"unauth/commonExam",
-  ManageExamProgress:"user/examProgress"
+  ManageExamProgress:"user/examProgress",
+  getUserWithTarget:"user/getUser",
 
 }
 export const Dashboard={

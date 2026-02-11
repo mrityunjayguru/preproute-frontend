@@ -1,13 +1,18 @@
 import Image from "next/image";
 import LOCK2 from "@/assets/vectors/lock-2.svg";
 import { capitalizeWords } from "@/Utils/Cappital";
+import { useRouter } from "next/navigation";
 
 const MockExamCard = ({ exam, index, handleExam,selectedExam }: any) => {
+  const router=useRouter()
   const isUnlocked =
      exam?.previousCompleted || selectedExam?.hasAccess;
 
   const onClick = () => {
-    if (!isUnlocked) return;
+    if (!isUnlocked){
+      router.push("/PlanandPricing")
+return
+    } 
     handleExam(exam, exam?.hasGivenExam ? "Resume" : "start", index);
   };
 

@@ -24,10 +24,11 @@ const ManageTopicExam = () => {
   const topicExamData = useSelector((state: any) => state?.examType?.examDetail);
   const singleQuestion = useSelector((state: any) => state?.question?.singleQuestion);
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
-
+console.log(topicExamData,"topicExamDatatopicExamData")
   const exam = topicExamData?.[0];
+  
   const question = singleQuestion?.[0];
-
+console.log(question,"questionquestion")
   /* ================= TOTAL QUESTIONS ================= */
   const totalQuestions = useMemo(() => {
     return Number(exam?.examDetail?.sections?.[0]?.noOfQuestions || 0);
@@ -219,6 +220,17 @@ const ManageTopicExam = () => {
 
           {/* QUESTION CARD */}
           <div className="bg-white rounded-2xl shadow-sm border p-8 mb-6">
+            {exam?.questionPapername}
+  <h1 className="text-lg font-semibold">
+  {exam?.topicDetail?.topic || "Topic"} -{" "}
+  {exam?.subTopicDetail?.subTopic || "Sub Topic"}
+
+</h1>
+ <h1 className="text-lg font-semibold">
+level {question?.questionType}
+  
+</h1>
+
 
             <div className="flex justify-between mb-6">
               <p className="text-[#FF5A3C] font-medium">

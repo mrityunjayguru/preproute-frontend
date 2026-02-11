@@ -50,7 +50,7 @@ interface Props {
   examName: string;
   paperName: string;
   currentQuestionIndex: number;
-  sectionQuestions: Question[];
+  handleSectionQuestions: Question[];
   examResult:any;
   getQuestionByNumberId: (idx: number) => void;
 }

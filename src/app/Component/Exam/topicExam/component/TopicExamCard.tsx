@@ -69,7 +69,6 @@ const TopicBlock = ({ topic, hasAccess }: any) => {
             <div className="p-3 text-center text-black">Advanced</div>
             <div className="p-3 text-center text-black">Expert</div>
           </div>
-
           <TopicRows topic={topic} hasAccess={hasAccess} />
         </div>
       )}
@@ -124,6 +123,16 @@ const LevelCell = ({ tests = [], hasAccess }: any) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleStartExam = async (test: any) => {
+     const isFree = test?.isfree === true;
+    const canAccess = hasAccess || isFree;
+
+    // ❌ If locked → redirect to home
+    if (!canAccess) {
+      router.push("/PlanandPricing"); // redirect to home page
+      return;
+    }
+
+    // ✅ If accessible → start exam
     await dispatch(getQuestionPaperById({ _id: test._id }));
     router.push("/Exam/attemptTopicExam");
   };
@@ -147,13 +156,13 @@ const LevelCell = ({ tests = [], hasAccess }: any) => {
                 : "text-gray-400 cursor-not-allowed"
             }`}
             onClick={() => {
-              if (canAccess) handleStartExam(test);
+               handleStartExam(test);
             }}
           >
             {!canAccess && (
               <FaLock size={14} className="text-red-500" />
             )}
-       {isFree && (
+           {isFree && (
               <span className=" text-green-600  ">
                 <FaLockOpen size={14} />
               </span>

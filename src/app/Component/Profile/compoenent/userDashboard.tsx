@@ -22,6 +22,8 @@ import HomeFooter from "../../Home/_componets/HomeFooter";
 import { handleSelectedExamType } from "@/api/ExamType";
 import { resetQuestionByExamID } from "@/api/Exam";
 import { resetQuestion } from "@/api/Question";
+import SocialMedia from "../../Home/_componets/social-media";
+import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 
 
 const UserDashboard = () => {
@@ -129,7 +131,12 @@ const UserDashboard = () => {
                     {/* Social Shots */}
                     <SocialShots />
                     <div className="my-5">
-                   <HomeFooter/>
+                    <section className="bg-[#FF5635] text-white py-6">
+                          <div className="flex justify-between items-center px-28">
+                            <Image src={FOOTERLOGO} alt="logo" width={180} />
+                            <SocialMedia />
+                          </div>
+                        </section>
                     </div>
                 </div>
 
