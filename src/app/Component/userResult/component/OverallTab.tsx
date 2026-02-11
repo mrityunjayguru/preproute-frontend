@@ -312,7 +312,8 @@ const OverallTab = ({ data }: OverallTabProps) => {
   const end = new Date(data?.fullExamEndTime).getTime();
   const spentMinutes = ((end - start) / 60000).toFixed(2);
         {/* Time Analysis */}
-let checkShow=data?.examdetail?.examname=="CUET"
+        // console.log(data?.questionpaper?.examformet=="sectional","data?.examdetail?.examname")
+let checkShow=data?.examdetail?.examname=="CUET"  || data?.questionpaper?.examformet=="sectional"
 // console.log(checkShow,"llllllllllllllllllllll")
 
   return (

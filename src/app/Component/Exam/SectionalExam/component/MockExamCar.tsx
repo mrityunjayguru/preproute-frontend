@@ -1,9 +1,10 @@
 import Image from "next/image";
 import LOCK2 from "@/assets/vectors/lock-2.svg";
+import { capitalizeWords } from "@/Utils/Cappital";
 
 const MockExamCard = ({ exam, index, handleExam,selectedExam }: any) => {
   const isUnlocked =
-    index === 0 || exam?.previousCompleted || selectedExam?.hasAccess;
+     exam?.previousCompleted || selectedExam?.hasAccess;
 
   const onClick = () => {
     if (!isUnlocked) return;
@@ -12,13 +13,9 @@ const MockExamCard = ({ exam, index, handleExam,selectedExam }: any) => {
 
   return (
     <div
-      className={`rounded-xl border p-5 transition-all
-        ${
-          isUnlocked
-            ? "bg-white cursor-pointer hover:shadow-md"
-            : "bg-gray-100 cursor-not-allowed opacity-70"
-        }
-      `}
+      className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white 
+                 border border-[#E6F4FF] p-4 sm:p-5 lg:p-6 
+                 flex flex-col transition-all"
       onClick={onClick}
     >
       <div className="flex justify-between mb-3">
@@ -27,7 +24,7 @@ const MockExamCard = ({ exam, index, handleExam,selectedExam }: any) => {
       </div>
 
       <h3 className="text-lg font-semibold mb-2">
-        {exam.questionPapername}
+        {capitalizeWords(exam.questionPapername)}
       </h3>
 
       <p className="text-sm text-gray-500 mb-4">
@@ -36,7 +33,7 @@ const MockExamCard = ({ exam, index, handleExam,selectedExam }: any) => {
 
       <button
         disabled={!isUnlocked}
-        className={`w-full h-10 rounded-lg text-sm font-medium
+        className={`w-full h-10 cursor-pointer rounded-lg text-sm font-medium
           ${
             isUnlocked
               ? "bg-[#FF5635] text-white hover:bg-[#e34d2d]"

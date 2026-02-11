@@ -134,9 +134,9 @@ export default function SectionalExa() {
                 </>
               )}
             </h2>
-            <p className="text-gray-600 mt-1">
+             <p className="text-gray-600 mt-1">
               Strict sequential mock exams
-            </p>
+             </p>
           </div>
           <Image src={EXAMPREP} alt="exam" width={180} />
         </div>
@@ -170,7 +170,7 @@ export default function SectionalExa() {
             </button>
           ))}
         </div>
-           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mx-auto">
               { !toggle &&  examdata.map((exam: any, i: number) => (
                 <motion.div
                   key={exam._id}
@@ -178,13 +178,23 @@ export default function SectionalExa() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
                 >
-                  <div className="border rounded-lg p-5 bg-gradient-to-t from-[#F0F9FF] to-white">
+                  <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] 
+          p-4 sm:p-5 lg:p-6 
+          flex flex-col transition-all">
                     <p className="text-sm">Mock Exam</p>
-                    <h3 className="text-xl text-[#FF5635] mt-2">
+                    <h3 className=" text-lg sm:text-xl lg:text-2xl
+            font-poppins font-medium text-[#FF5635]
+            mb-4 sm:mb-5 lg:mb-6
+            leading-snug">
                       {exam.examname}
                     </h3>
                     <button
-                      className="mt-6 w-full bg-[#FF5635] text-white h-10 rounded-lg"
+                      className="  w-full md:w-fit px-6 sm:px-8 md:px-10 cursor-pointer
+                h-10 sm:h-11
+                rounded-[8px]
+                bg-[#FF5635] text-white
+                hover:bg-[#e34d2e]
+                transition-all"
                        onClick={() => onExamClick(exam)}
                     >
                       Choose to start

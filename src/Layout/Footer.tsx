@@ -64,6 +64,13 @@ export const Footer = () => {
             >
               Support
             </Link>
+               <Link
+              // onClick={() => setShowPopup(true)}
+              href="/Auth/AdminSignin"
+              className="hover:underline"
+            >
+              Login
+            </Link>
           </div>
         </div>
       </footer>

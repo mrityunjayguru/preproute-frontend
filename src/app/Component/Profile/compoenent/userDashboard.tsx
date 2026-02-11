@@ -18,6 +18,10 @@ import MockUpdate from "./MockUpdate";
 import DailyStrake from "./DailyStrake";
 import SocialShots from "./SocialShots";
 import { useRouter, usePathname } from "next/navigation";
+import HomeFooter from "../../Home/_componets/HomeFooter";
+import { handleSelectedExamType } from "@/api/ExamType";
+import { resetQuestionByExamID } from "@/api/Exam";
+import { resetQuestion } from "@/api/Question";
 
 
 const UserDashboard = () => {
@@ -25,6 +29,8 @@ const UserDashboard = () => {
     const userdashboarddata = useSelector(
         (state: any) => state?.Auth?.userDashboard,
     );
+    const examTypeData =
+        useSelector((state: any) => state.examType.examType) || [];
     const dispatch = useDispatch<AppDispatch>();
     const getDashboardData = () => {
         const payload: any = {};
@@ -33,6 +39,15 @@ const UserDashboard = () => {
     useEffect(() => {
         getDashboardData();
     }, []);
+      const handleIPmatExam=()=>{
+    let mockExam=examTypeData.find((item:any)=>item.examType==="Mocks");
+    
+      dispatch(handleSelectedExamType(mockExam));
+            const payload: any = null;
+            dispatch(resetQuestionByExamID(payload));
+            dispatch(resetQuestion(payload));
+       router.push("/Exam/Mocks?isMock=true");
+      }
     return (
         <div className="">
             <div className="min-h-screen bg-white px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 py-8">
@@ -68,7 +83,7 @@ const UserDashboard = () => {
                             </p>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                            <Button className="w-full sm:w-auto bg-[#FF5635] hover:bg-[#E04D2E] text-white rounded-lg px-8 py-3 text-base h-auto font-poppins cursor-pointer shadow-sm">
+                            <Button onClick={handleIPmatExam} className="w-full sm:w-auto bg-[#FF5635] hover:bg-[#E04D2E] text-white rounded-lg px-8 py-3 text-base h-auto font-poppins cursor-pointer shadow-sm">
                                 Attempt Mocks
                             </Button>
                             <Button onClick={()=>router.push("bookMark")} className="w-full sm:w-auto bg-[#005EB6] hover:bg-[#004D96] text-white cursor-pointer rounded-lg px-8 py-3 text-base h-auto font-poppins shadow-sm">
@@ -113,6 +128,9 @@ const UserDashboard = () => {
 
                     {/* Social Shots */}
                     <SocialShots />
+                    <div className="my-5">
+                   <HomeFooter/>
+                    </div>
                 </div>
 
                 <style jsx global>{`

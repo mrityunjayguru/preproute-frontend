@@ -44,7 +44,7 @@ export const Header: React.FC = () => {
     useSelector((state: any) => state.examType.examType) || [];
 
   useEffect(() => {
-    const payload: any = { userId: userLogin?._id };
+    const payload: any = {isDeleted:false, userId: userLogin?._id };
     dispatch(getCommonExamType(payload));
   }, [dispatch, userLogin?._id]);
 
@@ -84,6 +84,8 @@ export const Header: React.FC = () => {
     { label: "Features", href: "/home#features" },
     { label: "Pricing", href: "/PlanandPricing" },
     { label: "Community", href: "/Community" },
+    { label: "Blog", href: "/blog" },
+
   ];
 
   /* ---------- Active Helpers ---------- */
@@ -132,7 +134,7 @@ export const Header: React.FC = () => {
       // 👉 Backend को code भेजो
       const response: any = await dispatch(googleLogin({ code, isCode: true }));
       if (response.payload === true) {
-        router.push("/home");
+        router.push("/user-dashboard");
       }
     },
 
@@ -218,7 +220,7 @@ export const Header: React.FC = () => {
             ))}
 
             {/* Resources */}
-            <div
+            {/* <div
               onMouseEnter={() => setResourcesMenuOpen(true)}
               onMouseLeave={() => setResourcesMenuOpen(false)}
             >
@@ -232,16 +234,7 @@ export const Header: React.FC = () => {
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent align="start" className="w-48">
-                  {/* {token && (
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href="/bookMark"
-                        onClick={() => setResourcesMenuOpen(false)}
-                      >
-                        Bookmark
-                      </Link>
-                    </DropdownMenuItem>
-                  )} */}
+                 
 
                   <DropdownMenuItem
                     asChild
@@ -251,7 +244,7 @@ export const Header: React.FC = () => {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </div>
+            </div> */}
 
             {token ? (
               <>

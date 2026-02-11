@@ -18,8 +18,10 @@ function DailyPratice() {
     useSelector((state: any) => state?.Auth?.userDashboard?.data) || [];
 
   /**
-   * ✅ Filter only TODAY + daily practice
-   * ✅ Always return array (never undefined)
+   * ✅ Filter ONLY:
+   * - Today
+   * - examformet === daily practice
+   * - isPublished === true
    */
   const todaySections = useMemo(() => {
     if (!Array.isArray(userdashboarddata)) return [];
@@ -34,16 +36,20 @@ function DailyPratice() {
       return (
         itemDate === today &&
         item?.examformet?.toLowerCase() === "daily practice" &&
-        item?.sectionDetail
+        item?.isPublished === true &&
+        item?.sectionDetail?._id
       );
     });
   }, [userdashboarddata]);
 
-  const startExam = async (section: any) => {
-    if (!section?._id) return;
+  /**
+   * ✅ Start Exam
+   */
+  const startExam = async (sectionItem: any) => {
+    if (!sectionItem?.sectionDetail?._id) return;
 
     const payload = {
-      sectionId: section._id,
+      sectionId: sectionItem.sectionDetail._id,
     };
 
     await dispatch(getExamBeSectionTypeId(payload));
@@ -59,26 +65,26 @@ function DailyPratice() {
         </h3>
 
         <span className="bg-[#2D80FB] text-white text-xs px-6 py-2 rounded-full font-medium tracking-tight whitespace-nowrap">
-          245 Preppers Attempted
+          {todaySections.length} Sections Available
         </span>
       </div>
 
       {/* Sections */}
       <div className="space-y-4">
-        {todaySections.length > 0 ? (
-          todaySections.map((item: any, index: number) => {
-            const section = item?.sectionDetail;
-
+        {userdashboarddata.length > 0 ? (
+          userdashboarddata.map((item: any, index: number) => {
             return (
               <div
-                key={section?._id || index}
+                key={item?._id || index}
                 className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
               >
-                {/* Section info */}
+                {/* Section Info */}
                 <div className="flex-1">
                   <h4 className="font-medium text-lg text-gray-800 mb-1 font-dm-sans">
-                    {section?.section || "—"}
+                    {item?.sectionDetail?.section || "—"}
                   </h4>
+
+                
 
                   <div className="flex items-center gap-2 text-gray-500 text-sm mt-1 font-dm-sans">
                     <Image
@@ -92,7 +98,7 @@ function DailyPratice() {
                         ? new Date(item.createdAt).toLocaleDateString("en-GB", {
                             weekday: "long",
                             day: "2-digit",
-                            month: "2-digit",
+                            month: "short",
                             year: "numeric",
                           })
                         : "—"}
@@ -102,7 +108,7 @@ function DailyPratice() {
 
                 {/* Attempt Button */}
                 <Button
-                  onClick={() => startExam(section)}
+                  onClick={() => startExam(item)}
                   className="w-full sm:w-auto bg-[#FF5635] hover:bg-[#FF5635]/90 text-white rounded-lg font-poppins cursor-pointer px-8 py-2 text-base h-auto shadow-sm"
                 >
                   Attempt Now

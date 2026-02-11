@@ -12,8 +12,6 @@ function UserResult() {
   const examResult = useSelector((state: any) => state.question?.result?.data);
   const dispatch = useDispatch<AppDispatch>();
 
-  console.log(examResult);
-
   const getData = async () => {
     const payload: any = {};
     await dispatch(getTopic(payload));

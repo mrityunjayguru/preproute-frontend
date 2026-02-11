@@ -71,7 +71,7 @@ const TopicWiseTab = ({ data }: TopicWiseTabProps) => {
   /** -------------------- FILTER OPTIONS -------------------- */
   const filterOptions = useMemo(() => {
     const base = ["Time", "Topic", "Difficulty"];
-    if (data?.examdetail?.examname !== "CUET") {
+    if (data?.questionpaper?.examformet!=="sectional" && data?.questionpaper?.examformet!=="CUET" ) {
       base.unshift("Section");
     }
     return base;

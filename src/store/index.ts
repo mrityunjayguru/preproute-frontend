@@ -23,6 +23,7 @@ import bookMark from "./boockMark/index"
 import Report from "./Report/index"
 import forum from "./forum/index"
 import college from "./seatUpexam/college/index"
+import announcement from "./seatUpexam/Annoucement/index"
 const appReducer = combineReducers({
  school:school,
  forum:forum,
@@ -47,7 +48,8 @@ const appReducer = combineReducers({
  dashboard:dashboard,
  question:question,
  palnAndpricing:palnAndpricing,
- college:college
+ college:college,
+ announcement:announcement
 });
 
 // Create a root reducer with reset functionality

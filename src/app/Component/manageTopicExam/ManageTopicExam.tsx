@@ -3,14 +3,19 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-
 import { getQuestionById } from "@/api/Question";
 import RenderPreview from "@/Common/CommonLatex";
 import { AppDispatch } from "@/store/store";
+import { createboockMark } from "@/api/boockMark";
+import { Button } from "@/components/ui/button";
+import Popup from "../ManageExam/Component/Report";
+import { createReport } from "@/api/Users";
 
-// Note: Ensure these components are imported correctly
-// import { MCQOptions } from "../ManageExam/Component/MCQOptions";
-// import { NumericalKeypad } from "../ManageExam/Component/NumericalKeypad";
+interface AnswerState {
+  selected: string | null;
+  isSubmitted: boolean;
+  isCorrect: boolean | null;
+}
 
 const ManageTopicExam = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,49 +23,51 @@ const ManageTopicExam = () => {
 
   const topicExamData = useSelector((state: any) => state?.examType?.examDetail);
   const singleQuestion = useSelector((state: any) => state?.question?.singleQuestion);
+  const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
 
   const exam = topicExamData?.[0];
   const question = singleQuestion?.[0];
 
-  const totalQuestions = useMemo(
-    () => Number(exam?.examDetail?.sections?.[0]?.noOfQuestions || 0),
-    [exam]
-  );
+  /* ================= TOTAL QUESTIONS ================= */
+  const totalQuestions = useMemo(() => {
+    return Number(exam?.examDetail?.sections?.[0]?.noOfQuestions || 0);
+  }, [exam]);
 
+  /* ================= STATES ================= */
   const [questionNo, setQuestionNo] = useState(1);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [numericalValue, setNumericalValue] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [answers, setAnswers] = useState<Record<number, AnswerState>>({});
   const [seconds, setSeconds] = useState(0);
+  const [examFinished, setExamFinished] = useState(false);
+  const [reporttoggle, setReportToggle] = useState(false);
+  const [bookmarkStatus, setBookmarkStatus] = useState(false);
 
-  /* ---------------- FETCH QUESTION ---------------- */
+  /* ================= FETCH QUESTION ================= */
   const fetchQuestion = useCallback(async () => {
     if (!exam?._id) return;
-    const payload: any = {
-      questionPaperId: exam._id,
-      questionNo,
-    };
-    await dispatch(getQuestionById(payload));
+
+    const response: any = await dispatch(
+      getQuestionById({
+        questionPaperId: exam._id,
+        questionNo,
+      })
+    );
+
+    setBookmarkStatus(response?.payload?.data?.status || false);
   }, [dispatch, exam?._id, questionNo]);
 
   useEffect(() => {
     fetchQuestion();
-    setSelected(null);
-    setNumericalValue("");
-    setIsSubmitted(false);
-    setIsCorrect(null);
-    setSeconds(0);
   }, [fetchQuestion]);
 
-  /* ---------------- TIMER ---------------- */
+  /* ================= TIMER ================= */
   useEffect(() => {
-    if (isSubmitted) return;
+    if (examFinished) return;
     const timer = setInterval(() => {
       setSeconds((prev) => prev + 1);
     }, 1000);
+
     return () => clearInterval(timer);
-  }, [isSubmitted]);
+  }, [examFinished]);
 
   const formatTime = (s: number) => {
     const mins = String(Math.floor(s / 60)).padStart(2, "0");
@@ -68,176 +75,294 @@ const ManageTopicExam = () => {
     return `${mins}:${secs}`;
   };
 
-  /* ---------------- ACTIONS ---------------- */
-  const handleSubmit = useCallback(() => {
+  const currentAnswer = answers[questionNo] || {
+    selected: null,
+    isSubmitted: false,
+    isCorrect: null,
+  };
+
+  /* ================= SELECT OPTION ================= */
+  const handleSelect = (optionId: string) => {
+    if (currentAnswer.isSubmitted) return;
+
+    setAnswers((prev) => ({
+      ...prev,
+      [questionNo]: {
+        ...currentAnswer,
+        selected: optionId,
+      },
+    }));
+  };
+
+  /* ================= SUBMIT ================= */
+  const handleSubmit = () => {
     if (!question) return;
-    let correct = false;
-    if (question.answerType === "MCQ") {
-      const correctOption = question.options?.find((o: any) => o.isCorrect);
-      correct = selected === correctOption?._id;
+
+    const correctOption = question.options?.find((o: any) => o.isCorrect);
+    const isCorrect = currentAnswer.selected === correctOption?._id;
+
+    setAnswers((prev) => ({
+      ...prev,
+      [questionNo]: {
+        selected: currentAnswer.selected,
+        isSubmitted: true,
+        isCorrect,
+      },
+    }));
+  };
+
+  /* ================= NEXT ================= */
+  const handleNext = () => {
+    if (!currentAnswer.isSubmitted) return;
+
+    if (questionNo < totalQuestions) {
+      setQuestionNo((prev) => prev + 1);
+    } else {
+      setExamFinished(true);
     }
-    if (question.answerType === "Numeric") {
-      correct = numericalValue === question.correctAnswer;
+  };
+
+  /* ================= PREV ================= */
+  const handlePrev = () => {
+    if (questionNo > 1) {
+      setQuestionNo((prev) => prev - 1);
     }
-    setIsCorrect(correct);
-    setIsSubmitted(true);
-  }, [question, selected, numericalValue]);
+  };
 
-  const handleNext = useCallback(() => {
-    if (questionNo < totalQuestions) setQuestionNo((q) => q + 1);
-  }, [questionNo, totalQuestions]);
+  /* ================= BOOKMARK ================= */
+  const handleBookmark = async () => {
+    if (!question?._id) return;
 
-  const handleKeyPress = useCallback((key: string) => {
-    if (key === "Clear All") return setNumericalValue("");
-    if (key === "⌫") return setNumericalValue((v) => v.slice(0, -1));
-    if (/^[0-9]$/.test(key)) return setNumericalValue((v) => v + key);
-  }, []);
+    const payload = {
+      questionId: question._id,
+      BookmarkStatus: bookmarkStatus ? "remove" : "add",
+    };
 
-  return (
-    <div className="min-h-screen bg-[#F4F9FF] p-6 font-sans">
-      <div className="max-w-6xl mx-auto">
-        {/* ================= HEADER ================= */}
-        <div className="flex justify-between items-center mb-6">
-          <div className="text-2xl font-bold tracking-tight">
-            the<span className="text-[#FF5A3C]">prep</span>route
+    await dispatch(createboockMark(payload));
+    setBookmarkStatus(!bookmarkStatus);
+  };
+
+  /* ================= REPORT ================= */
+  const handleSubmitReport = (val: string) => {
+    const payload = {
+      title: val,
+      questionId: question?._id,
+      userId: userLogin?._id,
+    };
+
+    dispatch(createReport(payload));
+    setReportToggle(false);
+  };
+
+  /* ================= SCORE ================= */
+  const correctCount = Object.values(answers).filter((a) => a.isCorrect).length;
+  const wrongCount = Object.values(answers).filter(
+    (a) => a.isSubmitted && !a.isCorrect
+  ).length;
+
+  const percentage = totalQuestions
+    ? ((correctCount / totalQuestions) * 100).toFixed(2)
+    : 0;
+
+  /* ================= FINAL PAGE ================= */
+  if (examFinished) {
+    return (
+      <div className="min-h-screen bg-[#F4F9FF] flex items-center justify-center p-6">
+        <div className="bg-white rounded-2xl shadow-lg p-10 w-[500px] text-center">
+          <h2 className="text-3xl font-bold mb-6">Exam Completed 🎉</h2>
+
+          <div className="space-y-4 text-lg">
+            <p>Total Questions: <b>{totalQuestions}</b></p>
+            <p className="text-green-600">Correct: <b>{correctCount}</b></p>
+            <p className="text-red-500">Wrong: <b>{wrongCount}</b></p>
+            <p className="text-blue-600">Score: <b>{percentage}%</b></p>
+            <p>Time Taken: <b>{formatTime(seconds)}</b></p>
           </div>
+
           <button
             onClick={() => router.push("/Exam/topicExam")}
-            className="bg-black text-white px-8 py-2 rounded-full text-sm font-medium"
+            className="mt-6 bg-[#FF5A3C] text-white px-8 py-2 rounded-lg"
           >
-            Exit Exam
+            Back to Exams
           </button>
         </div>
+      </div>
+    );
+  }
 
-        {/* ================= MAIN QUESTION CARD ================= */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 mb-6">
-          <div className="flex justify-between items-start mb-8">
-            <div>
-              <p className="text-gray-500 text-lg">Topic / Sub Topic</p>
-              <p className="text-[#FF5A3C] font-semibold text-lg">
-                {exam?.examDetail?.examname || "Test 1"} - Expert
-              </p>
+  /* ================= MAIN UI ================= */
+  return (
+    <>
+      <Popup
+        isOpen={reporttoggle}
+        onClose={() => setReportToggle(false)}
+        onSubmit={handleSubmitReport}
+        title="Report Question"
+        question={question}
+      />
+
+      <div className="min-h-screen bg-[#F4F9FF] p-6 font-sans">
+        <div className="max-w-6xl mx-auto">
+
+          {/* HEADER */}
+          <div className="flex justify-between items-center mb-6">
+            <div className="text-2xl font-bold">
+              the<span className="text-[#FF5A3C]">prep</span>route
             </div>
-            <div className="flex items-center gap-3">
-              <div className="text-[#FF5A3C] text-3xl italic">⏱</div>
-              <div className="flex flex-col">
-                <span className="text-gray-400 text-[10px] uppercase font-bold tracking-wider">Elapsed Time</span>
-                <span className="text-black text-xl font-bold leading-none">{formatTime(seconds)}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="mb-8">
-            <p className="text-[#FF5A3C] font-medium mb-3 text-sm">
-              Question No. {questionNo} of {totalQuestions}
-            </p>
-            <div className="text-gray-800 text-lg leading-relaxed font-normal">
-              <RenderPreview content={question?.questionText} />
-            </div>
-          </div>
-
-          {/* OPTIONS */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-            {question?.answerType === "MCQ" && (
-              question.options?.map((opt: any) => (
-                <div
-                  key={opt._id}
-                  onClick={() => !isSubmitted && setSelected(opt._id)}
-                  className={`flex items-center p-4 rounded-xl border-2 transition-all cursor-pointer ${
-                    selected === opt._id ? "border-[#FF5A3C] bg-white" : "border-gray-100 hover:border-gray-200"
-                  }`}
-                >
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mr-4 ${
-                    selected === opt._id ? "border-[#FF5A3C]" : "border-gray-300"
-                  }`}>
-                    {selected === opt._id && <div className="w-2.5 h-2.5 bg-[#FF5A3C] rounded-full" />}
-                  </div>
-                  <RenderPreview content={opt.text} />
-                </div>
-              ))
-            )}
-          </div>
-
-          {/* PAGINATION & BUTTONS */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-gray-50">
             <button
-              disabled={questionNo === 1}
-              onClick={() => setQuestionNo((q) => Math.max(1, q - 1))}
-              className="px-8 py-2 border border-[#FF5A3C] text-[#FF5A3C] rounded-lg font-medium hover:bg-orange-50 disabled:opacity-50"
+              onClick={() => router.push("/Exam/topicExam")}
+              className="bg-black text-white px-8 py-2 rounded-full text-sm"
             >
-              Prev
+              Exit Exam
             </button>
-
-            <div className="flex gap-2">
-              {Array.from({ length: totalQuestions }).map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setQuestionNo(i + 1)}
-                  className={`w-9 h-9 rounded text-sm font-medium transition-colors ${
-                    questionNo === i + 1 ? "bg-[#2563EB] text-white" : "border text-gray-600 hover:bg-gray-100"
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                disabled={questionNo === totalQuestions}
-                onClick={handleNext}
-                className="px-8 py-2 border border-[#FF5A3C] text-[#FF5A3C] rounded-lg font-medium hover:bg-orange-50 disabled:opacity-50"
-              >
-                Next
-              </button>
-              {!isSubmitted && (
-                <button
-                  onClick={handleSubmit}
-                  className="px-10 py-2 bg-[#FF5A3C] text-white rounded-lg font-semibold shadow-lg shadow-orange-100 hover:bg-[#e44d32]"
-                >
-                  Submit
-                </button>
-              )}
-            </div>
           </div>
-        </div>
 
-        {/* ================= RESULT SECTION ================= */}
-        {isSubmitted && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-6 flex justify-between items-center border-b border-gray-50">
-              <div>
-                <p className="text-gray-400 text-sm font-medium">Correct Answer</p>
-                <p className="text-[#64D164] text-2xl font-bold">
-                  {question?.answerType === "MCQ"
-                    ? question?.options?.find((o: any) => o.isCorrect)?.text || "Option 2"
-                    : question?.correctAnswer}
-                </p>
-              </div>
-              <div className="flex gap-3">
-                <button className="px-6 py-2 bg-[#F9F9F9] border border-gray-200 rounded-lg text-gray-600 text-sm font-medium">
-                  Report
-                </button>
-                <button className="px-6 py-2 bg-[#F9F9F9] border border-gray-200 rounded-lg text-gray-600 text-sm font-medium">
-                  Bookmark
-                </button>
-              </div>
+          {/* QUESTION CARD */}
+          <div className="bg-white rounded-2xl shadow-sm border p-8 mb-6">
+
+            <div className="flex justify-between mb-6">
+              <p className="text-[#FF5A3C] font-medium">
+                Question {questionNo} of {totalQuestions}
+              </p>
+              <p className="font-bold">{formatTime(seconds)}</p>
             </div>
 
-            <div className="p-8">
-              <p className="text-center text-gray-400 font-medium mb-4">Solution</p>
-              <div className="w-full  rounded-xl aspect-video max-h-[350px] flex items-center justify-center overflow-hidden">
-                {question?.hint ? (
-                  <RenderPreview content={question.hint} />
+            <RenderPreview content={question?.questionText} />
+
+            {/* OPTIONS */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+              {question?.options?.map((opt: any) => {
+                const correctOption = question.options?.find((o: any) => o.isCorrect);
+                const isSelected = currentAnswer.selected === opt._id;
+                const showCorrect =
+                  currentAnswer.isSubmitted &&
+                  opt._id === correctOption?._id;
+                const showWrong =
+                  currentAnswer.isSubmitted &&
+                  isSelected &&
+                  opt._id !== correctOption?._id;
+
+                return (
+                  <div
+                    key={opt._id}
+                    onClick={() => handleSelect(opt._id)}
+                    className={`p-4 rounded-xl border-2 cursor-pointer
+                      ${
+                        showCorrect
+                          ? "border-green-500 bg-green-50"
+                          : showWrong
+                          ? "border-red-500 bg-red-50"
+                          : isSelected
+                          ? "border-[#FF5A3C]"
+                          : "border-gray-200 hover:border-gray-300"
+                      }
+                    `}
+                  >
+                    <RenderPreview content={opt.text} />
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* NAVIGATION WITH QUESTION NUMBERS */}
+            <div className="flex justify-between items-center mt-8 pt-6 border-t">
+
+              {/* PREV */}
+              <button
+                disabled={questionNo === 1}
+                onClick={handlePrev}
+                className="px-6 py-2 border border-[#FF5A3C] text-[#FF5A3C] rounded-lg disabled:opacity-50"
+              >
+                Prev
+              </button>
+
+              {/* QUESTION NUMBERS */}
+              <div className="flex gap-2 flex-wrap justify-center">
+                {Array.from({ length: totalQuestions }).map((_, i) => {
+                  const q = i + 1;
+                  const ans = answers[q];
+
+                  return (
+                    <button
+                      key={q}
+                      onClick={() => setQuestionNo(q)}
+                      className={`w-9 h-9 rounded font-medium
+                        ${
+                          q === questionNo
+                            ? "bg-blue-600 text-white"
+                            : ans?.isSubmitted
+                            ? ans?.isCorrect
+                              ? "bg-green-500 text-white"
+                              : "bg-red-500 text-white"
+                            : "border border-gray-300 text-gray-600"
+                        }
+                      `}
+                    >
+                      {q}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* SUBMIT / NEXT */}
+              <div>
+                {!currentAnswer.isSubmitted ? (
+                  <button
+                    onClick={handleSubmit}
+                    disabled={!currentAnswer.selected}
+                    className="px-8 py-2 bg-[#FF5A3C] text-white rounded-lg disabled:opacity-50"
+                  >
+                    Submit
+                  </button>
                 ) : (
-                 null
+                  <button
+                    onClick={handleNext}
+                    className="px-8 py-2 border border-[#FF5A3C] text-[#FF5A3C] rounded-lg"
+                  >
+                    {questionNo === totalQuestions ? "Finish" : "Next"}
+                  </button>
                 )}
               </div>
             </div>
           </div>
-        )}
+
+          {/* BOOKMARK & REPORT */}
+          <div className="flex gap-2">
+            <Button
+              onClick={handleBookmark}
+              variant="outline"
+              className="bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF]"
+            >
+              {bookmarkStatus ? "Remove Bookmark" : "Bookmark"}
+            </Button>
+
+            <Button
+              onClick={() => setReportToggle(true)}
+              variant="outline"
+              className="bg-gradient-to-t from-[#FFECDF] to-white border border-[#F0F9FF]"
+            >
+              Report
+            </Button>
+          </div>
+
+          {/* HINT */}
+          {currentAnswer.isSubmitted && (
+            <div className="bg-white rounded-2xl shadow-sm border p-8 mt-6">
+              <p className="text-center text-gray-400 font-medium mb-4">
+                Solution / Hint
+              </p>
+              {question?.hint ? (
+                <RenderPreview content={question.hint} />
+              ) : (
+                <p className="text-center text-gray-400">
+                  No hint available
+                </p>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

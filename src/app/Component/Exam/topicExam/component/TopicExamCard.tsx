@@ -3,9 +3,11 @@ import { AppDispatch } from "@/store/store";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-
+import { capitalizeWords } from "@/Utils/Cappital";
+import { FiLock } from "react-icons/fi";
+import { FaArrowAltCircleDown } from "react-icons/fa";
 /* ================= PARENT ================= */
-
+import { FaArrowAltCircleUp } from "react-icons/fa";
 const TopicExamCard = ({ selectedExam }: any) => {
   const examById = useSelector((s: any) => s.exam?.examById) || [];
 
@@ -47,17 +49,17 @@ const TopicBlock = ({ topic, hasAccess }: any) => {
             {" "} | Sub Topics {countSubTopics}
           </span>
         </div>
-        <span>{open ? "▲" : "▼"}</span>
+        <span>{open ? (<FaArrowAltCircleUp size={28}/>) : (<FaArrowAltCircleDown size={28} /> )}</span>
       </div>
 
       {open && (
         <div className="w-full">
           {/* TABLE HEADER */}
-          <div className="grid grid-cols-4 bg-[#FF5A3C] text-white text-sm font-medium">
-            <div className="p-3">Exam Topic</div>
-            <div className="p-3 text-center">Basic</div>
-            <div className="p-3 text-center">Advanced</div>
-            <div className="p-3 text-center">Expert</div>
+          <div className="grid grid-cols-4 bg-[#FFEDE0] text-white text-sm font-medium">
+            <div className="p-3"></div>
+            <div className="p-3 text-center text-[#000]">Basic</div>
+            <div className="p-3 text-center text-[#000]">Advanced</div>
+            <div className="p-3 text-center text-[#000]">Expert</div>
           </div>
 
           <TopicRows topic={topic} hasAccess={hasAccess} />
@@ -136,9 +138,13 @@ const LevelCell = ({ tests = [], hasAccess }: any) => {
           }`}
           onClick={() => handleStartExam(test)}
         >
-          {hasAccess ? test.testName : `🔒 ${test.testName}`}
+  {!hasAccess && <FiLock size={14} className="text-red-500" />}
+  <span>{capitalizeWords(test.testName)}</span>
         </div>
       ))}
     </div>
   );
 };
+
+
+ 

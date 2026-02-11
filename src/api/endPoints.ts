@@ -90,6 +90,12 @@ export const Report={
   conversation:"forum/conversation"
 
 }
+export const Annoucement={
+    create:"annoucement/create",
+  get:"annoucement/get",
+  conversation:"forum/conversation",
+  update:"annoucement/update",
+}
 
 
 export const feedback={

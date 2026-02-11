@@ -250,14 +250,21 @@ export default function MergedExamPageCUET() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {examdata.map((exam: any, index: number) => (
-                <div key={exam._id} className="rounded-[8px] bg-white border border-[#E6F4FF] p-6 flex flex-col shadow-sm hover:shadow-md transition-all">
+                <div key={exam._id} className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white 
+                 border border-[#E6F4FF] p-4 sm:p-5 lg:p-6 
+                 flex flex-col transition-all">
                   <p className="text-xs font-medium text-gray-400 mb-1">Subject</p>
                   <h3 className="text-xl font-poppins font-medium text-[#FF5635] mb-6">
                     {exam.subjectName}
                   </h3>
                   <button
                     onClick={() => handleSelectExam(exam)}
-                    className="mt-auto w-full py-2.5 bg-[#FF5635] text-white rounded-lg font-medium hover:bg-black transition-colors cursor-pointer"
+                    className="  w-full md:w-fit px-6 sm:px-8 md:px-10 cursor-pointer
+                h-10 sm:h-11
+                rounded-[8px]
+                bg-[#FF5635] text-white
+                hover:bg-[#e34d2e]
+                transition-all"
                   >
                     Choose To Start
                   </button>
