@@ -5,14 +5,14 @@ import Anoucement from "./Anoucement";
 import { useSelector } from "react-redux";
 
 function DailyStrake() {
-      const userdashboarddata = useSelector(
-        (state: any) => state?.Auth?.userDashboard,
-    );
-    
-    const todayAttempts =
-  userdashboarddata?.attemptcountdailybasis?.[0]?.totalAttempts ?? 0;
+  const userdashboarddata = useSelector(
+    (state: any) => state?.Auth?.userDashboard,
+  );
+
+  const todayAttempts =
+    userdashboarddata?.attemptcountdailybasis?.[0]?.totalAttempts ?? 0;
   return (
-    <div className="md:col-span-6 lg:col-span-4 flex flex-col space-y-6">
+    <div className="md:col-span-1 lg:col-span-4 flex flex-col space-y-6">
       {/* Daily Streaks */}
       <div className="p-6 bg-[#FFF4CF] border-none rounded-2xl flex flex-col justify-between h-40">
         <div className="flex justify-between items-start">
@@ -30,8 +30,8 @@ function DailyStrake() {
       </div>
 
       {/* Announcements */}
-     
-<Anoucement/>
+
+      <Anoucement />
     </div>
   );
 }

@@ -36,25 +36,6 @@ export default function InstructionsPage() {
     <div className="px-3 sm:px-6  flex flex-col gap-10">
       {/* MAIN CARD */}
       <div className="px-6 sm:px-8 md:px-12 lg:px-28">
-        <header
-          className={`sticky font-dm-sans  top-0 z-20 w-full bg-white font-DM_Sans`}
-        >
-          <div className="mx-auto flex items-center justify-between gap-4 py24 lg:py-5">
-            {/* Left: Logo */}
-            <div className="flex items-center gap-12">
-              <div
-                className="cursor-pointer"
-                onClick={() => router.push("/home")}
-              >
-                <Image
-                  src={logo}
-                  alt="Logo"
-                  className="h-8 w-auto object-contain"
-                />
-              </div>
-            </div>
-          </div>
-        </header>
         {/* HEADER */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h1 className="text-xl sm:text-2xl md:text-3xl   font-poppins text-black">
@@ -231,7 +212,7 @@ export default function InstructionsPage() {
           </ul>
         </section>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }
