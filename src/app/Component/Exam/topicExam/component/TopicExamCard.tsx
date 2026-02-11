@@ -1,13 +1,16 @@
+"use client";
+
+import React, { useState } from "react";
 import { getQuestionPaperById } from "@/api/QuestionPaper";
 import { AppDispatch } from "@/store/store";
-import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { capitalizeWords } from "@/Utils/Cappital";
-import { FiLock } from "react-icons/fi";
-import { FaArrowAltCircleDown } from "react-icons/fa";
+import { FaArrowAltCircleDown, FaArrowAltCircleUp } from "react-icons/fa";
+import { FaLock } from "react-icons/fa6";
+import { FaLockOpen } from "react-icons/fa";
 /* ================= PARENT ================= */
-import { FaArrowAltCircleUp } from "react-icons/fa";
+
 const TopicExamCard = ({ selectedExam }: any) => {
   const examById = useSelector((s: any) => s.exam?.examById) || [];
 
@@ -44,22 +47,27 @@ const TopicBlock = ({ topic, hasAccess }: any) => {
         onClick={() => setOpen(!open)}
       >
         <div className="font-semibold">
-           {topic?.topicName}
+          {topic?.topicName}
           <span className="text-sm font-normal">
             {" "} | Sub Topics {countSubTopics}
           </span>
         </div>
-        <span>{open ? (<FaArrowAltCircleUp size={28}/>) : (<FaArrowAltCircleDown size={28} /> )}</span>
+
+        {open ? (
+          <FaArrowAltCircleUp size={24} />
+        ) : (
+          <FaArrowAltCircleDown size={24} />
+        )}
       </div>
 
       {open && (
         <div className="w-full">
           {/* TABLE HEADER */}
-          <div className="grid grid-cols-4 bg-[#FFEDE0] text-white text-sm font-medium">
+          <div className="grid grid-cols-4 bg-[#FFEDE0] text-sm font-medium">
             <div className="p-3"></div>
-            <div className="p-3 text-center text-[#000]">Basic</div>
-            <div className="p-3 text-center text-[#000]">Advanced</div>
-            <div className="p-3 text-center text-[#000]">Expert</div>
+            <div className="p-3 text-center text-black">Basic</div>
+            <div className="p-3 text-center text-black">Advanced</div>
+            <div className="p-3 text-center text-black">Expert</div>
           </div>
 
           <TopicRows topic={topic} hasAccess={hasAccess} />
@@ -95,7 +103,7 @@ const TopicRows = ({ topic, hasAccess }: any) => {
           key={i}
           className="grid grid-cols-4 border-b text-sm bg-[#F8FCFF]"
         >
-          {/* SUB TOPIC */}
+          {/* SUB TOPIC NAME */}
           <div className="p-3 font-medium text-[#FF5A3C]">
             {row.subTopicName}
           </div>
@@ -116,8 +124,6 @@ const LevelCell = ({ tests = [], hasAccess }: any) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleStartExam = async (test: any) => {
-    if (!hasAccess) return;
-
     await dispatch(getQuestionPaperById({ _id: test._id }));
     router.push("/Exam/attemptTopicExam");
   };
@@ -128,23 +134,34 @@ const LevelCell = ({ tests = [], hasAccess }: any) => {
         <span className="text-gray-400">Coming Soon</span>
       )}
 
-      {tests.map((test: any) => (
-        <div
-          key={test._id}
-          className={`text-sm ${
-            hasAccess
-              ? "text-blue-600 cursor-pointer"
-              : "text-gray-400 cursor-not-allowed"
-          }`}
-          onClick={() => handleStartExam(test)}
-        >
-  {!hasAccess && <FiLock size={14} className="text-red-500" />}
-  <span>{capitalizeWords(test.testName)}</span>
-        </div>
-      ))}
+      {tests.map((test: any) => {
+        const isFree = test?.isfree === true;
+        const canAccess = hasAccess || isFree;
+
+        return (
+          <div
+            key={test._id}
+            className={`flex items-center justify-center gap-2 text-sm ${
+              canAccess
+                ? "text-blue-600 cursor-pointer"
+                : "text-gray-400 cursor-not-allowed"
+            }`}
+            onClick={() => {
+              if (canAccess) handleStartExam(test);
+            }}
+          >
+            {!canAccess && (
+              <FaLock size={14} className="text-red-500" />
+            )}
+       {isFree && (
+              <span className=" text-green-600  ">
+                <FaLockOpen size={14} />
+              </span>
+            )}
+            <span>{capitalizeWords(test.testName)}</span>
+          </div>
+        );
+      })}
     </div>
   );
 };
-
-
- 
