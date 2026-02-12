@@ -2,9 +2,9 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 function MockProgress() {
-    const userdashboarddata = useSelector(
-        (state: any) => state?.Auth?.userDashboard,
-    );
+  const userdashboarddata = useSelector(
+    (state: any) => state?.Auth?.userDashboard,
+  );
   return (
     <div className="flex justify-between items-center">
       <div className="space-y-1">

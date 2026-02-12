@@ -44,31 +44,31 @@ export const Header: React.FC = () => {
     useSelector((state: any) => state.examType.examType) || [];
 
   useEffect(() => {
-    const payload: any = {isDeleted:false, userId: userLogin?._id };
+    const payload: any = { isDeleted: false, userId: userLogin?._id };
     dispatch(getCommonExamType(payload));
   }, [dispatch, userLogin?._id]);
 
   const handleExamClick = async (exam: any) => {
-    const payload:any=null
+    const payload: any = null
     dispatch(handleSelectedExamType(exam));
     dispatch(resetQuestionByExamID(payload));
     dispatch(resetQuestion(payload));
 
-      const payload2: any = {
+    const payload2: any = {
       userId: userLogin?._id,
       examTypeId: exam?._id,
     };
-   await dispatch(getCommonexam(payload2));
-    if(exam.examType.toLowerCase()=="topic wise"){ 
-    router.push("/Exam/topicExam");
-    }else if(exam.examType.toLowerCase()=="sectional"){
-    router.push("/Exam/sectionalExam");
+    await dispatch(getCommonexam(payload2));
+    if (exam.examType.toLowerCase() == "topic wise") {
+      router.push("/Exam/topicExam");
+    } else if (exam.examType.toLowerCase() == "sectional") {
+      router.push("/Exam/sectionalExam");
     }
-    else if(exam.examType.toLowerCase()=="daily practice"){
-    router.push("/user-dashboard");
+    else if (exam.examType.toLowerCase() == "daily practice") {
+      router.push("/user-dashboard");
     }
-    else{
-    router.push("/Exam/Mocks");
+    else {
+      router.push("/Exam/Mocks");
     }
   };
 
@@ -116,15 +116,15 @@ export const Header: React.FC = () => {
       examTypeId: exam?._id,
       subExamTypeId: sub?._id,
     };
-   await dispatch(getCommonexam(payload));
-   if(sub?.subExamType=="CUET"){
-    router.push("/Exam/CUET");
+    await dispatch(getCommonexam(payload));
+    if (sub?.subExamType == "CUET") {
+      router.push("/Exam/CUET");
 
-   }else{
-    router.push("/Exam/Mocks");
+    } else {
+      router.push("/Exam/Mocks");
 
-   }
-    
+    }
+
   };
 
   const loginWithGoogle = useGoogleLogin({
@@ -148,13 +148,13 @@ export const Header: React.FC = () => {
 //     redirect_uri: "http://localhost:3200/api/auth/google/callback",
 //   });
 const preventredirect=()=>{
-  if(!token){
+  if(!token  || userLogin.role=="Admin"){
    router.push("/home")
   }
 }
   return (
-    <header className="sticky top-0 z-20 w-full bg-white sm:px-6 md:px-8 lg:px-10 xl:px-12">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:py-5">
+    <header className="sticky top-0 z-20 w-full bg-white px-2 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-2 py-4 sm:px-4 lg:py-5">
         {/* Logo */}
         <div className="flex items-center gap-12">
           <div className="cursor-pointer" onClick={preventredirect}>
@@ -272,7 +272,7 @@ const preventredirect=()=>{
         </div>
 
         {/* Right */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {!token ? (
             <div className="hidden lg:flex items-center gap-3">
               {/* <Link href="/Auth/register" className="text-[#FF5635]">
@@ -308,13 +308,13 @@ const preventredirect=()=>{
           {/* Mobile */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="lg:hidden">
-                <MenuIcon />
+              <Button variant="ghost" size="icon" className="lg:hidden shrink-0">
+                <MenuIcon className="h-5 w-5 sm:h-6 sm:w-6" />
               </Button>
             </SheetTrigger>
 
-            <SheetContent side="right" className="w-[320px]">
-              <div className="space-y-3 pt-6">
+            <SheetContent side="right" className="w-[85%] sm:w-[320px] p-0 flex flex-col h-full">
+              <div className="flex-1 overflow-y-auto pt-10 pb-6 px-2 space-y-6 no-scrollbar">
                 {/* Practice Menu - Mobile */}
                 <div className="px-4">
                   <p className="text-sm font-semibold text-gray-900 mb-2">
@@ -333,23 +333,25 @@ const preventredirect=()=>{
                         {exam.examType}
                       </button>
                     ))}
-                  </div>   
+                  </div>
                 </div>
 
                 {/* Main Links */}
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={`block px-4 py-2 rounded-lg ${isActive(link.href)
-                      ? "text-[#FF5635] font-semibold"
-                      : "text-gray-700 hover:text-[#FF5635]"
-                      }`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                <div className="px-4 space-y-1">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={`block px-4 py-2 rounded-lg text-sm ${isActive(link.href)
+                        ? "text-[#FF5635] font-semibold bg-orange-50"
+                        : "text-gray-700 hover:text-[#FF5635] hover:bg-orange-50"
+                        }`}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
 
                 {/* Resources Menu - Mobile */}
                 <div className="px-4">
@@ -392,15 +394,17 @@ const preventredirect=()=>{
                     </Link>
                   </div>
                 </div>
+              </div>
 
 
-                {/* Auth Buttons - Mobile */}
-                {!token && (
-                  <div className="px-4 pt-4 space-y-2 border-t">
+              {/* Auth Buttons - Mobile */}
+              <div className="p-4 border-t bg-white safe-area-bottom pb-8 sm:pb-6">
+                {!token ? (
+                  <div className="space-y-2">
                     <Link
                       href="/Auth/register"
                       onClick={() => setMobileOpen(false)}
-                      className="block text-center px-4 py-2 text-[#FF5635] font-semibold rounded-lg border border-[#FF5635]"
+                      className="block text-center px-4 py-2 text-[#FF5635] font-semibold rounded-full border border-[#FF5635] hover:bg-orange-50 transition-colors"
                     >
                       Register
                     </Link>
@@ -409,31 +413,28 @@ const preventredirect=()=>{
                         loginWithGoogle()
                         setMobileOpen(false);
                       }}
-                      className="w-full rounded-full bg-[#FF5635] text-white"
+                      className="w-full rounded-full bg-[#FF5635] text-white px-4 py-2 h-auto text-lg shadow-lg hover:bg-[#E04D2E] transition-all"
                     >
                       Login
                     </Button>
                   </div>
-                )}
-
-                {/* Dashboard Button - Mobile */}
-                {token &&
+                ) : (
+                  /* Dashboard Button - Mobile */
                   (userLogin?.role === "Admin" ||
                     userLogin?.role === "Expert") && (
-                    <div className="px-4 pt-4 border-t">
-                      <Button
-                        onClick={() => {
-                          router.push("/dashboard/home");
-                          setMobileOpen(false);
-                        }}
-                        className="w-full border-[#FF5635] text-[#FF5635]"
-                        variant="outline"
-                      >
-                        <LayoutDashboard className="mr-2 h-4 w-4" />
-                        Dashboard
-                      </Button>
-                    </div>
-                  )}
+                    <Button
+                      onClick={() => {
+                        router.push("/dashboard/home");
+                        setMobileOpen(false);
+                      }}
+                      className="w-full border-[#FF5635] text-[#FF5635] px-4 py-2 h-auto text-lg"
+                      variant="outline"
+                    >
+                      <LayoutDashboard className="mr-2 h-5 w-5" />
+                      Dashboard
+                    </Button>
+                  )
+                )}
               </div>
             </SheetContent>
           </Sheet>

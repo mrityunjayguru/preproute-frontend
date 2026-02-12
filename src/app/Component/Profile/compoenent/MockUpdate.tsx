@@ -13,17 +13,17 @@ function MockUpdate() {
       </h3>
 
       {/* ✅ max height + scroll added */}
-      <div className="space-y-3 flex-1 overflow-y-auto max-h-[320px] pr-1">
+      <div className="space-y-3 flex-1 overflow-y-auto max-h-[320px] lg:max-h-[520px] pr-1">
         {userdashboarddata?.calculatenexkmoxk?.length > 0 ? (
-          userdashboarddata.calculatenexkmoxk.map((group, gi) =>
-            group?.exams?.map((exam, i) => (
+          userdashboarddata.calculatenexkmoxk.map((group: any, gi: any) =>
+            group?.exams?.map((exam: any, i: any) => (
               <div
                 key={`${gi}-${i}`}
                 className="bg-white py-4 px-3 border-l-4 border-[#FF5635] font-dm-sans"
               >
                 <div className="flex items-center gap-1 font-bold text-sm">
                   <span className="text-[#FF5635]">
-                    {exam?.examname} {exam?.subjectName} 
+                    {exam?.examname} {exam?.subjectName}
                   </span>
                   <span className="text-gray-800">
                     {exam?.questionPapername || "Mock"}
