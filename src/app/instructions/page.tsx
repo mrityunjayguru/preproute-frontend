@@ -4,7 +4,7 @@ import InstructionPage from '../Component/ManageExam/Component/InstructionPaeg';
 
 function Instruction() {
   return (
-    <div>
+    <div className='mt-10'>
       <InstructionPage/>
   </div>
   )

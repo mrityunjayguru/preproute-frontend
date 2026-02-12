@@ -105,7 +105,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
       {/* ---------------- BUTTONS ---------------- */}
       <div className="mt-auto w-full font-poppins">
         {isLocked && (
-          <Button onClick={()=>router.push("/PlanandPricing")}
+          <Button onClick={() => router.push("/PlanandPricing")}
             className="px-10 h-11 rounded-[8px] bg-[#E3E5E9] text-[#ADB5CC] cursor-not-allowed font-poppins"
           >
             Start
@@ -152,7 +152,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
                 className="px-10 h-11 rounded-[8px] 
                            bg-[#FF5635] text-white 
                            hover:bg-black transition cursor-pointer font-poppins"
-                onClick={() => handleExam(exam, "start",index)}
+                onClick={() => handleExam(exam, "start", index)}
               >
                 Start
               </Button>
@@ -167,8 +167,8 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
 // perticuler Exam section
 export default function MergedExamPage() {
   const searchParams = useSearchParams();
-  const [mockDate,setMockDate]=useState("")
-  const [sectionId,setSectionId]=useState(null)
+  const [mockDate, setMockDate] = useState("")
+  const [sectionId, setSectionId] = useState(null)
   const isMock: any = searchParams.get("isMock") === "true";
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
@@ -181,22 +181,22 @@ export default function MergedExamPage() {
   const [selectedExam, setSelectedExam] = useState<any>(null);
   const examdata = useSelector((s: any) => s.exam?.exam) || [];
   const formatMockDate = (date: string) => {
-  return new Date(date).toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-};
+    return new Date(date).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
 
-useEffect(() => {
-  if (selectedExam?.mockDate) {
-    const date=formatMockDate(selectedExam.mockDate);
-    setMockDate(date);
-    // setMockDate(selectedExam.mockDate);
-  }else{
-    setMockDate("");
-  }
-}, [selectedExam]);
+  useEffect(() => {
+    if (selectedExam?.mockDate) {
+      const date = formatMockDate(selectedExam.mockDate);
+      setMockDate(date);
+      // setMockDate(selectedExam.mockDate);
+    } else {
+      setMockDate("");
+    }
+  }, [selectedExam]);
 
   useEffect(() => {
     // const payload: any = {
@@ -205,41 +205,41 @@ useEffect(() => {
     // dispatch(getCommonexam(payload));
   }, []);
 
- useEffect(() => {
+  useEffect(() => {
 
-  if (examById.length > 0) {
-    const payload: any = {
-      examname: examById[0]?.exam?.examname,
-      _id: examById[0]?.exam?._id,
-      mockDate: examById[0]?.exam?.mockDate, // ✅ ADD THIS
-      section:examById[0]?.sectionDetails
-    };
-    setSelectedExam(payload);
-  }
-}, [examById]);
+    if (examById.length > 0) {
+      const payload: any = {
+        examname: examById[0]?.exam?.examname,
+        _id: examById[0]?.exam?._id,
+        mockDate: examById[0]?.exam?.mockDate, // ✅ ADD THIS
+        section: examById[0]?.sectionDetails
+      };
+      setSelectedExam(payload);
+    }
+  }, [examById]);
 
 
   useEffect(() => {
     setSelectedExam(null);
   }, [selectedExamType]);
   // Handle dropdown
-  const handleSelectExam = async(option: any) => {
+  const handleSelectExam = async (option: any) => {
     if (!option) return;
-    dispatch(handleSetSelectedExam(option.value ||option._id ));
-    const exam = option.value ;
+    dispatch(handleSetSelectedExam(option.value || option._id));
+    const exam = option.value;
     setSelectedExam(exam);
 
     const payload: any = {
-      examid: exam?._id || option._id ,
+      examid: exam?._id || option._id,
       examTypeId: selectedExamType?._id,
       isPublished: true,
       uid: loginUser?._id,
     };
-if(sectionId){
-  payload.sectionId=sectionId
-}
+    if (sectionId) {
+      payload.sectionId = sectionId
+    }
 
-   await dispatch(getCommonQuestionBeExamId(payload));
+    await dispatch(getCommonQuestionBeExamId(payload));
   };
 
   const handleSelectExamDynamic = (val: any) => {
@@ -254,32 +254,31 @@ if(sectionId){
       isPublished: true,
       uid: loginUser?._id,
     };
-if(sectionId)
- {
-   payload.sectionId=sectionId
- }
+    if (sectionId) {
+      payload.sectionId = sectionId
+    }
     dispatch(getCommonQuestionBeExamId(payload));
   };
 
-  const handleExam = async (examData: any, type: any,i:any) => {
-if (
-  i > 0 &&
-  examById[i - 1]?.hasGivenExam==false ||
-  examById[i - 1]?.userSummary?.target === 0
-) {
- ToastError("Please complete previous mock exam first");
-  
-  return;
-}
+  const handleExam = async (examData: any, type: any, i: any) => {
+    if (
+      i > 0 &&
+      examById[i - 1]?.hasGivenExam == false ||
+      examById[i - 1]?.userSummary?.target === 0
+    ) {
+      ToastError("Please complete previous mock exam first");
+
+      return;
+    }
 
 
-  
+
     if (!localStorage.getItem("token")) return router.push("/Auth/signin");
     const payload: any = null;
     dispatch(handleGivenExam(payload));
     dispatch(setCurrentSection(payload));
     if (!examData?.hasGivenExam || type == "Resume" || type == "start") {
-       localStorage.setItem("exam_permission","true")
+      localStorage.setItem("exam_permission", "true")
       const payload: any = {
         examTypeId: examData?.examTypeId,
         questionPaperId: examData?._id,
@@ -288,8 +287,8 @@ if (
         questionPapername: examData?.questionPapername,
         records: examData,
       };
-     let responce:any=await dispatch(getUserQuestionData(payload));
-      if(type=="start"){
+      let responce: any = await dispatch(getUserQuestionData(payload));
+      if (type == "start") {
         localStorage.removeItem(`exam_timeLeft_${responce?.payload[0]?._id}`)
       }
       router.push("/Exam/Instruction");
@@ -302,7 +301,7 @@ if (
   const examOptions = examdata.map((ex: any) => ({
     label: ex.examname,
     value: ex,
-    section:ex.sectionDetails
+    section: ex.sectionDetails
   }));
   useEffect(() => {
     if (isMock) {
@@ -315,12 +314,12 @@ if (
       }
     }
   }, [isMock, examdata]);
-  
- const getExamBySection=(val:any)=>{
 
-  setSectionId(val._id)
-  handleSelectExam(selectedExam)
- }
+  const getExamBySection = (val: any) => {
+
+    setSectionId(val._id)
+    handleSelectExam(selectedExam)
+  }
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">
@@ -348,12 +347,12 @@ if (
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             {/* ===== Banner ===== */}
-            <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10   flex flex-col md:flex-row items-center justify-between overflow-hidden">
+            <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10   flex flex-col md:flex-row items-center justify-center md:justify-between overflow-hidden">
               {/* Left Content */}
 
               <div className="z-10 max-w-xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#FF5635] font-poppins">
-                  {selectedExamType?.examType} 
+                  {selectedExamType?.examType}
                 </h2>
                 <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
                   Select the college to access{" "}
@@ -457,7 +456,7 @@ if (
                     <span className="text-[#009DFF] font-thin">|</span>{" "}
                   </span>
                   <span className="text-[#FF5635] font-medium font-poppins text-xl sm:text-xl md:text-2xl">
-                    {selectedExam?.examname }
+                    {selectedExam?.examname}
                   </span>
                 </h2>
                 <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
@@ -482,40 +481,50 @@ if (
             </div>
 
             {examById ? (
-           <>
-           <div className="flex gap-2 ">
-               <div className="flex items-center py-8 gap-4 w-1/2">
-                <p className="text-[#727EA3] font-dm-sans">Change college</p>
-                <Select
-                  options={examOptions}
-                  value={
-                    selectedExam
-                      ? { label: selectedExam.examname, value: selectedExam }
-                      : null
-                  }
-                  onChange={handleSelectExam}
-                  placeholder="Select Exam"
-                  isSearchable
-                  className="flex font-dn-sans"
-                  styles={{
-                    control: (base) => ({
-                      ...base,
-                      minWidth: "300px",
-                      width: "auto",
-                      background: "linear-gradient(to top, #F0F9FF, white)",
-                      borderRadius: "8px",
-                    }),
-                    input: (base) => ({
-                      ...base,
-                      color: "black",
-                    }),
-                  }}
-                />
-              </div>
-     
+              <>
+                <div className="flex flex-col gap-4 sm:flex-row sm:gap-2 my-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 w-full">
 
-           </div>
-           </>
+                    <p className="text-[#727EA3] font-dm-sans whitespace-nowrap">
+                      Change college
+                    </p>
+
+                    <div className="w-[250px]">
+                      <Select
+                        options={examOptions}
+                        value={
+                          selectedExam
+                            ? { label: selectedExam.examname, value: selectedExam }
+                            : null
+                        }
+                        onChange={handleSelectExam}
+                        placeholder="Select Exam"
+                        isSearchable
+                        className="font-dm-sans"
+                        styles={{
+                          control: (base) => ({
+                            ...base,
+                            width: "100%",
+                            minWidth: "100%", // mobile safe
+                            background: "linear-gradient(to top, #F0F9FF, white)",
+                            borderRadius: "8px",
+                          }),
+                          input: (base) => ({
+                            ...base,
+                            color: "black",
+                          }),
+                          menu: (base) => ({
+                            ...base,
+                            zIndex: 50,
+                          }),
+                        }}
+                      />
+                    </div>
+
+                  </div>
+                </div>
+
+              </>
             ) : null}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mx-auto">
@@ -531,7 +540,7 @@ if (
                 [
                   ...Array((examById[0]?.exam?.Mocks || 24) - examById.length),
                 ].map((_, idx) => (
-                  <div onClick={()=>router.push("/PlanandPricing")}
+                  <div onClick={() => router.push("/PlanandPricing")}
                     key={`locked-${idx}`}
                     className={`rounded-[8px] bg-[#F3F4F6] p-4 sm:p-5  lg:p-6 flex flex-col transition-all  h-full`}
                   >
@@ -552,13 +561,13 @@ if (
 
                     {/* Mock name */}
                     <h3 className="text-lg sm:text-xl lg:text-2xl font-poppins font-medium text-[#727EA3] sm:mb-5 lg:mb-6">
-                      {selectedExamType?.examType=="Mocks"?"Mock":selectedExamType?.examType} {examlength + idx + 1}
+                      {selectedExamType?.examType == "Mocks" ? "Mock" : selectedExamType?.examType} {examlength + idx + 1}
                     </h3>
 
                     {/* Coming Soon text */}
                     <p className="text-sm text-gray-400 mb-4 font-poppins">
-  {idx === 0 ? (<>Available On <br /> <strong> {mockDate}</strong></>) : "Coming Soon"}
-</p>
+                      {idx === 0 ? (<>Available On <br /> <strong> {mockDate}</strong></>) : "Coming Soon"}
+                    </p>
 
                   </div>
                 ))}

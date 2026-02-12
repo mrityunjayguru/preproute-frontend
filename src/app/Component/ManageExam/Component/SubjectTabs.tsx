@@ -34,14 +34,14 @@ const SubjectTabs: React.FC<Props> = ({
   return (
     <>
       {isSection && examSections.length > 0 && (
-        <div className="flex gap-2 items-center overflow-x-auto no-scrollbar font-dm-sans px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10  pb-2 mt-2">
+        <div className="flex gap-2 items-center overflow-x-auto no-scrollbar font-dm-sans px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 py-3 lg:py-0 mt-2 lg:pb-2 bg-gray-50 border-y lg:bg-transparent lg:border-none">
           {examSections.map((t) => (
             <button
               key={t.sectionId}
               onClick={() => handleSection(t)}
-              className={`cursor-pointer px-6 py-2 rounded-[8px] text-md transition-all whitespace-nowrap ${t.sectionId === selectedSection?.sectionId
-                  ? "bg-[#005EB6] text-white"
-                  : "bg-blue-100 text-[#5291D2] "
+              className={`cursor-pointer px-4 lg:px-6 py-2 rounded-[8px] text-sm lg:text-md transition-all whitespace-nowrap shadow-sm ${t.sectionId === selectedSection?.sectionId
+                ? "bg-[#005EB6] text-white"
+                : "bg-white text-[#5291D2] border border-blue-100 hover:bg-blue-50"
                 }`}
             >
               {t.sectionDetail?.section || "Section"}
@@ -49,9 +49,11 @@ const SubjectTabs: React.FC<Props> = ({
           ))}
         </div>
       )}
-      <span className="h-6 bg-[#5291D2] font-dm-sans text-sm font-medium px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10  text-white" >
-        Question No. {currentQuestionIndex + 1}
-      </span>
+      <div className="bg-[#5291D2] py-1">
+        <span className="font-dm-sans text-xs sm:text-sm font-medium px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 text-white block">
+          Question No. {currentQuestionIndex + 1}
+        </span>
+      </div>
     </>
   );
 };

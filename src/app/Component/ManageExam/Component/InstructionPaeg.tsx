@@ -33,7 +33,7 @@ export default function InstructionsPage() {
   };
 
   return (
-    <div className="px-3 sm:px-6  flex flex-col gap-10">
+    <div className="px-3 sm:px-6  flex flex-col gap-10 my-10">
       {/* MAIN CARD */}
       <div className="px-6 sm:px-8 md:px-12 lg:px-28">
         {/* HEADER */}
