@@ -151,30 +151,30 @@ export default function TopicExam() {
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">
         {!examById.length && (
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10 flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl text-[#FF5635] font-medium">
+            <div className="relative min-h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10 py-6 sm:py-0 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-center sm:text-left">
+                <h2 className="text-xl sm:text-2xl text-[#FF5635] font-medium">
                   {selectedExamType?.examType}
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   Select the college to access exams
                 </p>
               </div>
-              <Image src={EXAMPREP} alt="exam" width={267} height={140} />
+              <Image src={EXAMPREP} alt="exam" width={267} height={140} className="hidden sm:block" />
             </div>
           </motion.div>
         )}
 
         {examById.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl">Topic Wise Exam</h2>
-                <p className="text-gray-600">
+            <div className="relative min-h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-6 sm:py-0 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-center sm:text-left">
+                <h2 className="text-xl sm:text-2xl text-[#FF5635] font-medium font-poppins" >Topic Wise Exam</h2>
+                <p className="text-sm sm:text-base text-gray-600 font-dm-sans">
                   Practice exams prepared as per syllabus
                 </p>
               </div>
-              <Image src={EXAMPREP} alt="exam" width={267} height={140} />
+              <Image src={EXAMPREP} alt="exam" width={267} height={140} className="hidden sm:block" />
             </div>
 
             <div className="flex gap-4 py-8 flex-wrap">
@@ -182,11 +182,10 @@ export default function TopicExam() {
                 <button
                   key={sec._id}
                   onClick={() => handleSectionSelect(sec)}
-                  className={`px-4 py-2 rounded-lg transition-all duration-200
-                    ${
-                      sectionId === sec._id
-                        ? "bg-[#FF5635] text-white shadow-md scale-105"
-                        : "bg-white text-[#FF5635] border border-[#FF5635] hover:bg-[#FF5635] hover:text-white"
+                  className={`px-8 py-2 rounded-[6px] transition-all font-poppins duration-200 cursor-pointer
+                    ${sectionId === sec._id
+                      ? "bg-[#FF5635] text-white  scale-105"
+                      : "bg-white text-[#FF5635] border border-[#FF5635] hover:bg-[#FF5635] hover:text-white"
                     }`}
                 >
                   {sec.section}
@@ -199,8 +198,8 @@ export default function TopicExam() {
         )}
       </div>
 
-      <section className="bg-[#FF5635] text-white py-6">
-        <div className="flex justify-between items-center px-28">
+      <section className="bg-[#FF5635] text-white py-6 sm:py-8 mt-5">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-6 px-6 sm:px-8 md:px-12 lg:px-28">
           <Image src={FOOTERLOGO} alt="logo" width={180} />
           <SocialMedia />
         </div>

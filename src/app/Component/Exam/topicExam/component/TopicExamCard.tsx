@@ -43,12 +43,12 @@ const TopicBlock = ({ topic, hasAccess }: any) => {
     <div className="border rounded-md overflow-hidden">
       {/* HEADER */}
       <div
-        className="flex justify-between items-center bg-[#FF5A3C] text-white px-4 py-3 cursor-pointer"
+        className="flex justify-between items-center bg-[#FF5A3C] text-white px-3 sm:px-4 py-3 cursor-pointer"
         onClick={() => setOpen(!open)}
       >
-        <div className="font-semibold">
+        <div className="font-semibold text-sm sm:text-base">
           {topic?.topicName}
-          <span className="text-sm font-normal">
+          <span className="text-xs sm:text-sm font-normal block sm:inline">
             {" "} | Sub Topics {countSubTopics}
           </span>
         </div>
@@ -61,15 +61,17 @@ const TopicBlock = ({ topic, hasAccess }: any) => {
       </div>
 
       {open && (
-        <div className="w-full">
-          {/* TABLE HEADER */}
-          <div className="grid grid-cols-4 bg-[#FFEDE0] text-sm font-medium">
-            <div className="p-3"></div>
-            <div className="p-3 text-center text-black">Basic</div>
-            <div className="p-3 text-center text-black">Advanced</div>
-            <div className="p-3 text-center text-black">Expert</div>
+        <div className="w-full overflow-x-auto">
+          <div className="min-w-[600px]">
+            {/* TABLE HEADER */}
+            <div className="grid grid-cols-4 bg-[#FFEDE0] text-sm font-medium">
+              <div className="p-3"></div>
+              <div className="p-3 text-center text-black">Basic</div>
+              <div className="p-3 text-center text-black">Advanced</div>
+              <div className="p-3 text-center text-black">Expert</div>
+            </div>
+            <TopicRows topic={topic} hasAccess={hasAccess} />
           </div>
-          <TopicRows topic={topic} hasAccess={hasAccess} />
         </div>
       )}
     </div>
@@ -123,7 +125,7 @@ const LevelCell = ({ tests = [], hasAccess }: any) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleStartExam = async (test: any) => {
-     const isFree = test?.isfree === true;
+    const isFree = test?.isfree === true;
     const canAccess = hasAccess || isFree;
 
     // ❌ If locked → redirect to home
@@ -150,19 +152,18 @@ const LevelCell = ({ tests = [], hasAccess }: any) => {
         return (
           <div
             key={test._id}
-            className={`flex items-center justify-center gap-2 text-sm ${
-              canAccess
+            className={`flex items-center justify-center gap-2 text-sm ${canAccess
                 ? "text-blue-600 cursor-pointer"
                 : "text-gray-400 cursor-not-allowed"
-            }`}
+              }`}
             onClick={() => {
-               handleStartExam(test);
+              handleStartExam(test);
             }}
           >
             {!canAccess && (
               <FaLock size={14} className="text-red-500" />
             )}
-           {isFree && (
+            {isFree && (
               <span className=" text-green-600  ">
                 <FaLockOpen size={14} />
               </span>
