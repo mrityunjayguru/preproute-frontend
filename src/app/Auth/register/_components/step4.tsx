@@ -120,7 +120,7 @@ const Step4: React.FC<Step4Props> = ({
                 </div>
 
                 {/* Button */}
-                <div className="mt-8 flex justify-center">
+                <div className="mt-8 flex flex-col sm:flex-row gap-5 justify-center">
                      <Button  onClick={prevStep} className="h-[43px] w-full max-w-[320px] bg-[#FF5635] hover:bg-[#FF5635]/90 text-white font-poppins rounded-[2px] shadow-sm shadow-[#FF5635]/20 transition-all active:scale-95 cursor-pointer mr-4">
                     Back
                       </Button>

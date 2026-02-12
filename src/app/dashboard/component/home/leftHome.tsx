@@ -51,8 +51,6 @@ const ExamCard = ({ exam }: any) => {
     await dispatch(handleUpdateStaus(payload));
     await dispatch(getDashboardData(payload));
   };
-  
-  console.log(exam,"examexamexam")
 
   return (
     <div className="flex flex-col w-full rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] px-5 py-5 ">

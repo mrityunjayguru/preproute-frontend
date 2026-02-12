@@ -31,6 +31,8 @@ const UserDashboard = () => {
     const userdashboarddata = useSelector(
         (state: any) => state?.Auth?.userDashboard,
     );
+      const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
+    
     const examTypeData =
         useSelector((state: any) => state.examType.examType) || [];
     const dispatch = useDispatch<AppDispatch>();
@@ -39,6 +41,11 @@ const UserDashboard = () => {
         dispatch(userDashboard(payload));
     };
     useEffect(() => {
+          if (
+    (userLogin?.isGoogle === true)
+  ) {
+    router.push("/Auth/register");
+  }
         getDashboardData();
     }, []);
       const handleIPmatExam=()=>{

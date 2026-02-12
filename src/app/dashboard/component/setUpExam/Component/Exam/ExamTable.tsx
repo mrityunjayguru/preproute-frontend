@@ -14,7 +14,6 @@ const ExamTable: React.FC<{ data?: any }> = ({ data }) => {
 
   const getData = async () => {
     const payload: any = {
-      examtypeId: data?.id, // Pass the exam type ID to fetch relevant exams
     };
     await dispatch(getexam(payload));
   };
