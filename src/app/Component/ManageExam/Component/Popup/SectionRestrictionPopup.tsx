@@ -13,11 +13,10 @@ export default function SectionRestrictionPopup({ onClose, examname }: Props) {
       <div className="bg-white rounded-2xl p-6 max-w-sm w-full text-center ">
         <div className=" rounded-lg p-4 text-left space-y-2 font-dm-sans text-lg">
           <p className="text-[#FF5635] font-medium">
-           In IPMAT Indore, you cannot move to the next section until the timer ends {" "}
+           In IPMAT Indore, you cannot move to the next section until the timer ends. {" "}
             <span className="text-gray-900 font-medium">
-              or submit early—and neither do we. 
               <br/> 
-         On our platform, you can proceed earlier by clicking Save & Next after attempting the last question of the section
+         On our platform, you can proceed earlier by clicking Save & Next after attempting the last question of the section.
             </span>
           </p>
           {/* <p className="font-medium">

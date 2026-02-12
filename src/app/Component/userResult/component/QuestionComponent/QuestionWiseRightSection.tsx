@@ -17,98 +17,106 @@ interface Option {
 }
 
 interface Question {
-  section: any;
   _id?: string;
   questionNo: number;
-  questionText: string;
-  questionType: string;
-  answerType: string;
-  options: Option[];
+  questionText?: string;
+  questionType?: string;
+  answerType?: string;
+  options?: Option[];
   usergiven?: {
-    userAnswer: string;
+    userAnswer?: string;
     numericAnswer?: string;
     timeTaken?: number;
     review?: boolean;
-  }[];
-  correctAnswer: string;
+  };
   userAttempt?: boolean;
-  userTime?: number;
 }
 
 interface Props {
   currentQuestionIndex: number;
   getQuestionByNumberId: (idx: number) => void;
   sectionQuestions: Question[];
+  examResult: any;
 }
 
 const QuestionWiseRightSection: React.FC<Props> = ({
   sectionQuestions,
   getQuestionByNumberId,
   currentQuestionIndex,
+  examResult,
 }) => {
-  const totalQuestions = sectionQuestions.length;
+  const isSection = examResult?.examdetail?.isSection;
 
-const getStatusIcon = (q: any) => {
-  // ❌ Not visited
-  if (!q.userAttempt || !q.usergiven) {
+  /** -------------------------------
+   * TOTAL QUESTIONS LOGIC
+   * ------------------------------ */
+  const totalQuestions = isSection
+    ? sectionQuestions.length
+    : Number(examResult?.examdetail?.noOfQuestions || 0);
+
+  /** -------------------------------
+   * BUILD QUESTIONS LIST
+   * ------------------------------ */
+  const questionsForGrid: Question[] = isSection
+    ? sectionQuestions
+    : Array.from({ length: totalQuestions }).map((_, idx) => {
+        return (
+          sectionQuestions.find((q) => q.questionNo === idx + 1) || {
+            questionNo: idx + 1,
+          }
+        );
+      });
+
+  /** -------------------------------
+   * STATUS ICON LOGIC
+   * ------------------------------ */
+  const getStatusIcon = (q: Question) => {
+    if (!q.userAttempt || !q.usergiven) {
+      return NOTVISITED;
+    }
+
+    if (q.usergiven.review && q.userAttempt) {
+      return ANSWEREDANDREVIEW;
+    }
+
+    if (q.usergiven.review) {
+      return REVIEWMARKED;
+    }
+
+    if (q.answerType === "Numeric") {
+      if (!q.usergiven.numericAnswer) return UNANSWERED;
+      return ANSWERED;
+    }
+
+    if (q.answerType === "MCQ") {
+      if (!q.usergiven.userAnswer) return UNANSWERED;
+      return ANSWERED;
+    }
+
     return NOTVISITED;
-  }
+  };
 
-  // ================= NUMERIC =================
-  if (q.answerType === "Numeric") {
-    const userAns = Number(q.usergiven.numericAnswer);
-    const correctAns = Number(q.numericAnswer);
-
-    if (isNaN(userAns)) return NOTVISITED;
-
-    return userAns === correctAns ? ANSWERED : UNANSWERED;
-  }
-
-  // ================= MCQ =================
-  if (q.answerType === "MCQ") {
-    const userAnswerId = q.usergiven.userAnswer;
-
-    if (!userAnswerId) return NOTVISITED;
-
-    const selectedOption = q.options?.find(
-      (opt: any) => opt._id === userAnswerId
-    );
-
-    if (!selectedOption) return UNANSWERED;
-
-    return selectedOption.isCorrect ? ANSWERED : UNANSWERED;
-  }
-
-  return NOTVISITED;
-};
-
-
-  // ⬅️ Previous
+  /** -------------------------------
+   * NAVIGATION
+   * ------------------------------ */
   const handlePrev = () => {
     if (currentQuestionIndex > 0) {
       getQuestionByNumberId(currentQuestionIndex - 1);
     }
   };
 
-  // ➡️ Next
   const handleNext = () => {
     if (currentQuestionIndex < totalQuestions - 1) {
       getQuestionByNumberId(currentQuestionIndex + 1);
     }
   };
 
-  // ✅ Filter only selected section
-  // const selectedSectionKey =
-  //   selectedSection?.sectionId;
-
-  // const selectedSectionQuestions =
-  //   groupedData[selectedSectionKey] || [];
-  //   const shortingData=selectedSectionQuestions.sort((a,b)=>a.questionNo - b.questionNo)
-  // console.log(sectionQuestions,"sectionQuestionssectionQuestions")
+  /** -------------------------------
+   * UI (UNCHANGED)
+   * ------------------------------ */
   return (
-    <aside className="lg:w-[350px] w-full bg-white py-6 flex-shrink-0 font-poppins px-6 ">
+    <aside className="lg:w-[350px] w-full bg-white py-6 flex-shrink-0 font-poppins px-6">
       <div className="bg-[#F8F9FA] rounded-xl p-4 h-fit border-[0.5px] border-[#C8DCFE] overflow-y-auto custom-scrollbar">
-        
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <Button
@@ -138,7 +146,7 @@ const getStatusIcon = (q: any) => {
 
         {/* Question Grid */}
         <div className="grid grid-cols-5 gap-3">
-          {sectionQuestions.map((q, idx) => {
+          {questionsForGrid.map((q, idx) => {
             const icon = getStatusIcon(q);
 
             return (

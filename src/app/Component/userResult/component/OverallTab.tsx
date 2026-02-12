@@ -30,10 +30,8 @@ const AverageTime = ({ value }: { value: number }) => (
       Average Time
     </p>
     <p className="flex  items-center text-lg font-semibold text-[#005EB6] text-center font-dm-sans">
-      {value.toFixed(2)} 
-      <span className="text-sm font-normal text-black">
-        mins
-      </span>
+      {value.toFixed(2)}
+      <span className="text-sm font-normal text-black">mins</span>
     </p>
   </div>
 );
@@ -44,26 +42,22 @@ const AvgTimeTooltip = ({ value }: { value: number }) => (
       Average Time
     </p>
     <p className="flex items-center text-lg font-semibold text-[#005EB6] text-center font-dm-sans">
-      {value.toFixed(2)} 
-      <span className="text-sm font-normal text-black">
-        mins
-      </span>
+      {value.toFixed(2)}
+      <span className="text-sm font-normal text-black">mins</span>
     </p>
   </div>
 );
 
-
-
 const OverallTab = ({ data }: OverallTabProps) => {
-  const dispatch=useDispatch<AppDispatch>()
-    const getData = async () => {
-      const payload:any={}
-      await dispatch(getsubTopic(payload));
-    };
-    
-    useEffect(() => {
-      getData();
-    }, []);
+  const dispatch = useDispatch<AppDispatch>();
+  const getData = async () => {
+    const payload: any = {};
+    await dispatch(getsubTopic(payload));
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
   const attemptedDate = useMemo(() => {
     const raw = data?.examdetail?.examDate;
     if (!raw) return "";
@@ -84,7 +78,7 @@ const OverallTab = ({ data }: OverallTabProps) => {
     data?.questionpaper?.negativeMark ??
       data?.examdetail?.negativeMark ??
       data?.negativeMark ??
-      0
+      0,
   );
   const computedNegative =
     Number.isFinite(negativePerWrong) && negativePerWrong !== 0
@@ -93,93 +87,90 @@ const OverallTab = ({ data }: OverallTabProps) => {
 
   const rank = Number(data?.rank ?? data?.myRank ?? 0);
   const totalStudents = Number(
-    data?.totalStudents ?? data?.totalUsers ?? data?.totalCandidates ?? 0
+    data?.totalStudents ?? data?.totalUsers ?? data?.totalCandidates ?? 0,
   );
 
-const sectionTime = useMemo(() => {
-  const sections = Array.isArray(data?.sectionWise)
-    ? data.sectionWise
-    : [];
+  const sectionTime = useMemo(() => {
+    const sections = Array.isArray(data?.sectionWise) ? data.sectionWise : [];
 
-  const examSections = Array.isArray(data?.examdetail?.sections)
-    ? data.examdetail.sections
-    : [];
+    const examSections = Array.isArray(data?.examdetail?.sections)
+      ? data.examdetail.sections
+      : [];
 
-  const COLORS = ["#FF8B00", "#00B8D9", "#6D5DFB"];
-  // 🔹 Build sectionId → duration map (from examdetail)
-  const durationMap: Record<string, number> = {};
-  examSections.forEach((s: any) => {
-    if (s.sectionId) {
-      durationMap[s.sectionId] = Number(s.duration || 0);
-    }
-  });
-
-  let overallSeconds = 0;
-
-  const items = sections.map((s: any, idx: number) => {
-    let seconds = 0;
-
-    if (s.startTime && s.endTime) {
-      const start = new Date(s.startTime).getTime();
-      const end = new Date(s.endTime).getTime();
-
-      if (!isNaN(start) && !isNaN(end) && end > start) {
-        seconds = Math.floor((end - start) / 1000);
+    const COLORS = ["#FF8B00", "#00B8D9", "#6D5DFB"];
+    // 🔹 Build sectionId → duration map (from examdetail)
+    const durationMap: Record<string, number> = {};
+    examSections.forEach((s: any) => {
+      if (s.sectionId) {
+        durationMap[s.sectionId] = Number(s.duration || 0);
       }
-    }
+    });
 
-    overallSeconds += seconds;
+    let overallSeconds = 0;
 
-    const totalDuration = durationMap[s.sectionId] || 0;
+    const items = sections.map((s: any, idx: number) => {
+      let seconds = 0;
+
+      if (s.startTime && s.endTime) {
+        const start = new Date(s.startTime).getTime();
+        const end = new Date(s.endTime).getTime();
+
+        if (!isNaN(start) && !isNaN(end) && end > start) {
+          seconds = Math.floor((end - start) / 1000);
+        }
+      }
+
+      overallSeconds += seconds;
+
+      const totalDuration = durationMap[s.sectionId] || 0;
+
+      return {
+        sectionId: s.sectionId,
+        name: s.sectionName,
+        seconds,
+        minutes: Math.round((seconds / 60) * 10) / 10,
+        totalDuration, // 🔹 from examdetail
+        totalQuestions: s.totalQuestions,
+        attempted: s.attempted,
+        totalPossibleMarks: s.totalPossibleMarks,
+        fill: COLORS[idx % COLORS.length],
+      };
+    });
+
+    const pie = items.map((i) => ({
+      name: i.name,
+      value: i.minutes,
+      fill: i.fill,
+    }));
 
     return {
-      sectionId: s.sectionId,
-      name: s.sectionName,
-      seconds,
-      minutes: Math.round((seconds / 60) * 10) / 10,
-      totalDuration, // 🔹 from examdetail
-      totalQuestions: s.totalQuestions,
-      attempted: s.attempted,
-      totalPossibleMarks: s.totalPossibleMarks,
-      fill: COLORS[idx % COLORS.length],
+      overallMinutes: Math.round((overallSeconds / 60) * 10) / 10,
+      totalExamDuration: Number(data?.examdetail?.fullExamduration || 0),
+      items,
+      pie,
     };
-  });
+  }, [data]);
 
-  const pie = items.map((i) => ({
-    name: i.name,
-    value: i.minutes,
-    fill: i.fill,
-  }));
+  const [title, settitle] = useState("");
+  const onSubmitFeedback = (e: React.FormEvent) => {
+    e.preventDefault();
 
-  return {
-    overallMinutes: Math.round((overallSeconds / 60) * 10) / 10,
-    totalExamDuration: Number(data?.examdetail?.fullExamduration || 0),
-    items,
-    pie,
+    // trim extra spaces & split into words
+    const wordCount = title.trim().split(/\s+/).length;
+
+    if (wordCount < 2) {
+      ToastError("Feedback must contain at least 1 words");
+      return;
+    }
+
+    const payload: any = {
+      title,
+      questionPaperId: data?.questionPaperID,
+    };
+
+    dispatch(addfeedback(payload));
+    settitle("");
   };
-}, [data]);
-
-const [title,settitle]=useState("")
-const onSubmitFeedback = (e: React.FormEvent) => {
-  e.preventDefault();
-
-  // trim extra spaces & split into words
-  const wordCount = title.trim().split(/\s+/).length;
-
-  if (wordCount < 2) {
-    ToastError("Feedback must contain at least 1 words");
-    return;
-  }
-
-  const payload: any = {
-    title,
-    questionPaperId: data?.questionPaperID,
-  };
-
-  dispatch(addfeedback(payload));
-  settitle("");
-};
-
 
   const avgSectionTime =
     sectionTime.items.length > 0
@@ -189,64 +180,66 @@ const onSubmitFeedback = (e: React.FormEvent) => {
   const overallMinutes = sectionTime.overallMinutes || 0;
   const topicData = useSelector((state: any) => state?.topic?.topic);
 
-const weakestSection = useMemo(() => {
-  const sections = data?.sectionWise || [];
-  if (!sections.length) return null;
+  const weakestSection = useMemo(() => {
+    const sections = data?.sectionWise || [];
+    if (!sections.length) return null;
 
-  let weakest = null;
-  let lowestAccuracy = Infinity;
+    let weakest = null;
+    let lowestAccuracy = Infinity;
 
-  sections.forEach((s: any) => {
-    const attempted = Number(s.attempted || 0);
-    const correct = Number(s.correct || 0);
+    sections.forEach((s: any) => {
+      const attempted = Number(s.attempted || 0);
+      const correct = Number(s.correct || 0);
 
-    if (attempted === 0) return;
+      if (attempted === 0) return;
 
-    const accuracy = correct / attempted; // 0 → 1
+      const accuracy = correct / attempted; // 0 → 1
 
-    if (accuracy < lowestAccuracy) {
-      lowestAccuracy = accuracy;
-      weakest = {
-        name: s.sectionName,
-        accuracy: Math.round(accuracy * 100),
-        correct,
-        attempted,
-      };
-    }
-  });
+      if (accuracy < lowestAccuracy) {
+        lowestAccuracy = accuracy;
+        weakest = {
+          name: s.sectionName,
+          accuracy: Math.round(accuracy * 100),
+          correct,
+          attempted,
+        };
+      }
+    });
 
-  return weakest;
-}, [data]);
-const weakTopics = useMemo(() => {
-  const topics = data?.typeWiseTime || [];
-  if (!topics.length) return [];
+    return weakest;
+  }, [data]);
+  const weakTopics = useMemo(() => {
+    const topics = data?.typeWiseTime || [];
+    if (!topics.length) return [];
 
-  return topics
-    .map((t: any) => {
-      const total = Number(t.total || 0);
-      const attempted = Number(t.attempted || 0);
-      const correct = Number(t.correct || 0);
+    return topics
+      .map((t: any) => {
+        const total = Number(t.total || 0);
+        const attempted = Number(t.attempted || 0);
+        const correct = Number(t.correct || 0);
 
-      if (total === 0) return null;
+        if (total === 0) return null;
 
-      const attemptRate = (attempted / total) * 100;
-      const accuracy = attempted ? (correct / attempted) * 100 : 0;
+        const attemptRate = (attempted / total) * 100;
+        const accuracy = attempted ? (correct / attempted) * 100 : 0;
 
-      return {
-        topicId: t.topicId,
-        total,
-        attempted,
-        correct,
-        wrong: Number(t.wrong || 0),
-        avgTime: Number(t.avgTime || 0),
-        attemptRate: Math.round(attemptRate),
-        accuracy: Math.round(accuracy),
-      };
-    })
-    .sort((a, b) => a.accuracy - b.accuracy);
-}, [data]);
+        return {
+          topicId: t.topicId,
+          total,
+          attempted,
+          correct,
+          wrong: Number(t.wrong || 0),
+          avgTime: Number(t.avgTime || 0),
+          attemptRate: Math.round(attemptRate),
+          accuracy: Math.round(accuracy),
+        };
+      })
+      .sort((a, b) => a.accuracy - b.accuracy);
+  }, [data]);
 
-    const subTopics = useSelector((state: any) => state?.subTopic?.subTopic || []);
+  const subTopics = useSelector(
+    (state: any) => state?.subTopic?.subTopic || [],
+  );
 
   const getTopicName = (topicId: string) => {
     const topic = topicData?.find((t: any) => t._id === topicId);
@@ -257,72 +250,71 @@ const weakTopics = useMemo(() => {
     return topic ? topic.subtopic : "Topic";
   };
 
-  
-const weakSubtopics = useMemo(() => {
-  const details = Array.isArray(data?.details) ? data.details : [];
-  if (!details.length) return [];
+  const weakSubtopics = useMemo(() => {
+    const details = Array.isArray(data?.details) ? data.details : [];
+    if (!details.length) return [];
 
-  const map: Record<string, any> = {};
+    const map: Record<string, any> = {};
 
-  details.forEach((q: any) => {
-    const subtopicId = q.subtopicId;
-    if (!subtopicId) return;
+    details.forEach((q: any) => {
+      const subtopicId = q.subtopicId;
+      if (!subtopicId) return;
 
-    if (!map[subtopicId]) {
-      map[subtopicId] = {
-        subtopicId,
-        total: 0,
-        attempted: 0,
-        correct: 0,
-      };
-    }
-
-    map[subtopicId].total += 1;
-
-    // ✅ Count attempt only if user answered
-    if (q.usergiven) {
-      map[subtopicId].attempted += 1;
-
-      let isCorrect = false;
-
-      if (q.answerType === "Numeric") {
-        isCorrect =
-          Number(q.usergiven?.numericAnswer) ===
-          Number(q.correctAnswer);
+      if (!map[subtopicId]) {
+        map[subtopicId] = {
+          subtopicId,
+          total: 0,
+          attempted: 0,
+          correct: 0,
+        };
       }
 
-      if (isCorrect) {
-        map[subtopicId].correct += 1;
+      map[subtopicId].total += 1;
+
+      // ✅ Count attempt only if user answered
+      if (q.usergiven) {
+        map[subtopicId].attempted += 1;
+
+        let isCorrect = false;
+
+        if (q.answerType === "Numeric") {
+          isCorrect =
+            Number(q.usergiven?.numericAnswer) === Number(q.correctAnswer);
+        }
+
+        if (isCorrect) {
+          map[subtopicId].correct += 1;
+        }
       }
-    }
-  });
+    });
 
-  return Object.values(map)
-    .map((s: any) => {
-      const attemptRate =
-        s.total > 0
-          ? Math.round((s.attempted / s.total) * 100)
-          : 0;
+    return (
+      Object.values(map)
+        .map((s: any) => {
+          const attemptRate =
+            s.total > 0 ? Math.round((s.attempted / s.total) * 100) : 0;
 
-      const accuracy =
-        s.attempted > 0
-          ? Math.round((s.correct / s.attempted) * 100)
-          : 0;
+          const accuracy =
+            s.attempted > 0 ? Math.round((s.correct / s.attempted) * 100) : 0;
 
-      return {
-        ...s,
-        attemptRate,
-        accuracy,
-      };
-    })
-    // ✅ Weak Area Condition
-   
-    .sort((a: any, b: any) => a.accuracy - b.accuracy);
-}, [data]);
-const start = new Date(data?.fullExamStartTime).getTime();
-const end = new Date(data?.fullExamEndTime).getTime();
-const spentMinutes = ((end - start) / 60000).toFixed(2);
+          return {
+            ...s,
+            attemptRate,
+            accuracy,
+          };
+        })
+        // ✅ Weak Area Condition
 
+        .sort((a: any, b: any) => a.accuracy - b.accuracy)
+    );
+  }, [data]);
+  const start = new Date(data?.fullExamStartTime).getTime();
+  const end = new Date(data?.fullExamEndTime).getTime();
+  const spentMinutes = ((end - start) / 60000).toFixed(2);
+        {/* Time Analysis */}
+        // console.log(data?.questionpaper?.examformet=="sectional","data?.examdetail?.examname")
+let checkShow=data?.examdetail?.examname=="CUET"  || data?.questionpaper?.examformet=="sectional"
+// console.log(checkShow,"llllllllllllllllllllll")
 
   return (
     <div className="w-full space-y-6">
@@ -440,9 +432,7 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
         </div>
 
         <div className="rounded-[8px] bg-[#F0F9FF] border border-[#E6F4FF] py-5 px-4 flex  justify-center items-start flex-col">
-          <p className="text-[#005EB6] font-medium font-dm-sans">
-            Avg. Time
-          </p>
+          <p className="text-[#005EB6] font-medium font-dm-sans">Avg. Time</p>
           <p className="text-xl font-normal text-gray-900 font-poppins">
             {data?.averageTimePerAttempted || "1 Min 26 Sec"}
           </p>
@@ -459,10 +449,11 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
+        {!checkShow?(<>
+          <div className="lg:col-span-2">
           <AnswerAccuracyGraph />
         </div>
-        {/* Time Analysis */}
+
         <div className="rounded-[8px] bg-white border border-[#E6F4FF] p-6">
           <div className="flex items-center justify-between mb-4 font-poppins">
             <h3 className="text-lg font-medium text-[#005EB6]">
@@ -483,11 +474,13 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
                     Overall Exam
                   </div>
                   <div className="text-2xl font-bold text-[#005EB6] relative group font-dm-sans">
-                    {spentMinutes}/<span className="text-[#000]">{data?.examdetail.fullExamduration}</span>
+                    {spentMinutes}/
+                    <span className="text-[#000]">
+                      {data?.examdetail.fullExamduration}
+                    </span>
                     {/* <span className="text-sm text-black font-normal">
                       /{data?.examdetail.fullExamduration || ""}
                     </span> */}
-
                     {/* <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50">
                       <AverageTime value={overallMinutes} />
                     </div> */}
@@ -552,7 +545,7 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
                             0,
                             (sectionTime.totalExamDuration ||
                               sectionTime.overallMinutes) -
-                              sectionTime.overallMinutes
+                              sectionTime.overallMinutes,
                           ),
                           fill: "#E0E0E0",
                         },
@@ -572,6 +565,8 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
             </div>
           )}
         </div>
+        </>):(null)}
+      
         
       </div>
 
@@ -580,12 +575,13 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
           Improvement Areas
         </h3>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="rounded-[8px] bg-[#F0F9FF]  p-6">
+
+  {!checkShow?(        <div className="rounded-[8px] bg-[#F0F9FF]  p-6">
             <p className="text-[#FF5635] font-medium font-poppins">
               Focus Areas
             </p>
             <p className="text-xl font-normal text-gray-900 font-dm-sans">
-              {weakestSection?.name} 
+              {weakestSection?.name}
             </p>
             <p className="text-sm text-[#FF5635] font-normal mt-3 font-dm-sans">
               Insights:
@@ -594,25 +590,20 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
               This section has the lowest contribution and largest gap, making
               it the top improvement area.
             </p>
-          </div>
+          </div>):(null)}
 
           <div className="rounded-[8px] max-h-[250px] overflow-y-scroll bg-[#F0F9FF] p-6 font-dm-sans">
             <p className="text-[#FF5635] font-medium font-poppins mb-3">
               Topics
             </p>
             <ul className="list-disc pl-5 text-sm text-gray-800 font-dm-sans space-y-1">
-           {weakTopics?.length > 0 ? (
-  weakTopics.map((val) => (
-    <li key={val.topicId}>
-      {getTopicName(val.topicId)}
-    </li>
-  ))
-) : (
-  <li>No data available</li>
-)}
-
-           
-            
+              {weakTopics?.length > 0 ? (
+                weakTopics.map((val) => (
+                  <li key={val.topicId}>{getTopicName(val.topicId)}</li>
+                ))
+              ) : (
+                <li>No data available</li>
+              )}
             </ul>
           </div>
 
@@ -620,21 +611,20 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
             <p className="text-[#FF5635] font-medium font-poppins mb-3">
               Subtopics
             </p>
-          <ul className="list-disc pl-5 text-sm text-gray-800 font-dm-sans space-y-1">
-  {weakSubtopics.map((val, i) => {
-    return (
-      <li key={val.subtopicId || i}>
-        {getSubTopicName(val.subtopicId)}
-      </li>
-    );
-  })}
-</ul>
-
+            <ul className="list-disc pl-5 text-sm text-gray-800 font-dm-sans space-y-1">
+              {weakSubtopics.map((val, i) => {
+                return (
+                  <li key={val.subtopicId || i}>
+                    {getSubTopicName(val.subtopicId)}
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         </div>
       </div>
 
-        {/* <h3 className="text-lg font-medium text-[#005EB6] font-poppins">
+      {/* <h3 className="text-lg font-medium text-[#005EB6] font-poppins">
             Overall Ranking Data
           </h3> */}
       {/* <MarksDistributionChart/> */}
@@ -684,9 +674,9 @@ const spentMinutes = ((end - start) / 60000).toFixed(2);
           </h3>
           <form onSubmit={onSubmitFeedback} className="space-y-4">
             <Textarea
-             value={title}
-             disabled={data?.isfeedBack}
-            onChange={(e)=>settitle(e.target.value)}
+              value={title}
+              disabled={data?.isfeedBack}
+              onChange={(e) => settitle(e.target.value)}
               placeholder="Enter your feedback and suggestions..."
               className="min-h-[120px] border border-[#E6F4FF] bg-white"
             />

@@ -6,7 +6,8 @@ loginUser:any;
 updateAuth:any;
 subject:any;
 year:any;
-exam:any
+exam:any;
+userDashboard:any
 }
 
 // Initial state for the slice
@@ -15,7 +16,8 @@ const initialState: UserDataState = {
   updateAuth:null,
   subject:null,
   year:null,
-  exam:null
+  exam:null,
+  userDashboard:null
 };
 
 // Create the user data slice
@@ -35,11 +37,14 @@ export const AuthSlicc = createSlice({
     setExam: (state, action: PayloadAction<any>) => {
       state.exam = action.payload; // Set login user data
     },
+    setDashboard: (state, action: PayloadAction<any>) => {
+      state.userDashboard = action.payload; // Set login user data
+    },
   },
 });
 
 // Export actions
-export const {setAuth,setSubject,setYear,setExam} = AuthSlicc.actions;
+export const {setAuth,setSubject,setYear,setExam,setDashboard} = AuthSlicc.actions;
 
 // Export reducer
 export default AuthSlicc.reducer;

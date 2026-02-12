@@ -39,6 +39,7 @@ export const examSlicc = createSlice({
   initialState,
   reducers: {
     setexam: (state, action: PayloadAction<any>) => {
+      state.exam=null
       state.exam = action.payload; // Set login user data
     },
     setUpdateexam: (state, action: PayloadAction<any>) => {

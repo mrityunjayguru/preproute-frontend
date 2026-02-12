@@ -23,7 +23,6 @@ const userExams=useSelector((state:any)=>state?.Auth?.exam)
       ...formData,
       exam: selectedExam
     }
-    console.log(payload,"payloadpayload")
     let responce:any= await dispatch(handleRegister(payload))
 
   };

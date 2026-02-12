@@ -50,7 +50,8 @@ interface Props {
   examName: string;
   paperName: string;
   currentQuestionIndex: number;
-  sectionQuestions: Question[];
+  handleSectionQuestions: Question[];
+  examResult:any;
   getQuestionByNumberId: (idx: number) => void;
 }
 
@@ -61,6 +62,7 @@ const QuestionWiswView: React.FC<Props> = ({
   currentQuestionIndex,
   sectionQuestions,
   getQuestionByNumberId,
+  examResult,
 }) => {
   // Render HTML/LaTeX content
   const dispatch=useDispatch<AppDispatch>()
@@ -168,7 +170,6 @@ const [reporttoggle,setReportToggle]=useState(false)
 const handlereport=()=>{
 setReportToggle(true)
 }
-console.log(question,"llllllllllllllll")
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
 
 const handleSubmitReport=(val:any)=>{

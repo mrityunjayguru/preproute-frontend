@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setexamType,setSelectedexamType,setUpdateexamType,setSingleexamType,setExamBeExamTypeId } from '../../store/seatUpexam/examType';
+import { setexamType,setSelectedexamType,setUpdateexamType,setSingleexamType,setExamBeExamTypeId,setTopicExam } from '../../store/seatUpexam/examType';
 import APIName, { examType } from '../endPoints';
 import { examTypeRepo } from './QuestionPaperRepo';
 import Swal from 'sweetalert2';
@@ -141,6 +141,33 @@ export const getUserQuestionData = createAsyncThunk<boolean, Payload>(
   async (payload, thunkAPI) => {
     try {
        const data = await examTypeRepo.getUserQuestionData(payload);
+      if (data.status === 200) {
+             thunkAPI.dispatch(setExamBeExamTypeId(data.data.data));
+     return data.data.data
+      }
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        // GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        // GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
+
+
+
+
+
+export const getQuestionPaperById = createAsyncThunk<boolean, Payload>(
+  examType.get,
+  async (payload, thunkAPI) => {
+    try {
+       const data = await examTypeRepo.getQuestionPaperById(payload);
       if (data.status === 200) {
              thunkAPI.dispatch(setExamBeExamTypeId(data.data.data));
      return data.data.data

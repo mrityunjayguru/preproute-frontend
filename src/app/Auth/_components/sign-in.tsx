@@ -33,7 +33,7 @@ const Signin = () => {
     const payload: any = { email, password };
     const response = await dispatch(handleLogin(payload));
     if (response.payload === true) {
-      router.push("/home");
+      router.push("/user-dashboard");
     }
   };
 
@@ -44,7 +44,7 @@ const Signin = () => {
       const payload: any = { token };
       const response: any = await dispatch(googleLogin(payload));
       if (response.payload === true) {
-        router.push("/home");
+        router.push("/user-dashboard");
       }
     }
   };
@@ -63,7 +63,7 @@ const loginWithGoogle = useGoogleLogin({
     // 👉 Backend को code भेजो
     const response: any = await dispatch(googleLogin({ code,isCode:true }));
      if (response.payload === true) {
-        router.push("/home");
+        router.push("/user-dashboard");
       }
   },
 
@@ -101,7 +101,7 @@ const loginWithGoogle = useGoogleLogin({
               </div>
 
               <p  className="text-sm text-[#6F767E] mb-8 font-dm-sans">
-                Welcome Back, Sign in to your account
+                Welcome Back, Enter your details to sign in to your account
               </p>
 {/* <Button
   onClick={() => loginWithGoogle()}

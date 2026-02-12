@@ -73,7 +73,7 @@ export const getSubTopicByTopicId= createAsyncThunk<boolean, Payload>(
       const data = await subtopicRepo.getSubTopicByTopicId(payload);
       if (data.status === 200) {
         thunkAPI.dispatch(setsubTopic(data.data.data));
-        return true;
+        return data.data.data;
       }
     } catch (err:any) {
       if(err.status==401){

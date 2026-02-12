@@ -12,6 +12,7 @@ interface examTypeRepo {
   getExamType: (payload: Payload) => Promise<AxiosResponse>;
   handleUploadImage: (payload: Payload) => Promise<AxiosResponse>;
   getUserQuestionData: (payload: Payload) => Promise<AxiosResponse>;
+  getQuestionPaperById: (payload: Payload) => Promise<AxiosResponse>;
 }
 export const examTypeRepo: examTypeRepo = {
   createQuestionPaper(payload) {
@@ -23,6 +24,9 @@ export const examTypeRepo: examTypeRepo = {
   },
   getUserQuestionData(payload) {
     return Repository.post(questionPaper.getUserQuestionData, payload);
+  },
+  getQuestionPaperById(payload) {
+    return Repository.post(questionPaper.getQuestionPaperById, payload);
   },
  handleUploadImage(payload: any) {
   return Repository.post(questionPaper.handleUploadImage, payload, {

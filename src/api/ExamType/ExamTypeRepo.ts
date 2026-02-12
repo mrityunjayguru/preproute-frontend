@@ -12,6 +12,7 @@ interface examTypeRepo {
   getExamType: (payload: Payload) => Promise<AxiosResponse>;
   selectedExamType: (payload: Payload) => Promise<AxiosResponse>;
   getExamBeExamTypeId: (payload: any) => Promise<AxiosResponse>;
+  getExamBeSectionTypeId:(payload: any) => Promise<AxiosResponse>;
 updateExamType: (payload: any) => Promise<AxiosResponse>;
 getCommonExamType: (payload: any) => Promise<AxiosResponse>;
 }
@@ -35,5 +36,8 @@ export const examTypeRepo: examTypeRepo = {
   },
   getCommonExamType(payload) {
  return Repository.post(examType.getCommonExamType, payload);
+  },
+  getExamBeSectionTypeId(payload) {
+ return Repository.post(examType.getExamBeSectionTypeId, payload);
   },
 };

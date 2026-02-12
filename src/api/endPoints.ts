@@ -12,6 +12,7 @@ const UserAuth={
   checkUser:"Auth/checUser",
   VerifyOtp:"Auth/VerifyOtp",
   resetPassword:"Auth/resetPassword",
+  userDashboard:"user/userDashboard",
   AdminLogin:"Auth/adminLogin",
   exam:"statusmaster",
 }
@@ -34,13 +35,21 @@ export const examType={
   get:"setUpexam/examType/get",
   update:"setUpexam/examType/update",
   getCommonExamType:"UnAuth/examType",
-  getExamBeExamTypeId:"setUpexam/examType/getById"
+  getExamBeExamTypeId:"setUpexam/examType/getById",
+  getExamBeSectionTypeId:"setUpexam/questionpaper/dailyPraticesExam"
 }
 export const section={
   create:"setUpexam/section/create",
   get:"setUpexam/section/get",
   getSectionByExamId:"sections/getallsectionsbyexamid",
   update:"setUpexam/section/update",
+
+}
+export const college={
+  create:"setUpexam/college/create",
+  get:"setUpexam/college/get",
+  getSectionByExamId:"college/getallsectionsbyexamid",
+  update:"setUpexam/college/update",
 
 }
 export const topic={
@@ -81,6 +90,12 @@ export const Report={
   conversation:"forum/conversation"
 
 }
+export const Annoucement={
+    create:"annoucement/create",
+  get:"annoucement/get",
+  conversation:"forum/conversation",
+  update:"annoucement/update",
+}
 
 
 export const feedback={
@@ -117,11 +132,14 @@ export const questionPaper={
   handleUploadImage:"setUpexam/questionpaper/uploadImage",
   getQuestionBeExamId:"setUpexam/questionpaper/getQuestionBeExamId",
   getUserQuestionData:"setUpexam/questionpaper/userExam",
+  getQuestionPaperById:"setUpexam/questionpaper/getById",
   createUserExam:"/user/exam",
   update:"setUpexam/questionpaper/update",
   getCommonQuestionBeExamId:"unauth/QuestionByExamId",
+  getCommonTopicQuestionBeExamId:"unauth/topicWiseExamById",
   getCommonexam:"unauth/commonExam",
-  ManageExamProgress:"user/examProgress"
+  ManageExamProgress:"user/examProgress",
+  getUserWithTarget:"user/getUser",
 
 }
 export const Dashboard={

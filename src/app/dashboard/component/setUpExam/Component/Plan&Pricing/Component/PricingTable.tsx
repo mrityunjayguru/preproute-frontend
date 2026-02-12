@@ -8,6 +8,7 @@ import { getPlanandPricing, setUpdatePlanData } from "@/api/Plan&Pricing";
 import CommonTable from "@/Common/CommonTable";
 import { formatDateTime } from "@/Common/ComonDate";
 import { Search } from "lucide-react";
+import { getCollege } from "@/api/college";
 
 const PricingTable = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,12 +22,14 @@ const PricingTable = () => {
   const getData = async () => {
     const payload: any = {};
     await dispatch(getPlanandPricing(payload));
+    await dispatch(getCollege(payload));
+
   };
 
   useEffect(() => {
     getData();
   }, []);
-
+ 
   // Filter Logic
   const filteredData = palnAndpricing.filter((item: any) => {
     const searchLower = search.toLowerCase();

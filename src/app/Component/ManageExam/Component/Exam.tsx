@@ -8,9 +8,7 @@ import { AppDispatch } from "@/store/store";
 // API & Actions
 import {
   createUserExam,
-  handleGivenExam,
   ManageExamProgress,
-  setCurrentSection,
 } from "@/api/Exam";
 import {
   clearQuestionResponce,
@@ -56,7 +54,6 @@ export default function ExamUI() {
   const singleQuestion = useSelector((state: any) => state.question?.singleQuestion);
   const examProgress = useSelector((state: any) => state.exam?.examProgress);
   const userLogin = useSelector((state: any) => state.Auth?.loginUser);
-  const currentSectionId = useSelector((state: any) => state.exam.currentSectionId);
 
   // --- UI & Modal State ---
   const [showSubmitPopup, setShowSubmitPopup] = useState(false);
@@ -76,7 +73,7 @@ export default function ExamUI() {
   const [question, setQuestion] = useState<any>(null);
   const [numericalValue, setNumericalValue] = useState("");
   const [mcqSelected, setMcqSelected] = useState<string | null>(null);
-  const [sectionQuestionStatus, setSectionQuestionStatus] = useState<Record<string, Record<number, string>>>({});
+  const [sectionQuestionStatus, setSectionQuestionStatus] = useState<Record<string, Record<string | number, string>>>({});
   const [timeLeft, setTimeLeft] = useState(1);
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [questionStartTime, setQuestionStartTime] = useState<number | null>(null);
@@ -84,14 +81,17 @@ export default function ExamUI() {
   // --- Derived State ---
   const exam = useMemo(() => examData?.[0]?.exam || {}, [examData]);
   const examSections: Section[] = useMemo(() => exam?.sections || [], [exam]);
-  const activeSectionId = examProgress?.currentSection?.sectionId || selectedSection?.sectionId;
+  
+  const activeSectionId = isSection 
+    ? (examProgress?.currentSection?.sectionId || selectedSection?.sectionId)
+    : "no-section";
 
   const currentStatus = useMemo(() => {
     if (examProgress?.givenExam) {
       return examProgress?.givenExam[activeSectionId] || {};
     }
-    return sectionQuestionStatus[selectedSection?.sectionId] || {};
-  }, [examProgress, sectionQuestionStatus, activeSectionId, selectedSection]);
+    return sectionQuestionStatus[activeSectionId] || {};
+  }, [examProgress, sectionQuestionStatus, activeSectionId]);
 
   // --- Helper Functions ---
   const getISTDate = useCallback(() => {
@@ -133,14 +133,22 @@ export default function ExamUI() {
     }
   }, [dispatch, examData, userLogin, getISTDate]);
 
+  // --- CRITICAL CHANGE: Dynamic Keys ---
   const updateStatus = useCallback((status: string) => {
     const sectionKey = isSection ? selectedSection?.sectionId : "no-section";
     if (!sectionKey) return;
+
+    // Use Question ID if isSection is false, otherwise use index
+    const statusKey = isSection ? currentQuestionIndex : (currentQuestionIndex || currentQuestionIndex);
+
     setSectionQuestionStatus((prev) => ({
       ...prev,
-      [sectionKey]: { ...prev[sectionKey], [currentQuestionIndex]: status?status:"visited" },
+      [sectionKey]: { 
+        ...prev[sectionKey], 
+        [statusKey]: status ? status : "visited" 
+      },
     }));
-  }, [isSection, selectedSection, currentQuestionIndex]);
+  }, [isSection, selectedSection, currentQuestionIndex, question]);
 
   // --- Initialization & Progress Recovery ---
   useEffect(() => {
@@ -169,13 +177,11 @@ export default function ExamUI() {
         setTotalNoOfQuestions(response.payload.currentSection.noofQuestion);
         fetchQuestion(response.payload.currentQuestionNoIndex + 1, response.payload.currentSection.sectionId);
       } else {
-        // Fresh start
         if (examInfo.isSection && examSections.length) {
           const firstSection = examSections[0];
           setSelectedSection(firstSection);
           setTotalNoOfQuestions(firstSection.noOfQuestions);
           fetchQuestion(1, firstSection.sectionId);
-
           if (!localStorage.getItem(`sectionStartTime_${firstSection.sectionId}`)) {
             updateSectionTime(null, firstSection.sectionId);
             localStorage.setItem(`sectionStartTime_${firstSection.sectionId}`, "1");
@@ -186,7 +192,6 @@ export default function ExamUI() {
         }
       }
 
-      // Restore Timer
       const savedTime = localStorage.getItem(`exam_timeLeft_${examData[0]._id}`);
       if (savedTime) {
         setTimeLeft(Number(savedTime));
@@ -209,7 +214,6 @@ export default function ExamUI() {
       }
       return;
     }
-
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         const next = prev <= 1 ? 0 : prev - 1;
@@ -217,7 +221,6 @@ export default function ExamUI() {
         return next;
       });
     }, 1000);
-
     return () => clearInterval(timer);
   }, [timeLeft, examData, isSection, currentSectionIndex, examSections]);
 
@@ -228,18 +231,22 @@ export default function ExamUI() {
     setQuestion(q);
     setQuestionStartTime(Date.now());
     
+    // Determine status key for check
+    const statusKey = isSection ? currentQuestionIndex : q._id;
+    const existingStatus = currentStatus[statusKey];
+
     if (q.userAttempted && q.usergiven?.length) {
       setMcqSelected(q.usergiven[0]?.userAnswer || null);
       setNumericalValue(q.usergiven[0]?.numericAnswer || "");
-      updateStatus(currentStatus[currentQuestionIndex] || "answered");
+      updateStatus(existingStatus || "answered");
     } else {
       setMcqSelected(null);
       setNumericalValue("");
-      updateStatus(currentStatus[currentQuestionIndex] || "visited");
+      updateStatus(existingStatus || "visited");
     }
-  }, [singleQuestion, currentQuestionIndex]);
+  }, [singleQuestion, currentQuestionIndex, isSection]);
 
-  // --- Tab Visibility Security ---
+  // --- Security ---
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
@@ -253,7 +260,6 @@ export default function ExamUI() {
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, []);
 
-  // --- Handlers ---
   const handleKeyPress = useCallback((key: string) => {
     if (key === "Clear All") return setNumericalValue("");
     if (key === "⌫") return setNumericalValue((prev) => prev.slice(0, -1));
@@ -262,7 +268,6 @@ export default function ExamUI() {
 
   const saveCurrentAnswer = async (statusType = "visited") => {
     if (!question) return;
-   
     const timeTaken = questionStartTime ? Math.floor((Date.now() - questionStartTime) / 1000) : 0;
     const payload: any = {
       questionId: question._id,
@@ -271,35 +276,20 @@ export default function ExamUI() {
       questionPaperId: examData?.[0]?._id,
       statusType,
     };
-
-    if (question.answerType === "Numeric") {
-      payload.numericAnswer = numericalValue;
-    } else {
-      payload.userAnswer = mcqSelected;
-    }
+    if (question.answerType === "Numeric") payload.numericAnswer = numericalValue;
+    else payload.userAnswer = mcqSelected;
 
     if (mcqSelected || numericalValue) {
       await dispatch(createUserExam(payload));
       updateStatus(statusType);
-      return
+      return;
     }
-    if(statusType=="review"){
-      updateStatus("review");
-    } 
-    else {
-      updateStatus("visited");
-    }
+    updateStatus(statusType === "review" ? "review" : "visited");
   };
 
   const handleNextQuestion = async () => {
     setloder(true);
-    if(mcqSelected || numericalValue){
- await saveCurrentAnswer("answered");
-    }else{
- await saveCurrentAnswer("visited");
-    }
-   
-
+    await saveCurrentAnswer(mcqSelected || numericalValue ? "answered" : "visited");
     if (currentQuestionIndex + 1 < totalNoOfQuestions) {
       setCurrentQuestionIndex((p) => p + 1);
       fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
@@ -318,13 +308,7 @@ export default function ExamUI() {
 
   const handleMarkForAnswerAndReview = async () => {
     setloder(true);
-          if (mcqSelected || numericalValue) {
-  await saveCurrentAnswer("reviewAndAnswer");
-    }else{
-  await saveCurrentAnswer("review");
-    }
-    // await saveCurrentAnswer("reviewAndAnswer");
-
+    await saveCurrentAnswer(mcqSelected || numericalValue ? "reviewAndAnswer" : "review");
     if (currentQuestionIndex + 1 < totalNoOfQuestions) {
       setCurrentQuestionIndex((p) => p + 1);
       fetchQuestion(currentQuestionIndex + 2, selectedSection?.sectionId);
@@ -335,7 +319,7 @@ export default function ExamUI() {
   };
 
   const handleClearResponse = async () => {
-    await dispatch(clearQuestionResponce({ questionPaperId: question }));
+    await dispatch(clearQuestionResponce({ questionPaperId: question._id }));
     setMcqSelected(null);
     setNumericalValue("");
     updateStatus("visited");
@@ -346,9 +330,7 @@ export default function ExamUI() {
     const nextIndex = currentSectionIndex + 1;
     const nextSection = examSections[nextIndex];
     if (!nextSection) return;
-
     if (!switchable) setTimeLeft(nextSection.duration! * 60);
-    
     await updateSectionTime(selectedSection?.sectionId, nextSection.sectionId);
     setSelectedSection(nextSection);
     setCurrentSectionIndex(nextIndex);
@@ -358,10 +340,7 @@ export default function ExamUI() {
   };
 
   const handleSection = async (section: Section) => {
-    if (!switchable) {
-      setSectionShowPopup(true);
-      return;
-    }
+    if (!switchable) { setSectionShowPopup(true); return; }
     await updateSectionTime(selectedSection?.sectionId, section.sectionId);
     setSelectedSection(section);
     setCurrentSectionIndex(examSections.findIndex((s) => s.sectionId === section.sectionId));
@@ -375,12 +354,9 @@ export default function ExamUI() {
       await updateSectionTime(selectedSection?.sectionId, undefined);
       await dispatch(userExamResult(examData));
       router.push("/analytics");
-    } catch (err) {
-      console.error("Error submitting exam:", err);
-    }
+    } catch (err) { console.error("Error submitting exam:", err); }
   };
 
-  // --- Progress Sync Effect ---
   useEffect(() => {
     if (!userLogin || !examData?.length || !selectedSection) return;
     const payload: any = {
@@ -397,7 +373,6 @@ export default function ExamUI() {
       givenExam: sectionQuestionStatus,
       status: "in-progress",
     };
-    console.log(payload,"payloadpayload")
     dispatch(ManageExamProgress(payload));
   }, [sectionQuestionStatus, currentQuestionIndex, selectedSection]);
 
@@ -422,13 +397,23 @@ export default function ExamUI() {
 
       <div><ExamHeader examData={examData} /></div>
       <div className="h-[94vh] flex flex-col overflow-hidden">
-        <HeaderSection timeLeft={timeLeft} formatTime={formatTime} examName={exam?.examname} paperName={examData[0]?.questionPaper} />
+        <HeaderSection examData={examData} timeLeft={timeLeft} formatTime={formatTime} examName={exam?.examname} paperName={examData[0]?.questionPaper} />
         <div className="flex flex-col justify-between lg:flex-row flex-1">
           <div className="flex flex-col w-full">
             <SubjectTabs isSection={isSection} examSections={examSections} selectedSection={selectedSection} handleSection={handleSection} question={question} currentQuestionIndex={currentQuestionIndex} />
             <QuestionView question={question} examName={exam?.examname} paperName={examData[0]?.questionPaper} currentQuestionIndex={currentQuestionIndex} selectedsection={selectedSection} CurrentInput={CurrentInput} />
           </div>
-          <RightSection userLogin={userLogin} totalNoOfQuestions={totalNoOfQuestions} currentStatus={currentStatus} currentQuestionIndex={currentQuestionIndex} getQuestionByNumberId={(n: number) => { setCurrentQuestionIndex(n); fetchQuestion(n + 1, selectedSection?.sectionId); }} isSection={isSection} selectedSection={examProgress} isTimeUp={isTimeUp} />
+          {/* Passed currentQuestionIndex and question list info for ID mapping in RightSection */}
+          <RightSection 
+            userLogin={userLogin} 
+            totalNoOfQuestions={totalNoOfQuestions} 
+            currentStatus={currentStatus} 
+            currentQuestionIndex={currentQuestionIndex} 
+            getQuestionByNumberId={(n: number) => { setCurrentQuestionIndex(n); fetchQuestion(n + 1, selectedSection?.sectionId); }} 
+            isSection={isSection} 
+            selectedSection={selectedSection || examSections} 
+            isTimeUp={isTimeUp} 
+          />
         </div>
       </div>
       <div className="fixed bottom-0 left-0 w-full z-50 bg-white border-t">

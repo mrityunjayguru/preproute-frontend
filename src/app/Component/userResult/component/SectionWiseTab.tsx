@@ -7,7 +7,7 @@ interface DifficultyWiseTabProps {
 
 const SectionWiseTab: React.FC<DifficultyWiseTabProps> = ({ data }) => {
   const examDetail = useSelector(
-    (state: any) => state?.examType?.examDetail || []
+    (state: any) => state?.examType?.examDetail || [],
   );
 
   if (!data?.sectiondifculty?.length) {
@@ -55,13 +55,13 @@ const SectionWiseTab: React.FC<DifficultyWiseTabProps> = ({ data }) => {
 
           {/* 🔹 Correct | Wrong | Attempted */}
           <div className="flex border-b bg-[#F9FBFC]">
-          <div className="p-4 w-1/4 min-w-[200px] font-poppins">
-  <span className="text-green-600 font-medium">Correct</span>
-  {" | "}
-  <span className="text-rose-500 font-medium">Wrong</span>
-  {" | "}
-  <span className="text-gray-700 font-medium">Attempted</span>
-</div>
+            <div className="p-4 w-1/4 min-w-[200px] font-poppins">
+              <span className="text-green-600 font-medium">Correct</span>
+              {" | "}
+              <span className="text-rose-500 font-medium">Wrong</span>
+              {" | "}
+              <span className="text-gray-700 font-medium">Attempted</span>
+            </div>
 
             <div className="flex-1 flex text-sm">
               {section.difficulties.map((d: any, i: number) => (

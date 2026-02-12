@@ -168,6 +168,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
 export default function MergedExamPage() {
   const searchParams = useSearchParams();
   const [mockDate,setMockDate]=useState("")
+  const [sectionId,setSectionId]=useState(null)
   const isMock: any = searchParams.get("isMock") === "true";
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
@@ -198,18 +199,20 @@ useEffect(() => {
 }, [selectedExam]);
 
   useEffect(() => {
-    const payload: any = {
-      userId: loginUser?._id,
-    };
-    dispatch(getCommonexam(payload));
+    // const payload: any = {
+    //   userId: loginUser?._id,
+    // };
+    // dispatch(getCommonexam(payload));
   }, []);
 
  useEffect(() => {
+
   if (examById.length > 0) {
     const payload: any = {
       examname: examById[0]?.exam?.examname,
       _id: examById[0]?.exam?._id,
       mockDate: examById[0]?.exam?.mockDate, // ✅ ADD THIS
+      section:examById[0]?.sectionDetails
     };
     setSelectedExam(payload);
   }
@@ -220,20 +223,23 @@ useEffect(() => {
     setSelectedExam(null);
   }, [selectedExamType]);
   // Handle dropdown
-  const handleSelectExam = (option: any) => {
+  const handleSelectExam = async(option: any) => {
     if (!option) return;
-    dispatch(handleSetSelectedExam(option.value));
-    const exam = option.value;
+    dispatch(handleSetSelectedExam(option.value ||option._id ));
+    const exam = option.value ;
     setSelectedExam(exam);
 
     const payload: any = {
-      examid: exam?._id,
+      examid: exam?._id || option._id ,
       examTypeId: selectedExamType?._id,
       isPublished: true,
       uid: loginUser?._id,
     };
+if(sectionId){
+  payload.sectionId=sectionId
+}
 
-    dispatch(getCommonQuestionBeExamId(payload));
+   await dispatch(getCommonQuestionBeExamId(payload));
   };
 
   const handleSelectExamDynamic = (val: any) => {
@@ -248,7 +254,10 @@ useEffect(() => {
       isPublished: true,
       uid: loginUser?._id,
     };
-
+if(sectionId)
+ {
+   payload.sectionId=sectionId
+ }
     dispatch(getCommonQuestionBeExamId(payload));
   };
 
@@ -290,10 +299,10 @@ if (
       router.push("/analytics");
     }
   };
-
   const examOptions = examdata.map((ex: any) => ({
     label: ex.examname,
     value: ex,
+    section:ex.sectionDetails
   }));
   useEffect(() => {
     if (isMock) {
@@ -306,6 +315,12 @@ if (
       }
     }
   }, [isMock, examdata]);
+  
+ const getExamBySection=(val:any)=>{
+
+  setSectionId(val._id)
+  handleSelectExam(selectedExam)
+ }
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">
@@ -442,7 +457,7 @@ if (
                     <span className="text-[#009DFF] font-thin">|</span>{" "}
                   </span>
                   <span className="text-[#FF5635] font-medium font-poppins text-xl sm:text-xl md:text-2xl">
-                    {selectedExam?.examname || "Mock Tests"}
+                    {selectedExam?.examname }
                   </span>
                 </h2>
                 <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
@@ -467,7 +482,9 @@ if (
             </div>
 
             {examById ? (
-              <div className="flex items-center py-8 gap-4 w-full">
+           <>
+           <div className="flex gap-2 ">
+               <div className="flex items-center py-8 gap-4 w-1/2">
                 <p className="text-[#727EA3] font-dm-sans">Change college</p>
                 <Select
                   options={examOptions}
@@ -495,6 +512,10 @@ if (
                   }}
                 />
               </div>
+     
+
+           </div>
+           </>
             ) : null}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mx-auto">
