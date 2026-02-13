@@ -107,7 +107,7 @@ otherStream:formData.otherStream,
         //  router.push("/home");
         await dispatch(updateUserProfile)
 
-         window.location.href="/home"
+         window.location.href="/user-dashboard"
 
         // nextStep();
       } 

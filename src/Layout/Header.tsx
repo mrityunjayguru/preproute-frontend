@@ -85,8 +85,8 @@ export const Header: React.FC = () => {
     { label: "Pricing", href: "/PlanandPricing" },
     { label: "Community", href: "/Community" },
     { label: "Blog", href: "/blog" },
-
   ];
+
 
   /* ---------- Active Helpers ---------- */
   const isActive = (href: string) => {
@@ -127,21 +127,23 @@ export const Header: React.FC = () => {
 
   };
 
-  const loginWithGoogle = useGoogleLogin({
-    flow: "auth-code",
+  const loginWithGoogle=()=>{
+    router.push("/Auth/signin")
+  }
+//   const loginWithGoogle = useGoogleLogin({
+//     flow: "auth-code",
+//     onSuccess: async ({ code }) => {
+//       // 👉 Backend को code भेजो
+//       const response: any = await dispatch(googleLogin({ code, isCode: true }));
+//       if (response.payload === true) {
+//         router.push("/user-dashboard");
+//       }
+//     },
 
-    onSuccess: async ({ code }) => {
-      // 👉 Backend को code भेजो
-      const response: any = await dispatch(googleLogin({ code, isCode: true }));
-      if (response.payload === true) {
-        router.push("/user-dashboard");
-      }
-    },
-
-  onError: () => {
-    console.log("Google login error");
-  },
-});
+//   onError: () => {
+//     console.log("Google login error");
+//   },
+// });
 // const loginWithGoogle = useGoogleLogin({
 //     flow: "auth-code",
 //     ux_mode: "redirect",

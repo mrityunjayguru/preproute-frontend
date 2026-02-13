@@ -6,24 +6,202 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { AppDispatch } from "@/store/store";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-export const ExamList = ({ exams }: any) => (
-  <div className="col-span-12 lg:col-span-7 h-fit bg-white ">
-    <div className="flex justify-between items-center mb-6 px-5 font-poppins">
-      <h2 className="text-md font-medium  text-[#0056D2]">Recently Created Exams</h2>
-      <h2 className="text-[#FF5635] text-sm font-normal cursor-pointer hover:underline">View All</h2>
-    </div>
 
-    <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
-      {exams &&
-        exams.length > 0 &&
-        exams.map((exam: any, i: any) => {
-          return <ExamCard key={i} exam={exam} />;
-        })}
+import React, { useEffect, useMemo, useState } from "react";
+import Select from "react-select";
+import { getCollege } from "@/api/college";
+
+interface Props {
+  exams: any[];
+}
+
+
+
+export const ExamList: React.FC<Props> = ({ exams }) => {
+  const dispatch = useDispatch<any>();
+
+  /* ================= FETCH COLLEGE ================= */
+  useEffect(() => {
+    dispatch(getCollege({}));
+  }, [dispatch]);
+
+  const colleges =
+    useSelector((state: any) => state?.college?.college) || [];
+
+  const examTypeData =
+    useSelector((state: any) => state?.examType?.examType) || [];
+
+  /* ================= FORM STATE ================= */
+  const [formData, setFormData] = useState({
+    examTypeId: "",
+    subExamTypeId: "",
+    collegeId: "",
+  });
+
+  /* ================= SELECTED EXAM TYPE ================= */
+  const selectedExamType = useMemo(
+    () =>
+      examTypeData.find((e: any) => e._id === formData.examTypeId),
+    [examTypeData, formData.examTypeId]
+  );
+
+  /* ================= OPTIONS ================= */
+  const examTypeOptions = examTypeData.map((item: any) => ({
+    value: item._id,
+    label: item.examType,
+  }));
+
+  const subExamOptions =
+    selectedExamType?.subMenus?.map((item: any) => ({
+      value: item._id,
+      label: item.subExamType,
+    })) || [];
+
+  const collegeOptions = colleges.map((item: any) => ({
+    value: item._id,
+    label: item.examname,
+  }));
+
+  /* ================= REACT SELECT STYLE ================= */
+
+  const customStyles = {
+    control: (base: any) => ({
+      ...base,
+      borderRadius: "8px",
+      borderColor: "#E5E7EB",
+      boxShadow: "none",
+      minHeight: "38px",
+      "&:hover": {
+        borderColor: "#0056D2",
+      },
+    }),
+    option: (base: any, state: any) => ({
+      ...base,
+      backgroundColor: state.isSelected
+        ? "#0056D2"
+        : state.isFocused
+        ? "#E6F0FF"
+        : "white",
+      color: state.isSelected ? "white" : "#111827",
+      cursor: "pointer",
+    }),
+  };
+
+  /* ================= AUTO PAYLOAD LOGIC ================= */
+
+  useEffect(() => {
+    if (
+      formData.examTypeId &&
+      (subExamOptions.length === 0 || formData.subExamTypeId) &&
+      formData.collegeId
+    ) {
+      const payload:any = {
+        examTypeId: formData.examTypeId,
+        subExamTypeId: formData.subExamTypeId || null,
+        collegeId: formData.collegeId,
+      };
+
+      console.log("Final Payload:", payload);
+     dispatch(getDashboardData(payload));
+    }
+  }, [formData, subExamOptions.length]);
+
+  /* ================= UI ================= */
+
+  return (
+    <div className="col-span-12 lg:col-span-7 h-fit bg-white">
+      
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6 px-5 font-poppins">
+
+        {/* All Selects in Row */}
+        <div className="flex gap-4">
+
+          {/* 1️⃣ Exam Type */}
+          <div className="w-48">
+            <Select
+              options={examTypeOptions}
+              value={examTypeOptions.find(
+                (opt: any) => opt.value === formData.examTypeId
+              )}
+              onChange={(option: any) =>
+                setFormData({
+                  examTypeId: option?.value || "",
+                  subExamTypeId: "",
+                  collegeId: "",
+                })
+              }
+              styles={customStyles}
+              placeholder="Select Exam"
+              isSearchable={false}
+            />
+          </div>
+
+          {/* 2️⃣ Sub Exam Type (Only if exists) */}
+          {subExamOptions.length > 0 && (
+            <div className="w-48">
+              <Select
+                options={subExamOptions}
+                value={subExamOptions.find(
+                  (opt: any) =>
+                    opt.value === formData.subExamTypeId
+                )}
+                onChange={(option: any) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    subExamTypeId: option?.value || "",
+                    collegeId: "",
+                  }))
+                }
+                styles={customStyles}
+                placeholder="Select Sub Type"
+                isSearchable={false}
+              />
+            </div>
+          )}
+
+          {/* 3️⃣ College */}
+          <div className="w-48">
+            <Select
+              options={collegeOptions}
+              value={collegeOptions.find(
+                (opt: any) => opt.value === formData.collegeId
+              )}
+              onChange={(option: any) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  collegeId: option?.value || "",
+                }))
+              }
+              styles={customStyles}
+              placeholder="Select College"
+              isSearchable={false}
+            />
+          </div>
+
+        </div>
+
+        {/* View All */}
+        <h2 className="text-[#FF5635] text-sm font-normal cursor-pointer hover:underline">
+          View All
+        </h2>
+      </div>
+
+      {/* Exam List */}
+      <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar px-5 pb-5">
+        {exams &&
+          exams.length > 0 &&
+          exams.map((exam: any, i: number) => (
+            <ExamCard key={i} exam={exam} />
+          ))}
+      </div>
+
     </div>
-  </div>
-);
+  );
+};
+
 
 const ExamCard = ({ exam }: any) => {
   const dispatch = useDispatch<AppDispatch>();
