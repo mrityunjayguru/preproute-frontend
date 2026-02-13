@@ -23,7 +23,7 @@ function DailyStrake() {
         </div>
         <div className="mt-4">
           <div className="text-5xl font-medium text-[#FF5635]">
-            {todayAttempts}{""}
+            {todayAttempts}{" "}
             <span className="text-xl font-dm-sans text-gray-900">Days</span>
           </div>
         </div>

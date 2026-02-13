@@ -31,6 +31,7 @@ const UserDashboard = () => {
     const userdashboarddata = useSelector(
         (state: any) => state?.Auth?.userDashboard,
     );
+    const token=localStorage.getItem("token")
       const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
     
     const examTypeData =
@@ -41,7 +42,10 @@ const UserDashboard = () => {
         dispatch(userDashboard(payload));
     };
     useEffect(() => {
-          if (
+        if(!token){
+            router.push("/home")
+        }
+      if (
     (userLogin?.isGoogle === true)
   ) {
     router.push("/Auth/register");
@@ -84,12 +88,13 @@ const UserDashboard = () => {
 
                     <div className="flex px-8 mt-8 flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
                         <div>
-                            <h1 className="text-3xl font-medium font-poppins text-[#FF5635]">
-                                Brooke Hyde,
-                            </h1>
-                            <p className="text-gray-600 text-base font-poppins mt-1">
+                             <p className="text-gray-600 text-base font-poppins mt-1">
                                 Welcome back,
                             </p>
+                            <h1 className="text-3xl font-medium font-poppins text-[#FF5635]">
+                                {userLogin?.username}!
+                            </h1>
+                           
                         </div>
                         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                             <Button onClick={handleIPmatExam} className="w-full sm:w-auto bg-[#FF5635] hover:bg-[#E04D2E] text-white rounded-lg px-8 py-3 text-base h-auto font-poppins cursor-pointer shadow-sm">
