@@ -7,7 +7,7 @@ function MockUpdate() {
   );
 
   return (
-    <div className="p-6 bg-[#F5F8FF] border-none rounded-2xl space-y-4 flex-1 flex flex-col">
+    <div className="p-6 bg-[#F5F8FF] border-none rounded-[8px] space-y-4 flex-1 flex flex-col h-full">
       <h3 className="text-lg font-medium text-[#FF5635] font-poppins">
         Exam Updates
       </h3>
