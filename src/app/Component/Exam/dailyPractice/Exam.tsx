@@ -226,7 +226,7 @@ const DailyPractice = () => {
                    {/* ACTION BUTTON */}
                    <div className="flex justify-center">
                      <button
-                       onClick={() => router.push("/Exam/topicExam")}
+                       onClick={() => router.push("/user-dashboard")}
                        className="bg-[#FF5A3C] text-white cursor-pointer px-12 py-3 rounded-full font-medium hover:bg-[#FF4A2A] transition-all transform hover:scale-105"
                      >
                        Back to Exams
