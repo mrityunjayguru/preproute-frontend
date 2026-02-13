@@ -2,10 +2,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
 import IMPT from "./_components/impt/IMPT";
 import CUPT from "./_components/cupt/CUPT";
+import Image from "next/image";
+import SocialMedia from "../Home/_componets/social-media"
+import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 
 function Plan() {
     return (
-        <section className="min-h-screen w-full  bg-white">
+        <section className="min-h-screen w-full bg-white flex flex-col justify-between">
             <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
                 <div className="py-8 sm:py-12 md:py-16 text-center w-full">
                     <div className="flex flex-col items-center justify-center">
@@ -58,6 +61,24 @@ function Plan() {
                     </div>
                 </div>
             </div>
+            <section className="bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-8 sm:mt-12 md:mt-20 py-4 sm:py-5 lg:py-6 xl:py-8 ">
+                <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
+                    <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
+                        <div className="w-[100px] sm:w-[130px] md:w-[160px] lg:w-[200px]">
+                            <Image
+                                src={FOOTERLOGO}
+                                alt="preproute-logo"
+                                className="w-full h-auto object-contain"
+                                priority
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col items-center md:items-start gap-2 sm:gap-3">
+                        <SocialMedia />
+                    </div>
+                </div>
+            </section>
         </section>
     );
 }
