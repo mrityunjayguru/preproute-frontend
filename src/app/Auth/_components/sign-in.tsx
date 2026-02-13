@@ -9,7 +9,6 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import { googleLogin, handleLogin } from "@/api/Auth/UserAuth";
 import { GoogleLogin } from "@react-oauth/google";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import LOGO from "@/assets/logo.svg";
@@ -18,14 +17,17 @@ import IMG1 from "@/assets/vectors/auth-vectore/first.svg";
 import { Footer as UserFooter } from "@/Layout/Footer";
 import Link from "next/link";
 import { useGoogleLogin } from "@react-oauth/google";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Signin = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+const router = useRouter();
+const searchParams = useSearchParams();
+const redirect = searchParams.get("redirect");
+console.log(redirect,"searchParamssearchParamssearchParams")
 
   // Email/Password login
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,19 +35,27 @@ const Signin = () => {
     const payload: any = { email, password };
     const response = await dispatch(handleLogin(payload));
     if (response.payload === true) {
+      if(redirect=="/PlanandPricing" ){
+      router.push("/PlanandPricing");
+      }else{
       router.push("/user-dashboard");
+
+      }
     }
   };
-
   // Google login
   const handleGoogleSuccess = async (credentialResponse: any) => {
     const token = credentialResponse?.credential;
     if (token) {
       const payload: any = { token };
       const response: any = await dispatch(googleLogin(payload));
-      if (response.payload === true) {
-        router.push("/user-dashboard");
+    if (response.payload === true) {
+      if(redirect=="/PlanandPricing" ){
+      router.push("/PlanandPricing");
+      }else{
+      router.push("/user-dashboard");
       }
+    }
     }
   };
 

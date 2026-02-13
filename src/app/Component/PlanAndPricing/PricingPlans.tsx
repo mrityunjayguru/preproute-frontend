@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Script from "next/script";
 import { Check, Dot } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 import { AppDispatch } from "@/store/store";
@@ -17,7 +16,7 @@ import SocialMedia from "../Home/_componets/social-media";
 
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import { verifyCouponCode } from "@/api/coupon";
-
+import { useRouter, usePathname } from "next/navigation";
 /* ---------------- UI CONFIG ARRAY ---------------- */
 const PRICING_UI = [
   {
@@ -87,8 +86,6 @@ export default function PricingPlans() {
     getData();
   }, []);
 
-
-
   /* ---------------- CHECK IF PLAN IS PURCHASED ---------------- */
   const isPlanPurchased = (planId: string | undefined) => {
     if (
@@ -100,12 +97,13 @@ export default function PricingPlans() {
     }
     return user.purchaseDetails.some((item: any) => item?.plan?._id === planId);
   };
-
+const pathname = usePathname();
   /* ---------------- PAYMENT HANDLER ---------------- */
   const handleCreatePayment = async (plan: any) => {
     let token = localStorage.getItem("token");
     if (!token) {
-      router.push("/Auth/signin");
+       router.push(`/Auth/signin?redirect=${pathname}`);
+      // router.push("/Auth/signin");
       return;
     }
 
@@ -114,7 +112,7 @@ export default function PricingPlans() {
 
     try {
       // const couponId = couponCodes ? Object.values(couponCodes)[0] : null;
-const couponId = couponCodes[plan._id] || null;
+      const couponId = couponCodes[plan._id] || null;
 
       const payload: any = {
         amount: Number(plan.price - discount) * 100,
@@ -324,9 +322,9 @@ const couponId = couponCodes[plan._id] || null;
                         <div className=" flex justify-between mx-4 px-4 text-[#FF5635] items-start">
                           {/* Left side - Exams */}
                           <div>
-                             <p className="  text-sm sm:text-sm md:text-[13px] font-dm-sans">
+                            <p className="  text-sm sm:text-sm md:text-[13px] font-dm-sans">
                               IPMAT Indore, IPMAT Rohtak
-                              </p>
+                            </p>
                             <p className="  text-sm sm:text-sm md:text-[13px] font-dm-sans">
                               JIPMAT
                             </p>
@@ -393,13 +391,17 @@ const couponId = couponCodes[plan._id] || null;
                             className="flex items-start gap-1.5 sm:gap-2 leading-relaxed"
                           >
                             <Dot className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#000000] mt-0.5 sm:mt-1 shrink-0" />
-                            <span className="text-[#000000] font-[400] text-sm flex-1">{feature}</span>
+                            <span className="text-[#000000] font-[400] text-sm flex-1">
+                              {feature}
+                            </span>
                           </li>
                         ))}
                       </ul>
                       <div className="border-t border-[#FF5635] mx-4 sm:mx-6 my-2  " />
                       {/* BUTTON */}
-                      <p className="text-gray-700 mb-3 mx-7 text-sm font-normal flex justify-start">* Mocks will be available in phases</p>
+                      <p className="text-gray-700 mb-3 mx-7 text-sm font-normal flex justify-start">
+                        * Mocks will be available in phases
+                      </p>
                       <div className="w-full px-4 sm:px-6 pb-4 sm:pb-6 mt-auto flex justify-center items-center flex-col">
                         <div className="relative w-full my-2">
                           <input
