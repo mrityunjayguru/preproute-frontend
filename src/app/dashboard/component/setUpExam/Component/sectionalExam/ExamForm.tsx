@@ -214,10 +214,10 @@ useEffect(()=>{
   };
   // Submit handler
   const handleSubmit = async () => {
-    if (!examName.trim()) {
-      alert("Exam name is required!");
-      return;
-    }
+    // if (!examName.trim()) {
+    //   alert("Exam name is required!");
+    //   return;
+    // }
 
     const payload: any = {
       examname: selectedCollege.label,
