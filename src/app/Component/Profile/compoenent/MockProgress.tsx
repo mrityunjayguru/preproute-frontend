@@ -28,7 +28,7 @@ const strokeDashoffset =
           <div className="text-5xl font-medium text-[#FF5635]">{userdashboarddata?.summary?.completed || 0}</div>
           <div className="text-gray-900 font-medium font-dm-sans">Attempted</div>
         </div>
-        <div className="text-gray-500 font-medium font-dm-sans">/ Out of {userdashboarddata?.summary?.attempted} Exams</div>
+        {/* <div className="text-gray-500 font-medium font-dm-sans">/ Out of {userdashboarddata?.summary?.attempted} Exams</div> */}
       </div>
    <div className="font-poppins relative w-32 h-32">
   <svg className="w-full h-full transform -rotate-90">
@@ -37,7 +37,7 @@ const strokeDashoffset =
       cx="64"
       cy="64"
       r={radius}
-      stroke="#FF5635"
+      stroke="#D7E3FF"
       strokeWidth="12"
       fill="transparent"
     />
@@ -47,7 +47,7 @@ const strokeDashoffset =
       cx="64"
       cy="64"
       r={radius}
-      stroke="#22C55E"
+      stroke="#FF5635"
       strokeWidth="12"
       fill="transparent"
       strokeDasharray={circumference}
