@@ -48,7 +48,7 @@ function DailyPratice() {
   const startExam = async (sectionItem: any) => {
     if (!sectionItem?.sectionDetail?._id) return;
 
-    const payload = {
+    const payload: any = {
       sectionId: sectionItem.sectionDetail._id,
     };
 
@@ -57,7 +57,7 @@ function DailyPratice() {
   };
 
   return (
-    <div className="p-6 border-none rounded-xl max-h-[600px] bg-[#EBFAFF]">
+    <div className="p-6 border-none rounded-[8px] bg-[#EBFAFF] h-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h3 className="text-lg font-medium text-[#2B5CE7] font-poppins">
@@ -84,7 +84,7 @@ function DailyPratice() {
                     {item?.sectionDetail?.section || "—"}
                   </h4>
 
-                
+
 
                   <div className="flex items-center gap-2 text-gray-500 text-sm mt-1 font-dm-sans">
                     <Image
@@ -96,11 +96,11 @@ function DailyPratice() {
                     <span>
                       {item?.createdAt
                         ? new Date(item.createdAt).toLocaleDateString("en-GB", {
-                            weekday: "long",
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                          })
+                          weekday: "long",
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })
                         : "—"}
                     </span>
                   </div>

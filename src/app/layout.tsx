@@ -106,7 +106,7 @@ const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
         <ReduxProvider>
           <PageViewTracker />
           <LayoutComponent>
-             {/* <DisableDevTools /> */}
+             <DisableDevTools />
             {children}
             <Toaster />
           </LayoutComponent>

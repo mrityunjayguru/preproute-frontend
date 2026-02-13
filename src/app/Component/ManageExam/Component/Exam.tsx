@@ -81,8 +81,8 @@ export default function ExamUI() {
   // --- Derived State ---
   const exam = useMemo(() => examData?.[0]?.exam || {}, [examData]);
   const examSections: Section[] = useMemo(() => exam?.sections || [], [exam]);
-  
-  const activeSectionId = isSection 
+
+  const activeSectionId = isSection
     ? (examProgress?.currentSection?.sectionId || selectedSection?.sectionId)
     : "no-section";
 
@@ -107,10 +107,10 @@ export default function ExamUI() {
 
   const fetchQuestion = useCallback(async (questionNo: number, sectionId?: string) => {
     if (!examData?.[0]?._id) return;
-    const payload: any = { 
-        questionNo, 
-        questionPaperId: examData[0]._id,
-        section: sectionId 
+    const payload: any = {
+      questionNo,
+      questionPaperId: examData[0]._id,
+      section: sectionId
     };
     await dispatch(userQuestiongetQuestionById(payload));
   }, [dispatch, examData]);
@@ -143,9 +143,9 @@ export default function ExamUI() {
 
     setSectionQuestionStatus((prev) => ({
       ...prev,
-      [sectionKey]: { 
-        ...prev[sectionKey], 
-        [statusKey]: status ? status : "visited" 
+      [sectionKey]: {
+        ...prev[sectionKey],
+        [statusKey]: status ? status : "visited"
       },
     }));
   }, [isSection, selectedSection, currentQuestionIndex, question]);
@@ -167,12 +167,12 @@ export default function ExamUI() {
       };
 
       const response: any = await dispatch(ManageExamProgress(payload));
-      
+
       if (response?.payload?.givenExam) {
         setSectionQuestionStatus(response.payload.givenExam);
         const savedSection = examSections.find(s => s.sectionId === response.payload.currentSection.sectionId);
         if (savedSection) setSelectedSection(savedSection);
-        
+
         setCurrentQuestionIndex(response.payload.currentQuestionNoIndex);
         setTotalNoOfQuestions(response.payload.currentSection.noofQuestion);
         fetchQuestion(response.payload.currentQuestionNoIndex + 1, response.payload.currentSection.sectionId);
@@ -230,7 +230,7 @@ export default function ExamUI() {
     const q = singleQuestion[0];
     setQuestion(q);
     setQuestionStartTime(Date.now());
-    
+
     // Determine status key for check
     const statusKey = isSection ? currentQuestionIndex : q._id;
     const existingStatus = currentStatus[statusKey];
@@ -396,25 +396,25 @@ export default function ExamUI() {
       <Popup title="Submit Report" isOpen={showPopup} onClose={() => setShowPopup(false)} onSubmit={(val: any) => dispatch(createReport({ title: val, questionId: question._id }))} question={question} />
 
       <div><ExamHeader examData={examData} /></div>
-      <div className="h-[94vh] flex flex-col overflow-hidden">
+      <div className="min-h-screen lg:h-[94vh] flex flex-col overflow-x-hidden overflow-y-auto lg:overflow-hidden">
         <HeaderSection examData={examData} timeLeft={timeLeft} formatTime={formatTime} examName={exam?.examname} paperName={examData[0]?.questionPaper} />
-        <div className="flex flex-col justify-between lg:flex-row flex-1">
-          <div className="flex flex-col w-full">
+        <div className="flex flex-col lg:flex-row flex-1 overflow-y-auto lg:overflow-hidden">
+          <div className="flex flex-col w-full lg:flex-1">
             <SubjectTabs isSection={isSection} examSections={examSections} selectedSection={selectedSection} handleSection={handleSection} question={question} currentQuestionIndex={currentQuestionIndex} />
             <QuestionView question={question} examName={exam?.examname} paperName={examData[0]?.questionPaper} currentQuestionIndex={currentQuestionIndex} selectedsection={selectedSection} CurrentInput={CurrentInput} />
           </div>
-          {/* Passed currentQuestionIndex and question list info for ID mapping in RightSection */}
-          <RightSection 
-            userLogin={userLogin} 
-            totalNoOfQuestions={totalNoOfQuestions} 
-            currentStatus={currentStatus} 
-            currentQuestionIndex={currentQuestionIndex} 
-            getQuestionByNumberId={(n: number) => { setCurrentQuestionIndex(n); fetchQuestion(n + 1, selectedSection?.sectionId); }} 
-            isSection={isSection} 
-            selectedSection={selectedSection || examSections} 
-            isTimeUp={isTimeUp} 
+          <RightSection
+            userLogin={userLogin}
+            totalNoOfQuestions={totalNoOfQuestions}
+            currentStatus={currentStatus}
+            currentQuestionIndex={currentQuestionIndex}
+            getQuestionByNumberId={(n: number) => { setCurrentQuestionIndex(n); fetchQuestion(n + 1, selectedSection?.sectionId); }}
+            isSection={isSection}
+            selectedSection={selectedSection || examSections}
+            isTimeUp={isTimeUp}
           />
         </div>
+        <div className="h-24 lg:hidden" /> {/* Spacer for mobile footer */}
       </div>
       <div className="fixed bottom-0 left-0 w-full z-50 bg-white border-t">
         <FooterActions handleClearResponse={handleClearResponse} handlePreviousQuestion={handlePreviousQuestion} handleNextQuestion={handleNextQuestion} handleSubmit={() => setShowSubmitPopup(true)} handleMarkForAnswerAndReview={handleMarkForAnswerAndReview} isTimeUp={isTimeUp} loder={loder} ReportQuestion={() => setShowPopup(true)} />

@@ -27,7 +27,7 @@ import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 
 
 const UserDashboard = () => {
-    const router=useRouter()
+    const router = useRouter()
     const userdashboarddata = useSelector(
         (state: any) => state?.Auth?.userDashboard,
     );
@@ -52,15 +52,15 @@ const UserDashboard = () => {
   }
         getDashboardData();
     }, []);
-      const handleIPmatExam=()=>{
-    let mockExam=examTypeData.find((item:any)=>item.examType==="Mocks");
-    
-      dispatch(handleSelectedExamType(mockExam));
-            const payload: any = null;
-            dispatch(resetQuestionByExamID(payload));
-            dispatch(resetQuestion(payload));
-       router.push("/Exam/Mocks?isMock=true");
-      }
+    const handleIPmatExam = () => {
+        let mockExam = examTypeData.find((item: any) => item.examType === "Mocks");
+
+        dispatch(handleSelectedExamType(mockExam));
+        const payload: any = null;
+        dispatch(resetQuestionByExamID(payload));
+        dispatch(resetQuestion(payload));
+        router.push("/Exam/Mocks?isMock=true");
+    }
     return (
         <div className="">
             <div className="min-h-screen bg-white px-4 sm:px-6 md:px-8 lg:px-16 xl:px-24 py-8">
@@ -100,15 +100,15 @@ const UserDashboard = () => {
                             <Button onClick={handleIPmatExam} className="w-full sm:w-auto bg-[#FF5635] hover:bg-[#E04D2E] text-white rounded-lg px-8 py-3 text-base h-auto font-poppins cursor-pointer shadow-sm">
                                 Attempt Mocks
                             </Button>
-                            <Button onClick={()=>router.push("bookMark")} className="w-full sm:w-auto bg-[#005EB6] hover:bg-[#004D96] text-white cursor-pointer rounded-lg px-8 py-3 text-base h-auto font-poppins shadow-sm">
+                            <Button onClick={() => router.push("bookMark")} className="w-full sm:w-auto bg-[#005EB6] hover:bg-[#004D96] text-white cursor-pointer rounded-lg px-8 py-3 text-base h-auto font-poppins shadow-sm">
                                 Bookmarks
                             </Button>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 gap-6 mt-8">
-                        <div className="md:col-span-12 lg:col-span-5 flex flex-col space-y-6">
-                            <div className="px-6 py-4 bg-[#F5F8FF] border-none rounded-[8px] font-poppins">
+                        <div className="md:col-span-12 lg:col-span-5 flex flex-col space-y-6 h-full">
+                            <div className="px-4 py-2 bg-[#F5F8FF] border-none rounded-[8px] font-poppins">
                                 <MockProgress />
                             </div>
 
@@ -128,7 +128,7 @@ const UserDashboard = () => {
                         </div>
 
                         {/* Column 2 - Middle */}
-                        <div className="md:col-span-6 h-[100px] lg:col-span-3 flex flex-col space-y-6">
+                        <div className="md:col-span-6 lg:col-span-3 flex flex-col space-y-6 h-full">
                             {/* My Progress */}
                             <MyProgress />
 
@@ -142,7 +142,7 @@ const UserDashboard = () => {
 
                     {/* Social Shots */}
                     <SocialShots />
-                    
+
                 </div>
 
                 <style jsx global>{`
@@ -155,14 +155,25 @@ const UserDashboard = () => {
           }
         `}</style>
             </div>
-            <div className="my-5">
-                    <section className="bg-[#FF5635] text-white py-6">
-                          <div className="flex justify-between items-center px-28">
-                            <Image src={FOOTERLOGO} alt="logo" width={180} />
-                            <SocialMedia />
-                          </div>
-                        </section>
+            <section className="bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-8 sm:mt-12 md:mt-20 py-4 sm:py-5 lg:py-6 xl:py-8 ">
+                <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
+                    <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
+                        {/* Logo */}
+                        <div className="w-[100px] sm:w-[130px] md:w-[160px] lg:w-[200px]">
+                            <Image
+                                src={FOOTERLOGO}
+                                alt="preproute-logo"
+                                className="w-full h-auto object-contain"
+                                priority
+                            />
+                        </div>
                     </div>
+
+                    <div className="flex flex-col items-center md:items-start gap-2 sm:gap-3">
+                        <SocialMedia />
+                    </div>
+                </div>
+            </section>
         </div>
     );
 };
