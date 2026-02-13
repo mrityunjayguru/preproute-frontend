@@ -1,7 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
 import IMPT from "./_components/impt/IMPT";
-import { PRICING_DATA } from "./pricingData";
+import CUPT from "./_components/cupt/CUPT";
 
 function Plan() {
     return (
@@ -18,7 +18,7 @@ function Plan() {
                         </p>
                         <div className="flex justify-center items-center mt-3 mb-10 w-full">
                             <Tabs defaultValue="ipmat" className="w-full flex flex-col items-center">
-                                <TabsList className="flex w-full justify-center items-center rounded-full !bg-[#F4F7FA] px-1 py-1 max-w-[400px] h-auto">
+                                <TabsList className="flex w-full justify-center items-center rounded-full  px-1 py-1 max-w-[400px] h-auto">
                                     <TabsTrigger
                                         value="ipmat"
                                         className="
@@ -47,11 +47,11 @@ function Plan() {
                                 </TabsList>
 
                                 <TabsContent value="ipmat" className="mt-4 w-full">
-                                    <IMPT data={PRICING_DATA.ipmat} />
+                                    <IMPT />
                                 </TabsContent>
 
                                 <TabsContent value="cuet" className="mt-4 w-full">
-                                    <IMPT data={PRICING_DATA.cuet} />
+                                    <CUPT />
                                 </TabsContent>
                             </Tabs>
                         </div>

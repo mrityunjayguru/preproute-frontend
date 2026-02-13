@@ -1,7 +1,7 @@
 import { Check, Minus } from "lucide-react";
 import React from "react";
 
-export default function PricingTable() {
+export default function CUPT() {
     return (
         <div className="w-full mx-auto flex justify-center items-center py-6 sm:py-10 overflow-x-auto max-w-5xl">
             <table className="w-full border-collapse bg-white text-[#333333] text-sm sm:text-base">
@@ -105,7 +105,7 @@ export default function PricingTable() {
                         </th>
                     </tr>
                 </thead>
-                <tbody className="font-poppins">
+                <tbody>
                     {/* Mocks Section */}
                     <tr>
                         <td className="px-4 py-4 font-medium text-[#FF5635] text-left">Mocks</td>
