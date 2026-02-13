@@ -129,8 +129,8 @@ export default function SectionalExa() {
               {selectedExamType?.examType}
               {selectedExam && (
                 <>
-                  <span className="mx-2 text-[#009DFF]">|</span>
-                  <span className="text-[#FF5635]">{selectedExam.examname}</span>
+                  {/* <span className="mx-2 text-[#009DFF]">|</span> */}
+                  {/* <span className="text-[#FF5635]">{selectedExam.examname}</span> */}
                 </>
               )}
             </h2>

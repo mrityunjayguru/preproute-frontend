@@ -1,5 +1,5 @@
 import { getDashboardData } from "@/api/dashboard";
-import { handleSelectedExamDetail, handleUpdateStaus } from "@/api/Exam";
+import { getexam, handleSelectedExamDetail, handleUpdateStaus } from "@/api/Exam";
 import { formatDateTime } from "@/Common/ComonDate";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -17,27 +17,20 @@ interface Props {
   exams: any[];
 }
 
-
-
 export const ExamList: React.FC<Props> = ({ exams }) => {
   const dispatch = useDispatch<any>();
 
-  /* ================= FETCH COLLEGE ================= */
-  useEffect(() => {
-    dispatch(getCollege({}));
-  }, [dispatch]);
-
-  const colleges =
-    useSelector((state: any) => state?.college?.college) || [];
-
   const examTypeData =
     useSelector((state: any) => state?.examType?.examType) || [];
+
+  const examList =
+    useSelector((state: any) => state?.exam?.exam) || [];
 
   /* ================= FORM STATE ================= */
   const [formData, setFormData] = useState({
     examTypeId: "",
     subExamTypeId: "",
-    collegeId: "",
+    examId: "",
   });
 
   /* ================= SELECTED EXAM TYPE ================= */
@@ -48,6 +41,7 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
   );
 
   /* ================= OPTIONS ================= */
+
   const examTypeOptions = examTypeData.map((item: any) => ({
     value: item._id,
     label: item.examType,
@@ -59,12 +53,11 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
       label: item.subExamType,
     })) || [];
 
-  const collegeOptions = colleges.map((item: any) => ({
+  const examOptions = examList.map((item: any) => ({
     value: item._id,
     label: item.examname,
   }));
 
-  /* ================= REACT SELECT STYLE ================= */
 
   const customStyles = {
     control: (base: any) => ({
@@ -89,26 +82,64 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
     }),
   };
 
-  /* ================= AUTO PAYLOAD LOGIC ================= */
+  /* ================= HANDLERS ================= */
+
+  const handleExamTypeChange = (option: any) => {
+    const id = option?.value || "";
+
+    setFormData({
+      examTypeId: id,
+      subExamTypeId: "",
+      examId: "",
+    });
+
+    dispatch(getexam({ examtypeId: id }));
+  };
+
+  const handleSubExamTypeChange = (option: any) => {
+    const id = option?.value || "";
+
+    setFormData((prev) => ({
+      ...prev,
+      subExamTypeId: id,
+      examId: "",
+    }));
+
+    dispatch(
+      getexam({
+        examtypeId: formData.examTypeId,
+        subExamTypeId: id,
+      })
+    );
+  };
+
+  const handleExamChange = (option: any) => {
+    const id = option?.value || "";
+
+    setFormData((prev) => ({
+      ...prev,
+      examId: id,
+    }));
+  };
+
 
   useEffect(() => {
     if (
       formData.examTypeId &&
       (subExamOptions.length === 0 || formData.subExamTypeId) &&
-      formData.collegeId
+      formData.examId
     ) {
-      const payload:any = {
+      const payload: any = {
         examTypeId: formData.examTypeId,
         subExamTypeId: formData.subExamTypeId || null,
-        collegeId: formData.collegeId,
+        examId: formData.examId,
       };
 
-      console.log("Final Payload:", payload);
-     dispatch(getDashboardData(payload));
+
+      dispatch(getDashboardData(payload));
     }
   }, [formData, subExamOptions.length]);
 
-  /* ================= UI ================= */
 
   return (
     <div className="col-span-12 lg:col-span-7 h-fit bg-white">
@@ -116,7 +147,6 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
       {/* Header */}
       <div className="flex justify-between items-center mb-6 px-5 font-poppins">
 
-        {/* All Selects in Row */}
         <div className="flex gap-4">
 
           {/* 1️⃣ Exam Type */}
@@ -126,20 +156,14 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
               value={examTypeOptions.find(
                 (opt: any) => opt.value === formData.examTypeId
               )}
-              onChange={(option: any) =>
-                setFormData({
-                  examTypeId: option?.value || "",
-                  subExamTypeId: "",
-                  collegeId: "",
-                })
-              }
+              onChange={handleExamTypeChange}
               styles={customStyles}
-              placeholder="Select Exam"
+              placeholder="Select Exam Type"
               isSearchable={false}
             />
           </div>
 
-          {/* 2️⃣ Sub Exam Type (Only if exists) */}
+          {/* 2️⃣ Sub Exam Type */}
           {subExamOptions.length > 0 && (
             <div className="w-48">
               <Select
@@ -148,13 +172,7 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
                   (opt: any) =>
                     opt.value === formData.subExamTypeId
                 )}
-                onChange={(option: any) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    subExamTypeId: option?.value || "",
-                    collegeId: "",
-                  }))
-                }
+                onChange={handleSubExamTypeChange}
                 styles={customStyles}
                 placeholder="Select Sub Type"
                 isSearchable={false}
@@ -162,24 +180,22 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
             </div>
           )}
 
-          {/* 3️⃣ College */}
-          <div className="w-48">
-            <Select
-              options={collegeOptions}
-              value={collegeOptions.find(
-                (opt: any) => opt.value === formData.collegeId
-              )}
-              onChange={(option: any) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  collegeId: option?.value || "",
-                }))
-              }
-              styles={customStyles}
-              placeholder="Select College"
-              isSearchable={false}
-            />
-          </div>
+          {/* 3️⃣ Exam List */}
+          {examOptions.length > 0 && (
+            <div className="w-48">
+              <Select
+                options={examOptions}
+                value={examOptions.find(
+                  (opt: any) =>
+                    opt.value === formData.examId
+                )}
+                onChange={handleExamChange}
+                styles={customStyles}
+                placeholder="Select Exam"
+                isSearchable={false}
+              />
+            </div>
+          )}
 
         </div>
 
@@ -189,7 +205,7 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
         </h2>
       </div>
 
-      {/* Exam List */}
+      {/* Exam Cards */}
       <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar px-5 pb-5">
         {exams &&
           exams.length > 0 &&
@@ -201,6 +217,7 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
     </div>
   );
 };
+
 
 
 const ExamCard = ({ exam }: any) => {
@@ -268,6 +285,13 @@ const ExamCard = ({ exam }: any) => {
         </p>
 
         <div className="flex flex-row gap-3 shrink-0 w-full sm:w-auto font-poppins">
+          <Button 
+            // onClick={() => handleEdit(exam)} 
+            variant="outline"
+            className="flex-1 sm:flex-none border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC] hover:text-[#FF5635] h-9 px-6 rounded-md font-normal text-md  cursor-pointer"
+          >
+            Publish Date
+          </Button>
           <Button 
             onClick={() => handleEdit(exam)} 
             variant="outline"

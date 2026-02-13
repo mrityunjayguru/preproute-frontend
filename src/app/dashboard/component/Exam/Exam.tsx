@@ -205,8 +205,18 @@ const Exam: React.FC = () => {
       } else {
         await dispatch(createQuestion(payload));
       }
-
+     setAnswerType("MCQ");
+      setQuestionType("Easy");
+      setActiveSection("");
+      setQuestionData("");
+      setHintText("");
+      setSelectedTopic("");
+      setSelectedSubtopic("");
+      setNumericAnswer(0);
+      setQuestionPessage("Normal");
+      setPassage("");
       handleActiveQuestion(activeQuestion + 1);
+
     } catch (err) {
       console.error("Submission Error:", err);
     } finally {

@@ -80,12 +80,12 @@ export const Header: React.FC = () => {
     // window.location.reload();
   };
 
-  const navLinks = [
-    { label: "Features", href: "/home#features" },
+  const navLinks:any = [
+    !token && { label: "Features", href: "/home#features" },
     { label: "Pricing", href: "/PlanandPricing" },
     { label: "Community", href: "/Community" },
     { label: "Blog", href: "/blog" },
-  ];
+  ].filter(Boolean);
 
 
   /* ---------- Active Helpers ---------- */

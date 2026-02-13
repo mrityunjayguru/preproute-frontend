@@ -101,7 +101,7 @@ const loginWithGoogle = useGoogleLogin({
               </div>
 
               <p  className="text-sm text-[#6F767E] mb-8 font-dm-sans">
-                Welcome Back, Enter your details to sign in to your account
+                Get started with your prep journey now! 
               </p>
 {/* <Button
   onClick={() => loginWithGoogle()}
