@@ -64,9 +64,9 @@ function DailyPratice() {
           Daily Practice
         </h3>
 
-        <span className="bg-[#2D80FB] text-white text-xs px-6 py-2 rounded-full font-medium tracking-tight whitespace-nowrap">
+        {/* <span className="bg-[#2D80FB] text-white text-xs px-6 py-2 rounded-full font-medium tracking-tight whitespace-nowrap">
           {todaySections.length} Sections Available
-        </span>
+        </span> */}
       </div>
 
       {/* Sections */}

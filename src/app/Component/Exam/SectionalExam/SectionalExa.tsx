@@ -125,16 +125,16 @@ export default function SectionalExa() {
         {/* HEADER */}
         <div className="my-8 rounded-2xl bg-[#F0F9FF] p-6 flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-medium">
+            <h2 className="text-2xl font-medium text-[#FF5635]">
               {selectedExamType?.examType}
               {selectedExam && (
                 <>
-                  <span className="mx-2 text-[#009DFF]">|</span>
-                  <span className="text-[#FF5635]">{selectedExam.examname}</span>
+                  {/* <span className="mx-2 text-[#009DFF]">|</span> */}
+                  {/* <span className="text-[#FF5635]">{selectedExam.examname}</span> */}
                 </>
               )}
             </h2>
-             <p className="text-gray-600 mt-1">
+             <p className="text-gray-600 mt-1 ">
               Strict sequential mock exams
              </p>
           </div>

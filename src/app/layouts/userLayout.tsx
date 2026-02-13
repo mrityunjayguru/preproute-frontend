@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { setQuestionPaperResult } from "@/api/Users";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
+import OfferBanner from "@/Layout/OfferBanner";
 
 export default function UserLayout({ children }: { children: ReactNode }) {
   const dispatch=useDispatch<AppDispatch>()
@@ -29,7 +30,10 @@ dispatch(setQuestionPaperResult(payload2));
 },[pathname])
   return (
     <div className="flex flex-col ">
-      {!hideChrome && <UserHeader />}
+      {!hideChrome && (<>
+        <OfferBanner/>
+      <UserHeader />
+      </>)}
       <main className={hideChrome ? "flex-1 overflow-hidden" : "flex-1 "}>
         {children}
       </main>

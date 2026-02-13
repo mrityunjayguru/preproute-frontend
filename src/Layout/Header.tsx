@@ -80,13 +80,13 @@ export const Header: React.FC = () => {
     // window.location.reload();
   };
 
-  const navLinks = [
-    { label: "Features", href: "/home#features" },
+  const navLinks:any = [
+    !token && { label: "Features", href: "/home#features" },
     { label: "Pricing", href: "/PlanandPricing" },
     { label: "Community", href: "/Community" },
     { label: "Blog", href: "/blog" },
+  ].filter(Boolean);
 
-  ];
 
   /* ---------- Active Helpers ---------- */
   const isActive = (href: string) => {
@@ -127,29 +127,36 @@ export const Header: React.FC = () => {
 
   };
 
-  const loginWithGoogle = useGoogleLogin({
-    flow: "auth-code",
+  const loginWithGoogle=()=>{
+    router.push("/Auth/signin")
+  }
+//   const loginWithGoogle = useGoogleLogin({
+//     flow: "auth-code",
+//     onSuccess: async ({ code }) => {
+//       // 👉 Backend को code भेजो
+//       const response: any = await dispatch(googleLogin({ code, isCode: true }));
+//       if (response.payload === true) {
+//         router.push("/user-dashboard");
+//       }
+//     },
 
-    onSuccess: async ({ code }) => {
-      // 👉 Backend को code भेजो
-      const response: any = await dispatch(googleLogin({ code, isCode: true }));
-      if (response.payload === true) {
-        router.push("/user-dashboard");
-      }
-    },
-
-  onError: () => {
-    console.log("Google login error");
-  },
-});
+//   onError: () => {
+//     console.log("Google login error");
+//   },
+// });
 // const loginWithGoogle = useGoogleLogin({
 //     flow: "auth-code",
 //     ux_mode: "redirect",
 //     redirect_uri: "http://localhost:3200/api/auth/google/callback",
 //   });
 const preventredirect=()=>{
-  if(!token  || userLogin.role=="Admin"){
-   router.push("/home")
+  if(!token){
+  router.push("/home")
+  }else if(userLogin.role=="Admin"){
+  router.push("/home")
+  }
+   else if(userLogin.role=="User"){
+  router.push("/user-dashboard")
   }
 }
   return (

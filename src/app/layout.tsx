@@ -14,6 +14,7 @@ import localFont from "next/font/local";
 import { Poppins, DM_Sans } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
+import DisableDevTools from "./DisableDevTools";
 
 declare global {
   interface Window {
@@ -105,6 +106,7 @@ const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
         <ReduxProvider>
           <PageViewTracker />
           <LayoutComponent>
+             {/* <DisableDevTools /> */}
             {children}
             <Toaster />
           </LayoutComponent>

@@ -27,11 +27,9 @@ const ManageTopicExam = () => {
   const topicExamData = useSelector((state: any) => state?.examType?.examDetail);
   const singleQuestion = useSelector((state: any) => state?.question?.singleQuestion);
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
-  console.log(topicExamData, "topicExamDatatopicExamData")
   const exam = topicExamData?.[0];
 
   const question = singleQuestion?.[0];
-  console.log(question, "questionquestion")
   /* ================= TOTAL QUESTIONS ================= */
   const totalQuestions = useMemo(() => {
     return Number(exam?.examDetail?.sections?.[0]?.noOfQuestions || 0);
@@ -382,7 +380,7 @@ const payload:any={
                         <button
                           key={q}
                           id={`q-btn-${q}`}
-                          onClick={() => setQuestionNo(q)}
+                          // onClick={() => setQuestionNo(q)}
                           className={`min-w-[32px] sm:min-w-[36px] h-8 sm:h-9 px-2 rounded-md font-medium font-poppins transition-all cursor-pointer text-xs sm:text-sm
                       ${q === questionNo
                               ? "bg-[#2D74FF] text-white shadow-md"
@@ -462,11 +460,11 @@ const payload:any={
           {/* ================= SOLUTION ================= */}
           {currentAnswer.isSubmitted && (
             <div className="bg-white rounded-2xl border p-6">
-              <p className="text-center font-poppins font-normal text-gray-400 mb-4">
-                Solution / Hint
+              <p className="text-center font-poppins font-bold text-[#FF5A3C] mb-4">
+                Solution 
               </p>
 
-              <div className="w-full h-64 bg-gray-300 rounded-lg flex items-center justify-center text-white text-xl">
+              <div className="w-full h-auto  py-5 bg-[#fff]  rounded-lg flex items-center justify-center text-gray-600 text-xl">
                 {question?.hint ? (
                   <RenderPreview content={question.hint} />
                 ) : (
@@ -479,13 +477,13 @@ const payload:any={
           )}
         </div>
       </div>
-      <div className="text-center font-poppins text-sm my-2 ">
+      {/* <div className="text-center font-poppins text-sm my-2 ">
         A product of
         <span className="text-[#FF5A3C]">
           ⓒ Brillovate Pvt. Ltd.
         </span>
         all rights reserved
-      </div>
+      </div> */}
     </>
 
   );

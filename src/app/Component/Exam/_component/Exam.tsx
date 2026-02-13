@@ -306,6 +306,7 @@ export default function MergedExamPage() {
   useEffect(() => {
     if (isMock) {
       // Find only IPMAT Indore
+      console.log(examdata,"selectedExamTypeselectedExamType")
       const ipmatIndoreExam = examdata.find(
         (ex: any) => ex.examname === "IPMAT Indore"
       );
