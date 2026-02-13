@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 
 import { AppDispatch } from "@/store/store";
 
-import { resetQuestionByExamID } from "@/api/Exam";
+import { getCommonexam, resetQuestionByExamID } from "@/api/Exam";
 import { handleSelectedExamType } from "@/api/ExamType";
 import { resetQuestion } from "@/api/Question";
 
 const HeroSection = ({ logoSrc }: { logoSrc: any }) => {
+    const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
+  
   const dispatch = useDispatch<AppDispatch>();
   const examTypeData =
     useSelector((state: any) => state.examType.examType) || [];
@@ -19,9 +21,18 @@ const HeroSection = ({ logoSrc }: { logoSrc: any }) => {
   };
   // console.log(examTypeData,"examTypeDataexamTypeData")
 
-  const handleIPmatExam=()=>{
+  const handleIPmatExam=async()=>{
 let mockExam=examTypeData.find((item:any)=>item.examType==="Mocks");
+  console.log(mockExam,"mockExammockExam")
+ const payload2: any = {
+  userId: userLogin?._id,
+  examTypeId: mockExam?._id,
+  subExamTypeId: mockExam?.subMenus.find(
+    (val: any) => val.subExamType === "IPMAT"
+  )?._id,   // ✅ return only _id
+};
 
+    await dispatch(getCommonexam(payload2));
   dispatch(handleSelectedExamType(mockExam));
         const payload: any = null;
         dispatch(resetQuestionByExamID(payload));
