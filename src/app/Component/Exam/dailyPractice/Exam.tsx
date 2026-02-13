@@ -257,7 +257,7 @@ const DailyPractice = () => {
                 </div>
     
                 <button
-                  onClick={() => router.push("/Exam/topicExam")}
+                  onClick={() => router.push("/user-dashboard")}
                   className="bg-black cursor-pointer text-white px-8 py-2 rounded-full text-sm w-full sm:w-auto"
                 >
                   Exit Exam

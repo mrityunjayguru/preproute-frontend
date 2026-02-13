@@ -380,7 +380,7 @@ const payload:any={
                         <button
                           key={q}
                           id={`q-btn-${q}`}
-                          onClick={() => setQuestionNo(q)}
+                          // onClick={() => setQuestionNo(q)}
                           className={`min-w-[32px] sm:min-w-[36px] h-8 sm:h-9 px-2 rounded-md font-medium font-poppins transition-all cursor-pointer text-xs sm:text-sm
                       ${q === questionNo
                               ? "bg-[#2D74FF] text-white shadow-md"
