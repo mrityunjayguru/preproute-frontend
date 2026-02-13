@@ -446,11 +446,11 @@ const DailyPractice = () => {
               {/* ================= SOLUTION ================= */}
               {currentAnswer.isSubmitted && (
                 <div className="bg-white rounded-2xl border p-6">
-                  <p className="text-center font-poppins font-normal text-gray-400 mb-4">
-                    Solution / Hint
+                  <p className="text-center font-poppins font-bold text-[#FF5A3C] mb-4">
+                    Solution
                   </p>
     
-                  <div className="w-full h-64 bg-gray-100 rounded-lg flex items-center justify-center text-gray-800 text-xl p-4 overflow-auto">
+                  <div className="w-full h-64 bg-[#fff] rounded-lg flex items-center justify-center text-gray-800 text-xl p-4 overflow-auto">
                     {question?.hint ? (
                       <RenderPreview content={question.hint} />
                     ) : (
