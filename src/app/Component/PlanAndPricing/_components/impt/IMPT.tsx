@@ -167,7 +167,7 @@ export default function PricingPlans() {
                                                 <h3 className="text-xl font-medium text-[#FF5635]">Basic</h3>
                                                 <p className="text-3xl font-medium text-black"><span className="text-xl">
                                                     ₹{" "}
-                                                </span> 1999</p>
+                                                </span> 1XXX</p>
 
                                                 <div className="mt-3 mb-2 w-full">
                                                     <button
@@ -262,7 +262,7 @@ export default function PricingPlans() {
                                                 <h3 className="text-xl font-medium text-[#FF5635]">Elite</h3>
                                                 <p className="text-3xl font-medium text-black"><span className="text-xl">
                                                     ₹{" "}
-                                                </span>3999</p>
+                                                </span>3XXX</p>
 
                                                 <div className="mt-3 mb-2 w-full">
                                                     <button

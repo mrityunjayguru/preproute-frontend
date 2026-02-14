@@ -6,9 +6,9 @@ const MobileView = ({ rows, fullAccessPlan, handlePayment, couponCode, setCoupon
     const [selectedPlan, setSelectedPlan] = useState<"Basic" | "Pro" | "Elite">("Pro");
 
     const plans = [
-        { name: "Basic", price: "1999", color: "#EBE9FF", textColor: "text-black", highlight: false },
+        { name: "Basic", price: "1XXX", color: "#EBE9FF", textColor: "text-black", highlight: false },
         { name: "Pro", price: fullAccessPlan?.price || "2999", color: "#FF5635", textColor: "text-white", highlight: true },
-        { name: "Elite", price: "3999", color: "#FFBD00", textColor: "text-black", highlight: false },
+        { name: "Elite", price: "3XXX", color: "#FFBD00", textColor: "text-black", highlight: false },
     ];
 
     const currentPlan = plans.find(p => p.name === selectedPlan) || plans[1];
