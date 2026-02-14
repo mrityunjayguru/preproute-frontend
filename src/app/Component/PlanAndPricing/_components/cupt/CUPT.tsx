@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from "react";
@@ -6,7 +7,7 @@ import Image from "next/image";
 
 export default function CUPT() {
   return (
-    <div className="flex flex-col items-center justify-center py-10 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+    <div className="flex flex-col items-center justify-center py-10 bg-gray-50 rounded-2xl max-w-4xl mx-auto border border-dashed border-gray-200">
       <Image
         src={CULT}
         alt="Soon"

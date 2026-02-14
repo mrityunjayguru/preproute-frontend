@@ -97,12 +97,12 @@ export default function PricingPlans() {
     }
     return user.purchaseDetails.some((item: any) => item?.plan?._id === planId);
   };
-const pathname = usePathname();
+  const pathname = usePathname();
   /* ---------------- PAYMENT HANDLER ---------------- */
   const handleCreatePayment = async (plan: any) => {
     let token = localStorage.getItem("token");
     if (!token) {
-       router.push(`/Auth/signin?redirect=${pathname}`);
+      router.push(`/Auth/signin?redirect=${pathname}`);
       // router.push("/Auth/signin");
       return;
     }
@@ -270,11 +270,10 @@ const pathname = usePathname();
                     key={index}
                     className={`rounded-[8px]
                          border flex flex-col h-full transition-all
-                        ${
-                          index === 1
-                            ? "bg-gradient-to-t from-[#FFECDF] to-white border-[#FFECDF] md:scale-110 z-10"
-                            : "bg-gradient-to-t from-[#F0F9FF] to-white border-[#F0F9FF]"
-                        }`}
+                        ${index === 1
+                        ? "bg-gradient-to-t from-[#FFECDF] to-white border-[#FFECDF] md:scale-110 z-10"
+                        : "bg-gradient-to-t from-[#F0F9FF] to-white border-[#F0F9FF]"
+                      }`}
                   >
                     <div className="relative flex flex-col h-full">
                       {/* BADGE */}
@@ -441,11 +440,10 @@ const pathname = usePathname();
                         <button
                           onClick={() => handleCreatePayment(plan)}
                           disabled={plan.alreadyPurchased}
-                          className={`w-full sm:w-fit py-3 sm:py-3.5 px-8 sm:px-16 rounded-[8px] font-poppins text-sm sm:text-base transition-colors ${
-                            plan.alreadyPurchased
+                          className={`w-full sm:w-fit py-3 sm:py-3.5 px-8 sm:px-16 rounded-[8px] font-poppins text-sm sm:text-base transition-colors ${plan.alreadyPurchased
                               ? "bg-gray-400 text-white cursor-not-allowed"
                               : "bg-[#FF5635] hover:bg-[#e14c2f] text-white cursor-pointer"
-                          }`}
+                            }`}
                         >
                           {plan.alreadyPurchased
                             ? "Get Started"
@@ -461,14 +459,10 @@ const pathname = usePathname();
               })}
             </div>
           </div>
-
-          {/* SPACER */}
-          {/* <div className="h-0 md:h-[420px] lg:h-[520px]" /> */}
         </div>
         <section className="bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-8 sm:mt-12 md:mt-20 py-4 sm:py-5 lg:py-6 xl:py-8 ">
           <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
             <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
-              {/* Logo */}
               <div className="w-[100px] sm:w-[130px] md:w-[160px] lg:w-[200px]">
                 <Image
                   src={FOOTERLOGO}
