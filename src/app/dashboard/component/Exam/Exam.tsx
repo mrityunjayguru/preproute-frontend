@@ -205,9 +205,9 @@ const Exam: React.FC = () => {
       } else {
         await dispatch(createQuestion(payload));
       }
-     setAnswerType("MCQ");
+      setAnswerType("MCQ");
       setQuestionType("Easy");
-      setActiveSection("");
+      // setActiveSection("");
       setQuestionData("");
       setHintText("");
       setSelectedTopic("");

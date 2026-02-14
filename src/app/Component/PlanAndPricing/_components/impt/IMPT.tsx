@@ -103,7 +103,7 @@ export default function PricingPlans() {
         }
         if (!fullAccessPlan) return;
         try {
-            const payload = {
+            const payload:any = {
                 amount: Number(fullAccessPlan.price - discountAmount) * 100,
                 currency: "INR",
                 userId: user?._id,
