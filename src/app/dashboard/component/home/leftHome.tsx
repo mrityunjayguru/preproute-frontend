@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import { getCollege } from "@/api/college";
+import { getCommonExamType } from "@/api/ExamType";
 
 interface Props {
   exams: any[];
@@ -134,12 +135,22 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
         subExamTypeId: formData.subExamTypeId || null,
         examId: formData.examId,
       };
-
-
       dispatch(getDashboardData(payload));
     }
+       const payload: any = {  };
+        dispatch(getCommonExamType(payload));
   }, [formData, subExamOptions.length]);
 
+  const viewallexam=async()=>{
+    const payload:any={}
+     setFormData({
+    examTypeId: "",
+    subExamTypeId: "",
+    examId: "",
+  });
+  dispatch(getexam(payload));
+     await dispatch(getDashboardData(payload));
+  }
 
   return (
     <div className="col-span-12 lg:col-span-7 h-fit bg-white">
@@ -153,9 +164,9 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
           <div className="w-48">
             <Select
               options={examTypeOptions}
-              value={examTypeOptions.find(
+              value={formData.examTypeId?examTypeOptions.find(
                 (opt: any) => opt.value === formData.examTypeId
-              )}
+              ):null}
               onChange={handleExamTypeChange}
               styles={customStyles}
               placeholder="Select Exam Type"
@@ -168,10 +179,10 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
             <div className="w-48">
               <Select
                 options={subExamOptions}
-                value={subExamOptions.find(
+                value={formData.subExamTypeId?subExamOptions.find(
                   (opt: any) =>
                     opt.value === formData.subExamTypeId
-                )}
+                ):null}
                 onChange={handleSubExamTypeChange}
                 styles={customStyles}
                 placeholder="Select Sub Type"
@@ -185,10 +196,10 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
             <div className="w-48">
               <Select
                 options={examOptions}
-                value={examOptions.find(
+                value={formData.examId?examOptions.find(
                   (opt: any) =>
                     opt.value === formData.examId
-                )}
+                ):null}
                 onChange={handleExamChange}
                 styles={customStyles}
                 placeholder="Select Exam"
@@ -200,7 +211,7 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
         </div>
 
         {/* View All */}
-        <h2 className="text-[#FF5635] text-sm font-normal cursor-pointer hover:underline">
+        <h2  onClick={viewallexam} className="text-[#FF5635] text-sm font-normal cursor-pointer hover:underline">
           View All
         </h2>
       </div>

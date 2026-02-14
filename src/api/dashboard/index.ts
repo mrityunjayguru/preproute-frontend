@@ -60,7 +60,7 @@ export const getDashboardData = createAsyncThunk<boolean, Payload>(
         GetMessage("warning", "Unauthorized");
         // window.location.href = "/signin";
       } else {
-        GetMessage("warning", "something went wrong");
+        // GetMessage("warning", "something went wrong");
       }
     }
     return false;
