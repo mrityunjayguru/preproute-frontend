@@ -66,11 +66,10 @@ const QuestionWiseRightSection: React.FC<Props> = ({
           }
         );
       });
-
   /** -------------------------------
    * STATUS ICON LOGIC
    * ------------------------------ */
-  const getStatusIcon = (q: Question) => {
+  const getStatusIcon = (q: any) => {
     if (!q.userAttempt || !q.usergiven) {
       return NOTVISITED;
     }
@@ -83,15 +82,31 @@ const QuestionWiseRightSection: React.FC<Props> = ({
       return REVIEWMARKED;
     }
 
-    if (q.answerType === "Numeric") {
-      if (!q.usergiven.numericAnswer) return UNANSWERED;
-      return ANSWERED;
-    }
+if (q.answerType === "MCQ") {
+  if (!q.usergiven?.userAnswer) return UNANSWERED;
 
-    if (q.answerType === "MCQ") {
-      if (!q.usergiven.userAnswer) return UNANSWERED;
-      return ANSWERED;
-    }
+  const correctOption = q.options?.find((opt: any) => opt.isCorrect);
+
+  if (q.usergiven.userAnswer === correctOption?._id) {
+    return ANSWERED;
+  }
+
+  return ANSWEREDANDREVIEW;
+}
+
+if (q.answerType === "Numeric") {
+  if (!q.usergiven?.numericAnswer) return UNANSWERED;
+
+  const userAns = Number(q.usergiven.numericAnswer);
+  const correctAns = Number(q.numericAnswer);
+
+  if (userAns === correctAns) {
+    return ANSWERED;
+  }
+
+  return ANSWEREDANDREVIEW;
+}
+
 
     return NOTVISITED;
   };

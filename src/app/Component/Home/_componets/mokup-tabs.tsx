@@ -60,7 +60,6 @@ const FEATURES = [
 
 const MokupTabs = (props: Props) => {
   const [value, setValue] = React.useState("exam");
-    console.log(value,"valuevalue")
   return (
     <section className="w-full py-10">
       <Tabs value={value} onValueChange={setValue} className="w-full">
@@ -141,7 +140,7 @@ const MokupTabs = (props: Props) => {
               >
                 <TabsTrigger
                   value={item.value}
-                  className="rounded-full font-normal  cursor-pointer text-[#009DFF] px-10 text-[18px] data-[state=active]:font-medium data-[state=active]:bg-orange-500 data-[state=active]:text-white transition-all"
+                  className="rounded-full font-normal  cursor-pointer text-[#009DFF] px-10 text-[18px] data-[state=active]:font-medium data-[state=active]:bg-[#FF5635] data-[state=active]:text-white transition-all"
                 >
                   {item.label}
                 </TabsTrigger>

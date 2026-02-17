@@ -12,10 +12,11 @@ import { QuestionPaperResult } from "@/api/Users";
 import { getUserWithTarget, givenExam } from "@/api/Exam";
 import { capitalizeWords } from "@/Utils/Cappital";
 import { AppDispatch } from "@/store/store";
+import { useRouter } from "next/navigation";
 
 function Analytics() {
   const dispatch = useDispatch<AppDispatch>();
-
+const router = useRouter();
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
   const examResult = useSelector((state: any) => state?.question?.result?.data);
   const givenAllExam = useSelector((state: any) => state?.exam?.givenAllExam) || [];
@@ -163,6 +164,20 @@ function Analytics() {
     }),
   };
 
+useEffect(() => {
+    // Add fake state so back button triggers popstate
+    window.history.pushState(null, "", window.location.href);
+
+    const handlePopState = () => {
+      router.replace("/"); // redirect to home
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [router]);
   return (
     <div className="min-h-screen bg-white flex flex-col justify-between">
       <div className="mx-auto w-full px-6 sm:px-8 md:px-12 lg:px-28">

@@ -123,26 +123,36 @@ export default function SectionalExa() {
       <div className="flex-grow px-6 lg:px-28">
 
         {/* HEADER */}
-        <div className="my-8 rounded-2xl bg-[#F0F9FF] p-6 flex justify-between items-center">
-          <div>
-            <h2 className="text-2xl font-medium text-[#FF5635]">
-              {selectedExamType?.examType}
-              {selectedExam && (
-                <>
-                  {/* <span className="mx-2 text-[#009DFF]">|</span> */}
-                  {/* <span className="text-[#FF5635]">{selectedExam.examname}</span> */}
-                </>
-              )}
-            </h2>
-             <p className="text-gray-600 mt-1 ">
-              Strict sequential mock exams
-             </p>
-          </div>
-          <Image src={EXAMPREP} alt="exam" width={180} />
-        </div>
+  <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10   flex flex-col md:flex-row items-center justify-center md:justify-between overflow-hidden">
+              {/* Left Content */}
+
+              <div className="z-10 max-w-xl">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#FF5635] font-poppins">
+                  {selectedExamType?.examType}
+                </h2>
+                <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
+                  Strict sequential mock exams
+                </p>
+              </div>
+              {/* Illustration */}
+              <motion.div
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="mt-6 md:mt-0 md:w-[267px]"
+              >
+                <Image
+                  src={EXAMPREP}
+                  alt="Mock Exam Illustration"
+                  className="w-full hidden md:block object-contain"
+                  width={267}
+                  height={140}
+                />
+              </motion.div>
+            </div>
 
         {/* EXAM + SECTION */}
-        <div className="flex flex-wrap gap-5 mb-6">
+        <div className="flex flex-wrap gap-5 ">
           {toggle?(<Select
             options={examOptions}
             value={
@@ -181,14 +191,14 @@ export default function SectionalExa() {
                   <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] 
           p-4 sm:p-5 lg:p-6 
           flex flex-col transition-all">
-                    <p className="text-sm">Mock Exam</p>
+                      <p className="text-[12px] sm:text-[13px] lg:text-[14px] font-dm-sans font-medium">Mock Exam</p>
                     <h3 className=" text-lg sm:text-xl lg:text-2xl
             font-poppins font-medium text-[#FF5635]
             mb-4 sm:mb-5 lg:mb-6
             leading-snug">
                       {exam.examname}
                     </h3>
-                    <button
+                    {/* <button
                       className="  w-full md:w-fit px-6 sm:px-8 md:px-10 cursor-pointer
                 h-10 sm:h-11
                 rounded-[8px]
@@ -198,7 +208,27 @@ export default function SectionalExa() {
                        onClick={() => onExamClick(exam)}
                     >
                       Choose to start
-                    </button>
+                    </button> */}
+                    
+  <div className="mt-auto font-poppins">
+                      <button
+                        className="
+                w-full md:w-fit px-6 sm:px-8 md:px-10 cursor-pointer
+                h-10 sm:h-11
+                rounded-[8px]
+                bg-[#FF5635] text-white
+                hover:bg-[#e34d2e]
+                transition-all
+              "
+                        onClick={() => onExamClick(exam)}
+                      >
+                        <span className="text-[14px] sm:text-[15px]  lg:text-[16px]">
+                          Choose to start
+                        </span>
+                      </button>
+                    </div>
+
+
                   </div>
                 </motion.div>
               ))}

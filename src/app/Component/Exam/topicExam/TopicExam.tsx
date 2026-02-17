@@ -18,18 +18,6 @@ import EXAMPREP from "@/assets/vectors/exam/Man_Working_From_Home.svg";
 import SocialMedia from "../../Home/_componets/social-media";
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 
-/* ---------------- LOADER ---------------- */
-
-const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-screen bg-white">
-    <motion.div
-      animate={{ rotate: 360 }}
-      transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-      className="h-12 w-12 border-4 border-[#FF5635] border-t-transparent rounded-full"
-    />
-  </div>
-);
-
 export default function TopicExam() {
   const dispatch = useDispatch<AppDispatch>();
   const searchParams = useSearchParams();
@@ -45,20 +33,19 @@ export default function TopicExam() {
 
   const [selectedExam, setSelectedExam] = useState<any>(null);
   const [sectionId, setSectionId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
 
   /* ---------------- FETCHERS ---------------- */
 
   const fetchTopicExam = useCallback(
     async (exam: any, secId?: string | null) => {
-      if (!exam || !selectedExamType?._id || !loginUser?._id) return;
+      if (!exam || !selectedExamType?._id) return;
 
       await dispatch(
         getCommonTopicQuestionBeExamId({
           examid: exam._id,
           examTypeId: selectedExamType._id,
           isPublished: true,
-          uid: loginUser._id,
+          uid: loginUser?._id,
           ...(secId && { sectionId: secId }),
         }),
       );
@@ -88,9 +75,7 @@ export default function TopicExam() {
     async (sec: any) => {
       setSectionId(sec._id);
       if (selectedExam) {
-        setLoading(true);
         await fetchTopicExam(selectedExam, sec._id);
-        setLoading(false);
       }
     },
     [fetchTopicExam, selectedExam],
@@ -100,9 +85,7 @@ export default function TopicExam() {
 
   useEffect(() => {
     const init = async () => {
-      if (!examdata.length || !loginUser || !selectedExamType) return;
-
-      setLoading(true);
+      if (!examdata.length || !selectedExamType) return;
 
       let examToSelect = examdata[0];
 
@@ -123,8 +106,6 @@ export default function TopicExam() {
       } else {
         await fetchCommonExam(examToSelect);
       }
-
-      setLoading(false);
     };
 
     init();
@@ -137,12 +118,6 @@ export default function TopicExam() {
     fetchTopicExam,
     fetchCommonExam,
   ]);
-
-  /* ---------------- LOADER ---------------- */
-
-  if (loading) {
-    return <PageLoader />;
-  }
 
   /* ---------------- UI ---------------- */
 
@@ -160,22 +135,46 @@ export default function TopicExam() {
                   Select the college to access exams
                 </p>
               </div>
-              <Image src={EXAMPREP} alt="exam" width={267} height={140} className="hidden sm:block" />
+              <Image
+                src={EXAMPREP}
+                alt="exam"
+                width={267}
+                height={140}
+                className="hidden sm:block"
+              />
             </div>
           </motion.div>
         )}
 
         {examById.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="relative min-h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-6 sm:py-0 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="text-center sm:text-left">
-                <h2 className="text-xl sm:text-2xl text-[#FF5635] font-medium font-poppins" >Topic Wise Exam</h2>
-                <p className="text-sm sm:text-base text-gray-600 font-dm-sans">
-                  Practice exams prepared as per syllabus
-                </p>
-              </div>
-              <Image src={EXAMPREP} alt="exam" width={267} height={140} className="hidden sm:block" />
-            </div>
+        <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10   flex flex-col md:flex-row items-center justify-center md:justify-between overflow-hidden">
+                     {/* Left Content */}
+       
+                     <div className="z-10 max-w-xl">
+                       <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#FF5635] font-poppins">
+                         {selectedExamType?.examType}
+                       </h2>
+                       <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
+                         Practice exams prepared as per syllabus
+                       </p>
+                     </div>
+                     {/* Illustration */}
+                     <motion.div
+                       initial={{ opacity: 0, x: 40 }}
+                       animate={{ opacity: 1, x: 0 }}
+                       transition={{ duration: 0.6, delay: 0.2 }}
+                       className="mt-6 md:mt-0 md:w-[267px]"
+                     >
+                       <Image
+                         src={EXAMPREP}
+                         alt="Mock Exam Illustration"
+                         className="w-full hidden md:block object-contain"
+                         width={267}
+                         height={140}
+                       />
+                     </motion.div>
+                   </div>
 
             <div className="flex gap-4 py-8 flex-wrap">
               {selectedExam?.sectionDetails?.map((sec: any) => (
@@ -183,9 +182,10 @@ export default function TopicExam() {
                   key={sec._id}
                   onClick={() => handleSectionSelect(sec)}
                   className={`px-8 py-2 rounded-[6px] transition-all font-poppins duration-200 cursor-pointer
-                    ${sectionId === sec._id
-                      ? "bg-[#FF5635] text-white  scale-105"
-                      : "bg-white text-[#FF5635] border border-[#FF5635] hover:bg-[#FF5635] hover:text-white"
+                    ${
+                      sectionId === sec._id
+                        ? "bg-[#FF5635] text-white scale-105"
+                        : "bg-white text-[#FF5635] border border-[#FF5635] hover:bg-[#FF5635] hover:text-white"
                     }`}
                 >
                   {sec.section}

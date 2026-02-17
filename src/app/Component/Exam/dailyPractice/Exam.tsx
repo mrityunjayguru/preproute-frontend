@@ -14,6 +14,7 @@ import Popup from "../../ManageExam/Component/Report";
 
 // Assuming TIMER is a constant path or import
 import TIMER from "@/assets/vectors/timer.svg"
+import { createdailyStreaks } from "@/api/Exam";
 
 
 interface AnswerState {
@@ -52,7 +53,8 @@ const DailyPractice = () => {
   const [examFinished, setExamFinished] = useState(false);
   const [bookmarkStatus, setBookmarkStatus] = useState(false);
   const [reportToggle, setReportToggle] = useState(false);
-
+const [timerActive, setTimerActive] = useState(true);
+const [totalTime, setTotalTime] = useState(0);
   const currentAnswer = answers[questionNo] || {
     selected: null,
     isSubmitted: false,
@@ -83,9 +85,10 @@ const DailyPractice = () => {
     if (examFinished) return;
     const timer = setInterval(() => {
       setSeconds((s) => s + 1);
+     setTotalTime((prevTotal) => prevTotal + 1);
     }, 1000);
     return () => clearInterval(timer);
-  }, [examFinished]);
+}, [examFinished, timerActive]);
 
   const formatTime = (s: number) => {
     const m = String(Math.floor(s / 60)).padStart(2, "0");
@@ -107,6 +110,7 @@ const DailyPractice = () => {
 
   const handleSubmit = () => {
     if (!question) return;
+    setTimerActive(false);
 
     let correct = false;
 
@@ -132,9 +136,15 @@ const DailyPractice = () => {
   /* ================= NAVIGATION ================= */
   const handleNext = () => {
     if (!currentAnswer.isSubmitted) return;
+    setTimerActive(true);
+setSeconds(0)
     if (questionNo < totalQuestions) {
       setQuestionNo((q) => q + 1);
     } else {
+         const payload:any={
+              questionPaperId:exam?._id
+            }
+       dispatch(createdailyStreaks(payload))
       setExamFinished(true);
     }
   };
@@ -219,7 +229,7 @@ const DailyPractice = () => {
                    <div className="flex items-center justify-center gap-3 bg-gray-50 p-4 rounded-xl mb-8">
                      <Image src={TIMER} width={24} height={24} alt="timer" />
                      <p className="text-gray-700 font-poppins">
-                       Total Time Taken: <b className="text-lg">{formatTime(seconds)}</b>
+                       Total Time Taken: <b className="text-lg">{totalTime}</b>
                      </p>
                    </div>
      
@@ -445,21 +455,21 @@ const DailyPractice = () => {
     
               {/* ================= SOLUTION ================= */}
               {currentAnswer.isSubmitted && (
-                <div className="bg-white rounded-2xl border p-6">
-                  <p className="text-center font-poppins font-bold text-[#FF5A3C] mb-4">
-                    Solution
+               <div className="bg-white rounded-2xl border p-6">
+              <p className="text-center font-poppins font-bold text-[#FF5A3C] mb-4">
+                Solution 
+              </p>
+
+              <div className="w-full h-auto  py-5 bg-[#fff]  rounded-lg flex items-center justify-center text-gray-600 text-xl">
+                {question?.hint ? (
+                  <RenderPreview content={question.hint} />
+                ) : (
+                  <p className="text-center font-poppins font-normal text-gray-400">
+                    No hint available
                   </p>
-    
-                  <div className="w-full h-64 bg-[#fff] rounded-lg flex items-center justify-center text-gray-800 text-xl p-4 overflow-auto">
-                    {question?.hint ? (
-                      <RenderPreview content={question.hint} />
-                    ) : (
-                      <p className="text-center font-poppins font-normal text-gray-400">
-                        No hint available
-                      </p>
-                    )}
-                  </div>
-                </div>
+                )}
+              </div>
+            </div>
               )}
             </div>
           </div>

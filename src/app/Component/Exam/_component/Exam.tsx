@@ -39,14 +39,14 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
   const hasPurchase = user?.PurchaseDetail?.length > 0;
 
   const isMock1 = ["mock 1", "mocks 1"].includes(
-    exam?.questionPapername?.toLowerCase()
+    exam?.questionPapername?.toLowerCase(),
   );
 
   const isAttempted = exam?.hasGivenExam;
 
   const haaccessExam = useSelector((s: any) => s.exam?.examHeader);
   const selectedExamType = useSelector(
-    (s: any) => s.examType?.selectedExamType
+    (s: any) => s.examType?.selectedExamType,
   );
   const selectedExam = useSelector((s: any) => s.exam?.selectedExam);
 
@@ -59,7 +59,6 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
   const isInProgress = exam?.userSummary?.target === 0 && isAttempted;
 
   const isCompleted = isAttempted && exam?.userSummary?.target === 100;
-
 
   return (
     <div
@@ -105,7 +104,8 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
       {/* ---------------- BUTTONS ---------------- */}
       <div className="mt-auto w-full font-poppins">
         {isLocked && (
-          <Button onClick={() => router.push("/PlanandPricing")}
+          <Button
+            onClick={() => router.push("/PlanandPricing")}
             className="px-10 h-11 rounded-[8px] bg-[#E3E5E9] text-[#ADB5CC] cursor-not-allowed font-poppins"
           >
             Start
@@ -167,15 +167,15 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
 // perticuler Exam section
 export default function MergedExamPage() {
   const searchParams = useSearchParams();
-  const [mockDate, setMockDate] = useState("")
-  const [sectionId, setSectionId] = useState(null)
+  const [mockDate, setMockDate] = useState("");
+  const [sectionId, setSectionId] = useState(null);
   const isMock: any = searchParams.get("isMock") === "true";
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const examById = useSelector((s: any) => s.exam?.examById) || [];
   const examlength: any = examById.length;
   const selectedExamType = useSelector(
-    (s: any) => s.examType?.selectedExamType
+    (s: any) => s.examType?.selectedExamType,
   );
   const loginUser = useSelector((s: any) => s.Auth?.loginUser);
   const [selectedExam, setSelectedExam] = useState<any>(null);
@@ -206,18 +206,16 @@ export default function MergedExamPage() {
   }, []);
 
   useEffect(() => {
-
     if (examById.length > 0) {
       const payload: any = {
         examname: examById[0]?.exam?.examname,
         _id: examById[0]?.exam?._id,
         mockDate: examById[0]?.exam?.mockDate, // ✅ ADD THIS
-        section: examById[0]?.sectionDetails
+        section: examById[0]?.sectionDetails,
       };
       setSelectedExam(payload);
     }
   }, [examById]);
-
 
   useEffect(() => {
     setSelectedExam(null);
@@ -236,7 +234,7 @@ export default function MergedExamPage() {
       uid: loginUser?._id,
     };
     if (sectionId) {
-      payload.sectionId = sectionId
+      payload.sectionId = sectionId;
     }
 
     await dispatch(getCommonQuestionBeExamId(payload));
@@ -255,15 +253,14 @@ export default function MergedExamPage() {
       uid: loginUser?._id,
     };
     if (sectionId) {
-      payload.sectionId = sectionId
+      payload.sectionId = sectionId;
     }
     dispatch(getCommonQuestionBeExamId(payload));
   };
 
   const handleExam = async (examData: any, type: any, i: any) => {
     if (
-      i > 0 &&
-      examById[i - 1]?.hasGivenExam == false ||
+      (i > 0 && examById[i - 1]?.hasGivenExam == false) ||
       examById[i - 1]?.userSummary?.target === 0
     ) {
       ToastError("Please complete previous mock exam first");
@@ -271,14 +268,12 @@ export default function MergedExamPage() {
       return;
     }
 
-
-
     if (!localStorage.getItem("token")) return router.push("/Auth/signin");
     const payload: any = null;
     dispatch(handleGivenExam(payload));
     dispatch(setCurrentSection(payload));
     if (!examData?.hasGivenExam || type == "Resume" || type == "start") {
-      localStorage.setItem("exam_permission", "true")
+      localStorage.setItem("exam_permission", "true");
       const payload: any = {
         examTypeId: examData?.examTypeId,
         questionPaperId: examData?._id,
@@ -289,7 +284,7 @@ export default function MergedExamPage() {
       };
       let responce: any = await dispatch(getUserQuestionData(payload));
       if (type == "start") {
-        localStorage.removeItem(`exam_timeLeft_${responce?.payload[0]?._id}`)
+        localStorage.removeItem(`exam_timeLeft_${responce?.payload[0]?._id}`);
       }
       router.push("/Exam/Instruction");
     } else {
@@ -301,14 +296,14 @@ export default function MergedExamPage() {
   const examOptions = examdata.map((ex: any) => ({
     label: ex.examname,
     value: ex,
-    section: ex.sectionDetails
+    section: ex.sectionDetails,
   }));
   useEffect(() => {
     if (isMock) {
       // Find only IPMAT Indore
-      console.log(examdata,"selectedExamTypeselectedExamType")
+      console.log(examdata, "selectedExamTypeselectedExamType");
       const ipmatIndoreExam = examdata.find(
-        (ex: any) => ex.examname === "IPMAT Indore"
+        (ex: any) => ex.examname === "IPMAT Indore",
       );
       if (ipmatIndoreExam) {
         handleSelectExamDynamic(ipmatIndoreExam); // Pass only one exam
@@ -317,10 +312,9 @@ export default function MergedExamPage() {
   }, [isMock, examdata]);
 
   const getExamBySection = (val: any) => {
-
-    setSectionId(val._id)
-    handleSelectExam(selectedExam)
-  }
+    setSectionId(val._id);
+    handleSelectExam(selectedExam);
+  };
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">
@@ -356,9 +350,9 @@ export default function MergedExamPage() {
                   {selectedExamType?.examType}
                 </h2>
                 <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
-                  Select the college to access{" "}
-                  {selectedExamType?.examType} exams designed in
-                  accordance with the syllabus and exam pattern.
+                  Select the college to access {selectedExamType?.examType}{" "}
+                  exams designed in accordance with the syllabus and exam
+                  pattern.
                 </p>
               </div>
               {/* Illustration */}
@@ -485,7 +479,6 @@ export default function MergedExamPage() {
               <>
                 <div className="flex flex-col gap-4 sm:flex-row sm:gap-2 my-4">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 w-full">
-
                     <p className="text-[#727EA3] font-dm-sans whitespace-nowrap">
                       Change college
                     </p>
@@ -495,7 +488,10 @@ export default function MergedExamPage() {
                         options={examOptions}
                         value={
                           selectedExam
-                            ? { label: selectedExam.examname, value: selectedExam }
+                            ? {
+                                label: selectedExam.examname,
+                                value: selectedExam,
+                              }
                             : null
                         }
                         onChange={handleSelectExam}
@@ -507,7 +503,8 @@ export default function MergedExamPage() {
                             ...base,
                             width: "100%",
                             minWidth: "100%", // mobile safe
-                            background: "linear-gradient(to top, #F0F9FF, white)",
+                            background:
+                              "linear-gradient(to top, #F0F9FF, white)",
                             borderRadius: "8px",
                           }),
                           input: (base) => ({
@@ -521,10 +518,8 @@ export default function MergedExamPage() {
                         }}
                       />
                     </div>
-
                   </div>
                 </div>
-
               </>
             ) : null}
 
@@ -541,7 +536,8 @@ export default function MergedExamPage() {
                 [
                   ...Array((examById[0]?.exam?.Mocks || 24) - examById.length),
                 ].map((_, idx) => (
-                  <div onClick={() => router.push("/PlanandPricing")}
+                  <div
+                    onClick={() => router.push("/PlanandPricing")}
                     key={`locked-${idx}`}
                     className={`rounded-[8px] bg-[#F3F4F6] p-4 sm:p-5  lg:p-6 flex flex-col transition-all  h-full`}
                   >
@@ -562,14 +558,22 @@ export default function MergedExamPage() {
 
                     {/* Mock name */}
                     <h3 className="text-lg sm:text-xl lg:text-2xl font-poppins font-medium text-[#727EA3] sm:mb-5 lg:mb-6">
-                      {selectedExamType?.examType == "Mocks" ? "Mock" : selectedExamType?.examType} {examlength + idx + 1}
+                      {selectedExamType?.examType == "Mocks"
+                        ? "Mock"
+                        : selectedExamType?.examType}{" "}
+                      {examlength + idx + 1}
                     </h3>
 
                     {/* Coming Soon text */}
                     <p className="text-sm text-gray-400 mb-4 font-poppins">
-                      {idx === 0 ? (<>Available On <br /> <strong> {mockDate}</strong></>) : "Coming Soon"}
+                      {idx === 0 ? (
+                        <>
+                          Available On <br /> <strong> {mockDate}</strong>
+                        </>
+                      ) : (
+                        "Coming Soon"
+                      )}
                     </p>
-
                   </div>
                 ))}
             </div>

@@ -21,6 +21,7 @@ interface examRepo {
   ManageExamProgress: (payload: any) => Promise<AxiosResponse>;
   givenExam: (payload: any) => Promise<AxiosResponse>;
   getUserWithTarget: (payload: any) => Promise<AxiosResponse>;
+  dailyStreaks: (payload: any) => Promise<AxiosResponse>;
 }
 
 export const examRepo: examRepo = {
@@ -76,7 +77,10 @@ export const examRepo: examRepo = {
   getUserWithTarget(payload) {
     return Repository.post(questionPaper.getUserWithTarget, payload, {
     });
-    
+  },
+  dailyStreaks(payload) {
+    return Repository.post(questionPaper.dailyStreaks, payload, {
+    });
   },
 };
 

@@ -11,7 +11,7 @@ function MyProgress() {
   );
   console.log(userdashboarddata?.attemptcountdailybasis[0]?.totalAttempts)
   return (
-    <div className="px-6 py-2.5 bg-[#EAF8EC] border-none rounded-[8px] flex flex-col h-full">
+    <div className="px-6 py-2.5 bg-[#EAF8EC] border-none rounded-[8px] flex flex-col max-h-[200px]">
       <div className=" flex justify-between items-start mb-4">
         <div className="">
           <h3 className="text-xl font-medium text-[#FF5635] font-poppins">

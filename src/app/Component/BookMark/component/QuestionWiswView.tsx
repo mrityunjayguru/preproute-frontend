@@ -33,6 +33,7 @@ interface Question {
   solution?: string;
   hint?: string;
   userAttempt?: boolean;
+  
 }
 
 interface Props {
@@ -40,11 +41,12 @@ interface Props {
   examName?: string;
   attemptDate?: string;
   paperName?: string;
+  boolMarkData:any
 }
 
 /* ================= COMPONENT ================= */
 
-const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, paperName }) => {
+const QuestionWiswView: React.FC<Props> = ({ question, examName, attemptDate, paperName,boolMarkData }) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -96,8 +98,15 @@ await dispatch(createboockMark(payload))
             {/* Question Number and Exam Info */}
             <div className="flex items-center gap-2 mb-4">
               <span className="text-[#0056D2] font-medium text-md">
-                Question No. {question.questionNo}
-              </span>
+  Question No. {question?.questionNo}
+  {boolMarkData?.examTypeDetails?.examType && 
+    ` | ${boolMarkData.examTypeDetails.examType}`}
+  {boolMarkData?.questionPaperDetails?.questionPapername && 
+    ` | ${boolMarkData.questionPaperDetails.questionPapername}`}
+  {boolMarkData?.examDetails?.examname && 
+    ` | ${boolMarkData.examDetails.examname}`}
+</span>
+
               {examName && (
                 <>
                   <span className="text-gray-600">|</span>

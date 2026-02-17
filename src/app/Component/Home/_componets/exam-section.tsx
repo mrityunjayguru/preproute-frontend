@@ -12,7 +12,7 @@ const ExamsSection = (props: Props) => {
     "IIM B-(BBA-DBE)",
     "NPAT",
     "SET",
-    "Christ",
+    "IIM B - DEB",
     "ST.XAVIER's",
   ];
 

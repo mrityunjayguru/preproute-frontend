@@ -140,7 +140,7 @@ export const questionPaper={
   getCommonexam:"unauth/commonExam",
   ManageExamProgress:"user/examProgress",
   getUserWithTarget:"user/getUser",
-
+  dailyStreaks:"setUpexam/dailyStreaks/create"
 }
 export const Dashboard={
   get:"dashboard/get",

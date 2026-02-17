@@ -41,6 +41,7 @@ function BookMark() {
             examName={val?.examName || val?.paperDetails?.examName || ""}
             paperName={val?.paperName || val?.paperDetails?.paperName || ""}
             attemptDate={val?.attemptDate || val?.createdAt || val?.attemptedOn}
+            boolMarkData={val}
           />
         ))}
       </div>

@@ -386,7 +386,18 @@ export default function ExamUI() {
   }, [question, numericalValue, mcqSelected, handleKeyPress]);
 
   if (!examData?.length) return <div className="p-8 text-center">No exam data found.</div>;
+  useEffect(() => {
+    const handlePopState = () => {
+      window.history.pushState(null, "", window.location.href);
+    };
 
+    window.history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
   return (
     <>
       {showSubmitPopup && <SubmitExamPopup onClose={() => setShowSubmitPopup(false)} onConfirm={handleSubmitFullExam} />}

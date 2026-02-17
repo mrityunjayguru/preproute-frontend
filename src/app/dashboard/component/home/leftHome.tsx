@@ -257,14 +257,15 @@ const ExamCard = ({ exam }: any) => {
     await dispatch(handleUpdateStaus(payload));
     await dispatch(getDashboardData(payload));
   };
-
+  console.log(exam,"examexamexam")
   return (
     <div className="flex flex-col w-full rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] px-5 py-5 ">
       {/* Top Section */}
       <div className="flex justify-between items-start mb-1">
         <h3 className="text-xl font-medium font-poppins text-[#FF5635] truncate pr-4">
-          {exam.questionPapername} - {exam.examDetail.examname}
+        {exam?.examTyDetail?.examType} - {exam.questionPapername} - {exam.examDetail.examname}
         </h3>
+        {exam?.sectionId?(<><h1>{exam?.sectionCompletion[0]?.sectionName}</h1></>):(null)}
         <span className={`text-lg font-dm-sans font-normal ${isDraft ? 'text-gray-400' : 'text-gray-500'}`}>
           {isDraft ? 'Draft' : 'Published'}
         </span>

@@ -13,6 +13,7 @@ import Popup from "../ManageExam/Component/Report";
 import { createReport } from "@/api/Users";
 import Image from "next/image";
 import TIMER from "@/assets/vectors/timer.svg"
+import { createdailyStreaks } from "@/api/Exam";
 
 interface AnswerState {
   selected: string | null;
@@ -42,6 +43,8 @@ const ManageTopicExam = () => {
   const [examFinished, setExamFinished] = useState(false);
   const [reporttoggle, setReportToggle] = useState(false);
   const [bookmarkStatus, setBookmarkStatus] = useState(false);
+const [timerActive, setTimerActive] = useState(true);
+const [totalTime, setTotalTime] = useState(0);
 
   /* ================= FETCH QUESTION ================= */
   const fetchQuestion = useCallback(async () => {
@@ -62,14 +65,17 @@ const payload:any={
   }, [fetchQuestion]);
 
   /* ================= TIMER ================= */
-  useEffect(() => {
-    if (examFinished) return;
-    const timer = setInterval(() => {
-      setSeconds((prev) => prev + 1);
-    }, 1000);
+/* ================= TIMER ================= */
+useEffect(() => {
+  if (examFinished || !timerActive) return;
 
-    return () => clearInterval(timer);
-  }, [examFinished]);
+  const timer = setInterval(() => {
+    setSeconds((prev) => prev + 1);
+    setTotalTime((prevTotal) => prevTotal + 1);
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, [examFinished, timerActive]);
 
   const formatTime = (s: number) => {
     const mins = String(Math.floor(s / 60)).padStart(2, "0");
@@ -111,15 +117,23 @@ const payload:any={
         isCorrect,
       },
     }));
+    setTimerActive(false);
+    // setSeconds(0)
   };
 
   /* ================= NEXT ================= */
   const handleNext = () => {
     if (!currentAnswer.isSubmitted) return;
-
+    setTimerActive(true);
+setSeconds(0)
     if (questionNo < totalQuestions) {
       setQuestionNo((prev) => prev + 1);
     } else {
+      const payload:any={
+        questionPaperId:exam?._id
+      }
+      dispatch(createdailyStreaks(payload))
+      // console.log(exam,"examexam")
       setExamFinished(true);
     }
   };
@@ -229,7 +243,7 @@ const payload:any={
               <div className="flex items-center justify-center gap-3 bg-gray-50 p-4 rounded-xl mb-8">
                 <Image src={TIMER} width={24} height={24} alt="timer" />
                 <p className="text-gray-700 font-poppins">
-                  Total Time Taken: <b className="text-lg">{formatTime(seconds)}</b>
+                  Total Time Taken: <b className="text-lg">{totalTime}</b>
                 </p>
               </div>
 

@@ -323,14 +323,30 @@ export const handleUpdateStaus = createAsyncThunk<boolean, Payload>(
   }
 );
 
-
-
 export const handleSetSelectedExam = createAsyncThunk<boolean, Payload>(
   exam.get,
   async (payload, thunkAPI) => {
     try {
 
         thunkAPI.dispatch(SelectedExam(payload));
+        return true;
+    } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
+export const createdailyStreaks = createAsyncThunk<boolean, Payload>(
+  exam.get,
+  async (payload, thunkAPI) => {
+    try {
+    const data = await examRepo.dailyStreaks(payload);
         return true;
     } catch (err: any) {
       if (err.status == 401) {

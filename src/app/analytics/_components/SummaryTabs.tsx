@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
@@ -18,6 +18,7 @@ import Image from "next/image";
 import OverallTab from "@/app/Component/userResult/component/OverallTab";
 import TopicWiseTab from "@/app/Component/userResult/component/TopicWiseTab";
 import QuestionWiseTab from "@/app/Component/userResult/component/QuestionWiseTab";
+import { useRouter } from "next/navigation";
 
 interface SummaryTabsProps {
   data: any;
@@ -26,12 +27,14 @@ interface SummaryTabsProps {
 
 const SummaryTabs = ({ data }: SummaryTabsProps) => {
   const [activeTab, setActiveTab] = useState("Overall");
-
+const router = useRouter();
   const tabItems = [
     { value: "Overall", label: "Overall", icon: OVERALL },
     { value: "Question-wise", label: "Question-wise", icon: QUESTIONWISE },
     { value: "Detailed", label: "Detailed", icon: DETAILED },
   ];
+
+
 
   const questionRows = useMemo(() => {
     const details = Array.isArray(data?.details) ? data.details : [];

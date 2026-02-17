@@ -13,7 +13,7 @@ import { FaLockOpen } from "react-icons/fa";
 
 const TopicExamCard = ({ selectedExam }: any) => {
   const examById = useSelector((s: any) => s.exam?.examById) || [];
-
+console.log(selectedExam,"selectedExamselectedExam")
   return (
     <div className="space-y-6">
       {examById.map((topic: any, index: number) => (
@@ -125,6 +125,11 @@ const LevelCell = ({ tests = [], hasAccess }: any) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleStartExam = async (test: any) => {
+    let token=localStorage.getItem("token")
+    if(!token){
+      router.push("/PlanandPricing")
+      return
+    }
     const isFree = test?.isfree === true;
     const canAccess = hasAccess || isFree;
 
