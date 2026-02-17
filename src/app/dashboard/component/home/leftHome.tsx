@@ -13,6 +13,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import Select from "react-select";
 import { getCollege } from "@/api/college";
 import { getCommonExamType } from "@/api/ExamType";
+import DatePopup from "./DatePopup";
 
 interface Props {
   exams: any[];
@@ -235,7 +236,8 @@ const ExamCard = ({ exam }: any) => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const isDraft = !exam.isPublished;
-
+const [isOpen, setIsOpen] = useState(false);
+  const [date, setDate] = useState<Date | null>(null);
   const handleEdit = async (val: any) => {
     const payload: any = {
       examid: val.examid,
@@ -257,14 +259,38 @@ const ExamCard = ({ exam }: any) => {
     await dispatch(handleUpdateStaus(payload));
     await dispatch(getDashboardData(payload));
   };
-  console.log(exam,"examexamexam")
+  const [selectedData,setSelectedData]=useState<any>(null)
+  const handleData=async(val:any)=>{
+    console.log(val,"valval")
+    const myDate=new Date(val)
+    const payload:any={
+publishedDate:myDate,
+_id:selectedData?._id
+    }
+    const payload2:any=null;
+    await dispatch(handleUpdateStaus(payload))
+      dispatch(getDashboardData(payload2));
+
+  }
+  const handledelectedData=(val:any)=>{
+    setIsOpen(true)
+setSelectedData(val)
+  }
+  console.log(isDraft,"isDraftisDraftisDraft")
   return (
+     <>
+     <DatePopup
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onSelect={(selected) => handleData(selected)}
+      />
     <div className="flex flex-col w-full rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] px-5 py-5 ">
       {/* Top Section */}
       <div className="flex justify-between items-start mb-1">
-        <h3 className="text-xl font-medium font-poppins text-[#FF5635] truncate pr-4">
-        {exam?.examTyDetail?.examType} - {exam.questionPapername} - {exam.examDetail.examname}
-        </h3>
+       <h3 className="text-xl font-medium font-poppins text-[#FF5635] truncate pr-4">
+  {exam?.examTyDetail?.examType} - {exam.level}-{exam.questionPapername} - {exam.examDetail.examname}
+</h3>
+
         {exam?.sectionId?(<><h1>{exam?.sectionCompletion[0]?.sectionName}</h1></>):(null)}
         <span className={`text-lg font-dm-sans font-normal ${isDraft ? 'text-gray-400' : 'text-gray-500'}`}>
           {isDraft ? 'Draft' : 'Published'}
@@ -293,12 +319,12 @@ const ExamCard = ({ exam }: any) => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-auto">
         <p className="text-[10px] text-gray-400 font-normal font-dm-sans">
           Created on: {formatDateTime(exam.createdAt)}
-          {!isDraft && exam.publishedAt && ` | Published on: ${formatDateTime(exam.publishedAt)}`}
+          {isDraft && exam.publishedDate && ` | Published on: ${formatDateTime(exam.publishedDate)}`}
         </p>
 
         <div className="flex flex-row gap-3 shrink-0 w-full sm:w-auto font-poppins">
           <Button 
-            // onClick={() => handleEdit(exam)} 
+            onClick={() => handledelectedData(exam)}
             variant="outline"
             className="flex-1 sm:flex-none border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC] hover:text-[#FF5635] h-9 px-6 rounded-md font-normal text-md  cursor-pointer"
           >
@@ -329,5 +355,6 @@ const ExamCard = ({ exam }: any) => {
         </div>
       </div>
     </div>
+     </>
   );
 };
