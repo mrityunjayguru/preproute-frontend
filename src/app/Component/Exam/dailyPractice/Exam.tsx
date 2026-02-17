@@ -82,7 +82,7 @@ const [totalTime, setTotalTime] = useState(0);
 
   /* ================= TIMER ================= */
   useEffect(() => {
-    if (examFinished) return;
+    if (examFinished ||  !timerActive) return;
     const timer = setInterval(() => {
       setSeconds((s) => s + 1);
      setTotalTime((prevTotal) => prevTotal + 1);
@@ -110,7 +110,6 @@ const [totalTime, setTotalTime] = useState(0);
 
   const handleSubmit = () => {
     if (!question) return;
-    setTimerActive(false);
 
     let correct = false;
 
@@ -131,6 +130,8 @@ const [totalTime, setTotalTime] = useState(0);
         isCorrect: correct,
       },
     }));
+    setTimerActive(false);
+
   };
 
   /* ================= NAVIGATION ================= */
