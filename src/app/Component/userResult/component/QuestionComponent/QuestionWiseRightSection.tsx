@@ -8,7 +8,7 @@ import NOTVISITED from "@/assets/vectors/perticulerExam/not-visited.svg";
 import ANSWERED from "@/assets/vectors/perticulerExam/answered.svg";
 import UNANSWERED from "@/assets/vectors/perticulerExam/unaswered.svg";
 import REVIEWMARKED from "@/assets/vectors/perticulerExam/reviewmarked.svg";
-import ANSWEREDANDREVIEW from "@/assets/vectors/perticulerExam/answeredAndReviewMarked.svg";
+import ANSWEREDANDREVIEW from "@/assets/vectors/perticulerExam/Layer_1.png";
 
 interface Option {
   _id: string;
