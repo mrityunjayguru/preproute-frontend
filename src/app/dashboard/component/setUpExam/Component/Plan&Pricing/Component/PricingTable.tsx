@@ -33,7 +33,7 @@ const PricingTable = () => {
   // Filter Logic
   const filteredData = palnAndpricing.filter((item: any) => {
     const searchLower = search.toLowerCase();
-
+console.log(item,"itemitem")
     return (
       item?.title?.toLowerCase().includes(searchLower) ||
       item?.price?.toString().includes(searchLower) ||
@@ -49,8 +49,8 @@ const PricingTable = () => {
     {
       header: "Exam Names",
       accessor: (row: any) =>
-        row?.examDetails?.length
-          ? row.examDetails.map((ex: any) => ex.examname).join(", ")
+        row?.exams?.length
+          ? row.exams.map((ex: any) => ex.examInfo?.examname).join(", ")
           : "-",
     },
 

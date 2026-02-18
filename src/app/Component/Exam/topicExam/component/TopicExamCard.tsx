@@ -13,14 +13,21 @@ import { FaLockOpen } from "react-icons/fa";
 
 const TopicExamCard = ({ selectedExam }: any) => {
   const examById = useSelector((s: any) => s.exam?.examById) || [];
-console.log(selectedExam,"selectedExamselectedExam")
+   const isUnlocked =!!(
+  selectedExam &&
+  Array.isArray(selectedExam.OrderDetail) &&
+  selectedExam.OrderDetail.length > 0 &&
+  Array.isArray(selectedExam.OrderDetail[0].planMatch) &&
+  selectedExam.OrderDetail[0].planMatch.length > 0 &&
+  selectedExam.OrderDetail[0].planMatch[0]?.features?.topicwise
+);
   return (
     <div className="space-y-6">
       {examById.map((topic: any, index: number) => (
         <TopicBlock
           key={index}
           topic={topic}
-          hasAccess={selectedExam?.hasAccess}
+          hasAccess={isUnlocked}
         />
       ))}
     </div>

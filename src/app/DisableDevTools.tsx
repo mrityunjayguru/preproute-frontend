@@ -14,6 +14,11 @@ export default function DisableDevTools() {
       e.preventDefault();
     };
 
+    // Disable Text Selection (Mouse Drag)
+    const handleSelectStart = (e: Event) => {
+      e.preventDefault();
+    };
+
     // Disable Key Shortcuts
     const handleKeyDown = (e: KeyboardEvent) => {
       // F12
@@ -27,17 +32,17 @@ export default function DisableDevTools() {
       }
 
       // Ctrl+U (view source)
-      if (e.ctrlKey && e.key === "u") {
+      if (e.ctrlKey && e.key.toLowerCase() === "u") {
         e.preventDefault();
       }
 
-      // Ctrl+C
-      if (e.ctrlKey && e.key === "c") {
+      // Ctrl+C / Ctrl+A
+      if (e.ctrlKey && ["c", "a"].includes(e.key.toLowerCase())) {
         e.preventDefault();
       }
     };
 
-    // Detect DevTools Open (basic trick)
+    // Detect DevTools Open
     const detectDevTools = () => {
       const threshold = 160;
       if (
@@ -48,18 +53,27 @@ export default function DisableDevTools() {
       }
     };
 
+    // Apply CSS to disable selection
+    document.body.style.userSelect = "none";
+    document.body.style.webkitUserSelect = "none";
+    document.body.style.msUserSelect = "none";
+
     document.addEventListener("contextmenu", handleContextMenu);
     document.addEventListener("copy", handleClipboard);
     document.addEventListener("cut", handleClipboard);
     document.addEventListener("paste", handleClipboard);
+    document.addEventListener("selectstart", handleSelectStart);
     document.addEventListener("keydown", handleKeyDown);
     window.addEventListener("resize", detectDevTools);
 
     return () => {
+      document.body.style.userSelect = "auto";
+
       document.removeEventListener("contextmenu", handleContextMenu);
       document.removeEventListener("copy", handleClipboard);
       document.removeEventListener("cut", handleClipboard);
       document.removeEventListener("paste", handleClipboard);
+      document.removeEventListener("selectstart", handleSelectStart);
       document.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("resize", detectDevTools);
     };

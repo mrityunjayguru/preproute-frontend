@@ -234,7 +234,7 @@ const OverallTab = ({ data }: OverallTabProps) => {
           accuracy: Math.round(accuracy),
         };
       })
-      .sort((a, b) => a.accuracy - b.accuracy);
+      .sort((a, b) => a.accuracy - b.accuracy).slice(0,5);
   }, [data]);
 
   const subTopics = useSelector(
@@ -305,7 +305,7 @@ const OverallTab = ({ data }: OverallTabProps) => {
         })
         // ✅ Weak Area Condition
 
-        .sort((a: any, b: any) => a.accuracy - b.accuracy)
+        .sort((a: any, b: any) => a.accuracy - b.accuracy).slice(0, 5)
     );
   }, [data]);
   const start = new Date(data?.fullExamStartTime).getTime();

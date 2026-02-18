@@ -16,7 +16,9 @@ function DailyPratice() {
 
   const userdashboarddata =
     useSelector((state: any) => state?.Auth?.userDashboard?.data) || [];
-
+ const contdayly =
+    useSelector((state: any) => state?.Auth?.userDashboard) || [];
+console.log(contdayly?.todaystreakByID.length,"userdashboarddatauserdashboarddata")
   /**
    * ✅ Filter ONLY:
    * - Today
@@ -64,9 +66,9 @@ function DailyPratice() {
           Daily Practice
         </h3>
 
-        {/* <span className="bg-[#2D80FB] text-white text-xs px-6 py-2 rounded-full font-medium tracking-tight whitespace-nowrap">
-          {todaySections.length} Sections Available
-        </span> */}
+        <span className="bg-[#2D80FB] text-white text-xs px-6 py-2 rounded-full font-medium tracking-tight whitespace-nowrap">
+          {contdayly?.todaystreakByID.length} Preppers Attempted
+        </span>
       </div>
 
       {/* Sections */}

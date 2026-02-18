@@ -243,7 +243,7 @@ setSeconds(0)
               <div className="flex items-center justify-center gap-3 bg-gray-50 p-4 rounded-xl mb-8">
                 <Image src={TIMER} width={24} height={24} alt="timer" />
                 <p className="text-gray-700 font-poppins">
-                  Total Time Taken: <b className="text-lg">{totalTime}</b>
+                  Total Time Taken: <b className="text-lg">{totalTime} seconds </b>
                 </p>
               </div>
 

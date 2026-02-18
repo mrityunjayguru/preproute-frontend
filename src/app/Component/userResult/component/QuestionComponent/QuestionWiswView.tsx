@@ -204,7 +204,7 @@ const handleSubmitReport=(val:any)=>{
 />
     <div className="flex-1 mt-6 bg-white">
       {/* Status Bar */}
-      <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] py-3 px-2 flex flex-wrap lg:gap-36 md:gap-30 items-start mb-6 font-poppins">
+      <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] py-3 px-2 flex flex-wrap lg:gap-36 md:gap-[80px] items-start mb-6 font-poppins">
         <div>
           <p className="text-xs font-medium text-black mb-1">Answer Status</p>
           {isAttempted ? (

@@ -39,7 +39,7 @@ export const Footer = () => {
           <div className="mb-2 sm:mb-0">
             A product of{" "}
             <a href="https://brillovate.com" target="blank" className="text-[#ff6600]">
-               ⓒ Brillovate Pvt. Ltd. 2026
+                Brillovate Pvt. Ltd. ⓒ 2026
             </a>{" "}
             All rights reserved.
           </div>

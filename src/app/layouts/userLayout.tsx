@@ -9,6 +9,8 @@ import { setQuestionPaperResult } from "@/api/Users";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/store/store";
 import OfferBanner from "@/Layout/OfferBanner";
+import { DashboardHeader } from "../dashboard/component/Navbar/Navbar";
+import DisableDevTools from "../DisableDevTools";
 
 export default function UserLayout({ children }: { children: ReactNode }) {
   const dispatch=useDispatch<AppDispatch>()
@@ -35,6 +37,7 @@ dispatch(setQuestionPaperResult(payload2));
       <UserHeader />
       </>)}
       <main className={hideChrome ? "flex-1 overflow-hidden" : "flex-1 "}>
+         {/* <DisableDevTools /> */}
         {children}
       </main>
       {!hideChrome && <UserFooter />}

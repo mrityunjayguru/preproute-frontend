@@ -5,8 +5,15 @@ import { useRouter } from "next/navigation";
 
 const MockExamCard = ({ exam, index, handleExam,selectedExam }: any) => {
   const router=useRouter()
-  const isUnlocked =
-     exam?.previousCompleted || selectedExam?.hasAccess;
+  const isUnlocked =!!(
+  selectedExam &&
+  Array.isArray(selectedExam.OrderDetail) &&
+  selectedExam.OrderDetail.length > 0 &&
+  Array.isArray(selectedExam.OrderDetail[0].planMatch) &&
+  selectedExam.OrderDetail[0].planMatch.length > 0 &&
+  selectedExam.OrderDetail[0].planMatch[0]?.features?.sectional
+);
+
 
   const onClick = () => {
     if (!isUnlocked){

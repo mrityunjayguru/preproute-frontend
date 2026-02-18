@@ -45,15 +45,41 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
   const isAttempted = exam?.hasGivenExam;
 
   const haaccessExam = useSelector((s: any) => s.exam?.examHeader);
+  // console.log(haaccessExam,"haaccessExamhaaccessExam")
   const selectedExamType = useSelector(
     (s: any) => s.examType?.selectedExamType,
   );
   const selectedExam = useSelector((s: any) => s.exam?.selectedExam);
+const [mockCount,serMockCount]=useState<any>(null)
+  useEffect(()=>{
+let mockCount = null;
+
+try {
+  if (
+    haaccessExam &&
+    Array.isArray(haaccessExam.purchasedPlan) &&
+    haaccessExam.purchasedPlan.length > 0 &&
+    Array.isArray(haaccessExam.purchasedPlan[0].exams) &&
+    haaccessExam._id
+  ) {
+    mockCount = haaccessExam.purchasedPlan[0].exams.find(
+      (val: any) => val?.examId === haaccessExam._id
+    ) ?? null;
+  }
+
+  console.log(mockCount?.mockCount, "mockCount");
+  serMockCount(mockCount)
+} catch (error) {
+  console.error("Error while finding mockCount:", error);
+}
+  },[haaccessExam])
+  const freeMockLimit = mockCount?.mockCount ?? 0;
 
   const isLocked = !(
     haaccessExam?.hasAccess ||
     index === 0 ||
-    selectedExamType?.examType === "Past Year"
+    selectedExamType?.examType === "Past Year"|| 
+    index < freeMockLimit
   );
 
   const isInProgress = exam?.userSummary?.target === 0 && isAttempted;
@@ -212,16 +238,17 @@ export default function MergedExamPage() {
         _id: examById[0]?.exam?._id,
         mockDate: examById[0]?.exam?.mockDate, // ✅ ADD THIS
         section: examById[0]?.sectionDetails,
+        oteher: examById,
       };
       setSelectedExam(payload);
     }
   }, [examById]);
-
   useEffect(() => {
     setSelectedExam(null);
   }, [selectedExamType]);
   // Handle dropdown
   const handleSelectExam = async (option: any) => {
+    // console.log(option,"optionoption")
     if (!option) return;
     dispatch(handleSetSelectedExam(option.value || option._id));
     const exam = option.value;
@@ -297,11 +324,13 @@ export default function MergedExamPage() {
     label: ex.examname,
     value: ex,
     section: ex.sectionDetails,
+    other:ex
   }));
+  // console.log(examOptions,"examdataexamdata")
+
   useEffect(() => {
     if (isMock) {
       // Find only IPMAT Indore
-      console.log(examdata, "selectedExamTypeselectedExamType");
       const ipmatIndoreExam = examdata.find(
         (ex: any) => ex.examname === "IPMAT Indore",
       );
@@ -315,6 +344,36 @@ export default function MergedExamPage() {
     setSectionId(val._id);
     handleSelectExam(selectedExam);
   };
+
+    const haaccessExam = useSelector((s: any) => s.exam?.examHeader);
+  // console.log(haaccessExam,"haaccessExamhaaccessExam")
+ 
+const [mockCount,serMockCount]=useState<any>(null)
+  useEffect(()=>{
+let mockCount = null;
+
+try {
+  if (
+    haaccessExam &&
+    Array.isArray(haaccessExam.purchasedPlan) &&
+    haaccessExam.purchasedPlan.length > 0 &&
+    Array.isArray(haaccessExam.purchasedPlan[0].exams) &&
+    haaccessExam._id
+  ) {
+    mockCount = haaccessExam.purchasedPlan[0].exams.find(
+      (val: any) => val?.examId === haaccessExam._id
+    ) ?? null;
+  }
+
+  console.log(mockCount?.mockCount, "mockCount");
+  serMockCount(mockCount)
+} catch (error) {
+  console.error("Error while finding mockCount:", error);
+}
+  },[haaccessExam])
+  const PruchaseMockLimit = mockCount?.mockCount ?? 0;
+  // alert(PruchaseMockLimit)
+  
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">
@@ -393,7 +452,7 @@ export default function MergedExamPage() {
           flex flex-col transition-all"
                   >
                     <p className="text-[12px] sm:text-[13px] lg:text-[14px] font-dm-sans font-medium">
-                      Mock Exam
+                      Mock Exam 
                     </p>
 
                     <h3
@@ -491,6 +550,7 @@ export default function MergedExamPage() {
                             ? {
                                 label: selectedExam.examname,
                                 value: selectedExam,
+                                other:selectedExam.other
                               }
                             : null
                         }
@@ -532,7 +592,7 @@ export default function MergedExamPage() {
                   index={i}
                 />
               ))}
-              {examById.length < (examById[0]?.exam?.Mocks || 24) &&
+              {examById.length < (examById[0]?.exam?.Mocks || 24 ) &&
                 [
                   ...Array((examById[0]?.exam?.Mocks || 24) - examById.length),
                 ].map((_, idx) => (
@@ -555,6 +615,7 @@ export default function MergedExamPage() {
                         <Image src={LOCK2} alt="lock" />
                       </div>
                     </div>
+                    {/* {idx==PruchaseMockLimit?("Purchase"):(null)} */}
 
                     {/* Mock name */}
                     <h3 className="text-lg sm:text-xl lg:text-2xl font-poppins font-medium text-[#727EA3] sm:mb-5 lg:mb-6">
