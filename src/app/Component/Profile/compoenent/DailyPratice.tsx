@@ -18,7 +18,6 @@ function DailyPratice() {
     useSelector((state: any) => state?.Auth?.userDashboard?.data) || [];
  const contdayly =
     useSelector((state: any) => state?.Auth?.userDashboard) || [];
-console.log(contdayly?.todaystreakByID.length,"userdashboarddatauserdashboarddata")
   /**
    * ✅ Filter ONLY:
    * - Today

@@ -35,9 +35,9 @@ dispatch(setQuestionPaperResult(payload2));
       {!hideChrome && (<>
         <OfferBanner/>
       <UserHeader />
-      </>)}
+      </>)}  
       <main className={hideChrome ? "flex-1 overflow-hidden" : "flex-1 "}>
-         <DisableDevTools />
+         {/* <DisableDevTools /> */}
         {children}
       </main>
       {!hideChrome && <UserFooter />}
