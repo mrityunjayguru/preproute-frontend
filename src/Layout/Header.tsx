@@ -67,6 +67,9 @@ export const Header: React.FC = () => {
     else if (exam.examType.toLowerCase() == "daily practice") {
       router.push("/user-dashboard");
     }
+      else if (exam.examType.toLowerCase() == "pyqs") {
+      router.push("/Exam/pyqs");
+    }
     else {
       router.push("/Exam/Mocks");
     }

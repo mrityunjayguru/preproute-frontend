@@ -23,14 +23,15 @@ import { QuestionPaperResult } from "@/api/Users";
 import UserExamPop from "@/app/Component/ManageExam/Component/UserExamPop";
 
 import EXAMPREP from "@/assets/vectors/exam/Man_Working_From_Home.svg";
-import SocialMedia from "../../Home/_componets/social-media";
+// import SocialMedia from "../../Home/_componets/social-media";
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import LOCK from "@/assets/vectors/lock.svg";
 import LOCK2 from "@/assets/vectors/lock-2.svg";
 import { capitalizeWords } from "@/Utils/Cappital";
 import { ToastError, ToastWarning } from "@/Utils/toastUtils";
+import SocialMedia from "@/app/Component/Home/_componets/social-media";
 
-const MockExamCard = ({ exam, handleExam, index }: any) => {
+const MockExamCardPUQ = ({ exam, handleExam, index }: any) => {
   const examById = useSelector((s: any) => s.exam?.examById) || [];
   const examlength: any = examById.length;
   const router = useRouter();
@@ -45,41 +46,21 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
   const isAttempted = exam?.hasGivenExam;
 
   const haaccessExam = useSelector((s: any) => s.exam?.examHeader);
-  console.log(haaccessExam,"haaccessExamhaaccessExam")
+
+ const checkAccess =
+  haaccessExam?.OrderDetail?.[0]?.planMatch?.[0]?.features?.pyp ?? false;
+
   const selectedExamType = useSelector(
     (s: any) => s.examType?.selectedExamType,
   );
   const selectedExam = useSelector((s: any) => s.exam?.selectedExam);
 const [mockCount,serMockCount]=useState<any>(null)
-  useEffect(()=>{
-let mockCount = null;
-
-try {
-  if (
-    haaccessExam &&
-    Array.isArray(haaccessExam.purchasedPlan) &&
-    haaccessExam.purchasedPlan.length > 0 &&
-    Array.isArray(haaccessExam.purchasedPlan[0].exams) &&
-    haaccessExam._id
-  ) {
-    mockCount = haaccessExam.purchasedPlan[0].exams.find(
-      (val: any) => val?.examId === haaccessExam._id
-    ) ?? null;
-  }
 
 
-  serMockCount(mockCount)
-} catch (error) {
-  console.error("Error while finding mockCount:", error);
-}
-  },[haaccessExam])
   const freeMockLimit = mockCount?.mockCount ?? 0;
-console.log(freeMockLimit,"freeMockLimitfreeMockLimit")
   const isLocked = !(
-    haaccessExam?.hasAccess ||
-    index === 0 ||
-    selectedExamType?.examType === "Past Year"|| 
-    index < freeMockLimit
+    checkAccess ||
+    index === 0 
   );
 
   const isInProgress = exam?.userSummary?.target === 0 && isAttempted;
@@ -191,7 +172,7 @@ console.log(freeMockLimit,"freeMockLimitfreeMockLimit")
 };
 
 // perticuler Exam section
-export default function MergedExamPage() {
+export default function MergedExamPagePYQS() {
   const searchParams = useSearchParams();
   const [mockDate, setMockDate] = useState("");
   const [sectionId, setSectionId] = useState(null);
@@ -587,7 +568,7 @@ try {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mx-auto">
               {examById.map((exam: any, i: any) => (
-                <MockExamCard
+                <MockExamCardPUQ
                   key={exam._id}
                   exam={exam}
                   handleExam={handleExam}

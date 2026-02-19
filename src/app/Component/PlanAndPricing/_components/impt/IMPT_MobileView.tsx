@@ -71,6 +71,7 @@ const MobileView = ({
                         <div className="flex h-10 w-full bg-white rounded-md overflow-hidden border border-gray-200">
                             <input
                                 placeholder="Enter code"
+                                 disabled={selectedPlan.alreadyPurchased}
                                 value={couponData[selectedPlan._id] || ""}
                                 onChange={(e) => setCouponData({ ...couponData, [selectedPlan._id]: e.target.value })}
                                 className="px-3 py-1 text-sm w-full focus:outline-none"
@@ -78,6 +79,8 @@ const MobileView = ({
                             <button
                                 onClick={() => handleVerifyCoupon(selectedPlan)}
                                 className="text-xs px-4 bg-gray-100 font-bold border-l hover:bg-gray-200 transition-colors"
+                                 disabled={selectedPlan.alreadyPurchased}
+                            
                             >
                                 {isVerifying === selectedPlan._id ? <Loader2 className="animate-spin w-4 h-4" /> : "APPLY"}
                             </button>

@@ -1,3 +1,4 @@
+import { capitalizeWords } from "@/Utils/Cappital";
 import React from "react";
 import { useSelector } from "react-redux";
 
@@ -23,7 +24,7 @@ function MockUpdate() {
               {/* Exam Name + Type */}
               <div className="flex items-center gap-2 font-bold text-sm">
                 <span className="text-[#FF5635]">
-                  {exam?.examType?.examType} {exam?.questionPapername}
+                  {capitalizeWords(exam?.examType?.examType)} {capitalizeWords(exam?.questionPapername)}
                 </span>
 
                 {/* Section name if exists */}

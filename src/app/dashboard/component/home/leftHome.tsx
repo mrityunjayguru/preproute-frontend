@@ -273,18 +273,32 @@ const ExamCard = ({ exam }: any) => {
     const payload2: any = null;
     await dispatch(handleUpdateStaus(payload));
     dispatch(getDashboardData(payload2));
+    setSelectedData(null)
   };
   const handledelectedData = (val: any) => {
     setIsOpen(true);
     setSelectedData(val);
   };
-  console.log(isDraft, "isDraftisDraftisDraft");
+ 
+  const RemoveDate=async()=>{
+const payload: any = {
+      publishedDate: null,
+      _id: selectedData?._id,
+    };
+    const payload2: any = null;
+    await dispatch(handleUpdateStaus(payload));
+    dispatch(getDashboardData(payload2));
+    setSelectedData(null)
+    setIsOpen(false)
+  }
   return (
     <>
       <DatePopup
         isOpen={isOpen}
+        RemoveDate={RemoveDate}
         onClose={() => setIsOpen(false)}
         onSelect={(selected) => handleData(selected)}
+        selectedData={selectedData}
       />
       <div className="flex flex-col w-full rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] px-5 py-5 ">
         {/* Top Section */}

@@ -1,19 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  RemoveDate: () => void;
   onSelect: (date: Date | null) => void;
+  selectedData:any;
 }
 
-export default function DatePopup({ isOpen, onClose, onSelect }: Props) {
+export default function DatePopup({ isOpen, onClose, onSelect,RemoveDate,selectedData }: Props) {
   const today = new Date();
   const [currentMonth, setCurrentMonth] = useState(today.getMonth());
   const [currentYear, setCurrentYear] = useState(today.getFullYear());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+useEffect(() => {
+  if (selectedData?.publishedDate) {
+    const dateObj = new Date(selectedData.publishedDate);
 
+    setSelectedDate(dateObj);
+    setCurrentMonth(dateObj.getMonth());
+    setCurrentYear(dateObj.getFullYear());
+  }
+}, [selectedData]);
   if (!isOpen) return null;
 
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -103,7 +113,12 @@ export default function DatePopup({ isOpen, onClose, onSelect }: Props) {
           >
             Cancel
           </button>
-
+          <button
+            onClick={RemoveDate}
+            className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
+          >
+            Remove Date
+          </button>
           <button
             onClick={() => {
               onSelect(selectedDate);

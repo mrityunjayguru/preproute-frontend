@@ -87,6 +87,7 @@ export default function PricingPlans() {
     };
 
     const handlePayment = async (plan: any) => {
+        if(plan?.alreadyPurchased==true) return
         let token = localStorage.getItem("token");
         if (!token) {
             router.push(`/Auth/signin?redirect=${pathname}`);
@@ -146,7 +147,7 @@ export default function PricingPlans() {
                                                         onMouseLeave={() => setHoveredPlan(null)}
                                                         onClick={() => handlePayment(plan)}
                                                         className={`mt-3 mb-2 py-3 px-6 rounded-xl text-sm font-bold transition-all w-full ${
-                                                            plan.title.includes('Elite') ? 'bg-[#FFBD00]' : 
+                                                            plan.title.includes('Elite') ? 'bg-[#FFBD00] cursor-not-allowed' : 
                                                             plan.title.includes('Pro') ? 'bg-[#FF5635] text-white' : 'bg-[#EBE9FF]'
                                                         }`}
                                                     >
@@ -158,11 +159,14 @@ export default function PricingPlans() {
                                                         <div className="flex h-8 w-full border border-gray-200 rounded-md overflow-hidden bg-white">
                                                             <input 
                                                                 placeholder="Coupon"
-                                                                className="px-2 py-1 text-xs w-full focus:outline-none"
+                                                                  disabled={plan.alreadyPurchased}
+                                                                className=" plan.alreadyPurchased px-2 py-1 text-xs w-full focus:outline-none"
                                                                 value={couponCodes[plan._id] || ""}
                                                                 onChange={(e) => setCouponCodes({ ...couponCodes, [plan._id]: e.target.value })}
                                                             />
                                                             <button 
+                                                                  disabled={plan.alreadyPurchased}
+
                                                                 onClick={() => handleVerifyCoupon(plan)}
                                                                 className="text-[10px] px-2 bg-gray-100 font-bold border-l"
                                                             >
