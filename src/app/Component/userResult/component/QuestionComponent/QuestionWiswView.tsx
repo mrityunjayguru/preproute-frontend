@@ -204,44 +204,68 @@ const handleSubmitReport=(val:any)=>{
 />
     <div className="flex-1 mt-6 bg-white">
       {/* Status Bar */}
-      <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] py-3 px-2 flex flex-wrap lg:gap-36 md:gap-[80px] items-start mb-6 font-poppins">
-        <div>
-          <p className="text-xs font-medium text-black mb-1">Answer Status</p>
-          {isAttempted ? (
-            isCorrect ? (
-              <p className="text-xl font-medium text-[#84CC16]">Correct</p>
-            ) : (
-              <p className="text-xl font-medium text-red-500">Wrong</p>
-            )
-          ) : (
-            <p className="text-xl font-medium text-gray-400">Unattempted</p>
-          )}
-        </div>
+   <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] py-4 px-4 mb-6 font-poppins">
+  
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    
+    {/* Answer Status */}
+    <div>
+      <p className="text-xs font-medium text-gray-500 mb-1">
+        Answer Status
+      </p>
 
-        <div>
-          <p className="text-xs font-medium text-gray-500 mb-1">
-            Response Time
+      {isAttempted ? (
+        isCorrect ? (
+          <p className="text-xl font-medium text-[#84CC16]">
+            Correct
           </p>
-          <p className="text-lg font-medium text-[#005EB6]">
-            {formatTime(timeTaken)}
+        ) : (
+          <p className="text-xl font-medium text-red-500">
+            Wrong
           </p>
-        </div>
+        )
+      ) : (
+        <p className="text-xl font-medium text-gray-400">
+          Unattempted
+        </p>
+      )}
+    </div>
 
-        <div>
-          <p className="text-xs font-medium text-gray-500 mb-1">Average Time</p>
-          <p className="text-lg font-medium text-[#005EB6]">
-            {formatSeconds(question.averageTime) || "1 Min 26 Sec"}
-          </p>
-        </div>
-        <div>
-          <p className="text-xs font-medium text-gray-500 mb-1">
-            Difficulty Level
-          </p>
-          <p className="text-lg font-medium text-[#005EB6]">
-            {question?.questionType || "Easy"}
-          </p>
-        </div>
-      </div>
+    {/* Response Time */}
+    <div>
+      <p className="text-xs font-medium text-gray-500 mb-1">
+        Response Time
+      </p>
+      <p className="text-lg font-medium text-[#005EB6]">
+        {formatTime(timeTaken)}
+      </p>
+    </div>
+
+    {/* Average Time */}
+    <div>
+      <p className="text-xs font-medium text-gray-500 mb-1">
+        Average Time
+      </p>
+      <p className="text-lg font-medium text-[#005EB6]">
+        {question?.averageTime
+          ? formatSeconds(question.averageTime)
+          : "1 Min 26 Sec"}
+      </p>
+    </div>
+
+    {/* Difficulty */}
+    <div>
+      <p className="text-xs font-medium text-gray-500 mb-1">
+        Difficulty Level
+      </p>
+      <p className="text-lg font-medium text-[#005EB6]">
+        {question?.questionType || "Easy"}
+      </p>
+    </div>
+
+  </div>
+</div>
+
 
       {/* Topic Header */}
       <div className="flex justify-between items-center mb-6">
