@@ -1,5 +1,5 @@
-const API_KEY = "AIzaSyCuA3cCx6lJiEDIQQFS1N-ZYYqWE-whff8";
-const CHANNEL_ID = "UCOWVNgOPuluzdSYjO-BXgYQ";
+const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
+const CHANNEL_ID = process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID;
 
 export const fetchYouTubeVideos=async()=> {
   const response = await fetch(
