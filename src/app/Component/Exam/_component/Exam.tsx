@@ -375,11 +375,10 @@ try {
   },[haaccessExam])
   const PruchaseMockLimit = mockCount?.mockCount ?? 0;
   const userAccessLimit = mockCount?.mockCount ?? 0;
-  console.log(PruchaseMockLimit,"PruchaseMockLimit")
   // alert(PruchaseMockLimit)
   const totalMocks = examById[0]?.exam?.Mocks || 24;
   const handleRedirect=(idx:any)=>{
-    if(idx<=userAccessLimit){
+    if(idx<userAccessLimit-examById.length){
 
     }else{
     router.push("/PlanandPricing")
