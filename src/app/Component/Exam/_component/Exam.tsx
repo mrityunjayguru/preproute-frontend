@@ -378,6 +378,14 @@ try {
   console.log(PruchaseMockLimit,"PruchaseMockLimit")
   // alert(PruchaseMockLimit)
   const totalMocks = examById[0]?.exam?.Mocks || 24;
+  const handleRedirect=(idx:any)=>{
+    if(idx<=userAccessLimit){
+
+    }else{
+    router.push("/PlanandPricing")
+
+    }
+  }
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">
@@ -601,7 +609,7 @@ try {
                   ...Array((examById[0]?.exam?.Mocks || 24) - examById.length),
                 ].map((_, idx) => (
                   <div
-                    onClick={() => router.push("/PlanandPricing")}
+                    onClick={() => handleRedirect(idx)}
                     key={`locked-${idx}`}
                     className={`rounded-[8px] bg-[#F3F4F6] p-4 sm:p-5  lg:p-6 flex flex-col transition-all  h-full`}
                   >
@@ -617,7 +625,7 @@ try {
 
                       {/* Lock icon in top right */}
                       <div className="absolute top-0 right-0">
-                        {idx<=userAccessLimit?(<span className="text-[#4FA77E]"><FaUnlock className="text-[#4FA77E]" /></span>):(<Image src={LOCK2} alt="lock" />)}
+                        {idx<userAccessLimit-examById.length?(<span className="text-[#4FA77E]"><FaUnlock className="text-[#4FA77E]" /></span>):(<Image src={LOCK2} alt="lock" />)}
                         {/* <Image src={LOCK2} alt="lock" /> */}
                       </div>
                     </div>
