@@ -31,7 +31,7 @@ export default function PricingPlans() {
 
     const user = useSelector((state: any) => state?.Auth?.loginUser);
     const planAndPricing = useSelector((state: any) => state?.palnAndpricing?.plandetail || []);
-    console.log(planAndPricing,"planAndPricingplanAndPricing")
+    console.log(planAndPricing, "planAndPricingplanAndPricing")
     useEffect(() => {
         dispatch(getPlanandPricing({ uid: user?._id }));
     }, [dispatch, user?._id]);
@@ -69,8 +69,8 @@ export default function PricingPlans() {
 
             if (result?.payload?.status) {
                 const couponData = result.payload.data;
-                let discount = couponData?.discountType === "PERCENTAGE" 
-                    ? (Number(plan.price) * Number(couponData.discountValue)) / 100 
+                let discount = couponData?.discountType === "PERCENTAGE"
+                    ? (Number(plan.price) * Number(couponData.discountValue)) / 100
                     : Number(couponData.discountValue);
 
                 setDiscountAmounts(prev => ({ ...prev, [plan._id]: Math.min(discount, plan.price) }));
@@ -87,7 +87,7 @@ export default function PricingPlans() {
     };
 
     const handlePayment = async (plan: any) => {
-        if(plan?.alreadyPurchased==true) return
+        if (plan?.alreadyPurchased == true) return
         let token = localStorage.getItem("token");
         if (!token) {
             router.push(`/Auth/signin?redirect=${pathname}`);
@@ -127,58 +127,23 @@ export default function PricingPlans() {
             {activeTab === "IPMAT" ? (
                 <div className="w-full">
                     <div className="hidden lg:block overflow-x-auto">
-                        <div className="min-w-[800px]">
+                        <div className="">
                             <table className="w-full max-w-6xl mx-auto border-separate border-spacing-0 bg-white text-[#333333] text-sm font-poppins">
                                 <thead>
                                     <tr>
                                         <th className="w-[20%] p-4 bg-white"></th>
                                         {planAndPricing.map((plan: any) => (
-                                            <th 
+                                            <th
                                                 key={plan._id}
-                                                className={`w-[25%] align-bottom rounded-t-lg pb-4 transition-all ${hoveredPlan === plan._id ? 'border-t border-x-2 border-[#C8DCFE]' : ''} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
+                                                onMouseEnter={() => setHoveredPlan(plan._id)}
+                                                onMouseLeave={() => setHoveredPlan(null)}
+                                                className={` align-bottom rounded-t-lg pb-4 transition-all border-t-2 border-x-2 ${hoveredPlan === plan._id ? 'border-[#C8DCFE]' : 'border-transparent'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
                                             >
                                                 <div className="flex flex-col items-center gap-1 px-4">
-                                                    <h3 className="text-xl font-bold text-[#FF5635] uppercase">{plan.title.split(' ')[0]}</h3>
-                                                    <p className="text-3xl font-extrabold text-black">
+                                                    <h3 className="text-xl font-medium text-[#FF5635] uppercase">{plan.title.split(' ')[0]}</h3>
+                                                    <p className="text-3xl font-medium text-black">
                                                         ₹ {plan.price}
                                                     </p>
-                                                    <button
-                                                        onMouseEnter={() => setHoveredPlan(plan._id)}
-                                                        onMouseLeave={() => setHoveredPlan(null)}
-                                                        onClick={() => handlePayment(plan)}
-                                                        className={`mt-3 mb-2 py-3 px-6 rounded-xl text-sm font-bold transition-all w-full ${
-                                                            plan.title.includes('Elite') ? 'bg-[#FFBD00] cursor-not-allowed' : 
-                                                            plan.title.includes('Pro') ? 'bg-[#FF5635] text-white' : 'bg-[#EBE9FF]'
-                                                        }`}
-                                                    >
-                                                        {plan.alreadyPurchased ? "Purchased" : "Get Started"}
-                                                    </button>
-
-                                                    {/* Coupon Box */}
-                                                    <div className="w-full px-2">
-                                                        <div className="flex h-8 w-full border border-gray-200 rounded-md overflow-hidden bg-white">
-                                                            <input 
-                                                                placeholder="Coupon"
-                                                                  disabled={plan.alreadyPurchased}
-                                                                className=" plan.alreadyPurchased px-2 py-1 text-xs w-full focus:outline-none"
-                                                                value={couponCodes[plan._id] || ""}
-                                                                onChange={(e) => setCouponCodes({ ...couponCodes, [plan._id]: e.target.value })}
-                                                            />
-                                                            <button 
-                                                                  disabled={plan.alreadyPurchased}
-
-                                                                onClick={() => handleVerifyCoupon(plan)}
-                                                                className="text-[10px] px-2 bg-gray-100 font-bold border-l"
-                                                            >
-                                                                {isVerifying === plan._id ? <Loader2 className="animate-spin w-3 h-3"/> : "APPLY"}
-                                                            </button>
-                                                        </div>
-                                                        {couponStatuses[plan._id] && (
-                                                            <p className={`text-[10px] mt-1 ${couponStatuses[plan._id].type === 'success' ? 'text-green-600' : 'text-red-500'}`}>
-                                                                {couponStatuses[plan._id].msg}
-                                                            </p>
-                                                        )}
-                                                    </div>
                                                 </div>
                                             </th>
                                         ))}
@@ -187,18 +152,30 @@ export default function PricingPlans() {
 
                                 <tbody>
                                     {/* Section Header: Mocks */}
-                                    <tr>
-                                        <td className="p-4 font-bold text-[#FF5635]">Mock Test Series</td>
-                                        {planAndPricing.map((p:any) => <td key={p._id} className={hoveredPlan === p._id ? 'border-x-2 border-[#C8DCFE]' : ''}></td>)}
+                                    <tr className="text-left">
+                                        <td className="p-4 font-medium text-[#FF5635]">Mock Test Series</td>
+                                        {planAndPricing.map((p: any) => (
+                                            <td
+                                                key={p._id}
+                                                onMouseEnter={() => setHoveredPlan(p._id)}
+                                                onMouseLeave={() => setHoveredPlan(null)}
+                                                className={`${hoveredPlan === p._id ? 'border-x-2 border-[#C8DCFE]' : ''} ${p.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
+                                            ></td>
+                                        ))}
                                     </tr>
                                     {examRows.map((row) => (
                                         <tr key={row.key}>
-                                            <td className="p-3 border-t border-[#C8DCFE] font-medium">{row.label}</td>
+                                            <td className="px-3 py-2 text-sm border-t text-left border-[#C8DCFE] font-medium">{row.label}</td>
                                             {planAndPricing.map((plan: any) => {
                                                 const examData = plan.exams?.find((e: any) => e.examInfo?.examname === row.key);
                                                 return (
-                                                    <td key={plan._id} className={`text-center border-t border-[#C8DCFE] ${hoveredPlan === plan._id ? 'border-x-2 border-[#C8DCFE]' : ''} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}>
-                                                        <span className="font-bold text-gray-700">{examData ? examData.mockCount : "—"}</span>
+                                                    <td
+                                                        key={plan._id}
+                                                        onMouseEnter={() => setHoveredPlan(plan._id)}
+                                                        onMouseLeave={() => setHoveredPlan(null)}
+                                                        className={`border-t border-[#C8DCFE]  ${hoveredPlan === plan._id ? 'border-[#C8DCFE] border-x-2' : 'border-t border-x-0'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
+                                                    >
+                                                        <span className="font-medium text-gray-700">{examData ? examData.mockCount : "—"}</span>
                                                     </td>
                                                 );
                                             })}
@@ -206,17 +183,29 @@ export default function PricingPlans() {
                                     ))}
 
                                     {/* Section Header: Features */}
-                                    <tr>
-                                        <td className="p-4 font-bold text-[#FF5635]">Included Features</td>
-                                        {planAndPricing.map((p:any) => <td key={p._id} className={hoveredPlan === p._id ? 'border-x-2 border-[#C8DCFE]' : ''}></td>)}
+                                    <tr className="text-left">
+                                        <td className="p-4 font-medium text-[#FF5635]">Included Features</td>
+                                        {planAndPricing.map((p: any) => (
+                                            <td
+                                                key={p._id}
+                                                onMouseEnter={() => setHoveredPlan(p._id)}
+                                                onMouseLeave={() => setHoveredPlan(null)}
+                                                className={`${hoveredPlan === p._id ? 'border-x-2 border-[#C8DCFE]' : ''} ${p.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
+                                            ></td>
+                                        ))}
                                     </tr>
                                     {featureRows.map((row) => (
                                         <tr key={row.key}>
-                                            <td className="p-3 border-t border-[#C8DCFE] font-medium">{row.label}</td>
+                                            <td className="px-3 py-2 text-sm border-t border-[#C8DCFE] font-medium text-left">{row.label}</td>
                                             {planAndPricing.map((plan: any) => {
                                                 const hasFeature = plan.features?.[row.key];
                                                 return (
-                                                    <td key={plan._id} className={`border-t border-[#C8DCFE] ${hoveredPlan === plan._id ? 'border-x-2 border-[#C8DCFE]' : ''} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}>
+                                                    <td
+                                                        key={plan._id}
+                                                        onMouseEnter={() => setHoveredPlan(plan._id)}
+                                                        onMouseLeave={() => setHoveredPlan(null)}
+                                                        className={`border-[#C8DCFE] border-t ${hoveredPlan === plan._id ? 'border-[#C8DCFE]  border-x-2' : 'border-t border-x-0'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
+                                                    >
                                                         <div className="flex justify-center">
                                                             {hasFeature ? (
                                                                 <div className="bg-green-500 rounded-full p-0.5"><Check className="w-3 h-3 text-white" strokeWidth={4} /></div>
@@ -229,11 +218,64 @@ export default function PricingPlans() {
                                             })}
                                         </tr>
                                     ))}
-                                    {/* Bottom Rounding Spacer */}
+                                    {/* CTA Buttons and Coupon Row */}
                                     <tr>
                                         <td></td>
                                         {planAndPricing.map((plan: any) => (
-                                            <td key={plan._id} className={`h-4 rounded-b-xl ${hoveredPlan === plan._id ? 'border-b-2 border-x-2 border-[#C8DCFE]' : ''} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}></td>
+                                            <td
+                                                key={plan._id}
+                                                onMouseEnter={() => setHoveredPlan(plan._id)}
+                                                onMouseLeave={() => setHoveredPlan(null)}
+                                                className={`p-4 border-x-2 ${hoveredPlan === plan._id ? 'border-[#C8DCFE]' : 'border-transparent'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
+                                            >
+                                                <div className="flex flex-col items-center gap-1">
+                                                    <button
+                                                        onClick={() => handlePayment(plan)}
+                                                        className={`py-3 px-6 cursor-pointer rounded-xl text-sm font-medium transition-all w-full ${plan.title.includes('Elite') ? 'bg-[#FFBD00] cursor-not-allowed' :
+                                                            plan.title.includes('Pro') ? 'bg-[#FF5635] text-white' : 'bg-[#EBE9FF]'
+                                                            }`}
+                                                    >
+                                                        {plan.alreadyPurchased ? "Purchased" : "Get Started"}
+                                                    </button>
+
+                                                    <div className="w-full mt-2">
+                                                        <p className="text-[10px] text-gray-500 mb-1 text-center font-normal">Got a coupon</p>
+                                                        <div className="flex h-8 w-full border border-gray-200 rounded-md overflow-hidden bg-white">
+                                                            <input
+                                                                placeholder="Coupon"
+                                                                disabled={plan.alreadyPurchased}
+                                                                className={`${plan.alreadyPurchased ? 'bg-gray-100' : 'bg-white'} px-2 py-1 text-xs w-full font-medium focus:outline-none`}
+                                                                value={couponCodes[plan._id] || ""}
+                                                                onChange={(e) => setCouponCodes({ ...couponCodes, [plan._id]: e.target.value })}
+                                                            />
+                                                            <button
+                                                                disabled={plan.alreadyPurchased}
+                                                                onClick={() => handleVerifyCoupon(plan)}
+                                                                className={`text-[10px] cursor-pointer px-2 font-medium border-l ${plan.title.includes('Elite') ? 'bg-[#FFBD00] cursor-not-allowed' :
+                                                                    plan.title.includes('Pro') ? 'bg-[#FF5635] text-white' : 'bg-[#EBE9FF]'}`}
+                                                            >
+                                                                {isVerifying === plan._id ? <Loader2 className="animate-spin w-3 h-3" /> : "APPLY"}
+                                                            </button>
+                                                        </div>
+                                                        {couponStatuses[plan._id] && (
+                                                            <p className={`text-[12px] cursor-pointer font-normal mt-1 text-center ${couponStatuses[plan._id].type === 'success' ? 'text-green-600' : 'text-red-500'}`}>
+                                                                {couponStatuses[plan._id].msg}
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        ))}
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        {planAndPricing.map((plan: any) => (
+                                            <td
+                                                key={plan._id}
+                                                onMouseEnter={() => setHoveredPlan(plan._id)}
+                                                onMouseLeave={() => setHoveredPlan(null)}
+                                                className={`h-4 rounded-b-xl border-x-2 border-b-2 ${hoveredPlan === plan._id ? 'border-[#C8DCFE]' : 'border-transparent'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
+                                            ></td>
                                         ))}
                                     </tr>
                                 </tbody>
