@@ -6,6 +6,7 @@ import Image from "next/image";
 import Select from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
+import { FaUnlock } from "react-icons/fa";
 
 import { AppDispatch } from "@/store/store";
 import { Button } from "@/components/ui/button";
@@ -45,7 +46,8 @@ const MockExamCardPUQ = ({ exam, handleExam, index }: any) => {
 
   const isAttempted = exam?.hasGivenExam;
 
-  const haaccessExam = useSelector((s: any) => s.exam?.examHeader);
+
+    const haaccessExam = useSelector((s: any) => s.exam?.examHeader);
 
  const checkAccess =
   haaccessExam?.OrderDetail?.[0]?.planMatch?.[0]?.features?.pyp ?? false;
@@ -357,6 +359,8 @@ try {
   console.log(PruchaseMockLimit,"PruchaseMockLimit")
   // alert(PruchaseMockLimit)
   const totalMocks = examById[0]?.exam?.Mocks || 24;
+ const checkAccess =
+  haaccessExam?.OrderDetail?.[0]?.planMatch?.[0]?.features?.pyp ?? false;
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">
@@ -595,7 +599,8 @@ try {
 
                       {/* Lock icon in top right */}
                       <div className="absolute top-0 right-0">
-                        <Image src={LOCK2} alt="lock" />
+                        {checkAccess?(<FaUnlock className="text-[#4FA77E]"/>):( <Image src={LOCK2} alt="lock" />)}
+                       
                       </div>
                     </div>
                     

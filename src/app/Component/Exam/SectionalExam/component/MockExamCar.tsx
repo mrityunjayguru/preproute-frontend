@@ -40,7 +40,7 @@ return
       </h3>
 
       <p className="text-sm text-gray-500 mb-4">
-        {exam.hasGivenExam ? "Completed" : isUnlocked ? "Unlocked" : "Locked"}
+        {exam.hasGivenExam ? "" : isUnlocked ? "Unlocked" : "Locked"}
       </p>
 
       <button

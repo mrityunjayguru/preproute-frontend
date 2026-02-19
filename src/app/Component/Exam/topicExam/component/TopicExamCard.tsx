@@ -175,7 +175,7 @@ const LevelCell = ({ tests = [], hasAccess }: any) => {
             {!canAccess && (
               <FaLock size={14} className="text-red-500" />
             )}
-            {isFree && (
+            {isFree && !hasAccess &&(
               <span className=" text-green-600  ">
                 <FaLockOpen size={14} />
               </span>
