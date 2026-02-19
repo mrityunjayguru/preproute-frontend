@@ -6,7 +6,8 @@ import Image from "next/image";
 import Select from "react-select";
 import { useDispatch, useSelector } from "react-redux";
 import { motion } from "framer-motion";
-
+import { FaLock } from "react-icons/fa";
+import { FaUnlock } from "react-icons/fa";
 import { AppDispatch } from "@/store/store";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -29,6 +30,7 @@ import LOCK from "@/assets/vectors/lock.svg";
 import LOCK2 from "@/assets/vectors/lock-2.svg";
 import { capitalizeWords } from "@/Utils/Cappital";
 import { ToastError, ToastWarning } from "@/Utils/toastUtils";
+import { Span } from "next/dist/trace";
 
 const MockExamCard = ({ exam, handleExam, index }: any) => {
   const examById = useSelector((s: any) => s.exam?.examById) || [];
@@ -609,12 +611,14 @@ try {
                       <p className="text-[12px] sm:text-[13px] text-[#727EA3] font-medium font-dm-sans ">
                         {examById[0]?.exam?.examname ||
                           selectedExamType?.examType ||
-                          "Exams"} <span className="text-[#4FA77E]">{idx<userAccessLimit?("Purchased"):(null)}</span>
+                          "Exams"} 
+                          {/* <span className="text-[#4FA77E]">{idx<=userAccessLimit?("Purchased"):(null)}</span> */}
                       </p>
 
                       {/* Lock icon in top right */}
                       <div className="absolute top-0 right-0">
-                        <Image src={LOCK2} alt="lock" />
+                        {idx<=userAccessLimit?(<span className="text-[#4FA77E]"><FaUnlock className="text-[#4FA77E]" /></span>):(<Image src={LOCK2} alt="lock" />)}
+                        {/* <Image src={LOCK2} alt="lock" /> */}
                       </div>
                     </div>
                     

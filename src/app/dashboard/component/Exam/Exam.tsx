@@ -38,9 +38,13 @@ const Exam: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // --- Redux Selectors ---
-  const selectedExamDetail = useSelector((state: any) => state?.exam?.selectedExamDetail?.[0]);
+  const selectedExamDetail = useSelector(
+    (state: any) => state?.exam?.selectedExamDetail?.[0],
+  );
   const subtopicData = useSelector((state: any) => state?.subTopic?.subTopic);
-  const singleQuestion = useSelector((state: any) => state.question.singleQuestion?.[0]);
+  const singleQuestion = useSelector(
+    (state: any) => state.question.singleQuestion?.[0],
+  );
 
   // --- Local State ---
   const [sectionsData, setSectionsData] = useState<any[]>([]);
@@ -69,7 +73,10 @@ const Exam: React.FC = () => {
   ]);
 
   // --- Helper Functions ---
-  const getOrdinalSuffix = (n: number) => ["th", "st", "nd", "rd"][((n % 100 > 10 && n % 100 < 20) || n % 10 > 3) ? 0 : n % 10] || "th";
+  const getOrdinalSuffix = (n: number) =>
+    ["th", "st", "nd", "rd"][
+      (n % 100 > 10 && n % 100 < 20) || n % 10 > 3 ? 0 : n % 10
+    ] || "th";
 
   const resetQuestionFields = useCallback(() => {
     setQuestionData("");
@@ -87,24 +94,30 @@ const Exam: React.FC = () => {
   }, []);
 
   // --- Effects ---
-  
+
   // Initialization: Setup sections and fetch initial topics
   useEffect(() => {
     if (!selectedExamDetail) return;
 
     const { examformet, sectionId, examDetail } = selectedExamDetail;
     setIsSection(examDetail?.isSection ?? true);
-    
+
     // Determine Sections Data
-    if (examformet === "sectional" || examformet === "topic wise" || examformet === "daily practice") {
-      const section = examDetail?.sections?.find((val: any) => val.sectionId === sectionId);
+    if (
+      examformet === "sectional" ||
+      examformet === "topic wise" ||
+      examformet === "daily practice"
+    ) {
+      const section = examDetail?.sections?.find(
+        (val: any) => val.sectionId === sectionId,
+      );
       setSectionsData(section ? [section] : []);
     } else {
       setSectionsData(examDetail?.sections || []);
     }
 
     if (!examDetail?.isSection) {
-        setNumberOfQuestion(examDetail?.noOfQuestions || 0);
+      setNumberOfQuestion(examDetail?.noOfQuestions || 0);
     }
 
     dispatch(getTopic({}));
@@ -130,14 +143,19 @@ const Exam: React.FC = () => {
       setNumericAnswer(singleQuestion.numericAnswer || 0);
       setQuestionPessage(singleQuestion.questionPessage || "Normal");
       setPassage(singleQuestion.passage || "");
-      
-      if (singleQuestion.answerType === "MCQ" && Array.isArray(singleQuestion.options)) {
-        setOptions(singleQuestion.options.map((opt: any, i: number) => ({
-          id: i + 1,
-          text: opt.text || "",
-          isCorrect: opt.isCorrect || false,
-          label: `${i + 1}${getOrdinalSuffix(i + 1)}`,
-        })));
+
+      if (
+        singleQuestion.answerType === "MCQ" &&
+        Array.isArray(singleQuestion.options)
+      ) {
+        setOptions(
+          singleQuestion.options.map((opt: any, i: number) => ({
+            id: i + 1,
+            text: opt.text || "",
+            isCorrect: opt.isCorrect || false,
+            label: `${i + 1}${getOrdinalSuffix(i + 1)}`,
+          })),
+        );
       }
     } else {
       resetQuestionFields();
@@ -152,30 +170,38 @@ const Exam: React.FC = () => {
     setNumberOfQuestion(section.noOfQuestions);
     if (section?.topicDetails) setTopic(section.topicDetails);
 
-    dispatch(getQuestionById({
-      questionNo: 1,
-      questionPaperId: selectedExamDetail?._id,
-      section: section.sectionId,
-    }));
+    dispatch(
+      getQuestionById({
+        questionNo: 1,
+        questionPaperId: selectedExamDetail?._id,
+        section: section.sectionId,
+      }),
+    );
   };
 
   const handleActiveQuestion = (qNo: number) => {
-    const currentSectionData = sectionsData.find(s => s.sectionId === activeSection);
-    
+    const currentSectionData = sectionsData.find(
+      (s) => s.sectionId === activeSection,
+    );
+
     // Navigation logic: Move to next section if out of bounds
     if (currentSectionData && qNo > currentSectionData.noOfQuestions) {
-      const currentIndex = sectionsData.findIndex(s => s.sectionId === activeSection);
+      const currentIndex = sectionsData.findIndex(
+        (s) => s.sectionId === activeSection,
+      );
       const nextSection = sectionsData[currentIndex + 1];
       if (nextSection) return handleActiveSection(nextSection);
       return; // End of exam
     }
 
     setActiveQuestion(qNo);
-    dispatch(getQuestionById({
-      questionNo: qNo,
-      questionPaperId: selectedExamDetail?._id,
-      section: isSection ? activeSection : undefined,
-    }));
+    dispatch(
+      getQuestionById({
+        questionNo: qNo,
+        questionPaperId: selectedExamDetail?._id,
+        section: isSection ? activeSection : undefined,
+      }),
+    );
   };
 
   const handleSubmit = async () => {
@@ -194,8 +220,14 @@ const Exam: React.FC = () => {
         numericAnswer,
         passage,
         hint: hintText,
-        options: answerType === "MCQ" ? options.map(({ text, isCorrect }) => ({ text, isCorrect })) : [],
-        correctAnswer: answerType === "Numeric" ? numericAnswer : options.find(o => o.isCorrect)?.text || "",
+        options:
+          answerType === "MCQ"
+            ? options.map(({ text, isCorrect }) => ({ text, isCorrect }))
+            : [],
+        correctAnswer:
+          answerType === "Numeric"
+            ? numericAnswer
+            : options.find((o) => o.isCorrect)?.text || "",
         createdBy: "6710fbc3f2b9b9e...", // Replace with dynamic user ID
       };
 
@@ -216,7 +248,6 @@ const Exam: React.FC = () => {
       setQuestionPessage("Normal");
       setPassage("");
       handleActiveQuestion(activeQuestion + 1);
-
     } catch (err) {
       console.error("Submission Error:", err);
     } finally {
@@ -224,9 +255,9 @@ const Exam: React.FC = () => {
     }
   };
 
-  const questionNumbers = useMemo(() => 
-    Array.from({ length: numberOfQuestion }, (_, i) => i + 1),
-    [numberOfQuestion]
+  const questionNumbers = useMemo(
+    () => Array.from({ length: numberOfQuestion }, (_, i) => i + 1),
+    [numberOfQuestion],
   );
 
   return (
@@ -235,45 +266,58 @@ const Exam: React.FC = () => {
 
       <div className="min-h-screen bg-white">
         <div className="w-full mx-auto px-4 md:px-10 mb-8">
-          
           {/* Header */}
           <div className="flex justify-between items-center bg-[#F0F9FF] rounded-lg px-8 py-6 mt-4">
             <h1 className="text-[#FF5635] text-2xl font-poppins font-medium">
-              Exam Setup <span className="text-black text-lg"> | <span className="text-[#005EB6]">Create Operator</span></span>
+              Exam Setup{" "}
+              <span className="text-black text-lg">
+                {" "}
+                | <span className="text-[#005EB6]">Create Operator</span>
+              </span>
             </h1>
             <div className="font-semibold text-gray-900 text-lg font-poppins">
-              {selectedExamDetail?.examDetail?.examname} {selectedExamDetail?.examDetail?.subjectName} 
-              <span className="text-[#FF4D4F] ml-2">{selectedExamDetail?.questionPapername}</span>
+              {selectedExamDetail?.examDetail?.examname}{" "}
+              {selectedExamDetail?.examDetail?.subjectName}
+              <span className="text-[#FF4D4F] ml-2">
+                {selectedExamDetail?.questionPapername}
+              </span>
             </div>
           </div>
 
           {/* Controls */}
           <div className="flex flex-col md:flex-row justify-between items-center my-6 gap-4">
             <div className="flex flex-wrap gap-4">
-              {isSection && sectionsData.map((sec) => (
-                <button
-                  key={sec.sectionId}
-                  onClick={() => handleActiveSection(sec)}
-                  className={`px-6 py-2 rounded-lg text-sm transition-colors ${
-                    sec.sectionId === activeSection ? "bg-[#005EB6] text-white" : "bg-[#5A9BD5] text-white hover:bg-[#4a8ac0]"
-                  }`}
-                >
-                  {sec?.sectionDetail?.section}
-                </button>
-              ))}
+              {isSection &&
+                sectionsData.map((sec) => (
+                  <button
+                    key={sec.sectionId}
+                    onClick={() => handleActiveSection(sec)}
+                    className={`px-6 py-2 rounded-lg text-sm transition-colors ${
+                      sec.sectionId === activeSection
+                        ? "bg-[#005EB6] text-white"
+                        : "bg-[#5A9BD5] text-white hover:bg-[#4a8ac0]"
+                    }`}
+                  >
+                    {sec?.sectionDetail?.section}
+                  </button>
+                ))}
             </div>
             <div className="flex gap-3">
-              <button 
+              <button
                 onClick={() => {
-                   dispatch(questionByQuestionPaperId({ questionPaperId: selectedExamDetail?._id }));
-                   setOpenSummary(true);
+                  dispatch(
+                    questionByQuestionPaperId({
+                      questionPaperId: selectedExamDetail?._id,
+                    }),
+                  );
+                  setOpenSummary(true);
                 }}
                 className="px-6 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] transition-all"
               >
                 Question Distribution
               </button>
-              <button 
-                onClick={handleSubmit} 
+              <button
+                onClick={handleSubmit}
                 disabled={loader}
                 className="px-10 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] disabled:opacity-50"
               >
@@ -285,20 +329,28 @@ const Exam: React.FC = () => {
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Form Section */}
             <div className="flex-1 space-y-6">
-              
               {/* Topic Selectors */}
-              {(isSection || selectedExamDetail?.examDetail?.examname === "CUET") && (
+              {(isSection ||
+                selectedExamDetail?.examDetail?.examname === "CUET") && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className="font-medium">Select Topic</Label>
                     <select
                       value={selectedTopic}
-                      onChange={(e) => { setSelectedTopic(e.target.value); setSelectedSubtopic(""); }}
+                      onChange={(e) => {
+                        setSelectedTopic(e.target.value);
+                        setSelectedSubtopic("");
+                      }}
                       className="w-full border rounded p-2 bg-white focus:ring-2 focus:ring-orange-500 outline-none"
                     >
                       <option value="">-- Choose Topic --</option>
-                      {(isSection ? topic : selectedExamDetail?.topicDetail || []).map((t: any) => (
-                        <option key={t._id} value={t._id}>{t.topic}</option>
+                      {(isSection
+                        ? topic
+                        : selectedExamDetail?.topicDetail || []
+                      ).map((t: any) => (
+                        <option key={t._id} value={t._id}>
+                          {t.topic}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -311,7 +363,9 @@ const Exam: React.FC = () => {
                     >
                       <option value="">-- Choose Sub Topic --</option>
                       {subtopicData?.map((sub: any) => (
-                        <option key={sub._id} value={sub._id}>{sub.subtopic}</option>
+                        <option key={sub._id} value={sub._id}>
+                          {sub.subtopic}
+                        </option>
                       ))}
                     </select>
                   </div>
@@ -323,18 +377,33 @@ const Exam: React.FC = () => {
                 <Label className="font-medium">Question Properties</Label>
                 <div className="flex flex-wrap gap-6 p-4 border rounded-md bg-gray-50">
                   {["Easy", "Medium", "Hard", "Normal", "Pass"].map((type) => {
-                    const isDifficulty = ["Easy", "Medium", "Hard"].includes(type);
-                    const isSelected = isDifficulty ? questionType === type : questionPessage === type;
+                    const isDifficulty = ["Easy", "Medium", "Hard"].includes(
+                      type,
+                    );
+                    const isSelected = isDifficulty
+                      ? questionType === type
+                      : questionPessage === type;
                     return (
-                      <label key={type} className="flex items-center space-x-2 cursor-pointer">
-                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${isSelected ? "border-[#FF4D4F]" : "border-gray-300"}`}>
-                          {isSelected && <div className="w-3 h-3 rounded-full bg-[#FF4D4F]" />}
+                      <label
+                        key={type}
+                        className="flex items-center space-x-2 cursor-pointer"
+                      >
+                        <div
+                          className={`w-5 h-5 rounded-full border flex items-center justify-center ${isSelected ? "border-[#FF4D4F]" : "border-gray-300"}`}
+                        >
+                          {isSelected && (
+                            <div className="w-3 h-3 rounded-full bg-[#FF4D4F]" />
+                          )}
                         </div>
                         <input
                           type="radio"
                           className="hidden"
                           checked={isSelected}
-                          onChange={() => isDifficulty ? setQuestionType(type) : setQuestionPessage(type)}
+                          onChange={() =>
+                            isDifficulty
+                              ? setQuestionType(type)
+                              : setQuestionPessage(type)
+                          }
                         />
                         <span className="text-sm font-poppins">{type}</span>
                       </label>
@@ -346,22 +415,26 @@ const Exam: React.FC = () => {
               {/* Editors */}
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col md:flex-row gap-4">
-                   <div className={questionPessage === "Pass" ? "md:w-2/3" : "w-full"}>
-                      <Label className="mb-2 block">Question Content</Label>
-                      <QuestionWithOptionsEditor 
-                        value={questionData} 
-                        onChange={setQuestionData} 
-                        QuestionType="HideInternalPreview" 
-                      />
-                   </div>
-                   {questionPessage === "Pass" && (
-                     <div className="md:w-1/3">
-                        <Label className="mb-2 block">Passage Content</Label>
-                        <LatesForpassage value={passage} onChange={setPassage} />
-                     </div>
-                   )}
+                  <div
+                    className={
+                      questionPessage === "Pass" ? "md:w-2/3" : "w-full"
+                    }
+                  >
+                    <Label className="mb-2 block">Question Content</Label>
+                    <QuestionWithOptionsEditor
+                      value={questionData}
+                      onChange={setQuestionData}
+                      QuestionType="HideInternalPreview"
+                    />
+                  </div>
+                  {questionPessage === "Pass" && (
+                    <div className="md:w-1/3">
+                      <Label className="mb-2 block">Passage Content</Label>
+                      <LatesForpassage value={passage} onChange={setPassage} />
+                    </div>
+                  )}
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label className="text-gray-600">Question Preview</Label>
                   <div className="border border-gray-200 rounded p-4 min-h-[100px] bg-white shadow-sm">
@@ -375,15 +448,18 @@ const Exam: React.FC = () => {
                 <Label>Answer Configuration</Label>
                 <div className="flex gap-6 mb-4">
                   {["MCQ", "Numeric"].map((t) => (
-                    <label key={t} className="flex items-center gap-2 cursor-pointer">
-                       <input 
-                        type="radio" 
-                        name="ansType" 
-                        checked={answerType === t} 
+                    <label
+                      key={t}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <input
+                        type="radio"
+                        name="ansType"
+                        checked={answerType === t}
                         onChange={() => setAnswerType(t as AnswerType)}
                         className="accent-[#FF4D4F]"
-                       />
-                       <span className="text-sm">{t}</span>
+                      />
+                      <span className="text-sm">{t}</span>
                     </label>
                   ))}
                 </div>
@@ -396,17 +472,36 @@ const Exam: React.FC = () => {
                         choice={opt.label}
                         value={opt.text}
                         isCorrect={opt.isCorrect}
-                        onChange={(val) => setOptions(prev => prev.map(o => o.id === opt.id ? { ...o, text: val } : o))}
-                        onCheckToggle={() => setOptions(prev => prev.map(o => ({ ...o, isCorrect: o.id === opt.id })))}
+                        onChange={(val) =>
+                          setOptions((prev) =>
+                            prev.map((o) =>
+                              o.id === opt.id ? { ...o, text: val } : o,
+                            ),
+                          )
+                        }
+                        onCheckToggle={() =>
+                          setOptions((prev) =>
+                            prev.map((o) => ({
+                              ...o,
+                              isCorrect: o.id === opt.id,
+                            })),
+                          )
+                        }
                         QuestionType={questionPessage}
                       />
                     ))}
                   </div>
                 ) : (
-                  <Input 
-                    type="number" 
-                    value={numericAnswer} 
-                    onChange={(e) => setNumericAnswer(Number(e.target.value))} 
+                  <Input
+                    type="number"
+                    value={numericAnswer}
+                    onChange={(e) => setNumericAnswer(Number(e.target.value))}
+                    onWheel={(e) => e.currentTarget.blur()}
+                    onKeyDown={(e) => {
+                      if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+                        e.preventDefault();
+                      }
+                    }}
                     placeholder="Enter correct numerical value"
                     className="max-w-xs"
                   />
@@ -418,7 +513,9 @@ const Exam: React.FC = () => {
                 <Label>Explanation / Solution</Label>
                 <LatexForSoluction value={hintText} onChange={setHintText} />
                 <div className="border border-dashed border-gray-300 rounded p-4 bg-gray-50">
-                  <span className="text-xs font-bold text-gray-400 uppercase">Solution Preview</span>
+                  <span className="text-xs font-bold text-gray-400 uppercase">
+                    Solution Preview
+                  </span>
                   <RenderPreview content={hintText} />
                 </div>
               </div>
@@ -428,10 +525,13 @@ const Exam: React.FC = () => {
             <div className="w-full lg:w-[320px] sticky top-4">
               <div className="bg-[#F9FAFC] border border-[#d6e4ff] rounded-lg overflow-hidden shadow-sm">
                 <div className="bg-[#0056b3] text-white p-4 font-medium">
-                  {sectionsData.find(s => s.sectionId === activeSection)?.sectionDetail?.section || "Questions"}
+                  {sectionsData.find((s) => s.sectionId === activeSection)
+                    ?.sectionDetail?.section || "Questions"}
                 </div>
                 <div className="p-4">
-                  <p className="text-xs text-gray-500 mb-4 uppercase tracking-wider font-bold">Question Palette</p>
+                  <p className="text-xs text-gray-500 mb-4 uppercase tracking-wider font-bold">
+                    Question Palette
+                  </p>
                   <div className="grid grid-cols-5 gap-2">
                     {questionNumbers.map((num) => (
                       <button
@@ -450,7 +550,6 @@ const Exam: React.FC = () => {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
         <Footer />
