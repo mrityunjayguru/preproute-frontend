@@ -43,7 +43,7 @@ export default function PricingPlans() {
         { label: "JIPMAT", key: "JIPMAT" },
         { label: "NPAT", key: "NPAT" },
         { label: "SET", key: "SET" },
-        { label: "IIMDBE", key: "IIM B DBE" },
+        { label: "IIM DBE", key: "IIM B DBE" },
         { label: "St.Xavier's", key: "St. Xavier’s" },
     ];
 

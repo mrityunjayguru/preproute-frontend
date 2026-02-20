@@ -15,10 +15,10 @@ import FEATURE1 from "@/assets/vectors/analytics-vector.svg";
 import FEATURE2 from "@/assets/vectors/compete-vector.svg";
 import FEATURE3 from "@/assets/vectors/content-vector.svg";
 import FEATURE4 from "@/assets/vectors/exam-vector.svg";
-import img1 from "@/assets/images/compete.jpg"
-import img2 from "@/assets/images/expert.jpg"
+import img1 from "@/assets/images/compete.png"
+import img2 from "@/assets/images/expert.png"
 import img3 from "@/assets/images/analytics.jpg"
-import img4 from "@/assets/images/realexam.jpg"
+import img4 from "@/assets/images/realexam.png"
 
 
 type Props = {};
