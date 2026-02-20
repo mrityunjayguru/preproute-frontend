@@ -5,6 +5,7 @@ import {
   setSelecteduser,
   setAttemptedExam,
   updateProfileData,
+  setYoutube
 } from "../../store/user";
 import APIName, { topic } from "../endPoints";
 import { UserRepo } from "./UsersRepo";
@@ -260,6 +261,28 @@ export const setQuestionPaperResult = createAsyncThunk<boolean, Payload>(
       // Dispatch your synchronous action
         // thunkAPI.dispatch(setAttemptedExam(data.data.data));
         thunkAPI.dispatch(setResult(payload));
+      // Return success flag
+      return true;
+    } catch (err: any) {
+      console.error("Error in updaquesPaperTime:", err);
+      // Properly reject the thunk if something fails
+      return thunkAPI.rejectWithValue(false) as any;
+    }
+  }
+);
+
+
+
+export const fetchYouTubeVideos = createAsyncThunk<boolean, Payload>(
+  "topic/get", // ✅ action type string must be a string, not a variable
+  async (payload, thunkAPI) => {
+    try {
+      // Dispatch your synchronous action
+      const data = await UserRepo.fetchYouTubeVideos(payload);
+      if (data.status == 200) {
+        // thunkAPI.dispatch(setAttemptedExam(data.data.data));
+        thunkAPI.dispatch(setYoutube(data.data));
+      }
       // Return success flag
       return true;
     } catch (err: any) {

@@ -6,7 +6,6 @@ function MockUpdate() {
   const userdashboarddata = useSelector(
     (state: any) => state?.Auth?.userDashboard
   );
-console.log(userdashboarddata.calculatenexkmoxk,"userdashboarddata.calculatenexkmoxk")
   return (
     <div className="p-6 bg-[#F5F8FF] border-none rounded-[8px] space-y-4 flex-1 flex flex-col max-h-[300px]">
       <h3 className="text-lg font-medium text-[#FF5635] font-poppins">

@@ -79,7 +79,8 @@ export const User={
   updateUserInfo:"user/updateProfile",
   createReport:"user/report",
   userProfiel:"user/userData",
-  givenExam:"user/givenExam"
+  givenExam:"user/givenExam",
+  fetchYouTubeVideos:"user/youtubeShorts"
 }
 export const Order={
   createOrder:"razorpay/createOrder"
