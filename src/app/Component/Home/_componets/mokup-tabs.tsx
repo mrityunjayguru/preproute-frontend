@@ -94,7 +94,7 @@ const MokupTabs = (props: Props) => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.4 }}
-                  className="absolute top-[5%] w-[100%] h-[83%]"
+                  className="absolute top-[5%] w-[100%] h-[75%]"
                 >
                   <Image
                     src={item.screen}
