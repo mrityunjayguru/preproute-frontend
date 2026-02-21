@@ -18,6 +18,7 @@ import { getsubTopic } from "@/api/subTopic";
 import { capitalizeWords, formatMinutesSeconds } from "@/Utils/Cappital";
 import MarksDistributionChart from "../Graph/MarksDistributionChart";
 import { ToastError } from "@/Utils/toastUtils";
+import { getTopic } from "@/api/Topic";
 
 interface OverallTabProps {
   data: any;
@@ -44,7 +45,7 @@ const OverallTab = ({ data }: OverallTabProps) => {
 
   useEffect(() => {
     getData();
-      dispatch(getTopic(payload));
+      dispatch(getTopic({}));
   }, []);
 
   const totalQuestions = Number(data?.totalQuestions || 0);
