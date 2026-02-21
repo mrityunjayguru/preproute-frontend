@@ -17,7 +17,6 @@ const HeaderSection: React.FC<Props> = ({
   paperName,
   examData,
 }) => {
-  console.log(examData[0]?.exam?.subjectName, "examDataexamData")
   return (
     <div className="bg-white  border-b-[0.1px]">
       {/* Top Header Row */}
