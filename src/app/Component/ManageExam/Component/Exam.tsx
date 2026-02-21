@@ -395,6 +395,7 @@ const currentTimeSpentInSection = sectionTimes[selectedSection?.sectionId || ""]
         examData
       }
       await updateSectionTime(selectedSection?.sectionId, undefined);
+          localStorage.removeItem(`section_times_${examData?.[0]?._id}`);
       await dispatch(userExamResult(payload));
       router.push("/analytics");
     } catch (err) { console.error("Error submitting exam:", err); }
