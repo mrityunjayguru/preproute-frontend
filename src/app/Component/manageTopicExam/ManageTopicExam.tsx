@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -12,13 +11,14 @@ import { Button } from "@/components/ui/button";
 import Popup from "../ManageExam/Component/Report";
 import { createReport } from "@/api/Users";
 import Image from "next/image";
-import TIMER from "@/assets/vectors/timer.svg"
+import TIMER from "@/assets/vectors/timer.svg";
 import { createdailyStreaks } from "@/api/Exam";
 
 interface AnswerState {
   selected: string | null;
   isSubmitted: boolean;
   isCorrect: boolean | null;
+  timeTaken: number;
 }
 
 const ManageTopicExam = () => {
@@ -31,6 +31,7 @@ const ManageTopicExam = () => {
   const exam = topicExamData?.[0];
 
   const question = singleQuestion?.[0];
+
   /* ================= TOTAL QUESTIONS ================= */
   const totalQuestions = useMemo(() => {
     return Number(exam?.examDetail?.sections?.[0]?.noOfQuestions || 0);
@@ -43,39 +44,45 @@ const ManageTopicExam = () => {
   const [examFinished, setExamFinished] = useState(false);
   const [reporttoggle, setReportToggle] = useState(false);
   const [bookmarkStatus, setBookmarkStatus] = useState(false);
-const [timerActive, setTimerActive] = useState(true);
-const [totalTime, setTotalTime] = useState(0);
+  const [timerActive, setTimerActive] = useState(true);
+  const [totalTime, setTotalTime] = useState(0);
 
   /* ================= FETCH QUESTION ================= */
   const fetchQuestion = useCallback(async () => {
     if (!exam?._id) return;
-const payload:any={
-        questionPaperId: exam._id,
-        questionNo,
-      }
-    const response: any = await dispatch(
-      getQuestionById(payload)
-    );
-
+    const payload: any = {
+      questionPaperId: exam._id,
+      questionNo,
+    };
+    const response: any = await dispatch(getQuestionById(payload));
     setBookmarkStatus(response?.payload?.data?.status || false);
-  }, [dispatch, exam?._id, questionNo]);
+
+    // If already submitted, stop timer and show recorded time
+    if (answers[questionNo]?.isSubmitted) {
+      setTimerActive(false);
+      setSeconds(answers[questionNo].timeTaken);
+    } else {
+      setTimerActive(true);
+      // We do NOT reset seconds to 0 here because it should continue 
+      // if the user is just navigating back to an unsubmitted question.
+    }
+  }, [dispatch, exam?._id, questionNo, answers]);
 
   useEffect(() => {
     fetchQuestion();
   }, [fetchQuestion]);
 
   /* ================= TIMER ================= */
-/* ================= TIMER ================= */
-useEffect(() => {
-  if (examFinished || !timerActive) return;
+  useEffect(() => {
+    if (examFinished || !timerActive) return;
 
-  const timer = setInterval(() => {
-    setSeconds((prev) => prev + 1);
-    setTotalTime((prevTotal) => prevTotal + 1);
-  }, 1000);
+    const timer = setInterval(() => {
+      setSeconds((prev) => prev + 1);
+      setTotalTime((prevTotal) => prevTotal + 1);
+    }, 1000);
 
-  return () => clearInterval(timer);
-}, [examFinished, timerActive]);
+    return () => clearInterval(timer);
+  }, [examFinished, timerActive]);
 
   const formatTime = (s: number) => {
     const mins = String(Math.floor(s / 60)).padStart(2, "0");
@@ -87,6 +94,7 @@ useEffect(() => {
     selected: null,
     isSubmitted: false,
     isCorrect: null,
+    timeTaken: 0,
   };
 
   /* ================= SELECT OPTION ================= */
@@ -100,11 +108,12 @@ useEffect(() => {
         selected: optionId,
       },
     }));
+    // Note: Timer is NOT touched here, so it keeps running.
   };
 
   /* ================= SUBMIT ================= */
   const handleSubmit = () => {
-    if (!question) return;
+    if (!question || currentAnswer.isSubmitted) return;
 
     const correctOption = question.options?.find((o: any) => o.isCorrect);
     const isCorrect = currentAnswer.selected === correctOption?._id;
@@ -115,25 +124,28 @@ useEffect(() => {
         selected: currentAnswer.selected,
         isSubmitted: true,
         isCorrect,
+        timeTaken: seconds, 
       },
     }));
     setTimerActive(false);
-    // setSeconds(0)
   };
 
   /* ================= NEXT ================= */
   const handleNext = () => {
     if (!currentAnswer.isSubmitted) return;
-    setTimerActive(true);
-setSeconds(0)
     if (questionNo < totalQuestions) {
       setQuestionNo((prev) => prev + 1);
-    } else {
-      const payload:any={
-        questionPaperId:exam?._id
+      
+      // Reset seconds only if the next question hasn't been submitted yet
+      if (!answers[questionNo + 1]?.isSubmitted) {
+        setSeconds(0);
+        setTimerActive(true);
       }
-      dispatch(createdailyStreaks(payload))
-      // console.log(exam,"examexam")
+    } else {
+      const payload: any = {
+        questionPaperId: exam?._id,
+      };
+      dispatch(createdailyStreaks(payload));
       setExamFinished(true);
     }
   };
@@ -149,7 +161,7 @@ setSeconds(0)
   const handleBookmark = async () => {
     if (!question?._id) return;
 
-    const payload:any = {
+    const payload: any = {
       questionId: question._id,
       BookmarkStatus: bookmarkStatus ? "remove" : "add",
     };
@@ -160,7 +172,7 @@ setSeconds(0)
 
   /* ================= REPORT ================= */
   const handleSubmitReport = (val: string) => {
-    const payload:any = {
+    const payload: any = {
       title: val,
       questionId: question?._id,
       userId: userLogin?._id,
@@ -181,25 +193,21 @@ setSeconds(0)
     : 0;
 
   const calculateSecondMinute = (seconds: number) => {
-  if (!seconds || seconds < 0) return "0 Min 0 Sec";
-
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
-
-  return `${minutes} Min ${remainingSeconds} Sec`;
-};
+    if (!seconds || seconds < 0) return "0 Min 0 Sec";
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes} Min ${remainingSeconds} Sec`;
+  };
 
   /* ================= FINAL PAGE ================= */
   if (examFinished) {
     return (
       <div className="min-h-screen bg-[#F4F9FF] p-4 sm:p-6 font-sans flex flex-col items-center">
         <div className="max-w-6xl w-full">
-          {/* ================= HEADER ================= */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
             <div className="text-2xl font-bold">
               the<span className="text-[#FF5A3C]">prep</span>route
             </div>
-
             <button
               onClick={() => router.push("/Exam/topicExam")}
               className="bg-black text-white px-8 py-2 rounded-full text-sm w-full sm:w-auto"
@@ -209,7 +217,6 @@ setSeconds(0)
           </div>
 
           <div className="bg-white rounded-[10px] border overflow-hidden mb-6">
-            {/* GRADIENT HEADER */}
             <div className="bg-gradient-to-r from-[#F0F9FF] to-white p-6 sm:p-8 border-b ">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 font-poppins">
                 Exam <span className="text-[#FF5A3C]">Completed</span> 🎉
@@ -220,7 +227,6 @@ setSeconds(0)
             </div>
 
             <div className="p-6 sm:p-8">
-              {/* STATS GRID */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 <div className="bg-gradient-to-t from-[#F0F9FF] to-white border border-[#FFECDF] p-4 rounded-xl text-center">
                   <p className="text-sm text-gray-500 font-dm-sans">Total Questions</p>
@@ -248,7 +254,6 @@ setSeconds(0)
                 </div>
               </div>
 
-              {/* TIME TAKEN INFO */}
               <div className="flex items-center justify-center gap-3 bg-gray-50 p-4 rounded-xl mb-8">
                 <Image src={TIMER} width={24} height={24} alt="timer" />
                 <p className="text-gray-700 font-poppins">
@@ -256,7 +261,6 @@ setSeconds(0)
                 </p>
               </div>
 
-              {/* ACTION BUTTON */}
               <div className="flex justify-center">
                 <button
                   onClick={() => router.push("/Exam/topicExam")}
@@ -272,10 +276,8 @@ setSeconds(0)
     );
   }
 
-  /* ================= MAIN UI ================= */
   return (
     <>
-      {/* REPORT POPUP */}
       <Popup
         isOpen={reporttoggle}
         onClose={() => setReportToggle(false)}
@@ -286,8 +288,6 @@ setSeconds(0)
 
       <div className="min-h-screen bg-[#F4F9FF] p-4 sm:p-6 font-sans">
         <div className="max-w-6xl mx-auto">
-
-          {/* ================= HEADER ================= */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
             <div className="text-2xl font-bold">
               the<span className="text-[#FF5A3C]">prep</span>route
@@ -301,10 +301,7 @@ setSeconds(0)
             </button>
           </div>
 
-          {/* ================= QUESTION CARD ================= */}
           <div className="bg-white rounded-[10px] border py-4 px-4 sm:py-6 sm:px-8 mb-3">
-
-            {/* TOP INFO */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <div>
                 <p className="text-sm text-[#FF5A3C] font-poppins font-normal">Topic / Sub Topic</p>
@@ -319,7 +316,9 @@ setSeconds(0)
                   <Image src={TIMER} width={32} height={32} className="sm:w-10 sm:h-10" alt="timer" />
                 </span>
                 <div className="">
-                  <p className="text-[10px] sm:text-xs text-gray-400">Elapsed Time</p>
+                  <p className="text-[10px] sm:text-xs text-gray-400">
+                    {currentAnswer.isSubmitted ? "Time Taken" : "Elapsed Time"}
+                  </p>
                   <p className="text-xl sm:text-2xl">
                     {formatTime(seconds)}
                   </p>
@@ -327,30 +326,20 @@ setSeconds(0)
               </div>
             </div>
 
-            {/* QUESTION NUMBER */}
             <p className="text-[#FF5A3C] font-normal font-dm-sans mb-1">
               Question {questionNo} of {totalQuestions}
             </p>
 
-            {/* QUESTION */}
             <div className="mb-3 font-poppins">
               <RenderPreview content={question?.questionText} />
             </div>
 
-            {/* ================= OPTIONS ================= */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {question?.options?.map((opt: any) => {
-                const correctOption = question.options?.find(
-                  (o: any) => o.isCorrect
-                );
+                const correctOption = question.options?.find((o: any) => o.isCorrect);
                 const isSelected = currentAnswer.selected === opt._id;
-                const showCorrect =
-                  currentAnswer.isSubmitted &&
-                  opt._id === correctOption?._id;
-                const showWrong =
-                  currentAnswer.isSubmitted &&
-                  isSelected &&
-                  opt._id !== correctOption?._id;
+                const showCorrect = currentAnswer.isSubmitted && opt._id === correctOption?._id;
+                const showWrong = currentAnswer.isSubmitted && isSelected && opt._id !== correctOption?._id;
 
                 return (
                   <div
@@ -366,7 +355,6 @@ setSeconds(0)
                             : "border-gray-200 hover:border-gray-300"}
                 `}
                   >
-                    {/* RADIO DOT */}
                     <div className="mt-1">
                       <div className="w-4 h-4 rounded-full border flex items-center justify-center">
                         {isSelected && (
@@ -374,23 +362,19 @@ setSeconds(0)
                         )}
                       </div>
                     </div>
-
                     <RenderPreview content={opt.text} />
                   </div>
                 );
               })}
             </div>
 
-            {/* ================= NAVIGATION ================= */}
             <div className="flex flex-col gap-6 mt-8 pt-6 border-t font-poppins">
               <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                 <div className="flex items-center gap-3 w-full md:w-auto justify-between md:justify-start">
-                  {/* PREV */}
                   <button
                     disabled={questionNo === 1}
                     onClick={handlePrev}
                     className="flex-1 md:flex-none px-4 sm:px-8 py-2 cursor-pointer border border-[#FF5A3C] text-[#FF5A3C] rounded-[8px] disabled:opacity-50 hover:bg-[#FFF5F1] transition-colors text-sm sm:text-base"
-                    id="prev-btn"
                   >
                     Prev
                   </button>
@@ -398,12 +382,10 @@ setSeconds(0)
                     {Array.from({ length: totalQuestions }).map((_, i) => {
                       const q = i + 1;
                       const ans = answers[q];
-
                       return (
                         <button
                           key={q}
-                          id={`q-btn-${q}`}
-                          // onClick={() => setQuestionNo(q)}
+                          onClick={() => setQuestionNo(q)}
                           className={`min-w-[32px] sm:min-w-[36px] h-8 sm:h-9 px-2 rounded-md font-medium font-poppins transition-all cursor-pointer text-xs sm:text-sm
                       ${q === questionNo
                               ? "bg-[#2D74FF] text-white shadow-md"
@@ -424,20 +406,15 @@ setSeconds(0)
                     onClick={handleNext}
                     disabled={!currentAnswer.isSubmitted}
                     className="flex-1 md:flex-none px-4 sm:px-8 py-2 cursor-pointer border border-[#FF5A3C] text-[#FF5A3C] rounded-[8px] disabled:opacity-50 hover:bg-[#FFF5F1] transition-colors text-sm sm:text-base"
-                    id="next-btn"
                   >
                     {questionNo === totalQuestions ? "Finish" : "Next"}
                   </button>
                 </div>
 
-                {/* QUESTION NUMBERS */}
-
-
                 <button
                   onClick={handleSubmit}
                   disabled={!currentAnswer.selected || currentAnswer.isSubmitted}
                   className="w-full md:w-auto px-12 py-2 cursor-pointer bg-[#FF5A3C] text-white font-medium rounded-[8px] disabled:opacity-50 hover:bg-[#FF4A2A] transition-all"
-                  id="submit-btn"
                 >
                   Submit
                 </button>
@@ -445,21 +422,14 @@ setSeconds(0)
             </div>
           </div>
 
-          {/* ================= CORRECT ANSWER BAR ================= */}
           {currentAnswer.isSubmitted && (
             <div className="bg-white rounded-xl border px-4 py-4 sm:px-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-3">
-              <div className="">
-                <span className="font-poppins font-normal text-sm sm:text-base">
-                  correct answer
-                </span>
-
+              <div>
+                <span className="font-poppins font-normal text-sm sm:text-base">correct answer</span>
                 <p className="text-green-600 text-xl sm:text-2xl font-normal font-poppins">
-                  Option {question?.options?.findIndex(
-                    (o: any) => o.isCorrect
-                  ) + 1}
+                  Option {question?.options?.findIndex((o: any) => o.isCorrect) + 1}
                 </p>
               </div>
-
               <div className="flex gap-2 w-full sm:w-auto">
                 <Button
                   onClick={() => setReportToggle(true)}
@@ -468,7 +438,6 @@ setSeconds(0)
                 >
                   Report
                 </Button>
-
                 <Button
                   onClick={handleBookmark}
                   variant="outline"
@@ -480,35 +449,21 @@ setSeconds(0)
             </div>
           )}
 
-          {/* ================= SOLUTION ================= */}
           {currentAnswer.isSubmitted && (
             <div className="bg-white rounded-2xl border p-6">
-              <p className="text-center font-poppins font-bold text-[#FF5A3C] mb-4">
-                Solution 
-              </p>
-
-              <div className="w-full h-auto  py-5 bg-[#fff]  rounded-lg flex items-center justify-center text-gray-600 text-xl">
+              <p className="text-center font-poppins font-bold text-[#FF5A3C] mb-4">Solution</p>
+              <div className="w-full h-auto py-5 bg-[#fff] rounded-lg flex items-center justify-center text-gray-600 text-xl">
                 {question?.hint ? (
                   <RenderPreview content={question.hint} />
                 ) : (
-                  <p className="text-center font-poppins font-normal text-gray-400">
-                    No hint available
-                  </p>
+                  <p className="text-center font-poppins font-normal text-gray-400">No hint available</p>
                 )}
               </div>
             </div>
           )}
         </div>
       </div>
-      {/* <div className="text-center font-poppins text-sm my-2 ">
-        A product of
-        <span className="text-[#FF5A3C]">
-          ⓒ Brillovate Pvt. Ltd.
-        </span>
-        all rights reserved
-      </div> */}
     </>
-
   );
 };
 
