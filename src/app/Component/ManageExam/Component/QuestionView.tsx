@@ -56,7 +56,7 @@ const QuestionView: React.FC<Props> = ({
             </div>
           ) : null}
 
-          <div className="mt-4">
+          <div className="mt-4 h-[290px] overflow-y-scroll">
             {CurrentInput}
           </div>
         </div>

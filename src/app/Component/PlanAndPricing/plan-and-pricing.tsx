@@ -11,7 +11,7 @@ function Plan() {
     return (
         <section className="min-h-screen w-full bg-white flex flex-col justify-between">
             <div className="mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
-                <div className="py-8 sm:py-12 md:py-16 text-center w-full">
+                <div className="py-1 sm:py-1 md:py-1 text-center w-full">
                     <div className="flex flex-col items-center justify-center">
                         <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium font-poppins text-[#FF5635] px-2">
                             Plans and Pricing
@@ -62,7 +62,7 @@ function Plan() {
                     </div>
                 </div>
             </div>
-            <section className="bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-8 sm:mt-12 md:mt-20 py-4 sm:py-5 lg:py-6 xl:py-8 ">
+            <section className="bg-[#FF5635] text-white px-4 sm:px-6 md:px-10 lg:px-12 xl:px-16 mt-1 sm:mt-1 md:mt-2 py-4 sm:py-5 lg:py-6 xl:py-8 ">
                 <div className="mx-auto flex flex-col md:flex-row items-center md:items-center justify-between gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-28">
                     <div className="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
                         <div className="w-[100px] sm:w-[130px] md:w-[160px] lg:w-[200px]">
