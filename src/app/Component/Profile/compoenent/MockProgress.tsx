@@ -5,8 +5,8 @@ function MockProgress() {
   const userdashboarddata = useSelector(
     (state: any) => state?.Auth?.userDashboard,
   );
-const completed = userdashboarddata?.summary?.completed || 0;
-const total = userdashboarddata?.summary?.attempted || 0;
+const completed = userdashboarddata?.summary?.attempted || 0;
+const total = userdashboarddata?.summary?.completed || 0;
 
 // Prevent divide by zero
 const percentage = total > 0 ? (completed / total) * 100 : 0;
@@ -25,7 +25,7 @@ const strokeDashoffset =
           Mocks Progress
         </h3>
         <div className="flex items-end gap-2">
-          <div className="text-5xl font-medium text-[#FF5635]">{userdashboarddata?.summary?.completed || 0}</div>
+          <div className="text-5xl font-medium text-[#FF5635]">{userdashboarddata?.summary?.attempted|| 0}</div>
           <div className="text-gray-900 font-medium font-dm-sans">Attempted</div>
         </div>
         {/* <div className="text-gray-500 font-medium font-dm-sans">/ Out of {userdashboarddata?.summary?.attempted} Exams</div> */}
@@ -50,8 +50,8 @@ const strokeDashoffset =
       stroke="#FF5635"
       strokeWidth="12"
       fill="transparent"
-      strokeDasharray={circumference}
-      strokeDashoffset={strokeDashoffset}
+      strokeDasharray={strokeDashoffset}
+      strokeDashoffset={circumference}
       strokeLinecap="round"
       className="transition-all duration-500 ease-in-out"
     />
