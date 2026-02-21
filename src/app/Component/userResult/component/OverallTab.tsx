@@ -44,6 +44,7 @@ const OverallTab = ({ data }: OverallTabProps) => {
 
   useEffect(() => {
     getData();
+      dispatch(getTopic(payload));
   }, []);
 
   const totalQuestions = Number(data?.totalQuestions || 0);
