@@ -182,7 +182,7 @@ export default function ExamUI() {
           setSelectedSection(firstSection);
           setTotalNoOfQuestions(firstSection.noOfQuestions);
           fetchQuestion(1, firstSection.sectionId);
-          if (!localStorage.getItem(`sectionStartTime_${firstSection.sectionId}`)) {
+          if (localStorage.getItem(`sectionStartTime_${firstSection.sectionId}`)) {
             updateSectionTime(null, firstSection.sectionId);
             localStorage.setItem(`sectionStartTime_${firstSection.sectionId}`, "1");
           }
@@ -381,6 +381,7 @@ export default function ExamUI() {
     return question.answerType === "Numeric" ? (
       <NumericalKeypad value={numericalValue} onKeyPress={handleKeyPress} />
     ) : (
+      
       <MCQOptions options={question.options || []} selected={mcqSelected} setSelected={setMcqSelected} />
     );
   }, [question, numericalValue, mcqSelected, handleKeyPress]);

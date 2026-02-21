@@ -180,6 +180,15 @@ setSeconds(0)
     ? ((correctCount / totalQuestions) * 100).toFixed(2)
     : 0;
 
+  const calculateSecondMinute = (seconds: number) => {
+  if (!seconds || seconds < 0) return "0 Min 0 Sec";
+
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  return `${minutes} Min ${remainingSeconds} Sec`;
+};
+
   /* ================= FINAL PAGE ================= */
   if (examFinished) {
     return (
@@ -243,7 +252,7 @@ setSeconds(0)
               <div className="flex items-center justify-center gap-3 bg-gray-50 p-4 rounded-xl mb-8">
                 <Image src={TIMER} width={24} height={24} alt="timer" />
                 <p className="text-gray-700 font-poppins">
-                  Total Time Taken: <b className="text-lg">{totalTime} seconds </b>
+                  Total Time Taken: <b className="text-lg">{calculateSecondMinute(totalTime)} </b>
                 </p>
               </div>
 

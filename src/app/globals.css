@@ -540,7 +540,9 @@ div[class*="badge"] {
 .preview .resize-handle {
   display: none !important;
 }
-
+/* .preview-container span:has(> span:only-child) {
+  display: none;
+} */
 
 /* scrollbar */
 ::-webkit-scrollbar {
