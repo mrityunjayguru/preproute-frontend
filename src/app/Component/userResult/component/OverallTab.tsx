@@ -592,7 +592,7 @@ let checkShow=data?.examdetail?.examname=="CUET"  || data?.questionpaper?.examfo
             </p>
           </div>):(null)}
 
-          <div className="rounded-[8px] max-h-[250px] overflow-y-scroll bg-[#F0F9FF] p-6 font-dm-sans">
+          <div className="rounded-[8px] max-h-[250px]  bg-[#F0F9FF] p-6 font-dm-sans">
             <p className="text-[#FF5635] font-medium font-poppins mb-3">
               Topics
             </p>
@@ -607,7 +607,7 @@ let checkShow=data?.examdetail?.examname=="CUET"  || data?.questionpaper?.examfo
             </ul>
           </div>
 
-          <div className="rounded-[8px] bg-[#F0F9FF]  p-6 font-dm-sans max-h-[250px] overflow-y-scroll">
+          <div className="rounded-[8px] bg-[#F0F9FF]  p-6 font-dm-sans max-h-[250px] ">
             <p className="text-[#FF5635] font-medium font-poppins mb-3">
               Subtopics
             </p>
