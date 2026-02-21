@@ -395,8 +395,13 @@ const currentTimeSpentInSection = sectionTimes[selectedSection?.sectionId || ""]
         examData
       }
       await updateSectionTime(selectedSection?.sectionId, undefined);
-          localStorage.removeItem(`section_times_${examData?.[0]?._id}`);
       await dispatch(userExamResult(payload));
+        localStorage.removeItem(`section_times_${examData?.[0]?._id}`);
+    // ✅ Remove exam timer also (recommended)
+        localStorage.removeItem(`exam_timeLeft_${examData?.[0]?._id}`);
+    // ✅ Clear sectionTimes state
+    setShowSubmitPopup(false)
+    setSectionTimes({});
       router.push("/analytics");
     } catch (err) { console.error("Error submitting exam:", err); }
   };

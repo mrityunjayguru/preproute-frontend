@@ -314,6 +314,7 @@ export default function MergedExamPage() {
       let responce: any = await dispatch(getUserQuestionData(payload));
       if (type == "start") {
         localStorage.removeItem(`exam_timeLeft_${responce?.payload[0]?._id}`);
+       localStorage.removeItem(`section_times_${examData?.[0]?._id}`);
       }
       router.push("/Exam/Instruction");
     } else {
