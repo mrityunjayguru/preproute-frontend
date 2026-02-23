@@ -43,8 +43,8 @@ export default function PricingPlans() {
         { label: "JIPMAT", key: "JIPMAT" },
         { label: "NPAT", key: "NPAT" },
         { label: "SET", key: "SET" },
-        { label: "IIM DBE", key: "IIM B DBE" },
-        { label: "St.Xavier's", key: "St. Xavier’s" },
+        { label: "IIM B DBE", key: "IIM B DBE" },
+        // { label: "St.Xavier's", key: "St. Xavier’s" },
     ];
 
     const featureRows = [
@@ -137,7 +137,7 @@ export default function PricingPlans() {
                                                 key={plan._id}
                                                 onMouseEnter={() => setHoveredPlan(plan._id)}
                                                 onMouseLeave={() => setHoveredPlan(null)}
-                                                className={` align-bottom rounded-t-lg pb-4 transition-all border-t-2 border-x-2 ${hoveredPlan === plan._id ? 'border-[#C8DCFE]' : 'border-transparent'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
+                                                className={` align-bottom rounded-t-lg pb-1 transition-all border-t-2 border-x-2 ${hoveredPlan === plan._id ? 'border-[#C8DCFE]' : 'border-transparent'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
                                             >
                                                 <div className="flex flex-col items-center gap-1 px-4">
                                                     <h3 className="text-xl font-medium text-[#FF5635] uppercase">{plan.title.split(' ')[0]}</h3>

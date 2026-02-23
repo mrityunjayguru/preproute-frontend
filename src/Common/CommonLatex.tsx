@@ -13,18 +13,26 @@ const inlineLatexTest = (t: string) => /^\$[^$]+\$$/.test(t);
 
 const RenderPreview: React.FC<RenderPreviewProps> = ({ content }) => {
   if (!content) return null;
-
   const parser = new DOMParser();
   const doc = parser.parseFromString(`<div id="__root__">${content}</div>`, "text/html");
   const root = doc.getElementById("__root__");
   if (!root) return null;
 const parseStyleString = (style: string | null): React.CSSProperties => {
   if (!style) return {};
+
   return style.split(";").reduce((acc, item) => {
     const [key, value] = item.split(":");
     if (!key || !value) return acc;
-    const jsKey = key.trim().replace(/-([a-z])/g, (_, c) => c.toUpperCase());
-    acc[jsKey as keyof React.CSSProperties] = value.trim();
+
+    const jsKey = key
+      .trim()
+      .replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+
+    // ✅ REMOVE !important
+    const cleanValue = value.replace(/!important/g, "").trim();
+
+    acc[jsKey as keyof React.CSSProperties] = cleanValue;
+
     return acc;
   }, {} as React.CSSProperties);
 };
@@ -104,41 +112,60 @@ const parseStyleString = (style: string | null): React.CSSProperties => {
 
       switch (tag) {
     
-case "img": {
+     case "img": {
   const src = el.getAttribute("src") || "";
   const alt = el.getAttribute("alt") || "";
 
-  const inlineStyles = parseStyleString(el.getAttribute("style"));
+  // Parse inline style string if present (e.g. style="width:50px;height:40px;")
+  const styleAttr = el.getAttribute("style") || "";
+  const inlineStyles: Record<string, string> = {};
+  styleAttr.split(";").forEach((rule) => {
+    const [prop, value] = rule.split(":").map((s) => s && s.trim());
+    if (prop && value) {
+      // Convert CSS property to camelCase for React
+      const jsProp = prop.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+      inlineStyles[jsProp] = value;
+    }
+  });
+
+  // Respect width/height attributes as well
+  const widthAttr = el.getAttribute("width");
+  const heightAttr = el.getAttribute("height");
 
   return (
     <img
       key={key}
       src={src}
       alt={alt}
+      width={widthAttr || undefined}
+      height={heightAttr || undefined}
       style={{
-        ...inlineStyles,      // ✅ editor-defined width/height
-        maxWidth: "100%",     // ✅ responsive safety
-        display: "block",
-        margin: inlineStyles.margin || "0.4rem 0",
+        display: "inline-block",
+        maxWidth: "100%",
+        height: "auto",
+        verticalAlign: "middle",
+        margin: "0 .3rem",
+        ...inlineStyles, // merge inline styles from content
       }}
     />
   );
 }
 
-
-        case "table":
-          return (
-            <table
-              key={key}
-              style={{
-                borderCollapse: "collapse",
-                width: "100%",
-                margin: "0.5rem 0",
-              }}
-            >
-              {children}
-            </table>
-          );
+      case "table": {
+  const inlineStyles = parseStyleString(el.getAttribute("style"));
+console.log(inlineStyles,"inlineStyles")
+  return (
+    <table
+      key={key}
+      className="vikash-table"
+      style={{
+        ...inlineStyles,          // ✅ DB wala width + border preserve
+      }}
+    >
+      {children}
+    </table>
+  );
+}
 
         case "tr":
           return <tr key={key}>{children}</tr>;
