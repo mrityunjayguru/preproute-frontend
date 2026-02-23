@@ -32,8 +32,8 @@ export default function QuestionEditor({ onChange, value,QuestionType }: Questio
   const [selectedTable, setSelectedTable] = useState<HTMLTableElement | null>(null);
   const [tableToolbarPos, setTableToolbarPos] = useState<TableToolbarPos>({ top: 0, left: 0 });
   const [resizing, setResizing] = useState<boolean>(false);
-  const [resizeData, setResizeData] = useState<any>(null);
-
+  const [resizeData, setResizeData] = useState<any>(null)
+const [tableWidth, setTableWidth] = useState<string>("");
   // ---------------------- Handle Image Removal ----------------------
   useEffect(() => {
     const editor = editorRef.current;
@@ -267,19 +267,35 @@ export default function QuestionEditor({ onChange, value,QuestionType }: Questio
     updateContent();
   };
 
-  const handleEditorClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const table = (e.target as HTMLElement).closest("table") as HTMLTableElement | null;
-    if (table) {
-      setSelectedTable(table);
-      const rect = table.getBoundingClientRect();
-      setTableToolbarPos({ top: rect.top - 40 + window.scrollY, left: rect.left + window.scrollX });
-      setShowTableToolbar(true);
-    } else {
-      setShowTableToolbar(false);
-      setSelectedTable(null);
-    }
-  };
+const handleEditorClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const table = (e.target as HTMLElement).closest("table") as HTMLTableElement | null;
 
+  if (table) {
+    setSelectedTable(table);
+
+    // 👇 YEH ADD KARO
+    setTableWidth(table.style.width || table.getAttribute("width") || "");
+
+    const rect = table.getBoundingClientRect();
+    setTableToolbarPos({
+      top: rect.top - 50 + window.scrollY,
+      left: rect.left + window.scrollX,
+    });
+
+    setShowTableToolbar(true);
+  } else {
+    setShowTableToolbar(false);
+    setSelectedTable(null);
+  }
+};
+const handleTableWidthChange = (value: string) => {
+  setTableWidth(value);
+
+  if (selectedTable) {
+selectedTable.style.setProperty("width", value, "important");
+    updateContent();
+  }
+};
   const attachTableEvents = () => {
     const tables = editorRef.current?.querySelectorAll("table");
     tables?.forEach((table) => {
@@ -645,29 +661,44 @@ export default function QuestionEditor({ onChange, value,QuestionType }: Questio
       />
 
       {/* Table Toolbar */}
-      {showTableToolbar && (
-        <div
-          className="table-toolbar"
-          style={{
-            position: "absolute",
-            top: tableToolbarPos.top,
-            left: tableToolbarPos.left,
-            background: "white",
-            border: "1px solid #ddd",
-            borderRadius: "6px",
-            padding: "4px",
-            display: "flex",
-            gap: "4px",
-            zIndex: 10,
-          }}
-        >
-          <button onClick={handleAddRow}>➕ Row</button>
-          <button onClick={handleAddColumn}>➕ Col</button>
-          <button onClick={handleRemoveRow}>➖ Row</button>
-          <button onClick={handleRemoveColumn}>➖ Col</button>
-          <button onClick={handleRemoveTable}>🗑</button>
-        </div>
-      )}
+  {showTableToolbar && (
+  <div
+    className="table-toolbar"
+    style={{
+      position: "absolute",
+      top: 0,
+      right: 0,
+      background: "white",
+      border: "1px solid #ddd",
+      borderRadius: "6px",
+      padding: "8px",
+      display: "flex",
+      alignItems: "center",
+      gap: "6px",
+      zIndex: 10,
+    }}
+  >
+    {/* ✅ Width Input */}
+    <input
+      type="text"
+      placeholder="Width (e.g. 500px or 80%)"
+      value={tableWidth}
+      onChange={(e) => handleTableWidthChange(e.target.value)}
+      style={{
+        width: "50px",
+        padding: "4px",
+        border: "1px solid #ccc",
+        borderRadius: "4px",
+      }}
+    />
+
+    <button onClick={handleAddRow}>➕ Row</button>
+    <button onClick={handleAddColumn}>➕ Col</button>
+    <button onClick={handleRemoveRow}>➖ Row</button>
+    <button onClick={handleRemoveColumn}>➖ Col</button>
+    <button onClick={handleRemoveTable}>🗑</button>
+  </div>
+)}
 
       {/* LaTeX Modal */}
       {showLatexModal && (

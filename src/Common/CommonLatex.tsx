@@ -13,18 +13,26 @@ const inlineLatexTest = (t: string) => /^\$[^$]+\$$/.test(t);
 
 const RenderPreview: React.FC<RenderPreviewProps> = ({ content }) => {
   if (!content) return null;
-
   const parser = new DOMParser();
   const doc = parser.parseFromString(`<div id="__root__">${content}</div>`, "text/html");
   const root = doc.getElementById("__root__");
   if (!root) return null;
 const parseStyleString = (style: string | null): React.CSSProperties => {
   if (!style) return {};
+
   return style.split(";").reduce((acc, item) => {
     const [key, value] = item.split(":");
     if (!key || !value) return acc;
-    const jsKey = key.trim().replace(/-([a-z])/g, (_, c) => c.toUpperCase());
-    acc[jsKey as keyof React.CSSProperties] = value.trim();
+
+    const jsKey = key
+      .trim()
+      .replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+
+    // ✅ REMOVE !important
+    const cleanValue = value.replace(/!important/g, "").trim();
+
+    acc[jsKey as keyof React.CSSProperties] = cleanValue;
+
     return acc;
   }, {} as React.CSSProperties);
 };
@@ -125,20 +133,21 @@ case "img": {
   );
 }
 
-
-        case "table":
-          return (
-            <table
-              key={key}
-              style={{
-                borderCollapse: "collapse",
-                width: "100%",
-                margin: "0.5rem 0",
-              }}
-            >
-              {children}
-            </table>
-          );
+      case "table": {
+  const inlineStyles = parseStyleString(el.getAttribute("style"));
+console.log(inlineStyles,"inlineStyles")
+  return (
+    <table
+      key={key}
+      className="vikash-table"
+      style={{
+        ...inlineStyles,          // ✅ DB wala width + border preserve
+      }}
+    >
+      {children}
+    </table>
+  );
+}
 
         case "tr":
           return <tr key={key}>{children}</tr>;
