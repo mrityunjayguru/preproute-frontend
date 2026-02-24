@@ -79,7 +79,7 @@ export default function YouTubeCarousel() {
           `}</style>
 
           {/* ================= SWIPER ================= */}
-          {videos.length > 0 ? (
+          {videos?.length > 0 ? (
             <Swiper
               className="youtube-swiper"
               modules={[Navigation, Pagination, Autoplay]}
@@ -98,7 +98,7 @@ export default function YouTubeCarousel() {
                 1024: { slidesPerView: 3.5, spaceBetween: 30 },
               }}
             >
-              {videos.map((id: string) => (
+              {videos?.map((id: string) => (
                 <SwiperSlide key={id}>
                   <div
                     onClick={() => setActiveVideo(id)}
