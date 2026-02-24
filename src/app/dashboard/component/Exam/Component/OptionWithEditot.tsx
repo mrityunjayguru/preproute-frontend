@@ -374,7 +374,7 @@ const createImageWrapper = (imageUrl: string) => {
     setShowLatexModal(false);
   };
 
- const renderPreview = useMemo(() => {
+ const renderPreview = ((previewHTML:any) => {
     if (!previewHTML) return null;
 
     // LaTeX regex patterns
@@ -602,7 +602,7 @@ const createImageWrapper = (imageUrl: string) => {
           wordBreak: "break-word",
           overflowX: "auto",
         }}
-        className="preview-container"
+        className="preview-container w-full"
       >
         <style>{`
           .preview-container img {
@@ -626,7 +626,7 @@ const createImageWrapper = (imageUrl: string) => {
         {output}
       </div>
     );
-  }, [previewHTML]);
+  });
 
   return (
     <div ref={containerRef} className="relative border rounded-lg p-3 mb-4 bg-white">

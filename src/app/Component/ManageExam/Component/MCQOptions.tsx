@@ -341,7 +341,8 @@ export const MCQOptions: React.FC<MCQOptionsProps> = ({
             </span>
 
             {/* Option Text */}
-            {renderPreview(opt.text)}
+              {renderPreview(opt.text)}
+
             {/* <span
               className="text-gray-900"
               dangerouslySetInnerHTML={{ __html: opt.text }}
