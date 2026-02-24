@@ -154,7 +154,7 @@ const [tableWidth, setTableWidth] = useState<string>("");
     img.style.resize = "none";
 
     const removeBtn = document.createElement("button");
-    removeBtn.textContent = "✖";
+    // removeBtn.textContent = "✖";
     removeBtn.className = "remove-img-btn";
     Object.assign(removeBtn.style, {
       position: "absolute",

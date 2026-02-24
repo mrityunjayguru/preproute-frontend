@@ -57,9 +57,7 @@ export const userSlicc = createSlice({
       }
     },
     setYoutube: (state, action: PayloadAction<any>) => {
-      if (state.user) {
         state.youtubeShort = action.payload;
-      }
     },
   },
 });
