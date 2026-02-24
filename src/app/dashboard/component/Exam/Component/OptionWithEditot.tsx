@@ -55,13 +55,15 @@ export default function OptionWithEditor({
 
   /* ================= INITIALIZE ================= */
 
-  useEffect(() => {
-    if (!editorRef.current || initializedRef.current) return;
+useEffect(() => {
+  if (!editorRef.current) return;
+
+  // Prevent cursor jump if already same
+  if (editorRef.current.innerHTML !== (value || "")) {
     editorRef.current.innerHTML = value || "";
     setPreviewHTML(value || "");
-    initializedRef.current = true;
-  }, []);
-
+  }
+}, [value]);
   /* ================= SELECTION HELPERS ================= */
 
   const saveSelection = () => {
@@ -298,7 +300,7 @@ const createImageWrapper = (imageUrl: string) => {
 
   const deleteBtn = document.createElement("button");
   // deleteBtn.innerHTML = "✕";
-  deleteBtn.className = `img-delete-btn`;
+  deleteBtn.className = `img-delete-btn `;
 
   Object.assign(deleteBtn.style, {
     background: "#ef4444",
@@ -374,7 +376,7 @@ const createImageWrapper = (imageUrl: string) => {
     setShowLatexModal(false);
   };
 
- const renderPreview = ((previewHTML:any) => {
+ const renderPreview = useMemo(() => {
     if (!previewHTML) return null;
 
     // LaTeX regex patterns
@@ -602,7 +604,7 @@ const createImageWrapper = (imageUrl: string) => {
           wordBreak: "break-word",
           overflowX: "auto",
         }}
-        className="preview-container w-full"
+        className="preview-container"
       >
         <style>{`
           .preview-container img {
@@ -626,7 +628,7 @@ const createImageWrapper = (imageUrl: string) => {
         {output}
       </div>
     );
-  });
+  }, [previewHTML]);
 
   return (
     <div ref={containerRef} className="relative border rounded-lg p-3 mb-4 bg-white">
