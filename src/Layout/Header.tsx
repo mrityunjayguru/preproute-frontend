@@ -165,7 +165,7 @@ export const Header: React.FC = () => {
     }
   }
   return (
-    <header className="sticky top-0 z-20 w-full bg-white px-2 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+    <header className="sticky top-0 z-90 w-full bg-white px-2 sm:px-6 md:px-8 lg:px-10 xl:px-12">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-2 py-4 sm:px-4 lg:py-5">
         {/* Logo */}
         <div className="flex items-center gap-12">
@@ -276,7 +276,7 @@ export const Header: React.FC = () => {
                   href="/user-dashboard"
                   className={isActive("/user-dashboard") ? activeClass : inactiveClass}
                 >
-                  User Dashboard
+                  My Dashboard
                 </Link> */}
               </>
             ) : null}
@@ -409,7 +409,7 @@ export const Header: React.FC = () => {
                 <div className="h-px bg-gray-100 mx-4 my-2" />
 
                 {/* Resources Menu - Mobile (Collapsible) */}
-                <div className="px-4">
+                {/* <div className="px-4">
                   <button
                     onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}
                     className="flex w-full items-center justify-between px-4 py-3 text-base font-semibold text-gray-900 hover:bg-orange-50 rounded-lg transition-all"
@@ -436,7 +436,7 @@ export const Header: React.FC = () => {
                       </Link>
                     </div>
                   )}
-                </div>
+                </div> */}
 
                 {token && (
                   <div className="px-4">
@@ -448,7 +448,7 @@ export const Header: React.FC = () => {
                         : "text-gray-900 hover:text-[#FF5635] hover:bg-orange-50"
                         }`}
                     >
-                      User Dashboard
+                      My Dashboard
                     </Link>
                   </div>
                 )}
@@ -467,13 +467,13 @@ export const Header: React.FC = () => {
                     >
                       Login
                     </Button>
-                    <Link
+                    {/* <Link
                       href="/Auth/register"
                       onClick={() => setMobileOpen(false)}
                       className="block text-center px-4 py-3 text-[#FF5635] font-semibold rounded-full border-2 border-[#FF5635] hover:bg-orange-50 transition-colors"
                     >
                       Create Account
-                    </Link>
+                    </Link> */}
                   </div>
                 ) : (
                   /* Dashboard Button - Mobile */

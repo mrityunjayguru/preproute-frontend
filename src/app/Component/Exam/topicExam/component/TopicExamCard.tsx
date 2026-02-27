@@ -234,7 +234,7 @@ const LevelCell = ({ tests = [], isSubTopicLocked, hasPlanAccess }: any) => {
   return (
     <div className="p-3 text-center space-y-2">
       {tests.length === 0 ? (
-        <span className="text-gray-400">Coming Soon</span>
+        <span className="text-gray-400 text-sm flex items-center md:justify-center">Coming Soon</span>
       ) : (
         tests.map((test: any) => {
           const isFree = test?.isfree === true;

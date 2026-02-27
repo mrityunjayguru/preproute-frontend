@@ -28,9 +28,9 @@ export default function YouTubeCarousel() {
   useEffect(() => {
     const getData = async () => {
       try {
-          setLoading(true);
-          await dispatch(fetchYouTubeVideos({}));
-        } catch (err) {
+        setLoading(true);
+        await dispatch(fetchYouTubeVideos({}));
+      } catch (err) {
         console.error("Error fetching YouTube videos:", err);
       } finally {
         setLoading(false);
@@ -47,7 +47,7 @@ export default function YouTubeCarousel() {
 
   return (
     <>
-      <div className="w-full bg-gray-50 py-16 px-4">
+      <div className="w-full bg-gray-50 py-16 px-4 overflow-hidden">
         <div className="max-w-6xl mx-auto">
           {/* ================= HEADER ================= */}
           <div className="mb-10 text-center">
@@ -134,11 +134,11 @@ export default function YouTubeCarousel() {
             </Swiper>
           ) : loading ? (
             /* ================= SKELETON ================= */
-            <div className="flex gap-6 justify-center">
+            <div className="flex gap-4 justify-center flex-wrap">
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="w-[280px] aspect-[9/16] bg-gray-200 animate-pulse rounded-3xl"
+                  className="w-full max-w-[280px] aspect-[9/16] bg-gray-200 animate-pulse rounded-3xl"
                 />
               ))}
             </div>

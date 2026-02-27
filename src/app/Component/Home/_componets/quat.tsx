@@ -8,7 +8,7 @@ type Props = {};
 const Quat = (props: Props) => {
   return (
     <section className="mt-12 p-4 sm:p-6 lg:p-16 bg-[#F9FAFC]" >
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-10 text-center">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-10 text-center">
         <motion.div
           initial={{ opacity: 0, x: -30, rotate: -90 }}
           whileInView={{ opacity: 1, x: 0, rotate: 0 }}
@@ -16,7 +16,7 @@ const Quat = (props: Props) => {
           transition={{ duration: 0.6, type: "spring" }}
           className="self-start -mt-2"
         >
-          <Image src={Q1} alt="1" />
+          <Image src={Q1} alt="1" className="h-8 w-8 md:h-12 md:w-12"/>
         </motion.div>
 
         <motion.p
@@ -39,7 +39,7 @@ const Quat = (props: Props) => {
           transition={{ duration: 0.6, type: "spring" }}
           className="self-end -mb-2 rotate-360"
         >
-          <Image src={Q2} alt="1" />
+          <Image src={Q2} alt="1" className="h-8 w-8 md:h-12 md:w-12" />
         </motion.div>
       </div>
     </section>
