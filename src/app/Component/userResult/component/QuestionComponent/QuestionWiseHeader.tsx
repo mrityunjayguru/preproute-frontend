@@ -66,16 +66,15 @@ const QuestionWiseHeader: React.FC<Props> = ({
 
       {/* Section Tabs */}
       {isSection && (
-        <div className="flex  flex-wrap gap-3 overflow-x-auto  ">
+        <div className="flex flex-wrap sm:flex-nowrap gap-3 overflow-x-auto scrollbar-none pb-2">
           {examSections?.map((t) => (
             <button
               key={t.sectionId}
               onClick={() => handleSection(t)}
-              className={`cursor-pointer px-6 py-2 rounded-[8px] transition-all text-sm font-medium whitespace-nowrap font-dm-sans ${
-                t.sectionId === selectedSection?.sectionId
+              className={`cursor-pointer px-6 py-2 rounded-[8px] transition-all text-sm font-medium whitespace-nowrap font-dm-sans ${t.sectionId === selectedSection?.sectionId
                   ? "bg-[#005EB6] text-white"
                   : "bg-[#5291D2] text-white hover:bg-[#4a85f6]"
-              }`}
+                }`}
             >
               {t.section || "Section"}
             </button>

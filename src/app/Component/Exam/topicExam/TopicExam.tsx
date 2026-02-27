@@ -126,8 +126,8 @@ export default function TopicExam() {
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">
         {!examById.length && (
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="relative min-h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10 py-6 sm:py-0 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="text-center sm:text-left">
+            <div className="relative min-h-[100px] md:min-h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10 py-6 sm:py-0 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="">
                 <h2 className="text-xl sm:text-2xl text-[#FF5635] font-medium">
                   {selectedExamType?.examType}
                 </h2>
@@ -148,33 +148,32 @@ export default function TopicExam() {
 
         {examById.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10   flex flex-col md:flex-row items-center justify-center md:justify-between overflow-hidden">
-                     {/* Left Content */}
-       
-                     <div className="z-10 max-w-xl">
-                       <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#FF5635] font-poppins">
-                         {selectedExamType?.examType}
-                       </h2>
-                       <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
-                         Practice exams prepared as per syllabus
-                       </p>
-                     </div>
-                     {/* Illustration */}
-                     <motion.div
-                       initial={{ opacity: 0, x: 40 }}
-                       animate={{ opacity: 1, x: 0 }}
-                       transition={{ duration: 0.6, delay: 0.2 }}
-                       className="mt-6 md:mt-0 md:w-[267px]"
-                     >
-                       <Image
-                         src={EXAMPREP}
-                         alt="Mock Exam Illustration"
-                         className="w-full hidden md:block object-contain"
-                         width={267}
-                         height={140}
-                       />
-                     </motion.div>
-                   </div>
+            <div className="relative min-h-[120px] md:min-h-[140px] bg-[#F0F9FF] my-4 sm:my-8 rounded-2xl px-6 sm:px-10 py-6 md:py-0 flex flex-col md:flex-row items-center justify-center md:justify-between overflow-hidden">
+              {/* Left Content */}
+              <div className="z-10 max-w-xl">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#FF5635] font-poppins">
+                  {selectedExamType?.examType}
+                </h2>
+                <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
+                  Practice exams prepared as per syllabus
+                </p>
+              </div>
+              {/* Illustration */}
+              <motion.div
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="mt-4 md:mt-0 md:w-[267px]"
+              >
+                <Image
+                  src={EXAMPREP}
+                  alt="Mock Exam Illustration"
+                  className="w-full hidden md:block object-contain"
+                  width={267}
+                  height={140}
+                />
+              </motion.div>
+            </div>
 
             <div className="flex gap-4 py-8 flex-wrap">
               {selectedExam?.sectionDetails?.map((sec: any) => (
@@ -182,10 +181,9 @@ export default function TopicExam() {
                   key={sec._id}
                   onClick={() => handleSectionSelect(sec)}
                   className={`px-8 py-2 rounded-[6px] transition-all font-poppins duration-200 cursor-pointer
-                    ${
-                      sectionId === sec._id
-                        ? "bg-[#FF5635] text-white scale-105"
-                        : "bg-white text-[#FF5635] border border-[#FF5635] hover:bg-[#FF5635] hover:text-white"
+                    ${sectionId === sec._id
+                      ? "bg-[#FF5635] text-white scale-105"
+                      : "bg-white text-[#FF5635] border border-[#FF5635] hover:bg-[#FF5635] hover:text-white"
                     }`}
                 >
                   {sec.section}
@@ -198,7 +196,7 @@ export default function TopicExam() {
         )}
       </div>
 
-      <section className="bg-[#FF5635] text-white py-6 sm:py-8 mt-5">
+      <section className="bg-[#FF5635] text-white py-6 sm:py-8">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-6 px-6 sm:px-8 md:px-12 lg:px-28">
           <Image src={FOOTERLOGO} alt="logo" width={180} />
           <SocialMedia />

@@ -19,7 +19,7 @@ const TopicExamCard = ({ selectedExam }: any) => {
     selectedExam &&
     selectedExam?.OrderDetail?.[0]?.planMatch?.[0]?.features?.topicwise
   );
-  console.log(selectedExam,"isPlanUnlockedisPlanUnlocked")
+  console.log(selectedExam, "isPlanUnlockedisPlanUnlocked")
 
   return (
     <div className="space-y-6">
@@ -68,17 +68,25 @@ const TopicBlock = ({ topic, hasPlanAccess }: any) => {
       </div>
 
       {open && (
-        <div className="w-full overflow-x-auto">
-          <div className="min-w-[600px]">
-            {/* TABLE HEADER */}
-            <div className="grid grid-cols-4 bg-[#FFEDE0] text-sm font-medium">
-              <div className="p-3"></div>
-              <div className="p-3 text-center text-black">Basic</div>
-              <div className="p-3 text-center text-black">Advanced</div>
-              <div className="p-3 text-center text-black">Expert</div>
-            </div>
+        <div className="w-full">
+          {/* DESKTOP VIEW */}
+          <div className="hidden sm:block overflow-x-auto">
+            <div className="min-w-[600px]">
+              {/* TABLE HEADER */}
+              <div className="grid grid-cols-4 bg-[#FFEDE0] text-sm font-medium">
+                <div className="p-3"></div>
+                <div className="p-3 text-center text-black">Basic</div>
+                <div className="p-3 text-center text-black">Advanced</div>
+                <div className="p-3 text-center text-black">Expert</div>
+              </div>
 
-            <TopicRows topic={topic} hasPlanAccess={hasPlanAccess} />
+              <TopicRows topic={topic} hasPlanAccess={hasPlanAccess} />
+            </div>
+          </div>
+
+          {/* MOBILE VIEW */}
+          <div className="sm:hidden space-y-4 font-poppins p-4 bg-[#F8FCFF]">
+            <MobileTopicRows topic={topic} hasPlanAccess={hasPlanAccess} />
           </div>
         </div>
       )}
@@ -88,10 +96,60 @@ const TopicBlock = ({ topic, hasPlanAccess }: any) => {
 
 /* ================= ROWS ================= */
 
-const TopicRows = ({ topic, hasPlanAccess }: any) => {
+const MobileTopicRows = ({ topic, hasPlanAccess }: any) => {
+  const allSubTopicsArr = getOrganizedSubTopics(topic);
+
+  return (
+    <>
+      {allSubTopicsArr.map((row: any, i: number) => (
+        <div key={i} className="border rounded-lg bg-white p-4 shadow-sm">
+          <div className="font-semibold text-[#FF5A3C] mb-3 border-b pb-2">
+            {row.subTopicName}
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            <MobileLevelItem
+              label="Basic"
+              tests={row.basic.tests}
+              isSubTopicLocked={row.basic.isLocked}
+              hasPlanAccess={hasPlanAccess}
+            />
+            <MobileLevelItem
+              label="Advanced"
+              tests={row.advanced.tests}
+              isSubTopicLocked={row.advanced.isLocked}
+              hasPlanAccess={hasPlanAccess}
+            />
+            <MobileLevelItem
+              label="Expert"
+              tests={row.expert.tests}
+              isSubTopicLocked={row.expert.isLocked}
+              hasPlanAccess={hasPlanAccess}
+            />
+          </div>
+        </div>
+      ))}
+    </>
+  );
+};
+
+const MobileLevelItem = ({ label, tests, isSubTopicLocked, hasPlanAccess }: any) => {
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">{label}</div>
+      <div className="pl-2 border-l-2 border-[#FFEDE0]">
+        <LevelCell
+          tests={tests}
+          isSubTopicLocked={isSubTopicLocked}
+          hasPlanAccess={hasPlanAccess}
+        />
+      </div>
+    </div>
+  );
+};
+
+const getOrganizedSubTopics = (topic: any) => {
   const allSubTopics = new Map();
 
-  // We organize data so each row represents one SubTopic across all 3 levels
   ["basic", "advanced", "expert"].forEach((level) => {
     topic[level]?.subTopics?.forEach((st: any) => {
       if (!allSubTopics.has(st.subTopicId)) {
@@ -102,19 +160,24 @@ const TopicRows = ({ topic, hasPlanAccess }: any) => {
           expert: { tests: [], isLocked: true },
         });
       }
-      
+
       const current = allSubTopics.get(st.subTopicId);
       current[level] = {
         tests: st.tests || [],
-        // ✅ Use the lock status returned by the API for this specific subtopic
-        isLocked: st.isLocked ?? (level !== "basic") 
+        isLocked: st.isLocked ?? level !== "basic",
       };
     });
   });
 
+  return [...allSubTopics.values()];
+};
+
+const TopicRows = ({ topic, hasPlanAccess }: any) => {
+  const allSubTopicsArr = getOrganizedSubTopics(topic);
+
   return (
     <>
-      {[...allSubTopics.values()].map((row: any, i: number) => (
+      {allSubTopicsArr.map((row: any, i: number) => (
         <div
           key={i}
           className="grid grid-cols-4 border-b text-sm bg-[#F8FCFF]"
@@ -144,8 +207,6 @@ const TopicRows = ({ topic, hasPlanAccess }: any) => {
   );
 };
 
-/* ================= LEVEL CELL ================= */
-
 const LevelCell = ({ tests = [], isSubTopicLocked, hasPlanAccess }: any) => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -159,10 +220,8 @@ const LevelCell = ({ tests = [], isSubTopicLocked, hasPlanAccess }: any) => {
     }
 
     const isFree = test?.isfree === true;
-    
-    // ✅ Logic: Can access if the test is free OR (User has plan AND Subtopic is not locked)
     const canAccess = isFree || (hasPlanAccess && !isSubTopicLocked);
-console.log(canAccess,"canAccesscanAccess")
+    console.log(canAccess, "canAccesscanAccess")
     if (!canAccess) {
       router.push("/PlanandPricing");
       return;
@@ -180,29 +239,24 @@ console.log(canAccess,"canAccesscanAccess")
         tests.map((test: any) => {
           const isFree = test?.isfree === true;
           const canAccess = isFree || (hasPlanAccess && !isSubTopicLocked);
-console.log(isFree,"canAccesscanAccess")
-console.log(hasPlanAccess,"hasPlanAccesshasPlanAccess")
+          console.log(isFree, "canAccesscanAccess")
+          console.log(hasPlanAccess, "hasPlanAccesshasPlanAccess")
           return (
             <div
               key={test._id}
-              className={`flex items-center justify-center gap-2 text-sm ${
-                canAccess
-                  ? "text-blue-600 cursor-pointer hover:underline"
-                  : "text-gray-400 cursor-not-allowed"
-              }`}
+              className={`flex items-center md:justify-center gap-2 text-sm ${canAccess
+                ? "text-blue-600 cursor-pointer hover:underline"
+                : "text-gray-400 cursor-not-allowed"
+                }`}
               onClick={() => canAccess && handleStartExam(test)}
             >
-              {/* 🔒 Locked Icon: Show only if it's locked AND not a free test */}
               {isSubTopicLocked && !isFree && (
                 <FaLock size={12} className="text-gray-400" />
               )}
 
-              {/* 🔓 Free Icon: Show if test is free and user hasn't bought plan yet */}
               {isFree && !hasPlanAccess && (
                 <FaLockOpen size={12} className="text-green-600" />
               )}
-
-              {/* ✅ Completed Icon */}
               {test.isCompleted && (
                 <FaCheckCircle size={12} className="text-green-600" />
               )}

@@ -388,7 +388,7 @@ try {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             {/* ===== Banner ===== */}
-            <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10   flex flex-col md:flex-row items-center justify-center md:justify-between overflow-hidden">
+           <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10   flex flex-col md:flex-row items-center justify-center md:justify-between overflow-hidden">
               {/* Left Content */}
 
               <div className="z-10 max-w-xl">

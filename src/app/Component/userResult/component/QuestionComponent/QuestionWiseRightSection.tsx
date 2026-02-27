@@ -60,12 +60,12 @@ const QuestionWiseRightSection: React.FC<Props> = ({
   const questionsForGrid: Question[] = isSection
     ? sectionQuestions
     : Array.from({ length: totalQuestions }).map((_, idx) => {
-        return (
-          sectionQuestions.find((q) => q.questionNo === idx + 1) || {
-            questionNo: idx + 1,
-          }
-        );
-      });
+      return (
+        sectionQuestions.find((q) => q.questionNo === idx + 1) || {
+          questionNo: idx + 1,
+        }
+      );
+    });
   /** -------------------------------
    * STATUS ICON LOGIC
    * ------------------------------ */
@@ -82,30 +82,30 @@ const QuestionWiseRightSection: React.FC<Props> = ({
       return REVIEWMARKED;
     }
 
-if (q.answerType === "MCQ") {
-  if (!q.usergiven?.userAnswer) return UNANSWERED;
+    if (q.answerType === "MCQ") {
+      if (!q.usergiven?.userAnswer) return UNANSWERED;
 
-  const correctOption = q.options?.find((opt: any) => opt.isCorrect);
+      const correctOption = q.options?.find((opt: any) => opt.isCorrect);
 
-  if (q.usergiven.userAnswer === correctOption?._id) {
-    return ANSWERED;
-  }
+      if (q.usergiven.userAnswer === correctOption?._id) {
+        return ANSWERED;
+      }
 
-  return ANSWEREDANDREVIEW;
-}
+      return ANSWEREDANDREVIEW;
+    }
 
-if (q.answerType === "Numeric") {
-  if (!q.usergiven?.numericAnswer) return UNANSWERED;
+    if (q.answerType === "Numeric") {
+      if (!q.usergiven?.numericAnswer) return UNANSWERED;
 
-  const userAns = Number(q.usergiven.numericAnswer);
-  const correctAns = Number(q.numericAnswer);
+      const userAns = Number(q.usergiven.numericAnswer);
+      const correctAns = Number(q.numericAnswer);
 
-  if (userAns === correctAns) {
-    return ANSWERED;
-  }
+      if (userAns === correctAns) {
+        return ANSWERED;
+      }
 
-  return ANSWEREDANDREVIEW;
-}
+      return ANSWEREDANDREVIEW;
+    }
 
 
     return NOTVISITED;
@@ -130,7 +130,7 @@ if (q.answerType === "Numeric") {
    * UI (UNCHANGED)
    * ------------------------------ */
   return (
-    <aside className="lg:w-[350px] w-full bg-white py-6 flex-shrink-0 font-poppins px-6">
+    <aside className="lg:w-[350px] w-full bg-white py-6 flex-shrink-0 font-poppins px-0 lg:px-6">
       <div className="bg-[#F8F9FA] rounded-xl p-4 h-fit border-[0.5px] border-[#C8DCFE] overflow-y-auto custom-scrollbar">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">

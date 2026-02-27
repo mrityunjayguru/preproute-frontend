@@ -22,7 +22,7 @@ const AnsweredIcon = () => <Image src={ANSWERED} alt="answered" />;
 const NotAnsweredMarkedIcon = () => <Image src={REVIEW} alt="answered" />;
 
 const AnsweredMarkedIcon = () => (
-  <Image src={NOTREVIEW } alt="answered" />
+  <Image src={NOTREVIEW} alt="answered" />
 );
 
 export default function InstructionsPage() {
@@ -33,12 +33,12 @@ export default function InstructionsPage() {
   };
 
   return (
-    <div className="px-3 sm:px-6  flex flex-col gap-10 my-10">
+    <div className="flex flex-col gap-6 sm:gap-10 my-6 sm:my-10 h-full">
       {/* MAIN CARD */}
-      <div className="px-6 sm:px-8 md:px-12 lg:px-28">
+      <div className="sm:px-8 md:px-12 lg:px-28 flex flex-col gap-6 px-3">
         {/* HEADER */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <h1 className="text-xl sm:text-2xl md:text-3xl   font-poppins text-black">
+        <div className="flex  items-center justify-between gap-4">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-poppins text-black text-center sm:text-left">
             Instructions
           </h1>
 
@@ -53,7 +53,7 @@ export default function InstructionsPage() {
         </div>
 
         {/* GENERAL INSTRUCTIONS */}
-        <section className="mb-2">
+        <section>
           <h2 className="text-sm sm:text-base md:text-md font-poppins text-black">
             General Instructions
           </h2>
@@ -74,45 +74,42 @@ export default function InstructionsPage() {
           </ol>
 
           {/* STATUS LEGEND */}
-          <div className="grid font-dm-sans grid-cols-1 sm:grid-cols-2 lg:grid-rows-3 gap-3 mt-2">
-            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-1">
+          <div className="grid font-dm-sans grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-4">
+            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-2">
               <NotVisitedIcon />
               <p className="text-xs sm:text-sm md:text-sm text-gray-700">
                 You have not visited the question yet.
               </p>
             </div>
-            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-1">
-            <NotAnsweredMarkedIcon />
+            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-2">
+              <NotAnsweredMarkedIcon />
               <p className="text-xs sm:text-sm md:text-sm text-gray-700">
                 You have NOT answered the question, but have marked the question
                 for review.
               </p>
             </div>
-            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-1">
-              
+            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-2">
               <NotAnsweredIcon />
               <p className="text-xs sm:text-sm md:text-sm text-gray-700">
                 You have not answered the question.
               </p>
             </div>
-            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-1">
-            
+            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-2">
               <AnsweredMarkedIcon />
               <p className="text-xs sm:text-sm md:text-sm text-gray-700">
                 The question(s) "Answered and Marked for Review" will be
                 considered for evaluation.
               </p>
-              
             </div>
-            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-1">
-            <AnsweredIcon />
+            <div className="flex items-center gap-3 bg-[#f8fbff] rounded-lg px-3 py-2">
+              <AnsweredIcon />
               <p className="text-xs sm:text-sm md:text-sm text-gray-700">
                 You have answered the question.
               </p>
             </div>
           </div>
 
-          <p className="mt-1 text-xs sm:text-sm md:text-sm text-gray-700 font-dm-sans max-w-7xl ">
+          <p className="mt-4 text-xs sm:text-sm md:text-sm text-gray-700 font-dm-sans max-w-7xl ">
             The Marked for Review status for a question simply indicates that
             you would like to look at that question again.{" "}
             <span className="text-[#FF5635] font-medium">
