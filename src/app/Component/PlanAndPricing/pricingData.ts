@@ -35,8 +35,8 @@ export const PRICING_DATA = {
                     { label: "JIPMAT", values: ["5", "15", "25"] },
                     { label: "NPAT", values: ["2", "5", "10"] },
                     { label: "SET", values: ["2", "5", "10"] },
-                    { label: "IIMDBE", values: ["-", "5", "10"] },
-                    { label: "St.Xavier's", values: ["-", "5", "10"] },
+                    { label: "IIM B DBE", values: ["-", "5", "10"] },
+                    // { label: "St.Xavier's", values: ["-", "5", "10"] },
                 ],
             },
             {

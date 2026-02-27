@@ -66,8 +66,8 @@ function DailyPratice() {
         </h3>
 
         <span className="bg-[#2D80FB] text-white text-xs px-6 py-2 rounded-full font-medium tracking-tight whitespace-nowrap">
-         {Array.isArray(contdayly?.todaystreakByID)
-  ? contdayly.todaystreakByID.length
+         {Array.isArray(contdayly?.todaystreakByIDOverAll)
+  ? contdayly?.todaystreakByIDOverAll.length
   : 0}{" "}
 Preppers Attempted
 

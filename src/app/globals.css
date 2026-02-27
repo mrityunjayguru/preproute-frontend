@@ -540,7 +540,9 @@ div[class*="badge"] {
 .preview .resize-handle {
   display: none !important;
 }
-
+/* .preview-container span:has(> span:only-child) {
+  display: none;
+} */
 
 /* scrollbar */
 ::-webkit-scrollbar {
@@ -573,4 +575,20 @@ div[class*="badge"] {
   margin: 0.6rem auto;
   object-fit: contain;
 } */
-
+/* ============================= */
+/* WRAPPER */
+/* ============================= */
+/* ============================= */
+/* WRAPPER */
+/* ============================= */
+/* ============================= */
+/* WRAPPER */
+/* ============================= */
+/* ============================= */
+/* WRAPPER */
+/* ============================= */
+/* ============================= */
+/* WRAPPER */
+/* ============================= */
+/* Container styling */
+/*  */

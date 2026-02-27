@@ -279,9 +279,11 @@ export const fetchYouTubeVideos = createAsyncThunk<boolean, Payload>(
     try {
       // Dispatch your synchronous action
       const data = await UserRepo.fetchYouTubeVideos(payload);
-      if (data.status == 200) {
-        // thunkAPI.dispatch(setAttemptedExam(data.data.data));
-        thunkAPI.dispatch(setYoutube(data.data));
+      if (data.status === 200) {
+      console.log(data,"datafetchYouTubeVideos")
+
+        // thunkAPI.d=ispatch(setAttemptedExam(data.data.data));
+        thunkAPI.dispatch(setYoutube(data.data?.videos));
       }
       // Return success flag
       return true;

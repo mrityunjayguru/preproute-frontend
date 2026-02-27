@@ -56,7 +56,7 @@ const QuestionView: React.FC<Props> = ({
             </div>
           ) : null}
 
-          <div className="mt-4">
+          <div className="mt-4 pb-24">
             {CurrentInput}
           </div>
         </div>

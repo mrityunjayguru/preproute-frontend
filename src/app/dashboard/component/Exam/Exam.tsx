@@ -373,7 +373,7 @@ const Exam: React.FC = () => {
               )}
 
               {/* Difficulty & Format */}
-              <div className="space-y-3">
+              <div className="">
                 <Label className="font-medium">Question Properties</Label>
                 <div className="flex flex-wrap gap-6 p-4 border rounded-md bg-gray-50">
                   {["Easy", "Medium", "Hard", "Normal", "Pass"].map((type) => {

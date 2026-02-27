@@ -77,7 +77,7 @@ export default function ExamUI() {
   const [timeLeft, setTimeLeft] = useState(1);
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [questionStartTime, setQuestionStartTime] = useState<number | null>(null);
-
+  const [sectionTimes, setSectionTimes] = useState<Record<string, number>>({});
   // --- Derived State ---
   const exam = useMemo(() => examData?.[0]?.exam || {}, [examData]);
   const examSections: Section[] = useMemo(() => exam?.sections || [], [exam]);
@@ -182,7 +182,7 @@ export default function ExamUI() {
           setSelectedSection(firstSection);
           setTotalNoOfQuestions(firstSection.noOfQuestions);
           fetchQuestion(1, firstSection.sectionId);
-          if (!localStorage.getItem(`sectionStartTime_${firstSection.sectionId}`)) {
+          if (localStorage.getItem(`sectionStartTime_${firstSection.sectionId}`)) {
             updateSectionTime(null, firstSection.sectionId);
             localStorage.setItem(`sectionStartTime_${firstSection.sectionId}`, "1");
           }
@@ -223,7 +223,46 @@ export default function ExamUI() {
     }, 1000);
     return () => clearInterval(timer);
   }, [timeLeft, examData, isSection, currentSectionIndex, examSections]);
+// 1. Add this state to your component
 
+// 2. Initialize state from LocalStorage on mount
+useEffect(() => {
+  if (examData?.[0]?._id) {
+    const savedSectionTimes = localStorage.getItem(`section_times_${examData[0]._id}`);
+    if (savedSectionTimes) {
+      setSectionTimes(JSON.parse(savedSectionTimes));
+    }
+  }
+}, [examData]);
+
+// 3. Persistent Internal Section Timer
+useEffect(() => {
+  if (!selectedSection?.sectionId || isTimeUp ) return;
+
+  const timer = setInterval(() => {
+    setSectionTimes((prev) => {
+      const currentSectionId = selectedSection.sectionId;
+      const updatedTimes = {
+        ...prev,
+        [currentSectionId]: (prev[currentSectionId] || 0) + 1,
+      };
+
+      // Sync to LocalStorage for persistence on refresh
+      localStorage.setItem(
+        `section_times_${examData?.[0]?._id}`,
+        JSON.stringify(updatedTimes)
+      );
+      
+      return updatedTimes;
+    });
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, [selectedSection?.sectionId, isTimeUp, examData]);
+
+// 4. (Optional) Access the time for the current section anywhere in your UI:
+const currentTimeSpentInSection = sectionTimes[selectedSection?.sectionId || ""] || 0;
+// console.log(sectionTimes,"currentTimeSpentInSection")
   // --- Question Sync ---
   useEffect(() => {
     if (!singleQuestion?.[0]) return;
@@ -351,8 +390,18 @@ export default function ExamUI() {
 
   const handleSubmitFullExam = async () => {
     try {
+      const payload:any={
+        sectionTimes,
+        examData
+      }
       await updateSectionTime(selectedSection?.sectionId, undefined);
-      await dispatch(userExamResult(examData));
+      await dispatch(userExamResult(payload));
+        localStorage.removeItem(`section_times_${examData?.[0]?._id}`);
+    // ✅ Remove exam timer also (recommended)
+        localStorage.removeItem(`exam_timeLeft_${examData?.[0]?._id}`);
+    // ✅ Clear sectionTimes state
+    setShowSubmitPopup(false)
+    setSectionTimes({});
       router.push("/analytics");
     } catch (err) { console.error("Error submitting exam:", err); }
   };
@@ -381,6 +430,7 @@ export default function ExamUI() {
     return question.answerType === "Numeric" ? (
       <NumericalKeypad value={numericalValue} onKeyPress={handleKeyPress} />
     ) : (
+      
       <MCQOptions options={question.options || []} selected={mcqSelected} setSelected={setMcqSelected} />
     );
   }, [question, numericalValue, mcqSelected, handleKeyPress]);
