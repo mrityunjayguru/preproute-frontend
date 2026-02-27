@@ -87,8 +87,8 @@ export default function SectionalExa() {
     dispatch(handleGivenExam(null));
     dispatch(setCurrentSection(null));
 
-    if (!examData?.hasGivenExam || type === "start") {
-      const payload = {
+    if (!examData?.hasGivenExam || type == "Resume"  || type === "start") {
+      const payload:any = {
         examTypeId: examData.examTypeId,
         questionPaperId: examData._id,
         examid: examData.examid,
@@ -98,9 +98,18 @@ export default function SectionalExa() {
       };
 
       const res: any = await dispatch(getUserQuestionData(payload));
-      localStorage.removeItem(`exam_timeLeft_${res?.payload?.[0]?._id}`);
+      if (type == "start") {
+        localStorage.removeItem(`exam_timeLeft_${res?.payload[0]?._id}`);
+       localStorage.removeItem(`section_times_${examData?.[0]?._id}`);
+    
+
+      }
+      // localStorage.removeItem(`exam_timeLeft_${res?.payload?.[0]?._id}`);
       router.push("/Exam/Instruction");
-    } else {
+    } 
+      
+    
+    else {
       await dispatch(QuestionPaperResult({ questionPaperID: examData._id }));
       router.push("/analytics");
     }
@@ -191,7 +200,7 @@ export default function SectionalExa() {
                   <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] 
           p-4 sm:p-5 lg:p-6 
           flex flex-col transition-all">
-                      <p className="text-[12px] sm:text-[13px] lg:text-[14px] font-dm-sans font-medium">Mock Exam</p>
+                      <p className="text-[12px] sm:text-[13px] lg:text-[14px] font-dm-sans font-medium">Sectional Exam</p>
                     <h3 className=" text-lg sm:text-xl lg:text-2xl
             font-poppins font-medium text-[#FF5635]
             mb-4 sm:mb-5 lg:mb-6

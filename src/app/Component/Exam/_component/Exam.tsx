@@ -386,6 +386,11 @@ try {
 
     }
   }
+  const noofMocks =
+  Array.isArray(selectedExam?.oteher) &&
+  selectedExam.oteher[0]?.exam?.noOfMocks !== undefined
+    ? selectedExam.oteher[0].exam.noOfMocks
+    : 24;
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">
@@ -604,9 +609,9 @@ try {
                   index={i}
                 />
               ))}
-              {examById.length < (examById[0]?.exam?.Mocks || 24 ) &&
+              {examById.length < (noofMocks) &&
                 [
-                  ...Array((examById[0]?.exam?.Mocks || 24) - examById.length),
+                  ...Array((noofMocks) - examById.length),
                 ].map((_, idx) => (
                   <div
                     onClick={() => handleRedirect(idx)}

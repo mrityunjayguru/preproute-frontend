@@ -64,7 +64,7 @@ export default function HomePage() {
 // }, []);
   return (
     <main className=" bg-white text-[#0F1724]">
-      <WhatsAppSocialApp />
+      {/* <WhatsAppSocialApp /> */}
       <div className="flex flex-col items-center  justify-center px-6 sm:px-8 md:px-12 lg:px-28">
         <HeroSection logoSrc={heroImage} />
       </div>

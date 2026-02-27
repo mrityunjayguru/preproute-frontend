@@ -12,6 +12,9 @@ import { Search } from "lucide-react";
 const SectionTable = () => {
   const dispatch = useDispatch<AppDispatch>();
   const sections = useSelector((state: any) => state?.section?.section || []);
+    const subTopics = useSelector((state: any) => state?.subTopic?.subTopic || []);
+    const topic = useSelector((state: any) => state?.topic?.topic);
+  
   const [search, setSearch] = useState("");
 
   const getData = async () => {

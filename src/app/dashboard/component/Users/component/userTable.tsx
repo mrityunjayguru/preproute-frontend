@@ -1,5 +1,5 @@
 "use client";
-import { getUsers, handleUpdateUserData } from "@/api/Users";
+import { DownloadUsers, getUsers, handleUpdateUserData } from "@/api/Users";
 import CommonTable from "@/Common/CommonTable";
 import { formatDateTime } from "@/Common/ComonDate";
 import { AppDispatch } from "@/store/store";
@@ -11,6 +11,7 @@ import { Search } from "lucide-react";
 import Pagination from "@/Common/Pagination";
 import DownloadUserPDF from "./DownloadUserPDF";
 import UserProfilePopup from "./UserProfilePopup";
+import { Button } from "@/components/ui/button";
 
 function userTable() {
   const router = useRouter();
@@ -78,6 +79,9 @@ function userTable() {
     setuserData(val)
   
   }
+  const downloadUsercsv=async()=>{
+    await dispatch(DownloadUsers({}))
+  }
   return (
   <>
  {userpopup && (
@@ -108,6 +112,14 @@ function userTable() {
         <h2 className="text-md font-poppins font-medium text-[#1570EF]">
           User List
         </h2>
+        <div className="flex gap-4">
+              <Button
+            onClick={downloadUsercsv}
+    
+            className="h-10 bg-[#FF5635] text-white px-10 font-normal font-poppins cursor-pointer w-fit rounded-[4px]"
+          >
+           Download User
+          </Button>
         <div className="w-[90%] md:w-96 bg-white border border-gray-200 rounded-sm flex items-center px-3 py-2 gap-2">
           {/* Role Select */}
           <select
@@ -130,6 +142,7 @@ function userTable() {
             onChange={(e) => setSearch(e.target.value)}
             className="flex-1 bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400 font-poppins"
           />
+        </div>
         </div>
       </div>
       <CommonTable

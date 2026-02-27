@@ -57,8 +57,7 @@ let mockExam=examTypeData.find((item:any)=>item.examType==="Mocks");
 
             <p className=" font-dm-sans text-[#333333] font-dm-sans text-xs sm:text-sm md:text-base lg:text-[18px] leading-relaxed font-normal max-w-6xl mx-auto">
               Practice entrance exams online in real exam-like conditions.
-              Access mock tests, past year papers, and exclusive exams designed
-              by professors from top institutes.
+              Access mock tests, past year papers, and exclusive exams Designed by experts and students from IIM’s and top institutes of India.
             </p>
           </motion.div>
 

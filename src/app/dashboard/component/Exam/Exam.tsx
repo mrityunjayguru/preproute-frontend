@@ -24,6 +24,7 @@ import QuestionWithOptionsEditor from "./Component/LatexCode";
 import LatexForSoluction from "./Component/LatexForSoluction";
 import LatesForpassage from "./Component/LatesForpassage";
 import SummaryTable from "./Component/Distirbution";
+import QuestionBankPopup from "./Component/QuestionBankPopup";
 
 type AnswerType = "Numeric" | "MCQ";
 
@@ -133,6 +134,7 @@ const Exam: React.FC = () => {
   // Sync state when a single question is loaded from DB
   useEffect(() => {
     if (singleQuestion) {
+      console.log(singleQuestion,"zzzzzzzzzzzzz")
       setAnswerType(singleQuestion.answerType || "MCQ");
       setQuestionType(singleQuestion.questionType || "Easy");
       setActiveSection(singleQuestion.section || "");
@@ -259,11 +261,51 @@ const Exam: React.FC = () => {
     () => Array.from({ length: numberOfQuestion }, (_, i) => i + 1),
     [numberOfQuestion],
   );
+const [openQB, setOpenQB] = useState(false);
+const handleOpenQuestionBank=()=>{
+   setOpenQB(true);
+}
+const addQuestionBankItem=(questionItem:any)=>{
+  let singleQuestion:any=questionItem
+   if (singleQuestion) {
+      setAnswerType(singleQuestion.answerType || "MCQ");
+      setQuestionType(singleQuestion.questionType || "Easy");
+      // setActiveSection(singleQuestion.section || "");
+      setQuestionData(singleQuestion.questionText || "");
+      setHintText(singleQuestion.hint || "");
+      setSelectedTopic(singleQuestion.topicId || "");
+      setSelectedSubtopic(singleQuestion.subtopicId || "");
+      setNumericAnswer(singleQuestion.numericAnswer || 0);
+      setQuestionPessage(singleQuestion.questionPessage || "Normal");
+      setPassage(singleQuestion.passage || "");
+      if (
+        singleQuestion.answerType === "MCQ" &&
+        Array.isArray(singleQuestion.options)
+      ) {
+        setOptions(
+          singleQuestion.options.map((opt: any, i: number) => ({
+            id: i + 1,
+            text: opt.text || "",
+            isCorrect: opt.isCorrect || false,
+            label: `${i + 1}${getOrdinalSuffix(i + 1)}`,
+          })),
+        );
+      }
+    } else {
+      resetQuestionFields();
+    }
+// console.log(questionItem,"questionItemquestionItem")
 
+}
   return (
     <>
       <SummaryTable open={openSummary} onClose={() => setOpenSummary(false)} />
-
+<QuestionBankPopup
+  isOpen={openQB}
+  onClose={() => setOpenQB(false)}
+  questionBankItem={addQuestionBankItem}
+  activeSection={activeSection}
+/>
       <div className="min-h-screen bg-white">
         <div className="w-full mx-auto px-4 md:px-10 mb-8">
           {/* Header */}
@@ -303,6 +345,13 @@ const Exam: React.FC = () => {
                 ))}
             </div>
             <div className="flex gap-3">
+              <button
+                onClick={handleOpenQuestionBank}
+                disabled={loader}
+                className="px-10 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] disabled:opacity-50"
+              >
+                Question Bank
+              </button>
               <button
                 onClick={() => {
                   dispatch(

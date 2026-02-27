@@ -10,6 +10,7 @@ interface Payload {
 interface UserRepo {
   createUser: (payload: Payload) => Promise<AxiosResponse>;
   getUser: (payload: Payload) => Promise<AxiosResponse>;
+  DownloadUsers: (payload: Payload) => Promise<AxiosResponse>;
   handleUpdateData: (payload: any) => Promise<AxiosResponse>;
   updaquesPaperTime: (payload: any) => Promise<AxiosResponse>;
   fetchAttemptedExam: (payload: any) => Promise<AxiosResponse>;
@@ -24,6 +25,10 @@ fetchYouTubeVideos: (payload: any) => Promise<AxiosResponse>;
 export const UserRepo: UserRepo = {
   createUser(payload) {
     return Repository.post(User.create, payload, {
+    });
+  },
+  DownloadUsers(payload) {
+    return Repository.post(User.DownloadUsers, payload, {
     });
   },
  fetchYouTubeVideos(payload) {

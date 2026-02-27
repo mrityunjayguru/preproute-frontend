@@ -25,7 +25,13 @@ const ExamTable: React.FC<{ data?: any }> = ({ data }) => {
 
   // Define columns same as your exam JSON structure
   const columns = [
-    { header: "Exam Name", accessor: "examname" },
+   {
+    header: "Exam Name",
+    accessor: (row: any) =>
+      row.subjectName
+        ? `${row.examname} (${row.subjectName})`
+        : row.examname,
+  },
     {
       header: "Switchable",
       accessor: "switchable",

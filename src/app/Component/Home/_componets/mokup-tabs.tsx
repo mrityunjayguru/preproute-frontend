@@ -29,7 +29,7 @@ const FEATURES = [
     label: "Real Exam Simulation",
     screen:img4,
     vector: FEATURE4,
-    title:"Take mock tests in a realistic exam setup that prepares you for the actual exam day by letting you practice in real-like conditions. Train your mind to stay calm, focused, and accurate under real exam pressure.",
+    // title:"Take mock tests in a realistic exam setup that prepares you for the actual exam day by letting you practice in real-like conditions. Train your mind to stay calm, focused, and accurate under real exam pressure.",
     description: "Take mock tests in real exam-like conditions.",
   },
   {
@@ -37,7 +37,7 @@ const FEATURES = [
     label: "Smart Analytics Dashboard",
     screen: img3,
     vector: FEATURE1,
-    title:"Track your performance with detailed insights that help you understand your strengths and weaknesses. Analyze your accuracy, speed, and progress across sections to identify improvement areas. Use smart reports and visual data to make informed study decisions and boost your overall exam readiness.",
+    // title:"Track your performance with detailed insights that help you understand your strengths and weaknesses. Analyze your accuracy, speed, and progress across sections to identify improvement areas. Use smart reports and visual data to make informed study decisions and boost your overall exam readiness.",
     description: "Track performance with detailed analytics.",
   },
   {
@@ -45,7 +45,7 @@ const FEATURES = [
     label: "Expert Curated Content",
     screen: img2,
     vector: FEATURE3,
-    title:"Learn with carefully designed study material created by experienced educators and exam specialists. Access high-quality questions, concepts, and practice sets aligned with the latest exam patterns. Strengthen your fundamentals and build confidence with content that truly prepares you for success.",
+    // title:"Learn with carefully designed study material created by experienced educators and exam specialists. Access high-quality questions, concepts, and practice sets aligned with the latest exam patterns. Strengthen your fundamentals and build confidence with content that truly prepares you for success.",
     description: "Practice with expert-curated questions.",
   },
   {
@@ -53,7 +53,7 @@ const FEATURES = [
     label: "Compete With Peers",
     screen: img1,
     vector: FEATURE2,
-    title:"Challenge yourself by competing with thousands of aspirants from across the country. Compare your scores, rankings, and performance to understand where you stand. Stay motivated, improve consistently, and push your limits by learning in a competitive environment.",
+    // title:"Challenge yourself by competing with thousands of aspirants from across the country. Compare your scores, rankings, and performance to understand where you stand. Stay motivated, improve consistently, and push your limits by learning in a competitive environment.",
     description: "Compare scores and rankings with peers.",
   },
 ];
@@ -61,7 +61,7 @@ const FEATURES = [
 const MokupTabs = (props: Props) => {
   const [value, setValue] = React.useState("exam");
   return (
-    <section className="w-full py-10">
+    <section className="w-full pt-10">
       <Tabs value={value} onValueChange={setValue} className="w-full">
         {/* Desktop/Laptop Tabs */}
 

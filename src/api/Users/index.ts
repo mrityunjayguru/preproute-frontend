@@ -14,6 +14,7 @@ import { setResult } from "@/store/seatUpexam/question";
 import { setAuth } from "@/store/Auth";
 import { toast } from "react-toastify";
 import { ToastSuccess } from "@/Utils/toastUtils";
+import { exportUsersToCSV } from "@/Utils/exportCSV";
 interface Payload {
   // Define your payload structure here, for example:
   someField: string; // replace this with actual fields
@@ -62,6 +63,26 @@ export const getUsers = createAsyncThunk<boolean, Payload>(
         return data;
       }
     } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
+export const DownloadUsers = createAsyncThunk<boolean, Payload>(
+  topic.get,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await UserRepo.DownloadUsers(payload);
+      await exportUsersToCSV(data?.data?.data);
+        return data;
+    } catch (err: any) {
+      console.log(err,"errerrerr")
       if (err.status == 401) {
         localStorage.removeItem("token");
         GetMessage("warning", "Unauthorized");

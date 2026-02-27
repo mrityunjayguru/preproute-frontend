@@ -80,9 +80,9 @@ const SelectExamForm = () => {
 
   // ================= CONSTANTS =================
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 10 }, (_, i) => ({ val: currentYear - i, lbl: currentYear - i }));
-  const mocks = Array.from({ length: 10 }, (_, i) => ({ val: `Mock ${i + 1}`, lbl: `Mock ${i + 1}` }));
-  const tests = Array.from({ length: 10 }, (_, i) => ({ val: `Test ${i + 1}`, lbl: `Test ${i + 1}` }));
+  const years = Array.from({ length: 24 }, (_, i) => ({ val: currentYear - i, lbl: currentYear - i }));
+  const mocks = Array.from({ length: 24 }, (_, i) => ({ val: `Mock ${i + 1}`, lbl: `Mock ${i + 1}` }));
+  const tests = Array.from({ length: 24 }, (_, i) => ({ val: `Test ${i + 1}`, lbl: `Test ${i + 1}` }));
 
   // ================= HANDLERS =================
   const updateForm = (updates: Partial<typeof formData>) => {
