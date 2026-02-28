@@ -11,7 +11,7 @@ function DailyStrake() {
 
   const todayAttempts =
     userdashboarddata?.attemptcountdailybasis?.[0]?.totalAttempts ?? 0;
-    const todayAttemptsdaily =
+  const todayAttemptsdaily =
     userdashboarddata?.dailyStreaksdata?.[0]?.totalAttempts ?? 0;
   return (
     <div className="md:col-span-6 lg:col-span-4 flex flex-col space-y-6 h-full">
@@ -24,7 +24,7 @@ function DailyStrake() {
         </div>
         <div className="mt-4">
           <div className="text-5xl font-medium text-[#FF5635]">
-            {todayAttempts+todayAttemptsdaily}{" "}
+            {todayAttempts + todayAttemptsdaily}{" "}
             <span className="text-xl font-dm-sans text-gray-900">Days</span>
           </div>
         </div>

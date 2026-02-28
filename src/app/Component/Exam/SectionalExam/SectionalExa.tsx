@@ -34,7 +34,7 @@ export default function SectionalExa() {
 
   const [selectedExam, setSelectedExam] = useState<any>(null);
   const [sectionId, setSectionId] = useState<string | null>(null);
- const [toggle,setToggle]=useState(false)
+  const [toggle, setToggle] = useState(false)
   /* ---------------- AUTO SELECT FIRST EXAM + SECTION ---------------- */
   useEffect(() => {
     if (examdata.length > 0) {
@@ -121,10 +121,10 @@ export default function SectionalExa() {
     value: ex,
   }));
 
-  const onExamClick = (exam:any) => {
-  handleSelectExam({ label: exam.examname, value: exam });
-  setToggle(true);
-};
+  const onExamClick = (exam: any) => {
+    handleSelectExam({ label: exam.examname, value: exam });
+    setToggle(true);
+  };
 
   /* ---------------- UI ---------------- */
   return (
@@ -132,37 +132,37 @@ export default function SectionalExa() {
       <div className="flex-grow px-6 lg:px-28">
 
         {/* HEADER */}
-  <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10   flex flex-col md:flex-row items-center justify-center md:justify-between overflow-hidden">
-              {/* Left Content */}
+        <div className="relative h-[100px] md:h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10 md:items-center  flex flex-col md:flex-row  justify-center md:justify-between overflow-hidden">
+          {/* Left Content */}
 
-              <div className="z-10 max-w-xl">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#FF5635] font-poppins">
-                  {selectedExamType?.examType}
-                </h2>
-                <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
-                  Strict sequential mock exams
-                </p>
-              </div>
-              {/* Illustration */}
-              <motion.div
-                initial={{ opacity: 0, x: 40 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="mt-6 md:mt-0 md:w-[267px]"
-              >
-                <Image
-                  src={EXAMPREP}
-                  alt="Mock Exam Illustration"
-                  className="w-full hidden md:block object-contain"
-                  width={267}
-                  height={140}
-                />
-              </motion.div>
-            </div>
+          <div className="z-10 max-w-xl">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#FF5635] font-poppins">
+              {selectedExamType?.examType}
+            </h2>
+            <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
+              Strict sequential mock exams
+            </p>
+          </div>
+          {/* Illustration */}
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-6 md:mt-0 md:w-[267px]"
+          >
+            <Image
+              src={EXAMPREP}
+              alt="Mock Exam Illustration"
+              className="w-full hidden md:block object-contain"
+              width={267}
+              height={140}
+            />
+          </motion.div>
+        </div>
 
         {/* EXAM + SECTION */}
-        <div className="flex flex-wrap gap-5 ">
-          {toggle?(<Select
+        <div className="flex flex-wrap gap-x-4 gap-y-3 mb-3 items-center">
+          {toggle ? (<Select
             options={examOptions}
             value={
               selectedExam
@@ -170,44 +170,46 @@ export default function SectionalExa() {
                 : null
             }
             onChange={handleSelectExam}
-            className="min-w-[260px]"
-          />):(null)}
+            className="w-full sm:w-auto min-w-[260px] rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF]
+          flex flex-col transition-all"
+          />) : (null)}
 
-          {toggle && selectedExam?.sectionDetails?.map((sec: any) => (
-            <button
-              key={sec._id}
-              onClick={() => handleSectionChange(sec)}
-              className={`px-4 py-2 rounded-lg border transition-all
-                ${
-                  sectionId === sec._id
-                    ? "bg-[#FF5635] text-white"
+          <div className="flex flex-wrap gap-2">
+            {toggle && selectedExam?.sectionDetails?.map((sec: any) => (
+              <button
+                key={sec._id}
+                onClick={() => handleSectionChange(sec)}
+                className={`px-4 py-2 text-sm sm:text-base rounded-lg border transition-all whitespace-nowrap
+                  ${sectionId === sec._id
+                    ? "bg-[#FF5635] text-white border-[#FF5635]"
                     : "border-[#FF5635] text-[#FF5635] hover:bg-[#FF5635] hover:text-white"
-                }
-              `}
-            >
-              {sec.section}
-            </button>
-          ))}
+                  }
+                `}
+              >
+                {sec.section}
+              </button>
+            ))}
+          </div>
         </div>
-           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mx-auto">
-              { !toggle &&  examdata.map((exam: any, i: number) => (
-                <motion.div
-                  key={exam._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                >
-                  <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] 
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mx-auto">
+          {!toggle && examdata.map((exam: any, i: number) => (
+            <motion.div
+              key={exam._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+            >
+              <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] 
           p-4 sm:p-5 lg:p-6 
           flex flex-col transition-all">
-                      <p className="text-[12px] sm:text-[13px] lg:text-[14px] font-dm-sans font-medium">Sectional Exam</p>
-                    <h3 className=" text-lg sm:text-xl lg:text-2xl
+                <p className="text-[12px] sm:text-[13px] lg:text-[14px] font-dm-sans font-medium">Mock Exam</p>
+                <h3 className=" text-lg sm:text-xl lg:text-2xl
             font-poppins font-medium text-[#FF5635]
             mb-4 sm:mb-5 lg:mb-6
             leading-snug">
-                      {exam.examname}
-                    </h3>
-                    {/* <button
+                  {exam.examname}
+                </h3>
+                {/* <button
                       className="  w-full md:w-fit px-6 sm:px-8 md:px-10 cursor-pointer
                 h-10 sm:h-11
                 rounded-[8px]
@@ -218,10 +220,10 @@ export default function SectionalExa() {
                     >
                       Choose to start
                     </button> */}
-                    
-  <div className="mt-auto font-poppins">
-                      <button
-                        className="
+
+                <div className="mt-auto font-poppins">
+                  <button
+                    className="
                 w-full md:w-fit px-6 sm:px-8 md:px-10 cursor-pointer
                 h-10 sm:h-11
                 rounded-[8px]
@@ -229,21 +231,21 @@ export default function SectionalExa() {
                 hover:bg-[#e34d2e]
                 transition-all
               "
-                        onClick={() => onExamClick(exam)}
-                      >
-                        <span className="text-[14px] sm:text-[15px]  lg:text-[16px]">
-                          Choose to start
-                        </span>
-                      </button>
-                    </div>
+                    onClick={() => onExamClick(exam)}
+                  >
+                    <span className="text-[14px] sm:text-[15px]  lg:text-[16px]">
+                      Choose to start
+                    </span>
+                  </button>
+                </div>
 
 
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
         {/* MOCK GRID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-5">
           {toggle && examById.map((exam: any, i: number) => (
             <MockExamCard
               key={exam._id}
@@ -257,7 +259,7 @@ export default function SectionalExa() {
       </div>
 
       {/* FOOTER */}
-      <footer className="bg-[#FF5635] text-white py-8 mt-20">
+      <footer className="bg-[#FF5635] text-white py-8 ">
         <div className="flex justify-between items-center px-6 lg:px-28">
           <Image src={FOOTERLOGO} alt="logo" width={160} />
           <SocialMedia />

@@ -16,7 +16,7 @@ function DailyPratice() {
 
   const userdashboarddata =
     useSelector((state: any) => state?.Auth?.userDashboard?.data) || [];
- const contdayly =
+  const contdayly =
     useSelector((state: any) => state?.Auth?.userDashboard) || [];
   /**
    * ✅ Filter ONLY:
@@ -58,7 +58,7 @@ function DailyPratice() {
   };
 
   return (
-    <div className="p-6 border-none rounded-[8px] bg-[#EBFAFF] max-h-[300px]">
+    <div className="p-6 border-none rounded-[8px] bg-[#EBFAFF] md:h-[300px]">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <h3 className="text-lg font-medium text-[#2B5CE7] font-poppins">
@@ -66,10 +66,10 @@ function DailyPratice() {
         </h3>
 
         <span className="bg-[#2D80FB] text-white text-xs px-6 py-2 rounded-full font-medium tracking-tight whitespace-nowrap">
-         {Array.isArray(contdayly?.todaystreakByIDOverAll)
-  ? contdayly?.todaystreakByIDOverAll.length
-  : 0}{" "}
-Preppers Attempted
+          {Array.isArray(contdayly?.todaystreakByIDOverAll)
+            ? contdayly?.todaystreakByIDOverAll.length
+            : 0}{" "}
+          Preppers Attempted
 
         </span>
       </div>
@@ -90,7 +90,7 @@ Preppers Attempted
                   </h4>
 
 
-{/* 
+                  {/* 
                   <div className="flex items-center gap-2 text-gray-500 text-sm mt-1 font-dm-sans">
                     <Image
                       src={CALENDER}

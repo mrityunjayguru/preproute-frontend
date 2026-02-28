@@ -45,7 +45,7 @@ const OverallTab = ({ data }: OverallTabProps) => {
 
   useEffect(() => {
     getData();
-      dispatch(getTopic({}));
+    dispatch(getTopic({}));
   }, []);
 
   const totalQuestions = Number(data?.totalQuestions || 0);
@@ -53,7 +53,10 @@ const OverallTab = ({ data }: OverallTabProps) => {
   const unattempted = Math.max(0, totalQuestions - attempted);
 
   const negativePerWrong = Number(
-    data?.questionpaper?.negativeMark ?? data?.examdetail?.negativeMark ?? data?.negativeMark ?? 0
+    data?.questionpaper?.negativeMark ??
+    data?.examdetail?.negativeMark ??
+    data?.negativeMark ??
+    0,
   );
   const computedNegative =
     Number.isFinite(negativePerWrong) && negativePerWrong !== 0
@@ -141,13 +144,32 @@ const OverallTab = ({ data }: OverallTabProps) => {
   }, [data]);
 
   const weakTopics = useMemo(() => {
-    return (data?.typeWiseTime || [])
-      .map((t: any) => ({
-        ...t,
-        accuracy: t.attempted ? (Number(t.correct) / Number(t.attempted)) * 100 : 0,
-      }))
-      .sort((a: any, b: any) => a.accuracy - b.accuracy)
-      .slice(0, 5);
+    const topics = data?.typeWiseTime || [];
+    if (!topics.length) return [];
+
+    return topics
+      .map((t: any) => {
+        const total = Number(t.total || 0);
+        const attempted = Number(t.attempted || 0);
+        const correct = Number(t.correct || 0);
+
+        if (total === 0) return null;
+
+        const attemptRate = (attempted / total) * 100;
+        const accuracy = attempted ? (correct / attempted) * 100 : 0;
+
+        return {
+          topicId: t.topicId,
+          total,
+          attempted,
+          correct,
+          wrong: Number(t.wrong || 0),
+          avgTime: Number(t.avgTime || 0),
+          attemptRate: Math.round(attemptRate),
+          accuracy: Math.round(accuracy),
+        };
+      })
+      .sort((a, b) => a.accuracy - b.accuracy).slice(0, 5);
   }, [data]);
 
   const weakSubtopics = useMemo(() => {
@@ -160,7 +182,7 @@ const OverallTab = ({ data }: OverallTabProps) => {
       map[sid].total += 1;
       if (q.usergiven) {
         map[sid].attempted += 1;
-        const isCorrect = q.answerType === "Numeric" 
+        const isCorrect = q.answerType === "Numeric"
           ? Number(q.usergiven?.numericAnswer) === Number(q.correctAnswer)
           : q.usergiven?.userAnswer === q.correctAnswer; // Standardized check
         if (isCorrect) map[sid].correct += 1;
@@ -171,8 +193,13 @@ const OverallTab = ({ data }: OverallTabProps) => {
       .sort((a: any, b: any) => a.accuracy - b.accuracy)
       .slice(0, 5);
   }, [data]);
-
-  const checkShow = data?.examdetail?.examname === "CUET" || data?.questionpaper?.examformet === "sectional";
+  const start = new Date(data?.fullExamStartTime).getTime();
+  const end = new Date(data?.fullExamEndTime).getTime();
+  const spentMinutes = ((end - start) / 60000).toFixed(2);
+  {/* Time Analysis */ }
+  // console.log(data?.questionpaper?.examformet=="sectional","data?.examdetail?.examname")
+  let checkShow = data?.examdetail?.examname == "CUET" || data?.questionpaper?.examformet == "sectional"
+  // console.log(checkShow,"llllllllllllllllllllll")
 
   return (
     <div className="w-full space-y-6">
@@ -225,96 +252,146 @@ const OverallTab = ({ data }: OverallTabProps) => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {!checkShow && (
-          <>
-            <div className="lg:col-span-2">
-              <AnswerAccuracyGraph />
+        {!checkShow ? (<>
+          <div className="lg:col-span-2">
+            <AnswerAccuracyGraph />
+          </div>
+
+          <div className="rounded-[8px] bg-white border border-[#E6F4FF] p-3 sm:p-6">
+            <div className="flex items-center justify-between mb-4 font-poppins">
+              <h3 className="text-lg font-medium text-[#005EB6]">
+                Time Analysis{" "}
+                <span className="text-xs text-black font-normal">(in mins)</span>
+              </h3>
             </div>
 
-            <div className="rounded-[8px] bg-white border border-[#E6F4FF] p-6">
-              <h3 className="text-lg font-medium text-[#005EB6] mb-4 font-poppins">
-                Time Analysis <span className="text-xs text-black font-normal">(in mins)</span>
-              </h3>
+            {sectionTime.pie.length === 0 ? (
+              <div className="text-sm text-gray-500 font-dm-sans">
+                No time data found.
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2 items-center">
+                <div className="space-y-4">
+                  <div className="border-b border-gray-100 pb-2">
+                    <div className="text-xs text-black font-dm-sans mb-1">
+                      Overall Exam
+                    </div>
+                    <div className="text-2xl font-bold text-[#005EB6] relative group font-dm-sans">
+                      {spentMinutes}/
+                      <span className="text-[#000]">
+                        {data?.examdetail.fullExamduration}
+                      </span>
+                      {/* <span className="text-sm text-black font-normal">
+                      /{data?.examdetail.fullExamduration || ""}
+                    </span> */}
+                      {/* <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50">
+                      <AverageTime value={overallMinutes} />
+                    </div> */}
+                    </div>
+                  </div>
 
-              {sectionTime.items.length === 0 ? (
-                <div className="text-sm text-gray-500 font-dm-sans">No time data found.</div>
-              ) : (
-                <div className="grid grid-cols-2 gap-2 items-center">
-                  <div className="space-y-4">
-                    <div className="border-b border-gray-100 pb-2">
-                      <div className="text-xs text-black font-dm-sans mb-1">Overall Exam</div>
-                      <div className="text-2xl font-bold text-[#005EB6] font-dm-sans">
-                        {formatMinutesSeconds(totalTimeTakenSeconds)}/
-                        <span className="text-[#000]">{data?.examdetail?.fullExamduration}</span>
+                  {sectionTime.items.slice(0, 4).map((s) => (
+                    <div
+                      key={s.name}
+                      className="border-b border-gray-100 pb-2 last:border-0"
+                    >
+                      <div className="text-xs text-black font-dm-sans mb-1">
+                        {s.name}
+                      </div>
+                      <div
+                        className="text-xl font-bold font-dm-sans relative group cursor-pointer"
+                        style={{
+                          color: sectionTime.pie.find((p) => p.name === s.name)
+                            ?.fill,
+                        }}
+                      >
+                        {s.minutes}
+                        {/* <span className="text-sm text-black font-normal">
+                        /{s.totalDuration || ""}
+                      </span> */}
+
+                        {/* Tooltip */}
+                        {/* <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50">
+                        <AvgTimeTooltip value={avgSectionTime} />
+                      </div> */}
                       </div>
                     </div>
-
-                    {sectionTime.items.slice(0, 4).map((s) => (
-                      <div key={s.name} className="border-b border-gray-100 pb-2 last:border-0">
-                        <div className="text-xs text-black font-dm-sans mb-1">{s.name}</div>
-                        <div className="text-xl font-bold font-dm-sans" style={{ color: s.fill }}>
-                          {s.minutes}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="w-full h-[200px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={sectionTime.pie}
-                          dataKey="value"
-                          innerRadius={50}
-                          outerRadius={70}
-                          startAngle={90}
-                          endAngle={-270}
-                          paddingAngle={2}
-                        >
-                          {sectionTime.pie.map((entry: any, index: number) => (
-                            <Cell key={`cell-${index}`} fill={entry.fill} stroke="none" />
-                          ))}
-                        </Pie>
-                        <Pie
-                          data={[
-                            { value: sectionTime.overallMinutes, fill: "#0B5FFF" },
-                            {
-                              value: Math.max(0, (sectionTime.totalExamDuration || sectionTime.overallMinutes) - sectionTime.overallMinutes),
-                              fill: "#E0E0E0",
-                            },
-                          ]}
-                          dataKey="value"
-                          innerRadius={78}
-                          outerRadius={85}
-                          startAngle={90}
-                          endAngle={-270}
-                        >
-                          <Cell fill="#0B5FFF" stroke="none" />
-                          <Cell fill="#E0E0E0" stroke="none" />
-                        </Pie>
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
+                  ))}
                 </div>
-              )}
-            </div>
-          </>
-        )}
+
+                <div className="w-full h-[200px] ">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
+                      <Pie
+                        data={sectionTime.pie}
+                        dataKey="value"
+                        innerRadius={35}
+                        outerRadius={55}
+                        startAngle={90}
+                        endAngle={-270}
+                        paddingAngle={2}
+                      >
+                        {sectionTime.pie.map((entry: any, index: number) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={entry.fill}
+                            stroke="none"
+                          />
+                        ))}
+                      </Pie>
+
+                      <Pie
+                        data={[
+                          { value: sectionTime.overallMinutes, fill: "#0B5FFF" },
+                          {
+                            value: Math.max(
+                              0,
+                              (sectionTime.totalExamDuration ||
+                                sectionTime.overallMinutes) -
+                              sectionTime.overallMinutes,
+                            ),
+                            fill: "#E0E0E0",
+                          },
+                        ]}
+                        dataKey="value"
+                        innerRadius={63}
+                        outerRadius={70}
+                        startAngle={90}
+                        endAngle={-270}
+                      >
+                        <Cell fill="#0B5FFF" stroke="none" />
+                        <Cell fill="#E0E0E0" stroke="none" />
+                      </Pie>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
+          </div>
+        </>) : (null)}
+
+
       </div>
 
       <div className="space-y-4">
         <h3 className="text-lg font-medium text-[#005EB6] font-poppins">Improvement Areas</h3>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {!checkShow && (
-            <div className="rounded-[8px] bg-[#F0F9FF] p-6">
-              <p className="text-[#FF5635] font-medium font-poppins">Focus Areas</p>
-              <p className="text-xl font-normal text-gray-900 font-dm-sans">{weakestSection?.name || "N/A"}</p>
-              <p className="text-sm text-[#FF5635] font-normal mt-3 font-dm-sans">Insights:</p>
-              <p className="text-sm text-black font-normal font-dm-sans">
-                This section has the lowest contribution and largest gap, making it the top improvement area.
-              </p>
-            </div>
-          )}
+
+          {!checkShow ? (<div className="rounded-[8px] bg-[#F0F9FF]  p-6">
+            <p className="text-[#FF5635] font-medium font-poppins">
+              Focus Areas
+            </p>
+            <p className="text-xl font-normal text-gray-900 font-dm-sans">
+              {weakestSection?.name}
+            </p>
+            <p className="text-sm text-[#FF5635] font-normal mt-3 font-dm-sans">
+              Insights:
+            </p>
+            <p className="text-sm text-black font-normal font-dm-sans">
+              This section has the lowest contribution and largest gap, making
+              it the top improvement area.
+            </p>
+          </div>) : (null)}
 
           <div className="rounded-[8px] max-h-[250px] bg-[#F0F9FF] p-6 font-dm-sans">
             <p className="text-[#FF5635] font-medium font-poppins mb-3">Topics</p>

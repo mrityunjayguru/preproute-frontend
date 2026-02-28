@@ -34,9 +34,9 @@ export default function HomePage() {
   useEffect(() => {
     const payload: any = null;
     dispatch(resetQuestionByExamID(payload));
-      // dispatch(fetchAttemptedExam(payload));
-     dispatch(setQuestionPaperResult(payload));
-      
+    // dispatch(fetchAttemptedExam(payload));
+    dispatch(setQuestionPaperResult(payload));
+
     dispatch(resetQuestion(payload));
     dispatch(handleSelectedExamType(payload));
   }, [dispatch]);
@@ -47,21 +47,21 @@ export default function HomePage() {
   ) {
     router.push("/Auth/register");
   }
-// useEffect(() => {
-//   if (typeof window === "undefined") return;
+  // useEffect(() => {
+  //   if (typeof window === "undefined") return;
 
-//   const hash = window.location.hash;
-//   if (hash) {
-//     const id = hash.replace("#", "");
-//     const el = document.getElementById(id);
+  //   const hash = window.location.hash;
+  //   if (hash) {
+  //     const id = hash.replace("#", "");
+  //     const el = document.getElementById(id);
 
-//     if (el) {
-//       setTimeout(() => {
-//         el.scrollIntoView({ behavior: "smooth", block: "start" });
-//       }, 100);
-//     }
-//   }
-// }, []);
+  //     if (el) {
+  //       setTimeout(() => {
+  //         el.scrollIntoView({ behavior: "smooth", block: "start" });
+  //       }, 100);
+  //     }
+  //   }
+  // }, []);
   return (
     <main className=" bg-white text-[#0F1724]">
       {/* <WhatsAppSocialApp /> */}
@@ -69,7 +69,7 @@ export default function HomePage() {
         <HeroSection logoSrc={heroImage} />
       </div>
       <motion.div
-       id="features"
+        id="features"
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
@@ -119,7 +119,7 @@ export default function HomePage() {
         <Quat />
       </motion.div>
       {/* Full width orange banner */}
-    <HomeFooter/>
+      <HomeFooter />
     </main>
   );
 }

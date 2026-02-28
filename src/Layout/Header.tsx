@@ -104,7 +104,7 @@ export const Header: React.FC = () => {
   const isPracticeActive = pathname.startsWith("/Exam");
 
   return (
-    <header className="sticky top-0 z-20 w-full bg-white px-2 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+    <header className="sticky top-0 z-90 w-full bg-white px-2 sm:px-6 md:px-8 lg:px-10 xl:px-12">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-2 py-4 sm:px-4 lg:py-5">
         <div className="flex items-center gap-12">
           <div className="cursor-pointer" onClick={preventredirect}>
@@ -116,7 +116,7 @@ export const Header: React.FC = () => {
               <DropdownMenuTrigger className={`flex items-center gap-1 cursor-pointer outline-none ${isPracticeActive ? activeClass : inactiveClass}`}>
                 Practice <ChevronDownIcon className="h-4 w-4 text-[#FF5635]" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56">
+              <DropdownMenuContent align="start" className="w-56 mt-3">
                 {examTypeData.map((exam: any) => (
                   exam.subMenuExists && exam.subMenus?.length ? (
                     <DropdownMenuSub key={exam._id}>
@@ -174,7 +174,7 @@ export const Header: React.FC = () => {
                 <MenuIcon className="h-5 w-5 sm:h-6 sm:w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[85%] sm:w-[320px] p-0 flex flex-col h-full">
+            <SheetContent side="right" className="w-[85%] z-[1000] sm:w-[320px] p-0 flex flex-col h-full">
               <div className="flex-1 overflow-y-auto pt-10 pb-6 px-2 space-y-6 no-scrollbar">
                 <div className="px-4">
                   <p className="text-sm font-semibold text-gray-900 mb-2">Practice</p>
@@ -219,6 +219,19 @@ export const Header: React.FC = () => {
                       {link.label}
                     </Link>
                   ))}
+
+                  {token && (
+                    <Link
+                      href="/analytics"
+                      onClick={() => setMobileOpen(false)}
+                      className={`block px-4 py-3 rounded-lg text-base font-medium transition-all ${isActive("/analytics")
+                        ? "text-[#FF5635] bg-orange-50"
+                        : "text-gray-900 hover:text-[#FF5635] hover:bg-orange-50"
+                        }`}
+                    >
+                      Analytics
+                    </Link>
+                  )}
                 </div>
 
                 {/* <div className="px-4">
@@ -247,6 +260,13 @@ export const Header: React.FC = () => {
                     <Button onClick={() => { loginWithGoogle(); setMobileOpen(false); }} className="w-full rounded-full bg-[#FF5635] text-white px-4 py-2 h-auto text-lg shadow-lg">
                       Login
                     </Button>
+                    {/* <Link
+                      href="/Auth/register"
+                      onClick={() => setMobileOpen(false)}
+                      className="block text-center px-4 py-3 text-[#FF5635] font-semibold rounded-full border-2 border-[#FF5635] hover:bg-orange-50 transition-colors"
+                    >
+                      Create Account
+                    </Link> */}
                   </div>
                 ) : (
                   (userLogin?.role === "Admin" || userLogin?.role === "Expert") && (
