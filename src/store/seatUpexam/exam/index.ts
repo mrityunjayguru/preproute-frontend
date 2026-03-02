@@ -14,7 +14,8 @@ givenExam:any;
 currentSectionId:any;
 currentQuestionIndex:any;
 examProgress:any;
-givenAllExam:any
+givenAllExam:any;
+loder:Boolean;
 }
 
 // Initial state for the slice
@@ -30,7 +31,8 @@ const initialState: UserDataState = {
   currentSectionId:null,
   currentQuestionIndex:null,
   examProgress:null,
-  givenAllExam:null
+  givenAllExam:null,
+  loder:false
 };
 
 // Create the user data slice
@@ -70,6 +72,9 @@ export const examSlicc = createSlice({
       setgivenAllExam: (state, action: PayloadAction<any>) => {
       state.givenAllExam = action.payload; // Set login user data
     },
+    setLoder: (state, action: PayloadAction<any>) => {
+      state.loder = action.payload; // Set login user data
+    },
     setExamProgress: (state, action: PayloadAction<any>) => {
       state.examProgress = action.payload; // Set login user data
     },
@@ -93,7 +98,7 @@ setGivenExam: (state, action: PayloadAction<any>) => {
 });
 
 // Export actions
-export const {setgivenAllExam,setExamProgress,setGivenExam,seSection,setQuestion,SelectedExam,setexam,setUpdateexam,setexamById,setSingleexam,setSelectedExam,setSelectedExamDetail} = examSlicc.actions;
+export const {setLoder,setgivenAllExam,setExamProgress,setGivenExam,seSection,setQuestion,SelectedExam,setexam,setUpdateexam,setexamById,setSingleexam,setSelectedExam,setSelectedExamDetail} = examSlicc.actions;
 
 // Export reducer
 export default examSlicc.reducer;

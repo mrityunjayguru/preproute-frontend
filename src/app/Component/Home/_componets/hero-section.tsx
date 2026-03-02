@@ -99,8 +99,8 @@ let mockExam=examTypeData.find((item:any)=>item.examType==="Mocks");
             transition={{ duration: 0.8, delay: 0.4 }}
             className="font-poppins text-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-black font-medium leading-relaxed max-w-4xl mx-auto px-2"
           >
-            Not just another question bank. A complete exam preparation
-            ecosystem designed to make you exam-ready.
+            Not just another question bank. A complete 
+            ecosystem Designed to make you exam-ready.
           </motion.h3>
         </div>
       </section>

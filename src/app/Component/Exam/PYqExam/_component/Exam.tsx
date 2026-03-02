@@ -15,6 +15,7 @@ import {
   getCommonexam,
   getCommonQuestionBeExamId,
   handleGivenExam,
+  handleSetLoder,
   handleSetSelectedExam,
   setCurrentSection,
 } from "@/api/Exam";
@@ -36,7 +37,7 @@ const MockExamCardPUQ = ({ exam, handleExam, index }: any) => {
   const examById = useSelector((s: any) => s.exam?.examById) || [];
   const examlength: any = examById.length;
   const router = useRouter();
-
+  const dispatch=useDispatch<AppDispatch>()
   const user = useSelector((s: any) => s.Auth?.loginUser);
   const hasPurchase = user?.PurchaseDetail?.length > 0;
 
@@ -68,7 +69,12 @@ const [mockCount,serMockCount]=useState<any>(null)
   const isInProgress = exam?.userSummary?.target === 0 && isAttempted;
 
   const isCompleted = isAttempted && exam?.userSummary?.target === 100;
-
+ useEffect(()=>{
+setTimeout(()=>{
+   const loderPayload:any=false
+ dispatch(handleSetLoder(loderPayload));
+})
+  },[])
   return (
     <div
       className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white 
@@ -226,6 +232,12 @@ export default function MergedExamPagePYQS() {
       setSelectedExam(payload);
     }
   }, [examById]);
+    useEffect(()=>{
+  setTimeout(()=>{
+     const loderPayload:any=false
+   dispatch(handleSetLoder(loderPayload));
+  })
+    },[])
   useEffect(() => {
     setSelectedExam(null);
   }, [selectedExamType]);

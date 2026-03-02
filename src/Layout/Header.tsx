@@ -23,7 +23,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import logo from "../assets/images/logo.svg";
 import { getCommonExamType, handleSelectedExamType } from "@/api/ExamType";
 import { handleLogout } from "@/api/Auth/UserAuth";
-import { getCommonexam, resetQuestionByExamID } from "@/api/Exam";
+import { getCommonexam, handleSetLoder, resetQuestionByExamID } from "@/api/Exam";
 import { resetQuestion } from "@/api/Question";
 import { ChevronDownIcon, LayoutDashboard, MenuIcon } from "lucide-react";
 
@@ -46,10 +46,11 @@ export const Header: React.FC = () => {
 
   const handleExamClick = async (exam: any) => {
     const payload: any = null;
-    dispatch(handleSelectedExamType(exam));
-    dispatch(resetQuestionByExamID(payload));
-    dispatch(resetQuestion(payload));
-
+   await dispatch(handleSelectedExamType(exam));
+   await dispatch(resetQuestionByExamID(payload));
+  await dispatch(resetQuestion(payload));
+  const loderPayload:any=true
+await dispatch(handleSetLoder(loderPayload));
     const payload2: any = { userId: userLogin?._id, examTypeId: exam?._id };
     await dispatch(getCommonexam(payload2));
 
@@ -66,7 +67,8 @@ export const Header: React.FC = () => {
     dispatch(handleSelectedExamType(exam));
     dispatch(resetQuestionByExamID(payload2));
     dispatch(resetQuestion(payload2));
-
+  const loderPayload:any=true
+await dispatch(handleSetLoder(loderPayload));
     const payload: any = {
       userId: userLogin?._id,
       examTypeId: exam?._id,

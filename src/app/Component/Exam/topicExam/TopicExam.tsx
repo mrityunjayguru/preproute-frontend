@@ -10,6 +10,7 @@ import { AppDispatch } from "@/store/store";
 import {
   getCommonQuestionBeExamId,
   getCommonTopicQuestionBeExamId,
+  handleSetLoder,
   handleSetSelectedExam,
 } from "@/api/Exam";
 
@@ -118,7 +119,12 @@ export default function TopicExam() {
     fetchTopicExam,
     fetchCommonExam,
   ]);
-
+  useEffect(()=>{
+      setTimeout(()=>{
+         const loderPayload:any=false
+       dispatch(handleSetLoder(loderPayload));
+      })
+        },[])
   /* ---------------- UI ---------------- */
 
   return (

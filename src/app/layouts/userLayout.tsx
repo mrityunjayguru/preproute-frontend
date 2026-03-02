@@ -9,13 +9,14 @@ import { setQuestionPaperResult } from "@/api/Users";
 import { AppDispatch } from "@/store/store";
 import OfferBanner from "@/Layout/OfferBanner";
 import WhatsAppSocialApp from "../Component/Home/_componets/whatsapp-socialmedia";
+import TopProgressBar from "@/Common/loder";
 
 export default function UserLayout({ children }: { children: ReactNode }) {
   const dispatch = useDispatch<AppDispatch>();
   const pathname = usePathname();
   const router = useRouter();
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
-
+const loder = useSelector((state: any) => state?.exam?.loder);
   // --- Logic for visibility ---
   const isExamFlow = pathname?.startsWith("/Exam");
   const isAuthPage = pathname?.startsWith("/Auth");
@@ -39,6 +40,7 @@ export default function UserLayout({ children }: { children: ReactNode }) {
 
   return (
     <>
+    <TopProgressBar isAnimating={loder} />
       {/* 1. Only show WhatsApp if NOT in the Exam flow */}
       {!isExamFlow && <WhatsAppSocialApp />}
 

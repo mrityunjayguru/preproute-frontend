@@ -10,6 +10,7 @@ import { AppDispatch } from "@/store/store";
 import {
   getCommonQuestionBeExamId,
   handleGivenExam,
+  handleSetLoder,
   handleSetSelectedExam,
   setCurrentSection,
 } from "@/api/Exam";
@@ -22,6 +23,7 @@ import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import SocialMedia from "../../Home/_componets/social-media";
 import MockExamCard from "./component/MockExamCar";
 import { motion } from "framer-motion";
+import TopProgressBar from "@/Common/loder";
 
 export default function SectionalExa() {
   const dispatch = useDispatch<AppDispatch>();
@@ -31,17 +33,20 @@ export default function SectionalExa() {
   const examById = useSelector((s: any) => s.exam?.examById) || [];
   const selectedExamType = useSelector((s: any) => s.examType?.selectedExamType);
   const loginUser = useSelector((s: any) => s.Auth?.loginUser);
-
+  const[loading, setLoading] = useState(true)
   const [selectedExam, setSelectedExam] = useState<any>(null);
   const [sectionId, setSectionId] = useState<string | null>(null);
   const [toggle, setToggle] = useState(false)
   /* ---------------- AUTO SELECT FIRST EXAM + SECTION ---------------- */
   useEffect(() => {
+
     if (examdata.length > 0) {
       const exam = examdata[0];
       setSelectedExam(exam);
       setSectionId(exam?.sectionDetails?.[0]?._id || null);
     }
+
+
   }, [examdata]);
 
   /* ---------------- FETCH MOCKS ---------------- */
@@ -58,6 +63,9 @@ export default function SectionalExa() {
 
     dispatch(handleSetSelectedExam(selectedExam._id));
     dispatch(getCommonQuestionBeExamId(payload));
+    setTimeout(() => {
+    setLoading(false)
+    }, 500);
   }, [selectedExam, sectionId]);
 
   /* ---------------- HANDLERS ---------------- */
@@ -126,8 +134,16 @@ export default function SectionalExa() {
     setToggle(true);
   };
 
+  useEffect(()=>{
+setTimeout(()=>{
+   const loderPayload:any=false
+ dispatch(handleSetLoder(loderPayload));
+})
+  },[])
   /* ---------------- UI ---------------- */
   return (
+    <>
+     
     <div className="min-h-screen bg-white flex flex-col">
       <div className="flex-grow px-6 lg:px-28">
 
@@ -202,7 +218,7 @@ export default function SectionalExa() {
               <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] 
           p-4 sm:p-5 lg:p-6 
           flex flex-col transition-all">
-                <p className="text-[12px] sm:text-[13px] lg:text-[14px] font-dm-sans font-medium">Mock Exam</p>
+                <p className="text-[12px] sm:text-[13px] lg:text-[14px] font-dm-sans font-medium">Sectional Exam</p>
                 <h3 className=" text-lg sm:text-xl lg:text-2xl
             font-poppins font-medium text-[#FF5635]
             mb-4 sm:mb-5 lg:mb-6
@@ -266,5 +282,6 @@ export default function SectionalExa() {
         </div>
       </footer>
     </div>
+    </>
   );
 }

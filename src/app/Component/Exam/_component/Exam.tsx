@@ -15,6 +15,7 @@ import {
   getCommonexam,
   getCommonQuestionBeExamId,
   handleGivenExam,
+  handleSetLoder,
   handleSetSelectedExam,
   setCurrentSection,
 } from "@/api/Exam";
@@ -391,6 +392,9 @@ try {
   selectedExam.oteher[0]?.exam?.noOfMocks !== undefined
     ? selectedExam.oteher[0].exam.noOfMocks
     : 24;
+
+    
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">
