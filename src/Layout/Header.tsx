@@ -53,7 +53,10 @@ export const Header: React.FC = () => {
 await dispatch(handleSetLoder(loderPayload));
     const payload2: any = { userId: userLogin?._id, examTypeId: exam?._id };
     await dispatch(getCommonexam(payload2));
-
+setTimeout(() => {
+ const loderPayload:any=false
+ dispatch(handleSetLoder(loderPayload));
+}, 2000);
     const type = exam.examType.toLowerCase();
     if (type === "topic wise") router.push("/Exam/topicExam");
     else if (type === "sectional") router.push("/Exam/sectionalExam");
@@ -69,6 +72,10 @@ await dispatch(handleSetLoder(loderPayload));
     dispatch(resetQuestion(payload2));
   const loderPayload:any=true
 await dispatch(handleSetLoder(loderPayload));
+setTimeout(() => {
+ const loderPayload:any=false
+ dispatch(handleSetLoder(loderPayload));
+}, 2000);
     const payload: any = {
       userId: userLogin?._id,
       examTypeId: exam?._id,
