@@ -57,7 +57,7 @@ let mockExam=examTypeData.find((item:any)=>item.examType==="Mocks");
 
             <p className=" font-dm-sans text-[#333333] font-dm-sans text-xs sm:text-sm md:text-base lg:text-[18px] leading-relaxed font-normal max-w-6xl mx-auto">
               Practice entrance exams online in real exam-like conditions.
-              Access mock tests, past year papers, and exclusive exams Designed by experts and students from IIM’s and top institutes of India.
+              Access mock tests, past year papers, and exclusive exams designed by experts and students from IIM’s and top institutes of India.
             </p>
           </motion.div>
 
@@ -100,7 +100,7 @@ let mockExam=examTypeData.find((item:any)=>item.examType==="Mocks");
             className="font-poppins text-center text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-black font-medium leading-relaxed max-w-4xl mx-auto px-2"
           >
             Not just another question bank. A complete 
-            ecosystem Designed to make you exam-ready.
+            ecosystem designed to make you exam-ready.
           </motion.h3>
         </div>
       </section>

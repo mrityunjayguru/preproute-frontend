@@ -74,6 +74,9 @@ export const examSlicc = createSlice({
     },
     setLoder: (state, action: PayloadAction<any>) => {
       state.loder = action.payload; // Set login user data
+      setTimeout(() => {
+         state.loder = false;
+      }, 2000);
     },
     setExamProgress: (state, action: PayloadAction<any>) => {
       state.examProgress = action.payload; // Set login user data

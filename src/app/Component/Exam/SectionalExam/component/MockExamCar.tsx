@@ -39,7 +39,7 @@ const MockExamCard = ({ exam, index, handleExam, selectedExam }: any) => {
     >
       {/* Header */}
       <div className="flex justify-between mb-3">
-        <span className="text-xs text-gray-500 uppercase">
+        <span className="text-xs text-gray-500 ">
           Sectional Test
         </span>
         {!isUnlocked && (
