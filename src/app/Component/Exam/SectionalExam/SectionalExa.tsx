@@ -53,7 +53,7 @@ export default function SectionalExa() {
   useEffect(() => {
     if (!selectedExam || !sectionId) return;
 
-    const payload = {
+    const payload : any = {
       examid: selectedExam._id,
       examTypeId: selectedExamType?._id,
       isPublished: true,
@@ -148,7 +148,7 @@ setTimeout(()=>{
       <div className="flex-grow px-6 lg:px-28">
 
         {/* HEADER */}
-        <div className="relative h-[100px] md:h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10 md:items-center  flex flex-col md:flex-row  justify-center md:justify-between overflow-hidden">
+        <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-2  flex flex-row items-center justify-between overflow-hidden">
           {/* Left Content */}
 
           <div className="z-10 max-w-xl">
@@ -177,7 +177,7 @@ setTimeout(()=>{
         </div>
 
         {/* EXAM + SECTION */}
-        <div className="flex flex-wrap gap-x-4 gap-y-3 mb-3 items-center">
+        <div className="flex flex-wrap gap-x-4 gap-y-3  mt-8 items-center">
           {toggle ? (<Select
             options={examOptions}
             value={

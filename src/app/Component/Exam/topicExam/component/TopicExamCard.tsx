@@ -22,7 +22,7 @@ const TopicExamCard = ({ selectedExam }: any) => {
   console.log(selectedExam, "isPlanUnlockedisPlanUnlocked")
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mb-3">
       {examById.map((topic: any, index: number) => (
         <TopicBlock
           key={index}

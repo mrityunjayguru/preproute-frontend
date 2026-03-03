@@ -154,7 +154,7 @@ export default function TopicExam() {
 
         {examById.length > 0 && (
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="relative min-h-[120px] md:min-h-[140px] bg-[#F0F9FF] my-4 sm:my-8 rounded-2xl px-6 sm:px-10 py-6 md:py-0 flex flex-col md:flex-row items-center justify-center md:justify-between overflow-hidden">
+             <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-2  flex flex-row items-center justify-between overflow-hidden">
               {/* Left Content */}
               <div className="z-10 max-w-xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#FF5635] font-poppins">

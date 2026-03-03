@@ -16,10 +16,11 @@ import { useRouter } from "next/navigation";
 
 function Analytics() {
   const dispatch = useDispatch<AppDispatch>();
-const router = useRouter();
+  const router = useRouter();
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
   const examResult = useSelector((state: any) => state?.question?.result?.data);
-  const givenAllExam = useSelector((state: any) => state?.exam?.givenAllExam) || [];
+  const givenAllExam =
+    useSelector((state: any) => state?.exam?.givenAllExam) || [];
 
   /* ===========================
       STATES
@@ -68,7 +69,8 @@ const router = useRouter();
     if (!selectedExamTypeId) return null;
     return (
       givenAllExam.find(
-        (item: any) => String(item?.examType?._id) === String(selectedExamTypeId)
+        (item: any) =>
+          String(item?.examType?._id) === String(selectedExamTypeId),
       ) || null
     );
   }, [givenAllExam, selectedExamTypeId]);
@@ -82,7 +84,7 @@ const router = useRouter();
   }, [selectedExamType]);
 
   const selectedExam = (selectedExamType?.exams || []).find(
-    (ex: any) => String(ex?._id) === String(selectedExamId)
+    (ex: any) => String(ex?._id) === String(selectedExamId),
   );
 
   const isSectional = selectedExamType?.examType?.name === "Sectional";
@@ -107,10 +109,10 @@ const router = useRouter();
 
     return papers.map((val: any) => ({
       value: val._id,
-      label: isSectional 
-        ? `${capitalizeWords(val.name)} (${val.sectionName})` 
+      label: isSectional
+        ? `${capitalizeWords(val.name)} (${val.sectionName})`
         : capitalizeWords(val.name),
-      sectionId: val.sectionId
+      sectionId: val.sectionId,
     }));
   }, [selectedExam, isSectional]);
 
@@ -118,11 +120,12 @@ const router = useRouter();
       FETCH RESULT
   ============================ */
   useEffect(() => {
-    const userId = userLogin?.role === "Admin" ? selectedUserId : userLogin?._id;
+    const userId =
+      userLogin?.role === "Admin" ? selectedUserId : userLogin?._id;
 
     if (userId && selectedExamTypeId && selectedExamId && selectedQuestion) {
       const selectedQP = questionPapers.find(
-        (q: any) => String(q?.value) === String(selectedQuestion)
+        (q: any) => String(q?.value) === String(selectedQuestion),
       );
 
       dispatch(
@@ -132,10 +135,19 @@ const router = useRouter();
           selectedExamId,
           questionPaperID: selectedQuestion,
           sectionId: isSectional ? selectedQP?.sectionId : undefined,
-        })
+        }),
       );
     }
-  }, [selectedUserId, userLogin, selectedExamTypeId, selectedExamId, selectedQuestion, questionPapers, isSectional, dispatch]);
+  }, [
+    selectedUserId,
+    userLogin,
+    selectedExamTypeId,
+    selectedExamId,
+    selectedQuestion,
+    questionPapers,
+    isSectional,
+    dispatch,
+  ]);
 
   /* ===========================
       REACT SELECT CUSTOM STYLES
@@ -143,28 +155,37 @@ const router = useRouter();
   const customStyles = {
     control: (base: any) => ({
       ...base,
-      minHeight: '42px',
-      borderRadius: '4px',
-      borderColor: '#e5e7eb', // border color
-      boxShadow: 'none',
-      '&:hover': {
-        borderColor: '#d1d5db',
+      minHeight: "42px",
+      borderRadius: "4px",
+      borderColor: "#e5e7eb", // border color
+      boxShadow: "none",
+      "&:hover": {
+        borderColor: "#d1d5db",
       },
-      fontSize: '14px',
-      fontFamily: 'Poppins, sans-serif',
+      // Use at least 16px to prevent iOS Safari auto-zoom on focus
+      fontSize: "16px",
+      fontFamily: "Poppins, sans-serif",
+    }),
+    input: (base: any) => ({
+      ...base,
+      fontSize: "16px",
+    }),
+    valueContainer: (base: any) => ({
+      ...base,
+      fontSize: "16px",
     }),
     placeholder: (base: any) => ({
       ...base,
-      color: '#9ca3af',
+      color: "#9ca3af",
     }),
-    indicatorSeparator: () => ({ display: 'none' }),
+    indicatorSeparator: () => ({ display: "none" }),
     menu: (base: any) => ({
       ...base,
       zIndex: 50,
     }),
   };
 
-useEffect(() => {
+  useEffect(() => {
     // Add fake state so back button triggers popstate
     window.history.pushState(null, "", window.location.href);
 
@@ -194,10 +215,19 @@ useEffect(() => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full lg:w-[700px]">
             {userLogin?.role === "Admin" && (
               <div className="space-y-2">
-                <p className="text-xs font-medium text-gray-900 font-poppins">Select User</p>
+                <p className="text-xs font-medium text-gray-900 font-poppins">
+                  Select User
+                </p>
                 <Select
-                  options={userdata.map(u => ({ value: u._id, label: u.email }))}
-                  value={userdata.map(u => ({ value: u._id, label: u.email })).find(o => o.value === selectedUserId) || null}
+                  options={userdata.map((u) => ({
+                    value: u._id,
+                    label: u.email,
+                  }))}
+                  value={
+                    userdata
+                      .map((u) => ({ value: u._id, label: u.email }))
+                      .find((o) => o.value === selectedUserId) || null
+                  }
                   onChange={(opt: any) => {
                     setSelectedUserId(opt?.value || "");
                     setSelectedExamTypeId("");
@@ -212,10 +242,14 @@ useEffect(() => {
             )}
 
             <div className="space-y-2">
-              <p className="text-xs font-medium text-gray-900 font-poppins">Select Exam Type</p>
+              <p className="text-xs font-medium text-gray-900 font-poppins">
+                Select Exam Type
+              </p>
               <Select
                 options={examTypes}
-                value={examTypes.find(o => o.value === selectedExamTypeId) || null}
+                value={
+                  examTypes.find((o) => o.value === selectedExamTypeId) || null
+                }
                 onChange={(opt: any) => {
                   setSelectedExamTypeId(opt?.value || "");
                   setSelectedExamId("");
@@ -228,10 +262,12 @@ useEffect(() => {
             </div>
 
             <div className="space-y-2">
-              <p className="text-xs font-medium text-gray-900 font-poppins">Select Exam</p>
+              <p className="text-xs font-medium text-gray-900 font-poppins">
+                Select Exam
+              </p>
               <Select
                 options={exams}
-                value={exams.find(o => o.value === selectedExamId) || null}
+                value={exams.find((o) => o.value === selectedExamId) || null}
                 onChange={(opt: any) => {
                   setSelectedExamId(opt?.value || "");
                   setselectedQuestion("");
@@ -243,11 +279,17 @@ useEffect(() => {
             </div>
 
             <div className="space-y-2">
-              <p className="text-xs font-medium text-gray-900 font-poppins">Question Paper</p>
+              <p className="text-xs font-medium text-gray-900 font-poppins">
+                Question Paper
+              </p>
               <Select
                 options={questionPapers}
-                value={questionPapers.find(o => o.value === selectedQuestion) || null}
+                value={
+                  questionPapers.find((o) => o.value === selectedQuestion) ||
+                  null
+                }
                 onChange={(opt: any) => setselectedQuestion(opt?.value || "")}
+                className="text-nowrap"
                 placeholder="Select Year or Number"
                 isSearchable
                 styles={customStyles}

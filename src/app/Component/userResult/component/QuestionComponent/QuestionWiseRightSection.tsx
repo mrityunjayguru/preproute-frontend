@@ -131,65 +131,65 @@ const QuestionWiseRightSection: React.FC<Props> = ({
    * ------------------------------ */
   return (
     <aside className="lg:w-[350px] w-full bg-white py-6 flex-shrink-0 font-poppins px-0 lg:px-6">
-      <div className="bg-[#F8F9FA] rounded-xl p-4 h-fit border-[0.5px] border-[#C8DCFE] overflow-y-auto custom-scrollbar">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handlePrev}
-            disabled={currentQuestionIndex === 0}
-            className="bg-[#005EB6] hover:bg-[#0044a5] text-white h-8 w-8 p-0 rounded-md disabled:opacity-40"
-          >
-            <ChevronLeft size={18} />
-          </Button>
+    <div className="bg-[#F8F9FA] rounded-xl p-4 h-fit border-[0.5px] border-[#C8DCFE] overflow-y-auto custom-scrollbar">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handlePrev}
+          disabled={currentQuestionIndex === 0}
+          className="bg-[#005EB6] hover:bg-[#0044a5] text-white h-8 w-8 p-0 rounded-md disabled:opacity-40"
+        >
+          <ChevronLeft size={18} />
+        </Button>
 
-          <span className="text-sm font-medium text-gray-700">
-            Choose Question
-          </span>
+        <span className="text-sm font-medium text-gray-700">
+          Choose Question
+        </span>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleNext}
-            disabled={currentQuestionIndex === totalQuestions - 1}
-            className="bg-[#005EB6] hover:bg-[#0044a5] text-white h-8 w-8 p-0 rounded-md disabled:opacity-40"
-          >
-            <ChevronRight size={18} />
-          </Button>
-        </div>
-
-        {/* Question Grid */}
-        <div className="grid grid-cols-5 gap-3">
-          {questionsForGrid.map((q, idx) => {
-            const icon = getStatusIcon(q);
-
-            return (
-              <button
-                key={q._id || idx}
-                onClick={() => getQuestionByNumberId(idx)}
-                className="relative flex items-center justify-center aspect-square font-bold transition hover:opacity-80"
-              >
-                <Image
-                  src={icon}
-                  alt="status"
-                  className="w-full h-full object-contain"
-                />
-
-                <span
-                  className="absolute inset-0 flex items-center justify-center text-sm font-medium"
-                  style={{
-                    color: icon === NOTVISITED ? "#000000" : "#FFFFFF",
-                  }}
-                >
-                  {q.questionNo}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleNext}
+          disabled={currentQuestionIndex === totalQuestions - 1}
+          className="bg-[#005EB6] hover:bg-[#0044a5] text-white h-8 w-8 p-0 rounded-md disabled:opacity-40"
+        >
+          <ChevronRight size={18} />
+        </Button>
       </div>
-    </aside>
+
+      {/* Question Grid */}
+      <div className="grid grid-cols-5 gap-3">
+        {questionsForGrid.map((q, idx) => {
+          const icon = getStatusIcon(q);
+
+          return (
+            <button
+              key={q._id || idx}
+              onClick={() => getQuestionByNumberId(idx)}
+              className="relative flex items-center justify-center aspect-square font-bold transition hover:opacity-80"
+            >
+              <Image
+                src={icon}
+                alt="status"
+                className="w-full h-full object-contain"
+              />
+
+              <span
+                className="absolute inset-0 flex items-center justify-center text-sm font-medium"
+                style={{
+                  color: icon === NOTVISITED ? "#000000" : "#FFFFFF",
+                }}
+              >
+                {q.questionNo}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  </aside>
   );
 };
 

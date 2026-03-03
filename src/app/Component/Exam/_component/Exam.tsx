@@ -422,9 +422,8 @@ try {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             {/* ===== Banner ===== */}
-            <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10   flex flex-col md:flex-row items-center justify-center md:justify-between overflow-hidden">
+            <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10 flex flex-row items-center justify-between  overflow-hidden">
               {/* Left Content */}
-
               <div className="z-10 max-w-xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#FF5635] font-poppins">
                   {selectedExamType?.examType}
@@ -450,7 +449,8 @@ try {
                   height={140}
                 />
               </motion.div>
-            </div>
+              </div>
+            
             {/* <div className="max-w-7xl">
             </div> */}
 
@@ -523,7 +523,7 @@ try {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             {/* ===== Banner ===== */}
-            <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-2  flex flex-col md:flex-row items-center justify-between overflow-hidden">
+            <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-2  flex flex-row items-center justify-between overflow-hidden">
               <div className="z-10 max-w-xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl  font-medium text-[#FF5635] font-poppins">
                   <span className="text-black">
