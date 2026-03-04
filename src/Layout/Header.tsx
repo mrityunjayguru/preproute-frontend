@@ -23,7 +23,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import logo from "../assets/images/logo.svg";
 import { getCommonExamType, handleSelectedExamType } from "@/api/ExamType";
 import { googleLogin, handleLogout } from "@/api/Auth/UserAuth";
-import { getCommonexam, resetQuestionByExamID } from "@/api/Exam";
+import { getCommonexam, handleSetLoder, resetQuestionByExamID } from "@/api/Exam";
 import { resetQuestion } from "@/api/Question";
 import { ChevronDownIcon, LayoutDashboard, MenuIcon } from "lucide-react";
 
@@ -55,7 +55,12 @@ export const Header: React.FC = () => {
     dispatch(handleSelectedExamType(exam));
     dispatch(resetQuestionByExamID(payload));
     dispatch(resetQuestion(payload));
-
+   const loderPayload:any=true
+ dispatch(handleSetLoder(loderPayload));
+ setTimeout(()=>{
+   const loderPayload:any=false
+ dispatch(handleSetLoder(loderPayload));
+ },2000)
     const payload2: any = {
       userId: userLogin?._id,
       examTypeId: exam?._id,
@@ -115,7 +120,12 @@ export const Header: React.FC = () => {
     dispatch(handleSelectedExamType(exam));
     dispatch(resetQuestionByExamID(payload2));
     dispatch(resetQuestion(payload2));
-
+   const loderPayload:any=true
+ dispatch(handleSetLoder(loderPayload));
+ setTimeout(()=>{
+   const loderPayload:any=false
+ dispatch(handleSetLoder(loderPayload));
+ },2000)
     const payload: any = {
       userId: userLogin?._id,
       examTypeId: exam?._id,
