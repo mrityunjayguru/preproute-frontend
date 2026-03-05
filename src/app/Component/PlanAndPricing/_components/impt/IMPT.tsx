@@ -49,9 +49,9 @@ export default function PricingPlans() {
 
     const featureRows = [
         { label: "Past Year Paper (PYQs)", key: "pyp" },
+        { label: "Daily Practice", key: "dailyPractice" },
         { label: "Sectional Test", key: "sectional" },
         { label: "Topic-wise Test", key: "topicwise" },
-        { label: "Daily Practice", key: "dailyPractice" },
         { label: "Community Access", key: "community" },
         { label: "Interview Prep Support", key: "interviewPrep" },
     ];

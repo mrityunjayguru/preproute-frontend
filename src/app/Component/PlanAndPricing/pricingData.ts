@@ -43,9 +43,9 @@ export const PRICING_DATA = {
                 title: "Features",
                 rows: [
                     { label: "Past Year Paper (PYQs)", values: [false, true, true], isFeature: true },
+                    { label: "Daily Practice", values: [false, true, true], isFeature: true },
                     { label: "Sectional Test", values: [false, true, true], isFeature: true },
                     { label: "Topic-wise Test", values: [false, true, true], isFeature: true },
-                    { label: "Daily Practice", values: [false, true, true], isFeature: true },
                     { label: "Community Access", values: [false, false, true], isFeature: true },
                     { label: "Interview Prep Support", values: [false, false, true], isFeature: true },
                 ],

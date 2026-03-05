@@ -5,10 +5,12 @@ function MockProgress() {
   const userdashboarddata = useSelector(
     (state: any) => state?.Auth?.userDashboard,
   );
+let checkpurchaseExam=userdashboarddata?.checkpurchaseExam[0]?.totalPublishedMocks || 0
 
   const completed = userdashboarddata?.summary?.attempted || 0;
-  const total = userdashboarddata?.summary?.completed || 0;
+  const total = checkpurchaseExam;
 
+  
   // Prevent divide by zero
   const percentage = total > 0 ? (completed / total) * 100 : 0;
 
