@@ -5,7 +5,8 @@ function MockProgress() {
   const userdashboarddata = useSelector(
     (state: any) => state?.Auth?.userDashboard,
   );
-let checkpurchaseExam=userdashboarddata?.checkpurchaseExam[0]?.totalPublishedMocks || 0
+const checkpurchaseExam =
+  userdashboarddata?.checkpurchaseExam?.[0]?.totalPublishedMocks ?? 0;
 
   const completed = userdashboarddata?.summary?.attempted || 0;
   const total = checkpurchaseExam;
