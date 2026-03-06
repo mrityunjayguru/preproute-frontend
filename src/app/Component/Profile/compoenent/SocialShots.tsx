@@ -1,23 +1,33 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { X, Play } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { Play, X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { fetchYouTubeVideos } from "@/api/Users";
 
-function SocialShots() {
+/* ================= SWIPER CSS ================= */
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+
+export default function SocialShots() {
   const dispatch = useDispatch<AppDispatch>();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+
+  const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  /* ================= REDUX DATA ================= */
   const youtubeVideos = useSelector(
     (state: RootState) => state.user.youtubeShort || []
   );
 
+  /* ================= FETCH DATA ================= */
   useEffect(() => {
-    const getData = async () => {
+    const loadVideos = async () => {
       try {
         setLoading(true);
         await dispatch(fetchYouTubeVideos({}));
@@ -27,131 +37,166 @@ function SocialShots() {
         setLoading(false);
       }
     };
-    getData();
+
+    loadVideos();
   }, [dispatch]);
 
-  /* =========================
-     AUTO-SLIDE: Single Card
-  ========================== */
-  useEffect(() => {
-    const scrollContainer = scrollRef.current;
-    if (!scrollContainer || youtubeVideos.length === 0) return;
-
-    const autoScroll = setInterval(() => {
-      const { scrollLeft, offsetWidth, scrollWidth } = scrollContainer;
-      
-      // Calculate the exact width of one scroll "page"
-      // Since we use snap-center/start, we scroll by the container width
-      const scrollStep = offsetWidth; 
-
-      if (scrollLeft + offsetWidth >= scrollWidth - 10) {
-        scrollContainer.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        scrollContainer.scrollBy({ left: scrollStep, behavior: "smooth" });
-      }
-    }, 4000);
-
-    return () => clearInterval(autoScroll);
-  }, [youtubeVideos]);
-
-  const getVideoId = (video: any) => {
+  /* ================= FIX: EXTRACT VIDEO IDS CORRECTLY ================= */
+  const videos = youtubeVideos.map((video: any) => {
     return video?.id?.videoId || video?.videoId || video?.id;
-  };
+  });
 
   return (
-    <div className="mx-auto px-4 py-12 max-w-7xl">
-      {/* HEADER */}
-      <div className="mb-8 px-2">
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900 font-poppins">
-          Social <span className="text-[#FF5635]">Shots</span>
-        </h2>
-        <p className="text-gray-500 mt-1">Check out our latest highlights</p>
-      </div>
+    <div className="w-full bg-gray-50 py-16 px-4 overflow-hidden">
+      <div className="max-w-6xl mx-auto">
+        {/* ================= HEADER ================= */}
+        <div className="mb-10 text-center">
+          <h2 className="text-3xl font-bold text-gray-900">
+            Social <span className="text-[#FF5635]">Shots</span>
+          </h2>
+          <p className="text-gray-500 mt-2">
+            Latest highlights from our community
+          </p>
+        </div>
 
-      {/* SCROLL CONTAINER */}
-      <div
-        ref={scrollRef}
-        className="flex gap-4 overflow-x-auto pb-10 scrollbar-hide snap-x snap-mandatory scroll-smooth"
-        style={{ WebkitOverflowScrolling: "touch" }}
-      >
-        {youtubeVideos.length > 0 ? (
-          youtubeVideos.map((video: any) => {
-            const videoId = getVideoId(video);
-            const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-            const fallbackUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+        {/* ================= CUSTOM SWIPER STYLES ================= */}
+        <style>{`
+          /* Ensure the swiper container allows side cards to be seen */
+          .youtube-swiper { 
+            padding-bottom: 60px !important; 
+            overflow: visible !important; 
+          }
+          
+          .youtube-swiper .swiper-slide { 
+            transition: all 0.5s ease; 
+            opacity: 0.4; 
+            transform: scale(0.85); 
+          }
+          
+          .youtube-swiper .swiper-slide-active { 
+            opacity: 1; 
+            transform: scale(1); 
+          }
 
-            return (
-              <div
-                key={videoId}
-                onClick={() => setSelectedVideo(videoId)}
-                className="group relative 
-                           min-w-[90%] sm:min-w-[320px] 
-                           snap-center first:ml-[5%] last:mr-[5%] sm:first:ml-0 sm:last:mr-0
-                           aspect-[9/16] bg-gray-200 rounded-[2.5rem] overflow-hidden cursor-pointer 
-                           transition-all duration-500 shadow-lg"
-              >
-                {/* Thumbnail */}
-                <img
-                  src={thumbnailUrl}
-                  alt={video?.snippet?.title || "YouTube Short"}
-                  loading="lazy"
-                  onError={(e: any) => {
-                    e.target.onerror = null;
-                    e.target.src = fallbackUrl;
-                  }}
-                  className="w-full h-full object-cover"
-                />
+          /* Pagination Dots Fix */
+          .youtube-swiper .swiper-pagination {
+            bottom: 0px !important;
+          }
+          
+          .youtube-swiper .swiper-pagination-bullet-active {
+            background: #ff5635 !important;
+            width: 20px !important;
+            border-radius: 5px !important;
+          }
+        `}</style>
 
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+        {/* ================= SWIPER ================= */}
+        {videos?.length > 0 ? (
+          <Swiper
+            className="youtube-swiper"
+            modules={[Navigation, Pagination, Autoplay]}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
+            slidesPerView={1.3} /* 1.3 ensures the peek on mobile */
+            spaceBetween={10}
+            centeredSlides={true}
+            loop={true}
+            pagination={{ clickable: true }}
+            breakpoints={{
+              640: { slidesPerView: 2, spaceBetween: 20 },
+              1024: { slidesPerView: 3.5, spaceBetween: 30 },
+            }}
+          >
+            {videos?.map((id: string, index: number) => (
+              <SwiperSlide key={`${id}-${index}`}>
+                <div
+                  onClick={() => setActiveVideo(id)}
+                  className="relative w-full aspect-[9/16] max-h-[550px] bg-white rounded-3xl overflow-hidden shadow-lg cursor-pointer group border border-gray-200"
+                >
+                  {/* Thumbnail */}
+                  <img
+                    src={`https://img.youtube.com/vi/${id}/maxresdefault.jpg`}
+                    onError={(e: any) => {
+                      e.target.onerror = null;
+                      e.target.src = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+                    }}
+                    alt="Thumbnail"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
 
-                {/* Play Button */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-white/20 backdrop-blur-md p-4 rounded-full border border-white/30 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Play className="text-white fill-white w-8 h-8" />
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+                  {/* Play Icon */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-14 h-14 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 transform transition-all group-hover:scale-110 group-hover:bg-[#FF5635]/80">
+                      <Play
+                        fill="white"
+                        className="text-white ml-1"
+                        size={28}
+                      />
+                    </div>
                   </div>
                 </div>
-
-                {/* Title */}
-                <div className="absolute bottom-0 p-6 w-full">
-                  <p className="text-white font-semibold text-sm line-clamp-2 leading-snug">
-                    {video?.snippet?.title}
-                  </p>
-                </div>
-              </div>
-            );
-          })
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        ) : loading ? (
+          /* ================= SKELETON ================= */
+          <div className="flex gap-4 justify-center">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="w-[280px] aspect-[9/16] bg-gray-200 animate-pulse rounded-3xl hidden sm:block first:block"
+              />
+            ))}
+          </div>
         ) : (
-          /* SKELETON */
-          [1, 2, 3].map((i) => (
-            <div key={i} className="min-w-[90%] sm:min-w-[320px] aspect-[9/16] bg-gray-100 rounded-[2.5rem] animate-pulse" />
-          ))
+          <p className="text-center text-gray-500">No videos available</p>
         )}
       </div>
 
-      {/* MODAL */}
-      {selectedVideo && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/95 backdrop-blur-sm" onClick={() => setSelectedVideo(null)} />
-          <div className="relative w-full max-w-[400px] aspect-[9/16] bg-black rounded-3xl overflow-hidden animate-in fade-in zoom-in duration-300">
-            <button
-              onClick={() => setSelectedVideo(null)}
-              className="absolute top-4 right-4 z-10 p-2 bg-black/50 text-white rounded-full"
+      {/* ================= VIDEO MODAL ================= */}
+      <AnimatePresence>
+        {activeVideo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              className="relative w-full max-w-[380px] aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl"
             >
-              <X size={24} />
-            </button>
-            <iframe
-              className="w-full h-full"
-              src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1`}
-              title="YouTube video player"
-              frameBorder="0"
-              allowFullScreen
+              <button
+                className="absolute top-4 right-4 z-50 text-white bg-black/20 p-2 rounded-full hover:bg-white/10"
+                onClick={() => setActiveVideo(null)}
+              >
+                <X size={24} />
+              </button>
+
+              <iframe
+                className="w-full h-full"
+                src={`https://www.youtube.com/embed/${activeVideo}?autoplay=1&rel=0&modestbranding=1`}
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+              />
+            </motion.div>
+
+            {/* Click Outside Close */}
+            <div
+              className="absolute inset-0 -z-10"
+              onClick={() => setActiveVideo(null)}
             />
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
-
-export default SocialShots;
