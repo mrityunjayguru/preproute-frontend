@@ -108,7 +108,7 @@ const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
           <PageViewTracker />
           <LayoutComponent>
             <NetworkStatus />
-             <DisableDevTools />
+             {/* <DisableDevTools /> */}
             {children}
             <Toaster />
           </LayoutComponent>

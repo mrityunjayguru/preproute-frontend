@@ -304,7 +304,7 @@ const payload: any = {
         {/* Top Section */}
         <div className="flex justify-between items-start mb-1">
           <h3 className="text-xl font-medium font-poppins text-[#FF5635] truncate pr-4">
-            {exam?.examTyDetail?.examType} - {exam.level}-
+            {exam?.examTyDetail?.examType}  - {exam?.subExamTypeDetail?.subExamType} {exam.level}-
             {exam.questionPapername} - {exam.examDetail.examname}
           </h3>
 

@@ -16,9 +16,6 @@ function SocialShots() {
     (state: RootState) => state.user.youtubeShort || []
   );
 
-  /* =========================
-     1️⃣ Fetch Data
-  ========================== */
   useEffect(() => {
     const getData = async () => {
       try {
@@ -30,61 +27,52 @@ function SocialShots() {
         setLoading(false);
       }
     };
-
     getData();
   }, [dispatch]);
 
   /* =========================
-     2️⃣ Auto Horizontal Scroll (Desktop Only)
+     AUTO-SLIDE: Single Card
   ========================== */
   useEffect(() => {
     const scrollContainer = scrollRef.current;
-
-    if (
-      !scrollContainer ||
-      youtubeVideos.length === 0 ||
-      window.innerWidth < 640 // disable auto scroll on mobile
-    )
-      return;
+    if (!scrollContainer || youtubeVideos.length === 0) return;
 
     const autoScroll = setInterval(() => {
       const { scrollLeft, offsetWidth, scrollWidth } = scrollContainer;
+      
+      // Calculate the exact width of one scroll "page"
+      // Since we use snap-center/start, we scroll by the container width
+      const scrollStep = offsetWidth; 
 
-      if (scrollLeft + offsetWidth >= scrollWidth - 20) {
+      if (scrollLeft + offsetWidth >= scrollWidth - 10) {
         scrollContainer.scrollTo({ left: 0, behavior: "smooth" });
       } else {
-        scrollContainer.scrollBy({ left: 300, behavior: "smooth" });
+        scrollContainer.scrollBy({ left: scrollStep, behavior: "smooth" });
       }
-    }, 3500);
+    }, 4000);
 
     return () => clearInterval(autoScroll);
   }, [youtubeVideos]);
 
-  /* =========================
-     3️⃣ Extract videoId
-  ========================== */
   const getVideoId = (video: any) => {
     return video?.id?.videoId || video?.videoId || video?.id;
   };
 
   return (
-    <div className="mx-auto px-4 py-12">
-      {/* ================= HEADER ================= */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 font-poppins">
-            Social <span className="text-[#FF5635]">Shots</span>
-          </h2>
-          <p className="text-gray-500 mt-1">
-            Check out our latest vertical highlights
-          </p>
-        </div>
+    <div className="mx-auto px-4 py-12 max-w-7xl">
+      {/* HEADER */}
+      <div className="mb-8 px-2">
+        <h2 className="text-3xl font-bold tracking-tight text-gray-900 font-poppins">
+          Social <span className="text-[#FF5635]">Shots</span>
+        </h2>
+        <p className="text-gray-500 mt-1">Check out our latest highlights</p>
       </div>
 
-      {/* ================= SCROLL CONTAINER ================= */}
+      {/* SCROLL CONTAINER */}
       <div
         ref={scrollRef}
-        className="flex gap-6 overflow-x-auto pb-10 scrollbar-hide snap-x snap-mandatory scroll-smooth"
+        className="flex gap-4 overflow-x-auto pb-10 scrollbar-hide snap-x snap-mandatory scroll-smooth"
+        style={{ WebkitOverflowScrolling: "touch" }}
       >
         {youtubeVideos.length > 0 ? (
           youtubeVideos.map((video: any) => {
@@ -96,7 +84,11 @@ function SocialShots() {
               <div
                 key={videoId}
                 onClick={() => setSelectedVideo(videoId)}
-                className="group relative min-w-full sm:min-w-[280px] snap-center aspect-[9/16] bg-gray-200 rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                className="group relative 
+                           min-w-[90%] sm:min-w-[320px] 
+                           snap-center first:ml-[5%] last:mr-[5%] sm:first:ml-0 sm:last:mr-0
+                           aspect-[9/16] bg-gray-200 rounded-[2.5rem] overflow-hidden cursor-pointer 
+                           transition-all duration-500 shadow-lg"
               >
                 {/* Thumbnail */}
                 <img
@@ -107,68 +99,52 @@ function SocialShots() {
                     e.target.onerror = null;
                     e.target.src = fallbackUrl;
                   }}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="w-full h-full object-cover"
                 />
 
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
 
-                {/* Play Icon */}
-                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="bg-white/20 backdrop-blur-md p-4 rounded-full border border-white/30">
+                {/* Play Button */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="bg-white/20 backdrop-blur-md p-4 rounded-full border border-white/30 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Play className="text-white fill-white w-8 h-8" />
                   </div>
                 </div>
 
                 {/* Title */}
-                <div className="absolute bottom-0 p-5 w-full">
-                  <p className="text-white font-medium text-sm line-clamp-2 leading-relaxed">
+                <div className="absolute bottom-0 p-6 w-full">
+                  <p className="text-white font-semibold text-sm line-clamp-2 leading-snug">
                     {video?.snippet?.title}
                   </p>
                 </div>
               </div>
             );
           })
-        ) : loading ? (
-          /* ================= SKELETON ================= */
-          [1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="min-w-full sm:min-w-[280px] aspect-[9/16] bg-gray-100 rounded-3xl animate-pulse flex flex-col justify-end p-5 space-y-3"
-            >
-              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-            </div>
-          ))
         ) : (
-          <p className="text-gray-500">No videos available</p>
+          /* SKELETON */
+          [1, 2, 3].map((i) => (
+            <div key={i} className="min-w-[90%] sm:min-w-[320px] aspect-[9/16] bg-gray-100 rounded-[2.5rem] animate-pulse" />
+          ))
         )}
       </div>
 
-      {/* ================= VIDEO MODAL ================= */}
+      {/* MODAL */}
       {selectedVideo && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/95 backdrop-blur-sm"
-            onClick={() => setSelectedVideo(null)}
-          />
-
-          {/* Modal */}
+          <div className="absolute inset-0 bg-black/95 backdrop-blur-sm" onClick={() => setSelectedVideo(null)} />
           <div className="relative w-full max-w-[400px] aspect-[9/16] bg-black rounded-3xl overflow-hidden animate-in fade-in zoom-in duration-300">
             <button
               onClick={() => setSelectedVideo(null)}
-              className="absolute top-6 right-4 z-10 p-2 bg-black/50 hover:bg-white/20 text-white rounded-full transition-colors"
+              className="absolute top-4 right-4 z-10 p-2 bg-black/50 text-white rounded-full"
             >
               <X size={24} />
             </button>
-
             <iframe
               className="w-full h-full"
-              src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1&rel=0&modestbranding=1`}
+              src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1`}
               title="YouTube video player"
               frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
           </div>
