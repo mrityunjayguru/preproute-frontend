@@ -216,19 +216,19 @@ const QuestionWiswView: React.FC<Props> = ({
         </div>
 
         {/* Topic Header */}
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
           <h2 className="text-[#005EB6] text-lg font-medium font-dm-sans">
             <span className="text-[#000] text-sm">Topic:</span>{" "}
             {question?.topicdata?.topic || "Topic"} |{" "}
             <span className="text-sm text-[#000]">Subtopic:</span>{" "}
             {question?.subtopicdata?.subtopic || "Subtopic"}
           </h2>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {status ? (
               <Button
                 onClick={() => handlebookMark(question, "remove")}
                 variant="outline"
-                className="bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] text-[#1E1E1E] font-normal font-poppins cursor-pointer"
+                className="bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] text-[#1E1E1E] font-normal font-poppins cursor-pointer flex-1 sm:flex-none"
               >
                 Remove Bookmark
               </Button>
@@ -236,7 +236,7 @@ const QuestionWiswView: React.FC<Props> = ({
               <Button
                 onClick={() => handlebookMark(question, "add")}
                 variant="outline"
-                className="bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] text-[#1E1E1E] font-normal font-poppins cursor-pointer"
+                className="bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] text-[#1E1E1E] font-normal font-poppins cursor-pointer flex-1 sm:flex-none"
               >
                 Bookmark
               </Button>
@@ -245,7 +245,7 @@ const QuestionWiswView: React.FC<Props> = ({
             <Button
               onClick={handlereport}
               variant="outline"
-              className="bg-gradient-to-t from-[#FFECDF] to-white border border-[#F0F9FF] font-normal font-poppins cursor-pointer"
+              className="bg-gradient-to-t from-[#FFECDF] to-white border border-[#F0F9FF] font-normal font-poppins cursor-pointer flex-1 sm:flex-none"
             >
               Report
             </Button>
@@ -262,7 +262,7 @@ const QuestionWiswView: React.FC<Props> = ({
             <RenderPreview content={question.questionText} />
           </div>
           {question?.questionPessage == "Pass" ||
-          question?.questionPessage == "pass" ? (
+            question?.questionPessage == "pass" ? (
             <div className="mt-5">
               <RenderPreview content={question?.passage} />
             </div>
@@ -270,9 +270,8 @@ const QuestionWiswView: React.FC<Props> = ({
         </div>
 
         <div
-          className={`grid grid-cols-2 ${
-            question.answerType === "Numeric" ? "" : "lg:grid-cols-1"
-          } gap-6 w-full`}
+          className={`grid grid-cols-2 ${question.answerType === "Numeric" ? "" : "lg:grid-cols-1"
+            } gap-6 w-full`}
         >
           {/* LEFT: Correct Answer */}
           <div className="">
@@ -350,5 +349,5 @@ const QuestionWiswView: React.FC<Props> = ({
     </>
   );
 };
-    
+
 export default QuestionWiswView;

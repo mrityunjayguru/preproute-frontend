@@ -12,19 +12,18 @@ function SocialShots() {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Proper typing instead of any
   const youtubeVideos = useSelector(
     (state: RootState) => state.user.youtubeShort || []
   );
 
   /* =========================
-     1️⃣ Fetch Data (Only If Needed)
+     1️⃣ Fetch Data
   ========================== */
   useEffect(() => {
     const getData = async () => {
       try {
-          setLoading(true);
-          await dispatch(fetchYouTubeVideos({}));
+        setLoading(true);
+        await dispatch(fetchYouTubeVideos({}));
       } catch (err) {
         console.error("Error fetching YouTube videos:", err);
       } finally {
@@ -36,11 +35,17 @@ function SocialShots() {
   }, [dispatch]);
 
   /* =========================
-     2️⃣ Auto Horizontal Scroll
+     2️⃣ Auto Horizontal Scroll (Desktop Only)
   ========================== */
   useEffect(() => {
     const scrollContainer = scrollRef.current;
-    if (!scrollContainer || youtubeVideos.length === 0) return;
+
+    if (
+      !scrollContainer ||
+      youtubeVideos.length === 0 ||
+      window.innerWidth < 640 // disable auto scroll on mobile
+    )
+      return;
 
     const autoScroll = setInterval(() => {
       const { scrollLeft, offsetWidth, scrollWidth } = scrollContainer;
@@ -56,14 +61,14 @@ function SocialShots() {
   }, [youtubeVideos]);
 
   /* =========================
-     3️⃣ Helper to Extract videoId
+     3️⃣ Extract videoId
   ========================== */
   const getVideoId = (video: any) => {
     return video?.id?.videoId || video?.videoId || video?.id;
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
+    <div className="mx-auto px-4 py-12">
       {/* ================= HEADER ================= */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -79,7 +84,7 @@ function SocialShots() {
       {/* ================= SCROLL CONTAINER ================= */}
       <div
         ref={scrollRef}
-        className="flex gap-6 overflow-x-auto pb-10 scrollbar-hide snap-x cursor-grab active:cursor-grabbing scroll-smooth"
+        className="flex gap-6 overflow-x-auto pb-10 scrollbar-hide snap-x snap-mandatory scroll-smooth"
       >
         {youtubeVideos.length > 0 ? (
           youtubeVideos.map((video: any) => {
@@ -91,7 +96,7 @@ function SocialShots() {
               <div
                 key={videoId}
                 onClick={() => setSelectedVideo(videoId)}
-                className="group relative min-w-[250px] md:min-w-[280px] aspect-[9/16] bg-gray-200 rounded-3xl overflow-hidden cursor-pointer snap-start transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
+                className="group relative min-w-full sm:min-w-[280px] snap-center aspect-[9/16] bg-gray-200 rounded-3xl overflow-hidden cursor-pointer transition-all duration-500 hover:shadow-2xl hover:-translate-y-2"
               >
                 {/* Thumbnail */}
                 <img
@@ -125,11 +130,11 @@ function SocialShots() {
             );
           })
         ) : loading ? (
-          /* ================= SKELETON LOADER ================= */
-          [1, 2, 3, 4, 5].map((i) => (
+          /* ================= SKELETON ================= */
+          [1, 2, 3].map((i) => (
             <div
               key={i}
-              className="min-w-[250px] md:min-w-[280px] aspect-[9/16] bg-gray-100 rounded-3xl animate-pulse flex flex-col justify-end p-5 space-y-3"
+              className="min-w-full sm:min-w-[280px] aspect-[9/16] bg-gray-100 rounded-3xl animate-pulse flex flex-col justify-end p-5 space-y-3"
             >
               <div className="h-4 bg-gray-200 rounded w-3/4"></div>
               <div className="h-4 bg-gray-200 rounded w-1/2"></div>
@@ -145,12 +150,12 @@ function SocialShots() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/95 backdrop-blur-sm transition-opacity"
+            className="absolute inset-0 bg-black/95 backdrop-blur-sm"
             onClick={() => setSelectedVideo(null)}
           />
 
           {/* Modal */}
-          <div className="relative w-full max-w-[400px] aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/20 animate-in fade-in zoom-in duration-300">
+          <div className="relative w-full max-w-[400px] aspect-[9/16] bg-black rounded-3xl overflow-hidden animate-in fade-in zoom-in duration-300">
             <button
               onClick={() => setSelectedVideo(null)}
               className="absolute top-6 right-4 z-10 p-2 bg-black/50 hover:bg-white/20 text-white rounded-full transition-colors"

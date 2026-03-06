@@ -15,6 +15,7 @@ import {
   getCommonexam,
   getCommonQuestionBeExamId,
   handleGivenExam,
+  handleSetLoder,
   handleSetSelectedExam,
   setCurrentSection,
 } from "@/api/Exam";
@@ -386,6 +387,14 @@ try {
 
     }
   }
+  const noofMocks =
+  Array.isArray(selectedExam?.oteher) &&
+  selectedExam.oteher[0]?.exam?.noOfMocks !== undefined
+    ? selectedExam.oteher[0].exam.noOfMocks
+    : 24;
+
+    
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-grow px-6 sm:px-8 md:px-12 lg:px-28">
@@ -413,9 +422,8 @@ try {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             {/* ===== Banner ===== */}
-            <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10   flex flex-col md:flex-row items-center justify-center md:justify-between overflow-hidden">
+            <div className="relative h-[140px] bg-[#F0F9FF] my-8 rounded-2xl px-6 sm:px-10 flex flex-row items-center justify-between  overflow-hidden">
               {/* Left Content */}
-
               <div className="z-10 max-w-xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#FF5635] font-poppins">
                   {selectedExamType?.examType}
@@ -441,7 +449,8 @@ try {
                   height={140}
                 />
               </motion.div>
-            </div>
+              </div>
+            
             {/* <div className="max-w-7xl">
             </div> */}
 
@@ -514,7 +523,7 @@ try {
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             {/* ===== Banner ===== */}
-            <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-2  flex flex-col md:flex-row items-center justify-between overflow-hidden">
+            <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-2  flex flex-row items-center justify-between overflow-hidden">
               <div className="z-10 max-w-xl">
                 <h2 className="text-xl sm:text-2xl md:text-3xl  font-medium text-[#FF5635] font-poppins">
                   <span className="text-black">
@@ -604,9 +613,9 @@ try {
                   index={i}
                 />
               ))}
-              {examById.length < (examById[0]?.exam?.Mocks || 24 ) &&
+              {examById.length < (noofMocks) &&
                 [
-                  ...Array((examById[0]?.exam?.Mocks || 24) - examById.length),
+                  ...Array((noofMocks) - examById.length),
                 ].map((_, idx) => (
                   <div
                     onClick={() => handleRedirect(idx)}

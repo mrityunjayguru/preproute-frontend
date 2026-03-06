@@ -452,7 +452,7 @@ const ManageTopicExam = () => {
           {currentAnswer.isSubmitted && (
             <div className="bg-white rounded-2xl border p-6">
               <p className="text-center font-poppins font-bold text-[#FF5A3C] mb-4">Solution</p>
-              <div className="w-full h-auto py-5 bg-[#fff] rounded-lg flex items-center justify-center text-gray-600 text-xl">
+              <div className="w-full h-auto py-5 bg-[#fff] rounded-lg flex items-center justify-center text-[#000] text-xl">
                 {question?.hint ? (
                   <RenderPreview content={question.hint} />
                 ) : (

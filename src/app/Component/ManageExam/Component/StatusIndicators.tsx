@@ -8,41 +8,41 @@ import ANSWEREDANDREVIEW from "@/assets/vectors/perticulerExam/answeredAndReview
 
 const Indicator = ({ icon, label }: any) => {
   return (
-    <div className="flex items-center space-x-3">
-      <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
-        <Image src={icon} alt={label} width={40} height={40} />
+    <div className="flex items-center space-x-2">
+      <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
+        <Image src={icon} alt={label} width={32} height={32} className="object-contain" />
       </div>
-      <span className="text-[10px] font-poppins font-normal text-gray-800">{label}</span>
+      <span className="text-[10px] sm:text-[11px] font-poppins font-normal text-gray-800 leading-tight">{label}</span>
     </div>
   );
 };
 
 const StatusIndicators = () => {
   const indicatorsData = [
-    { 
+    {
       icon: NOTVISITED,
       label: "Not Visited"
     },
-    { 
+    {
       icon: ANSWERED,
       label: "Answered"
     },
-    { 
+    {
       icon: UNANSWERED,
       label: "Unanswered"
     },
-    { 
+    {
       icon: REVIEWMARKED,
       label: "Review Marked"
     },
-    { 
+    {
       icon: ANSWEREDANDREVIEW,
       label: "Answered and Review Marked"
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+    <div className="grid grid-cols-2 lg:grid-cols-1 gap-x-4 gap-y-2 py-1">
       {indicatorsData.map((item, index) => (
         <Indicator key={index} {...item} />
       ))}

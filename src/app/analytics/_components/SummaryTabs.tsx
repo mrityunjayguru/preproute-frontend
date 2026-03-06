@@ -27,7 +27,7 @@ interface SummaryTabsProps {
 
 const SummaryTabs = ({ data }: SummaryTabsProps) => {
   const [activeTab, setActiveTab] = useState("Overall");
-const router = useRouter();
+  const router = useRouter();
   const tabItems = [
     { value: "Overall", label: "Overall", icon: OVERALL },
     { value: "Question-wise", label: "Question-wise", icon: QUESTIONWISE },
@@ -71,12 +71,12 @@ const router = useRouter();
             alt="No Data"
             width={200}
             height={200}
-            className="opacity-80"
+            className="opacity-80 font-poppins"
           />
         </EmptyMedia>
         <EmptyContent>
-          <EmptyTitle>No Data Available</EmptyTitle>
-          <EmptyDescription>
+          <EmptyTitle className="font-poppins">No Data Available</EmptyTitle>
+          <EmptyDescription className="font-poppins">
             There is no analytics data available for this exam yet.
           </EmptyDescription>
         </EmptyContent>
@@ -86,7 +86,7 @@ const router = useRouter();
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="w-full bg-transparent p-0 h-auto justify-start gap-10 border-b border-[#D6EBFF] rounded-none">
+      <TabsList className="w-full bg-transparent p-0 h-auto justify-start gap-4 border-b border-[#D6EBFF] rounded-none overflow-x-auto scrollbar-none snap-x snap-mandatory px-4 sm:px-0">
         {tabItems.map((tab) => (
           <TabsTrigger
             key={tab.value}

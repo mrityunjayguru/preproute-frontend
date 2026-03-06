@@ -23,7 +23,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import logo from "../assets/images/logo.svg";
 import { getCommonExamType, handleSelectedExamType } from "@/api/ExamType";
 import { googleLogin, handleLogout } from "@/api/Auth/UserAuth";
-import { getCommonexam, resetQuestionByExamID } from "@/api/Exam";
+import { getCommonexam, handleSetLoder, resetQuestionByExamID } from "@/api/Exam";
 import { resetQuestion } from "@/api/Question";
 import { ChevronDownIcon, LayoutDashboard, MenuIcon } from "lucide-react";
 
@@ -34,6 +34,8 @@ export const Header: React.FC = () => {
 
   const [examMenuOpen, setExamMenuOpen] = useState(false);
   const [resourcesMenuOpen, setResourcesMenuOpen] = useState(false);
+  const [mobileExamOpen, setMobileExamOpen] = useState(false);
+  const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const token =
@@ -53,7 +55,12 @@ export const Header: React.FC = () => {
     dispatch(handleSelectedExamType(exam));
     dispatch(resetQuestionByExamID(payload));
     dispatch(resetQuestion(payload));
-
+   const loderPayload:any=true
+ dispatch(handleSetLoder(loderPayload));
+ setTimeout(()=>{
+   const loderPayload:any=false
+ dispatch(handleSetLoder(loderPayload));
+ },2000)
     const payload2: any = {
       userId: userLogin?._id,
       examTypeId: exam?._id,
@@ -67,7 +74,7 @@ export const Header: React.FC = () => {
     else if (exam.examType.toLowerCase() == "daily practice") {
       router.push("/user-dashboard");
     }
-      else if (exam.examType.toLowerCase() == "pyqs") {
+    else if (exam.examType.toLowerCase() == "pyqs") {
       router.push("/Exam/pyqs");
     }
     else {
@@ -83,7 +90,7 @@ export const Header: React.FC = () => {
     // window.location.reload();
   };
 
-  const navLinks:any = [
+  const navLinks: any = [
     !token && { label: "Features", href: "/home#features" },
     { label: "Pricing", href: "/PlanandPricing" },
     { label: "Community", href: "/Community" },
@@ -113,7 +120,12 @@ export const Header: React.FC = () => {
     dispatch(handleSelectedExamType(exam));
     dispatch(resetQuestionByExamID(payload2));
     dispatch(resetQuestion(payload2));
-
+   const loderPayload:any=true
+ dispatch(handleSetLoder(loderPayload));
+ setTimeout(()=>{
+   const loderPayload:any=false
+ dispatch(handleSetLoder(loderPayload));
+ },2000)
     const payload: any = {
       userId: userLogin?._id,
       examTypeId: exam?._id,
@@ -130,40 +142,40 @@ export const Header: React.FC = () => {
 
   };
 
-  const loginWithGoogle=()=>{
+  const loginWithGoogle = () => {
     router.push("/Auth/signin")
   }
-//   const loginWithGoogle = useGoogleLogin({
-//     flow: "auth-code",
-//     onSuccess: async ({ code }) => {
-//       // 👉 Backend को code भेजो
-//       const response: any = await dispatch(googleLogin({ code, isCode: true }));
-//       if (response.payload === true) {
-//         router.push("/user-dashboard");
-//       }
-//     },
+  //   const loginWithGoogle = useGoogleLogin({
+  //     flow: "auth-code",
+  //     onSuccess: async ({ code }) => {
+  //       // 👉 Backend को code भेजो
+  //       const response: any = await dispatch(googleLogin({ code, isCode: true }));
+  //       if (response.payload === true) {
+  //         router.push("/user-dashboard");
+  //       }
+  //     },
 
-//   onError: () => {
-//     console.log("Google login error");
-//   },
-// });
-// const loginWithGoogle = useGoogleLogin({
-//     flow: "auth-code",
-//     ux_mode: "redirect",
-//     redirect_uri: "http://localhost:3200/api/auth/google/callback",
-//   });
-const preventredirect=()=>{
-  if(!token){
-  router.push("/home")
-  }else if(userLogin.role=="Admin"){
-  router.push("/home")
+  //   onError: () => {
+  //     console.log("Google login error");
+  //   },
+  // });
+  // const loginWithGoogle = useGoogleLogin({
+  //     flow: "auth-code",
+  //     ux_mode: "redirect",
+  //     redirect_uri: "http://localhost:3200/api/auth/google/callback",
+  //   });
+  const preventredirect = () => {
+    if (!token) {
+      router.push("/home")
+    } else if (userLogin.role == "Admin") {
+      router.push("/home")
+    }
+    else if (userLogin.role == "User") {
+      router.push("/user-dashboard")
+    }
   }
-   else if(userLogin.role=="User"){
-  router.push("/user-dashboard")
-  }
-}
   return (
-    <header className="sticky top-0 z-20 w-full bg-white px-2 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+    <header className="sticky top-0 z-40 w-full bg-white px-2 sm:px-6 md:px-8 lg:px-10 xl:px-12">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-2 py-4 sm:px-4 lg:py-5">
         {/* Logo */}
         <div className="flex items-center gap-12">
@@ -220,7 +232,7 @@ const preventredirect=()=>{
             </DropdownMenu>
 
             {/* Main Links */}
-            {navLinks.map((link) => (
+            {navLinks.map((link : any) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -274,7 +286,7 @@ const preventredirect=()=>{
                   href="/user-dashboard"
                   className={isActive("/user-dashboard") ? activeClass : inactiveClass}
                 >
-                  User Dashboard
+                  My Dashboard
                 </Link> */}
               </>
             ) : null}
@@ -324,109 +336,154 @@ const preventredirect=()=>{
             </SheetTrigger>
 
             <SheetContent side="right" className="w-[85%] sm:w-[320px] p-0 flex flex-col h-full">
-              <div className="flex-1 overflow-y-auto pt-10 pb-6 px-2 space-y-6 no-scrollbar">
-                {/* Practice Menu - Mobile */}
+              <div className="flex-1 overflow-y-auto pt-10 pb-6 px-2 space-y-4 no-scrollbar">
+                {/* Practice Menu - Mobile (Collapsible) */}
                 <div className="px-4">
-                  <p className="text-sm font-semibold text-gray-900 mb-2">
-                    Practice
-                  </p>
-                  <div className="space-y-1 pl-2">
-                    {examTypeData.map((exam: any) => (
-                      <button
-                        key={exam._id}
-                        onClick={() => {
-                          handleExamClick(exam);
-                          setMobileOpen(false);
-                        }}
-                        className="block w-full text-left px-3 py-2 text-sm text-gray-700 hover:text-[#FF5635] hover:bg-orange-50 rounded-lg transition-colors"
-                      >
-                        {exam.examType}
-                      </button>
-                    ))}
-                  </div>
+                  <button
+                    onClick={() => setMobileExamOpen(!mobileExamOpen)}
+                    className="flex w-full items-center justify-between px-4 py-3 text-base font-semibold text-gray-900 hover:bg-orange-50 rounded-lg transition-all"
+                  >
+                    <span>Practice</span>
+                    <ChevronDownIcon className={`h-5 w-5 text-gray-500 transition-transform ${mobileExamOpen ? "rotate-180" : ""}`} />
+                  </button>
+
+                  {mobileExamOpen && (
+                    <div className="mt-1 space-y-1 pl-4 border-l-2 border-orange-100 ml-4">
+                      {examTypeData.map((exam: any) => (
+                        <div key={exam._id}>
+                          {exam.subMenuExists && exam.subMenus?.length ? (
+                            <div className="space-y-1">
+                              <p className="px-3 py-2 text-sm font-medium text-gray-900">{exam.examType}</p>
+                              <div className="pl-3 space-y-1">
+                                {exam.subMenus.map((sub: any) => (
+                                  <button
+                                    key={sub._id}
+                                    onClick={() => {
+                                      handleSubExamClick(exam, sub);
+                                      setMobileOpen(false);
+                                    }}
+                                    className="block w-full text-left px-3 py-2 text-sm text-gray-500 hover:text-[#FF5635] hover:bg-orange-50 rounded-md transition-colors"
+                                  >
+                                    {sub.subExamType}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                handleExamClick(exam);
+                                setMobileOpen(false);
+                              }}
+                              className="block w-full text-left px-3 py-2 text-sm text-gray-900 hover:text-[#FF5635] hover:bg-orange-50 rounded-md transition-colors"
+                            >
+                              {exam.examType}
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Main Links */}
                 <div className="px-4 space-y-1">
-                  {navLinks.map((link) => (
+                  {navLinks.map((link: any) => (
                     <Link
                       key={link.href}
                       href={link.href}
                       onClick={() => setMobileOpen(false)}
-                      className={`block px-4 py-2 rounded-lg text-sm ${isActive(link.href)
-                        ? "text-[#FF5635] font-semibold bg-orange-50"
-                        : "text-gray-700 hover:text-[#FF5635] hover:bg-orange-50"
+                      className={`block px-4 py-3 rounded-lg text-base font-medium transition-all ${isActive(link.href)
+                        ? "text-[#FF5635] bg-orange-50"
+                        : "text-gray-900 hover:text-[#FF5635] hover:bg-orange-50"
                         }`}
                     >
                       {link.label}
                     </Link>
                   ))}
+
+                  {token && (
+                    <Link
+                      href="/analytics"
+                      onClick={() => setMobileOpen(false)}
+                      className={`block px-4 py-3 rounded-lg text-base font-medium transition-all ${isActive("/analytics")
+                        ? "text-[#FF5635] bg-orange-50"
+                        : "text-gray-900 hover:text-[#FF5635] hover:bg-orange-50"
+                        }`}
+                    >
+                      Analytics
+                    </Link>
+                  )}
                 </div>
 
-                {/* Resources Menu - Mobile */}
-                <div className="px-4">
-                  <p className="text-sm font-semibold text-gray-900 mb-2">
-                    Resources
-                  </p>
-                  <div className="space-y-1 pl-2">
-                    <Link
-                      href="/resources"
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2 text-sm text-gray-700 hover:text-[#FF5635] hover:bg-orange-50 rounded-lg transition-colors"
-                    >
-                      Resources Home
-                    </Link>
-                    <Link
-                      href="/instructions"
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2 text-sm text-gray-700 hover:text-[#FF5635] hover:bg-orange-50 rounded-lg transition-colors"
-                    >
-                      Instructions
-                    </Link>
-                    <Link
-                      href="/blog"
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2 text-sm text-gray-700 hover:text-[#FF5635] hover:bg-orange-50 rounded-lg transition-colors"
-                    >
-                      Blogs
-                    </Link>
-                  </div>
-                </div>
+                <div className="h-px bg-gray-100 mx-4 my-2" />
 
-                <div className="px-4">
-                  <div className="space-y-1">
+                {/* Resources Menu - Mobile (Collapsible) */}
+                {/* <div className="px-4">
+                  <button
+                    onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}
+                    className="flex w-full items-center justify-between px-4 py-3 text-base font-semibold text-gray-900 hover:bg-orange-50 rounded-lg transition-all"
+                  >
+                    <span>Resources</span>
+                    <ChevronDownIcon className={`h-5 w-5 text-gray-500 transition-transform ${mobileResourcesOpen ? "rotate-180" : ""}`} />
+                  </button>
+
+                  {mobileResourcesOpen && (
+                    <div className="mt-1 space-y-1 pl-4 border-l-2 border-orange-100 ml-4">
+                      <Link
+                        href="/blog"
+                        onClick={() => setMobileOpen(false)}
+                        className="block px-3 py-2 text-sm text-gray-500 hover:text-[#FF5635] hover:bg-orange-50 rounded-md transition-colors"
+                      >
+                        Blogs
+                      </Link>
+                      <Link
+                        href="/instructions"
+                        onClick={() => setMobileOpen(false)}
+                        className="block px-3 py-2 text-sm text-gray-500 hover:text-[#FF5635] hover:bg-orange-50 rounded-md transition-colors"
+                      >
+                        Instructions
+                      </Link>
+                    </div>
+                  )}
+                </div> */}
+
+                {token && (
+                  <div className="px-4">
                     <Link
                       href="/user-dashboard"
                       onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2 text-sm text-gray-700 hover:text-[#FF5635] hover:bg-orange-50 rounded-lg transition-colors"
+                      className={`block px-4 py-3 rounded-lg text-base font-medium transition-all ${isActive("/user-dashboard")
+                        ? "text-[#FF5635] bg-orange-50"
+                        : "text-gray-900 hover:text-[#FF5635] hover:bg-orange-50"
+                        }`}
                     >
-                      User Dashboard
+                      My Dashboard
                     </Link>
                   </div>
-                </div>
+                )}
               </div>
-
 
               {/* Auth Buttons - Mobile */}
               <div className="p-4 border-t bg-white safe-area-bottom pb-8 sm:pb-6">
                 {!token ? (
-                  <div className="space-y-2">
-                    <Link
-                      href="/Auth/register"
-                      onClick={() => setMobileOpen(false)}
-                      className="block text-center px-4 py-2 text-[#FF5635] font-semibold rounded-full border border-[#FF5635] hover:bg-orange-50 transition-colors"
-                    >
-                      Register
-                    </Link>
+                  <div className="space-y-3">
                     <Button
                       onClick={() => {
-                        loginWithGoogle()
+                        loginWithGoogle();
                         setMobileOpen(false);
                       }}
-                      className="w-full rounded-full bg-[#FF5635] text-white px-4 py-2 h-auto text-lg shadow-lg hover:bg-[#E04D2E] transition-all"
+                      className="w-full rounded-full bg-[#FF5635] text-white px-4 py-3 h-auto text-lg font-semibold shadow-md hover:bg-[#E04D2E] transition-all"
                     >
                       Login
                     </Button>
+                    {/* <Link
+                      href="/Auth/register"
+                      onClick={() => setMobileOpen(false)}
+                      className="block text-center px-4 py-3 text-[#FF5635] font-semibold rounded-full border-2 border-[#FF5635] hover:bg-orange-50 transition-colors"
+                    >
+                      Create Account
+                    </Link> */}
                   </div>
                 ) : (
                   /* Dashboard Button - Mobile */
@@ -437,11 +494,11 @@ const preventredirect=()=>{
                         router.push("/dashboard/home");
                         setMobileOpen(false);
                       }}
-                      className="w-full border-[#FF5635] text-[#FF5635] px-4 py-2 h-auto text-lg"
+                      className="w-full border-2 border-[#FF5635] text-[#FF5635] px-4 py-3 h-auto text-lg font-semibold hover:bg-orange-50 transition-all"
                       variant="outline"
                     >
                       <LayoutDashboard className="mr-2 h-5 w-5" />
-                      Dashboard
+                      Admin Dashboard
                     </Button>
                   )
                 )}

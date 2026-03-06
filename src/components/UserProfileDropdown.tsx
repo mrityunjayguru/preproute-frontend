@@ -93,7 +93,7 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
           className="cursor-pointer  px-3 py-1 rounded-md text-sm font-dm-sans"
         >
             <Link href="/user-dashboard" className="w-full">
-            User Dashboard
+            My Dashboard
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem

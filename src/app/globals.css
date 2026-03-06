@@ -120,10 +120,12 @@
 
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden;
   }
 }
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 /* Font Family Utilities */
 .font-poppins {

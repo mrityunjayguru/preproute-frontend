@@ -69,6 +69,7 @@ export const subTopic={
 }
 export const User={
     create:"user/create",
+    DownloadUsers:"user/DownloadUsers",
   get:"user/get",
   getallsubtopicsbytopicid:"subtopic/getallsubtopicsbytopicid",
   getSubTopicByTopicId:"setUpexam/subtopic/getSubTopicByTopicId",
@@ -119,13 +120,16 @@ export const exam={
 }
 export const Question={
     create:"setUpexam/question/create",
+    createQuestionBank:"setUpexam/question/createQuestionBank",
     get:"question",
     getQuestionById:"setUpexam/question/getQuestionById",
     update:"setUpexam/question/updateQuestion",
+    getQuestionBank:"setUpexam/question/getQuestionBank",
     userQuestiongetQuestionById:"/user/getQuestionById",
     userExamResult:"/user/analysis",
     clearQuestionResponce:"/user/clearQuestionResponce",
-    questionByQuestionPaperId:"setUpexam/question/questionByQuestionPaperId"
+    questionByQuestionPaperId:"setUpexam/question/questionByQuestionPaperId",
+    handleupdateQuestionBank:"setUpexam/question/updateQuestionBank"
 }
 export const questionPaper={
   create:"setUpexam/questionpaper/create",

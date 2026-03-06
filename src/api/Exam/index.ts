@@ -10,7 +10,8 @@ import {
   setQuestion,
   seSection,
   setExamProgress,
-  setgivenAllExam
+  setgivenAllExam,
+  setLoder
 } from "../../store/seatUpexam/exam";
 import APIName, { exam } from "../endPoints";
 import { examRepo } from "./ExamRepo";
@@ -494,6 +495,29 @@ export const getUserWithTarget = createAsyncThunk<boolean, Payload>(
     return false;
   }
 );
+
+
+
+export const handleSetLoder = createAsyncThunk<boolean, Payload>(
+  exam.get,
+  async (payload, thunkAPI) => {
+    try {
+      thunkAPI.dispatch(setLoder(payload));
+  
+        return true;
+    } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        // GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
+
 
 
 

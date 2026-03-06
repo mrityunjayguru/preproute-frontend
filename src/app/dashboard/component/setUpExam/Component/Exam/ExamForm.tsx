@@ -35,6 +35,8 @@ const ExamForm: React.FC<{ data?: any }> = ({ data }) => {
 
   const [selectedCollege, setSelectedCollege] = useState<any>(null);
   const [examName, setExamName] = useState("");
+  const [noOfMocks, setNoOfMocks] = useState("");
+
   const [subjectName, setSubjectName] = useState(""); // State for Subject Name
   const [fullExamDuration, setFullExamDuration] = useState("");
   const [isSwitchable, setIsSwitchable] = useState("yes");
@@ -116,6 +118,7 @@ const ExamForm: React.FC<{ data?: any }> = ({ data }) => {
         : "";
       
       setExamName(updateExamData.examname || "");
+      setNoOfMocks(updateExamData.noOfMocks || "");
       setSubjectName(updateExamData.subjectName || ""); // Prefill Subject Name
       setIsSwitchable(updateExamData.switchable ? "yes" : "no");
       setIsSection(updateExamData.isSection ? "true" : "false");
@@ -193,6 +196,7 @@ const ExamForm: React.FC<{ data?: any }> = ({ data }) => {
       subjectName: subjectName, // Added to payload
       collegeId: selectedCollege?.value,
       switchable: isSwitchable === "yes",
+      noOfMocks:noOfMocks,
       isSection: isSection === "true",
       mockDate: mockDate,
       iscalculater: iscalculater === "yes",
@@ -294,7 +298,16 @@ const ExamForm: React.FC<{ data?: any }> = ({ data }) => {
             className="px-4 border border-[#D0D5DD] rounded-[2px] focus:ring-0"
           />
         </div>
-
+        <div>
+          <Label className="mb-1 block font-dm-sans text-md">No of Mocks</Label>
+          <Input
+            type="string"
+            value={noOfMocks}
+            onChange={(e) => setNoOfMocks(e.target.value)}
+            placeholder="0"
+            className="px-4 border border-[#D0D5DD] rounded-[2px] focus:ring-0"
+          />
+        </div>
         {/* CUET Specific Fields */}
         {selectedCollege?.label === "CUET" && (
           <>

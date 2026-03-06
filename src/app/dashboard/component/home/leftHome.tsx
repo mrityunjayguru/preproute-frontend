@@ -58,7 +58,7 @@ export const ExamList: React.FC<Props> = ({ exams }) => {
 
   const examOptions = examList.map((item: any) => ({
     value: item._id,
-    label: item.examname,
+    label: item.examname + (item.subjectName ? ` (${item.subjectName})` : ""),
   }));
 
   const customStyles = {

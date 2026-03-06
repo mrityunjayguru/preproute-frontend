@@ -27,7 +27,7 @@ function BookMark() {
         <div className="relative bg-[#E8F4F8] rounded-lg px-8 py-5 mb-12 flex justify-between items-center">
           <div className="">
             <h1 className="text-[#FF5635] text-2xl md:text-3xl font-medium font-poppins">
-              Bookmarked Question
+              Bookmarked Questions
             </h1>
             <p className="text-md text-gray-700 font-dm-sans max-w-xl">
               Understand your strengths and improve where it matters.

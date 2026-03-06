@@ -71,7 +71,7 @@ const TopicWiseTab = ({ data }: TopicWiseTabProps) => {
   /** -------------------- FILTER OPTIONS -------------------- */
   const filterOptions = useMemo(() => {
     const base = ["Time", "Topic", "Difficulty"];
-    if (data?.questionpaper?.examformet!=="sectional" && data?.questionpaper?.examformet!=="CUET" ) {
+    if (data?.questionpaper?.examformet !== "sectional" && data?.questionpaper?.examformet !== "CUET") {
       base.unshift("Section");
     }
     return base;
@@ -143,125 +143,128 @@ const TopicWiseTab = ({ data }: TopicWiseTabProps) => {
               className="bg-white rounded-lg overflow-hidden"
             >
               {/* Header Row */}
-              <div className="bg-[#005EB6] text-white flex">
-                <div className="p-4 w-1/4 min-w-[200px] text-lg font-poppins">
+              <div className="bg-[#005EB6] text-white flex overflow-x-auto scrollbar-none">
+                <div className="p-4 w-1/4 min-w-[200px] text-lg font-poppins shrink-0 bg-[#005EB6] sticky left-0 z-10">
                   {getTopicName(topic.topicId)}
                 </div>
-                <div className="flex-1 flex">
+                <div className="flex-1 flex min-w-max">
                   {topic.details.map((d: any, i: number) => (
-                    <div key={i} className="flex-1 p-4 text-center text-sm">
+                    <div key={i} className="flex-1 p-4 text-center text-sm min-w-[120px]">
                       {d.QuestionType}
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Number of Questions */}
-              <div className="flex border-b">
-                <div className="p-4 w-1/4 min-w-[200px] font-poppins">
-                  Number of Questions
-                </div>
-                <div className="flex-1 flex">
-                  {topic.details.map((d: any, i: number) => (
-                    <div key={i} className="flex-1 p-4 text-center">
-                      {d.total}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Correct | Wrong | Attempted */}
-              <div className="flex border-b bg-[#F9FBFC]">
-                <div className="p-4 w-1/4 min-w-[200px] font-poppins">
-                  Correct | Wrong | Attempted
-                </div>
-                <div className="flex-1 flex text-sm">
-                  {topic.details.map((d: any, i: number) => (
-                    <div
-                      key={i}
-                      className="flex-1 p-4 text-center relative group cursor-pointer"
-                    >
-                      <span className="text-green-600">{d.correct}</span> |{" "}
-                      <span className="text-red-500">{d.wrong}</span> |{" "}
-                      <span>{d.attempted}</span>
-                      <div className="hidden group-hover:block">
-                        <TooltipWrapper>
-                          <AvgCWA
-                            correct={Math.round(
-                              avg(topic.details.map((x: any) => x.correct))
-                            )}
-                            wrong={Math.round(
-                              avg(topic.details.map((x: any) => x.wrong))
-                            )}
-                            attempted={Math.round(
-                              avg(topic.details.map((x: any) => x.attempted))
-                            )}
-                          />
-                        </TooltipWrapper>
+              {/* Scrolling Container for the rest of the rows */}
+              <div className="overflow-x-auto scrollbar-none">
+                {/* Number of Questions */}
+                <div className="flex border-b min-w-max w-full">
+                  <div className="p-4 w-1/4 min-w-[200px] font-poppins shrink-0 bg-white sticky left-0 z-10 border-r">
+                    Number of Questions
+                  </div>
+                  <div className="flex-1 flex">
+                    {topic.details.map((d: any, i: number) => (
+                      <div key={i} className="flex-1 p-4 text-center min-w-[120px]">
+                        {d.total}
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Average Time */}
-              <div className="flex border-b">
-                <div className="p-4 w-1/4 min-w-[200px] font-poppins">
-                  Average Time
-                </div>
-                <div className="flex-1 flex">
-                  {topic.details.map((d: any, i: number) => (
-                    <div
-                      key={i}
-                      className="flex-1 p-4 text-center relative group cursor-pointer"
-                    >
-                      {Number(d.avgTime || 0).toFixed(2)} Sec.
-                      <div className="hidden group-hover:block">
-                        <TooltipWrapper>
-                          <AvgTime
-                            time={avg(
-                              topic.details.map((x: any) =>
-                                Number(x.avgTime || 0)
-                              )
-                            )}
-                          />
-                        </TooltipWrapper>
+                {/* Correct | Wrong | Attempted */}
+                <div className="flex border-b bg-[#F9FBFC] min-w-max w-full">
+                  <div className="p-4 w-1/4 min-w-[200px] font-poppins shrink-0 bg-[#F9FBFC] sticky left-0 z-10 border-r">
+                    Correct | Wrong | Attempted
+                  </div>
+                  <div className="flex-1 flex text-sm">
+                    {topic.details.map((d: any, i: number) => (
+                      <div
+                        key={i}
+                        className="flex-1 p-4 text-center relative group cursor-pointer min-w-[120px]"
+                      >
+                        <span className="text-green-600">{d.correct}</span> |{" "}
+                        <span className="text-red-500">{d.wrong}</span> |{" "}
+                        <span>{d.attempted}</span>
+                        <div className="hidden group-hover:block">
+                          <TooltipWrapper>
+                            <AvgCWA
+                              correct={Math.round(
+                                avg(topic.details.map((x: any) => x.correct))
+                              )}
+                              wrong={Math.round(
+                                avg(topic.details.map((x: any) => x.wrong))
+                              )}
+                              attempted={Math.round(
+                                avg(topic.details.map((x: any) => x.attempted))
+                              )}
+                            />
+                          </TooltipWrapper>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              {/* Accuracy | Attempt % */}
-              <div className="flex bg-[#F9FBFC]">
-                <div className="p-4 w-1/4 min-w-[200px] font-poppins text-[#005EB6]">
-                  Accuracy | Attempt %
-                </div>
-                <div className="flex-1 flex text-[#005EB6]">
-                  {topic.details.map((d: any, i: number) => (
-                    <div
-                      key={i}
-                      className="flex-1 p-4 text-center relative group cursor-pointer"
-                    >
-                      {d.accuracy} | {d.percentage}
-                      <div className="hidden group-hover:block">
-                        <TooltipWrapper>
-                          <AvgAccuracy
-                            acc={avg(
-                              topic.details.map((x: any) =>
-                                Number(x.accuracy || 0)
-                              )
-                            )}
-                            att={avg(
-                              topic.details.map((x: any) =>
-                                Number(x.percentage || 0)
-                              )
-                            )}
-                          />
-                        </TooltipWrapper>
+                {/* Average Time */}
+                <div className="flex border-b min-w-max w-full">
+                  <div className="p-4 w-1/4 min-w-[200px] font-poppins shrink-0 bg-white sticky left-0 z-10 border-r">
+                    Average Time
+                  </div>
+                  <div className="flex-1 flex">
+                    {topic.details.map((d: any, i: number) => (
+                      <div
+                        key={i}
+                        className="flex-1 p-4 text-center relative group cursor-pointer min-w-[120px]"
+                      >
+                        {Number(d.avgTime || 0).toFixed(2)} Sec.
+                        <div className="hidden group-hover:block">
+                          <TooltipWrapper>
+                            <AvgTime
+                              time={avg(
+                                topic.details.map((x: any) =>
+                                  Number(x.avgTime || 0)
+                                )
+                              )}
+                            />
+                          </TooltipWrapper>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                </div>
+
+                {/* Accuracy | Attempt % */}
+                <div className="flex bg-[#F9FBFC] min-w-max w-full">
+                  <div className="p-4 w-1/4 min-w-[200px] font-poppins text-[#005EB6] shrink-0 bg-[#F9FBFC] sticky left-0 z-10 border-r">
+                    Accuracy | Attempt %
+                  </div>
+                  <div className="flex-1 flex text-[#005EB6]">
+                    {topic.details.map((d: any, i: number) => (
+                      <div
+                        key={i}
+                        className="flex-1 p-4 text-center relative group cursor-pointer min-w-[120px]"
+                      >
+                        {d.accuracy} | {d.percentage}
+                        <div className="hidden group-hover:block">
+                          <TooltipWrapper>
+                            <AvgAccuracy
+                              acc={avg(
+                                topic.details.map((x: any) =>
+                                  Number(x.accuracy || 0)
+                                )
+                              )}
+                              att={avg(
+                                topic.details.map((x: any) =>
+                                  Number(x.percentage || 0)
+                                )
+                              )}
+                            />
+                          </TooltipWrapper>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

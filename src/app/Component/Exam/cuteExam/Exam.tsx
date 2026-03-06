@@ -346,13 +346,23 @@
 
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import CULT from "@/assets/vectors/pricing/CULT.svg";
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import SocialMedia from "../../Home/_componets/social-media";
+import { handleSetLoder } from "@/api/Exam";
+import { AppDispatch } from "@/store/store";
+import { useDispatch } from "react-redux";
 
 export default function MergedExamPageCUET() {
+  const dispatch = useDispatch<AppDispatch>();
+   useEffect(()=>{
+  setTimeout(()=>{
+     const loderPayload:any=false
+   dispatch(handleSetLoder(loderPayload));
+  })
+    },[])
   return (
     <section className="min-h-screen w-full bg-white flex flex-col justify-between">
       

@@ -58,10 +58,15 @@ export function DashboardHeader() {
       path: "/dashboard/support",
       isView: userLogin?.role === "Admin",
     },
-        {
+    {
       label: "Announce",
       path: "/dashboard/Annoucement",
       isView: userLogin?.role === "Admin",
+    },
+   {
+      label: "Question Bank",
+      path: "/dashboard/questionbank",
+      isView: true,
     },
   ];
 

@@ -333,35 +333,39 @@ useEffect(() => {
         formatTime={formatTime}
         data={data}
         examName={examResult?.examdetail?.examname}
-        attemptDate={data?.fullExamEndTime || data?.createdAt} 
-         paperName={examResult?.questionpaper?.questionPapername}
+        attemptDate={data?.fullExamEndTime || data?.createdAt}
+        paperName={examResult?.questionpaper?.questionPapername}
       />
 
       <div className="flex flex-col lg:flex-row flex-1">
-        <QuestionWiswView
-          question={question}
-          examResult={examResult}
-          examName={examResult?.examdetail?.examname}
-          paperName={examResult?.questionpaper?.questionPapername}
-          currentQuestionIndex={currentQuestionIndex}
-          sectionQuestions={sectionQuestions}
-          getQuestionByNumberId={getQuestionByNumberId}
-        />
+        <div className="order-2 lg:order-1 flex-1">
+          <QuestionWiswView
+            question={question}
+            examResult={examResult}
+            examName={examResult?.examdetail?.examname}
+            paperName={examResult?.questionpaper?.questionPapername}
+            currentQuestionIndex={currentQuestionIndex}
+            sectionQuestions={sectionQuestions}
+            getQuestionByNumberId={getQuestionByNumberId}
+          />
+        </div>
 
-        <QuestionWiseRightSection
-          question={question}
-          userLogin=""
-           examResult={examResult}
-          totalNoOfQuestions={totalNoOfQuestions}
-          currentStatus={currentStatus}
-          currentQuestionIndex={currentQuestionIndex}
-          getQuestionByNumberId={getQuestionByNumberId}
-          isSection={isSection}
-          selectedSection={selectedSection}
-          isTimeUp={isTimeUp}
-          data={data}
-          sectionQuestions={sectionQuestions}
-        />
+        <div className="order-1 lg:order-2">
+          <QuestionWiseRightSection
+            question={question}
+            userLogin=""
+            examResult={examResult}
+            totalNoOfQuestions={totalNoOfQuestions}
+            currentStatus={currentStatus}
+            currentQuestionIndex={currentQuestionIndex}
+            getQuestionByNumberId={getQuestionByNumberId}
+            isSection={isSection}
+            selectedSection={selectedSection}
+            isTimeUp={isTimeUp}
+            data={data}
+            sectionQuestions={sectionQuestions}
+          />
+        </div>
       </div>
 
       {/* <FooterActions

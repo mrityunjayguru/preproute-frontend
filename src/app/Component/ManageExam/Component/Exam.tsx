@@ -155,6 +155,8 @@ export default function ExamUI() {
     if (!examData?.length || !userLogin) return;
 
     const examInfo = examData[0].exam;
+    
+
     setIsSection(examInfo?.isSection);
     setSwitchable(examInfo?.switchable);
 
@@ -172,7 +174,7 @@ export default function ExamUI() {
         setSectionQuestionStatus(response.payload.givenExam);
         const savedSection = examSections.find(s => s.sectionId === response.payload.currentSection.sectionId);
         if (savedSection) setSelectedSection(savedSection);
-
+console.log(response,"responseresponseresponse")
         setCurrentQuestionIndex(response.payload.currentQuestionNoIndex);
         setTotalNoOfQuestions(response.payload.currentSection.noofQuestion);
         fetchQuestion(response.payload.currentQuestionNoIndex + 1, response.payload.currentSection.sectionId);
@@ -196,7 +198,16 @@ export default function ExamUI() {
       if (savedTime) {
         setTimeLeft(Number(savedTime));
       } else {
-        const duration = examInfo.switchable ? examInfo.fullExamduration : (examInfo.isSection ? examSections[0].duration : examInfo.fullExamduration);
+       let duration = examInfo.fullExamduration;
+
+if (!examInfo.switchable || examData?.[0]?.examformet === "sectional") {
+  const isSectional =
+    examInfo.isSection || examData?.[0]?.examformet === "sectional";
+
+  if (isSectional) {
+    duration = examSections?.[0]?.duration ?? examInfo.fullExamduration;
+  }
+}
         setTimeLeft(Number(duration || 0) * 60);
       }
     };

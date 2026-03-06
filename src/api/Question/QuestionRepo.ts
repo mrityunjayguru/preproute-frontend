@@ -15,7 +15,9 @@ interface QuestionRepo {
   userQuestiongetQuestionById: (payload: Payload) => Promise<AxiosResponse>;
   userExamResult: (payload: Payload) => Promise<AxiosResponse>;
   clearQuestionResponce: (payload: Payload) => Promise<AxiosResponse>;
-  questionByQuestionPaperId: (payload: Payload) => Promise<AxiosResponse>;
+  questionByQuestionPaperId: (payload: Payload) => Promise<AxiosResponse>;  
+  createQuestionBank: (payload: Payload) => Promise<AxiosResponse>;  
+  getQuestionBank: (payload: Payload) => Promise<AxiosResponse>;  
 }
 
 export const QuestionRepo: QuestionRepo = {
@@ -33,6 +35,12 @@ export const QuestionRepo: QuestionRepo = {
 handleUpdateQuestion(payload) {
     return Repository.post(Question.update, payload);
   },
+  getQuestionBank(payload) {
+    return Repository.post(Question.getQuestionBank, payload);
+  },
+  createQuestionBank(payload) {
+    return Repository.post(Question.createQuestionBank, payload);
+  },
   userQuestiongetQuestionById(payload) {
     return Repository.post(Question.userQuestiongetQuestionById, payload);
   },
@@ -44,5 +52,8 @@ handleUpdateQuestion(payload) {
   },
   questionByQuestionPaperId(payload) {
     return Repository.post(Question.questionByQuestionPaperId, payload);
-  },  
+  }, 
+  handleupdateQuestionBank(payload) {
+    return Repository.post(Question.handleupdateQuestionBank, payload);
+  }
 };

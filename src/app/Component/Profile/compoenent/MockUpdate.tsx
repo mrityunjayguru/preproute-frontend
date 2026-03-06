@@ -7,7 +7,7 @@ function MockUpdate() {
     (state: any) => state?.Auth?.userDashboard
   );
   return (
-    <div className="p-6 bg-[#F5F8FF] border-none rounded-[8px] space-y-4 flex-1 flex flex-col max-h-[300px]">
+    <div className="p-6 bg-[#F5F8FF] border-none rounded-[8px] space-y-4 flex-1 flex flex-col">
       <h3 className="text-lg font-medium text-[#FF5635] font-poppins">
         Exam Updates
       </h3>
