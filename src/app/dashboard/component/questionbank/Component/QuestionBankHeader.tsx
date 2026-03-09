@@ -7,6 +7,7 @@ import { AppDispatch } from "@/store/store";
 import { getExamType } from "@/api/ExamType";
 import { getsection } from "@/api/Section";
 import { getSubTopicByTopicId } from "@/api/subTopic";
+import { getgroup } from "@/api/group";
 
 function QuestionBankHeader({
   selectedExamType,
@@ -19,22 +20,22 @@ function QuestionBankHeader({
   setSelectedTopic,
   selectedSubTopic,
   setSelectedSubTopic,
+  setSelectedGroup,
+  selectedGroup,
 }: any) {
   const dispatch = useDispatch<AppDispatch>();
 
   const sections = useSelector((state: any) => state?.section?.section || []);
-  const subTopics = useSelector(
-    (state: any) => state?.subTopic?.subTopic || [],
-  );
-  const examTypeData = useSelector(
-    (state: any) => state?.examType?.examType || [],
-  );
+  const subTopics = useSelector((state: any) => state?.subTopic?.subTopic || []);
+  const examTypeData = useSelector((state: any) => state?.examType?.examType || []);
   const topics = useSelector((state: any) => state?.topic?.topic || []);
+  const group = useSelector((state: any) => state?.group?.group || []);
 
-  // Initial Fetch
+  // Initial Fetching
   useEffect(() => {
     dispatch(getExamType({}));
     dispatch(getsection({}));
+    dispatch(getgroup ({})); // 2. Fetch groups on mount
   }, [dispatch]);
 
   // Fetch SubTopic when Topic changes
@@ -48,14 +49,21 @@ function QuestionBankHeader({
   // ================= OPTIONS =================
 
   const examTypeOptions = useMemo(
-    () =>
-      examTypeData.map((item: any) => ({
-        label: item.examType,
-        value: item._id,
-        subMenus: item.subMenus || [],
-        subMenuExists: item.subMenuExists,
-      })),
-    [examTypeData],
+    () => examTypeData.map((item: any) => ({
+      label: item.examType,
+      value: item._id,
+      subMenus: item.subMenus || [],
+      subMenuExists: item.subMenuExists,
+    })),
+    [examTypeData]
+  );
+
+  const groupOptions = useMemo(
+    () => group.map((item: any) => ({
+      label: item.groupName,
+      value: item._id,
+    })),
+    [group]
   );
 
   const subExamOptions = useMemo(() => {
@@ -67,78 +75,97 @@ function QuestionBankHeader({
   }, [selectedExamType]);
 
   const sectionOptions = useMemo(
-    () =>
-      sections.map((item: any) => ({
-        label: item.section,
-        value: item._id,
-      })),
-    [sections],
+    () => sections.map((item: any) => ({
+      label: item.section,
+      value: item._id,
+    })),
+    [sections]
   );
 
   const topicOptions = useMemo(
-    () =>
-      topics.map((item: any) => ({
-        label: item.topic,
-        value: item._id,
-      })),
-    [topics],
+    () => topics.map((item: any) => ({
+      label: item.topic,
+      value: item._id,
+    })),
+    [topics]
   );
 
   const subTopicOptions = useMemo(
-    () =>
-      subTopics.map((item: any) => ({
-        label: item.subtopic,
-        value: item._id,
-      })),
-    [subTopics],
+    () => subTopics.map((item: any) => ({
+      label: item.subtopic,
+      value: item._id,
+    })),
+    [subTopics]
   );
 
+  // Common styles for React Select to keep UI consistent
+  const selectStyles = {
+    control: (base: any) => ({
+      ...base,
+      borderRadius: '0.5rem',
+      borderColor: '#e5e7eb', // gray-200
+      boxShadow: 'none',
+      '&:hover': { borderColor: '#4f46e5' } // indigo-600
+    })
+  };
+console.log(selectedGroup,"selectedGroupselectedGroup")
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4 bg-gray-50 rounded-lg shadow-sm">
-      {/* Exam Type */}
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
+      
       <Select
         placeholder="Exam Type"
         options={examTypeOptions}
         value={selectedExamType}
+        styles={selectStyles}
         onChange={(opt) => {
           setSelectedExamType(opt);
           setSelectedSubExam(null);
         }}
       />
 
-      {/* Sub Exam */}
       <Select
-        placeholder="Sub Exam Type"
+        placeholder="Sub Exam"
         options={subExamOptions}
         value={selectedSubExam}
+        styles={selectStyles}
         onChange={(opt) => setSelectedSubExam(opt)}
         isDisabled={!selectedExamType?.subMenuExists}
       />
 
-      {/* Section */}
       <Select
         placeholder="Section"
         options={sectionOptions}
         value={selectedSection}
+        styles={selectStyles}
         onChange={(opt) => setSelectedSection(opt)}
       />
 
-      {/* Topic */}
       <Select
         placeholder="Topic"
         options={topicOptions}
         value={selectedTopic}
+        styles={selectStyles}
         onChange={(opt) => setSelectedTopic(opt)}
       />
 
-      {/* Sub Topic */}
       <Select
         placeholder="Sub Topic"
         options={subTopicOptions}
         value={selectedSubTopic}
+        styles={selectStyles}
         onChange={(opt) => setSelectedSubTopic(opt)}
         isDisabled={!selectedTopic}
       />
+
+      {/* Group Select */}
+      <Select
+        placeholder="Select Group"
+        options={groupOptions}
+        value={selectedGroup}
+        styles={selectStyles}
+        onChange={(opt) => setSelectedGroup(opt)} 
+      />
+
     </div>
   );
 }

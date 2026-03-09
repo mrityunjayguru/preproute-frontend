@@ -9,7 +9,7 @@ import {
 import RenderPreview from "@/Common/CommonLatex";
 import { AppDispatch } from "@/store/store";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import QuestionBankHeader from "../../questionbank/Component/QuestionBankHeader";
 
@@ -38,10 +38,12 @@ console.log(activeSection,"activeSectionactiveSection")
   const [selectedSection, setSelectedSection] = useState<any>(null);
   const [selectedTopic, setSelectedTopic] = useState<any>(null);
   const [selectedSubTopic, setSelectedSubTopic] = useState<any>(null);
+  const [selectedGroup, setSelectedGroup] = useState<any>(null);
   /* ================= FETCH QUESTION BANK ================= */
   useEffect(() => {
     if (isOpen) {
-      dispatch(getQuestionBank({}));
+       const payload:any={status:true}
+      dispatch(getQuestionBank(payload));
     }
   }, [dispatch, isOpen]);
 
@@ -97,6 +99,25 @@ payload=[]
 payload.push(questionItem)
 // dispatch(handleSetSingleQuestion(payload))
 }
+const getQuestionBankData = async () => {
+  const payload: any = {
+    groupId: selectedGroup?.value || selectedGroup?._id,
+    sectionId: selectedSection?.value || selectedSection?._id,
+    topicId: selectedTopic?.value || selectedTopic?._id,
+  };
+
+  await dispatch(getQuestionBank(payload));
+};
+
+// useEffect(() => {
+//   if (selectedGroup) {
+//     getQuestionBankData();
+//   }
+// }, [selectedGroup]);
+
+if (!isOpen) return null;
+
+
   return (
     <>
   
@@ -127,6 +148,8 @@ payload.push(questionItem)
         setSelectedTopic={setSelectedTopic}
         selectedSubTopic={selectedSubTopic}
         setSelectedSubTopic={setSelectedSubTopic}
+        setSelectedGroup={setSelectedGroup}
+        selectedGroup={selectedGroup}
       />
           {/* Table */}
           <div className="overflow-auto">

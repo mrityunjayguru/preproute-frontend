@@ -30,6 +30,12 @@ export const blog={
   update:"Blog/update",
   getallblogsbysectionid:"Blog/getallblogsbysectionid"  
 }
+export const group={
+  create:"setupExam/group/create",
+  get:"setupExam/group/get",
+  update:"setupExam/group/update",
+  getallgroupsbysectionid:"setupExam/group/getallgroupsbysectionid"  
+}
 export const examType={
   create:"setUpexam/examType/create",
   get:"setUpexam/examType/get",

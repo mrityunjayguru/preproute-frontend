@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import {
   createQuestion,
+  getQuestionBank,
   getQuestionById,
   handleUpdateQuestion,
   questionByQuestionPaperId,
@@ -46,7 +47,9 @@ const Exam: React.FC = () => {
   const singleQuestion = useSelector(
     (state: any) => state.question.singleQuestion?.[0],
   );
-
+  const questionBank = useSelector(
+    (state: any) => state?.question?.questionBank || [],
+  );
   // --- Local State ---
   const [sectionsData, setSectionsData] = useState<any[]>([]);
   const [topic, setTopic] = useState<any[]>([]);
@@ -65,7 +68,7 @@ const Exam: React.FC = () => {
   const [openSummary, setOpenSummary] = useState(false);
   const [isSection, setIsSection] = useState<boolean>(true);
   const [numberOfQuestion, setNumberOfQuestion] = useState<number>(0);
-
+ const [selectedQuestion, setSelectedQuestion] = useState("");
   const [options, setOptions] = useState<Option[]>([
     { id: 1, text: "", isCorrect: true, label: "1st" },
     { id: 2, text: "", isCorrect: false, label: "2nd" },
@@ -123,6 +126,11 @@ const Exam: React.FC = () => {
 
     dispatch(getTopic({}));
   }, [selectedExamDetail, dispatch]);
+
+  useEffect(()=>{
+    const payload:any={status:true}
+dispatch(getQuestionBank(payload));
+  },[])
 
   // Fetch subtopics when topic changes
   useEffect(() => {
@@ -297,6 +305,11 @@ const addQuestionBankItem=(questionItem:any)=>{
 // console.log(questionItem,"questionItemquestionItem")
 
 }
+ const handleChange = async(e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedQuestion(e.target.value);
+let questionItem:any=questionBank.find((item:any)=>item._id===e.target.value)
+addQuestionBankItem(questionItem);
+  };
   return (
     <>
       <SummaryTable open={openSummary} onClose={() => setOpenSummary(false)} />
@@ -345,6 +358,19 @@ const addQuestionBankItem=(questionItem:any)=>{
                 ))}
             </div>
             <div className="flex gap-3">
+
+ <select
+        value={selectedQuestion}
+        onChange={handleChange}
+        className="border rounded px-3 py-2"
+      >
+        <option value="">Select Question</option>
+        {questionBank?.map((item: any) => (
+          <option key={item._id} value={item._id}>
+         <p>   {item.uniqueId}</p>
+          </option>
+        ))}
+      </select>
               <button
                 onClick={handleOpenQuestionBank}
                 disabled={loader}

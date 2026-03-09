@@ -144,6 +144,8 @@ function QuestionBankTable() {
             <table className="min-w-full text-sm text-left text-gray-600">
               <thead className="bg-gray-100 text-gray-700 uppercase text-xs">
                 <tr>
+                  <th className="px-6 py-3">Id</th>
+
                   <th className="px-6 py-3">Exam Type</th>
                   <th className="px-6 py-3">Sub Exam</th>
                   <th className="px-6 py-3">Section</th>
@@ -164,6 +166,9 @@ function QuestionBankTable() {
                       key={item._id}
                       className="border-b hover:bg-gray-50 transition"
                     >
+                       <td className="px-6 py-4">
+                        {item?.uniqueId || "-"}
+                      </td>
                       <td className="px-6 py-4">
                         {item?.examType?.examType || "-"}
                       </td>
