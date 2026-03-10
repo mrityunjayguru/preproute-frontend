@@ -234,7 +234,7 @@ const openUsedModal=(val:any)=>{
                         onClick={() => openUsedModal(item)}
                         className="px-6 py-4 text-indigo-600 cursor-pointer hover:underline"
                       >
-                       {item?.totalCount} {" "} {item?.totalCount>0 ? "Yes" : "No"}
+                       {item?.totalCount} 
                       </td>
                       <td className="px-6 py-4">
                         {new Date(item?.createdAt).toLocaleDateString()}
