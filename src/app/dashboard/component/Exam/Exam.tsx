@@ -94,7 +94,7 @@ const Exam: React.FC = () => {
   const [isSection, setIsSection] = useState<boolean>(true);
   const [numberOfQuestion, setNumberOfQuestion] = useState<number>(0);
   const [selectedQuestion, setSelectedQuestion] = useState("");
-  const [questionBankId, setQuestionBankId] = useState<any[]>([]);
+  const [questionBankId, setQuestionBankId] = useState<any>(null);
   const [note,setNote]=useState<string>("");
   const [options, setOptions] = useState<Option[]>([
     { id: 1, text: "", isCorrect: true, label: "1st" },
