@@ -115,8 +115,10 @@ const getQuestionBankData = async () => {
 //   }
 // }, [selectedGroup]);
 
-if (!isOpen) return null;
 
+// useEffect(()=>{
+
+// })
 
   return (
     <>

@@ -8,6 +8,8 @@ import { getExamType } from "@/api/ExamType";
 import { getsection } from "@/api/Section";
 import { getSubTopicByTopicId } from "@/api/subTopic";
 import { getgroup } from "@/api/group";
+import { getQuestionBank } from "@/api/Question";
+import { RotateCcw } from "lucide-react"; // Optional: Adding an icon for the reset button
 
 function QuestionBankHeader({
   selectedExamType,
@@ -35,7 +37,7 @@ function QuestionBankHeader({
   useEffect(() => {
     dispatch(getExamType({}));
     dispatch(getsection({}));
-    dispatch(getgroup ({})); // 2. Fetch groups on mount
+    dispatch(getgroup({}));
   }, [dispatch]);
 
   // Fetch SubTopic when Topic changes
@@ -46,8 +48,35 @@ function QuestionBankHeader({
     }
   }, [selectedTopic, dispatch, setSelectedSubTopic]);
 
-  // ================= OPTIONS =================
+  const getQuestionBankData = async () => {
+    const payload: any = {
+      groupId: selectedGroup?.value || selectedGroup?._id,
+      sectionId: selectedSection?.value || selectedSection?._id,
+      topicId: selectedTopic?.value || selectedTopic?._id,
+      status:true
+    };
+    await dispatch(getQuestionBank(payload));
+  };
 
+  useEffect(() => {
+    if (selectedGroup) {
+      getQuestionBankData();
+    }
+  }, [selectedGroup]);
+
+  // ================= RESET HANDLER =================
+  const handleReset = () => {
+    setSelectedExamType(null);
+    setSelectedSubExam(null);
+    setSelectedSection(null);
+    setSelectedTopic(null);
+    setSelectedSubTopic(null);
+    setSelectedGroup(null);
+    // Optionally trigger a fetch for all questions again or clear the list
+    dispatch(getQuestionBank({})); 
+  };
+
+  // ================= OPTIONS =================
   const examTypeOptions = useMemo(
     () => examTypeData.map((item: any) => ({
       label: item.examType,
@@ -98,19 +127,18 @@ function QuestionBankHeader({
     [subTopics]
   );
 
-  // Common styles for React Select to keep UI consistent
   const selectStyles = {
     control: (base: any) => ({
       ...base,
       borderRadius: '0.5rem',
-      borderColor: '#e5e7eb', // gray-200
+      borderColor: '#e5e7eb',
       boxShadow: 'none',
-      '&:hover': { borderColor: '#4f46e5' } // indigo-600
+      '&:hover': { borderColor: '#4f46e5' }
     })
   };
-console.log(selectedGroup,"selectedGroupselectedGroup")
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4 p-4 bg-white rounded-lg shadow-sm border border-gray-200 items-center">
       
       <Select
         placeholder="Exam Type"
@@ -157,7 +185,6 @@ console.log(selectedGroup,"selectedGroupselectedGroup")
         isDisabled={!selectedTopic}
       />
 
-      {/* Group Select */}
       <Select
         placeholder="Select Group"
         options={groupOptions}
@@ -165,6 +192,15 @@ console.log(selectedGroup,"selectedGroupselectedGroup")
         styles={selectStyles}
         onChange={(opt) => setSelectedGroup(opt)} 
       />
+
+      {/* Reset Button */}
+      <button
+        onClick={handleReset}
+        className="flex items-center justify-center gap-2 px-4 py-2 bg-red-50 text-red-600 border border-red-200 rounded-lg hover:bg-red-600 hover:text-white transition-all duration-200 font-medium"
+      >
+        <RotateCcw size={16} />
+        Reset
+      </button>
 
     </div>
   );
