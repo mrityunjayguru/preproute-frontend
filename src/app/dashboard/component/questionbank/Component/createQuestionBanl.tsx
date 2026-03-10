@@ -45,7 +45,7 @@ const QuestioBankExam: React.FC = () => {
   const [selectedSection, setSelectedSection] = useState<any>(null);
   const [selectedTopic, setSelectedTopic] = useState<any>(null);
   const [selectedSubTopic, setSelectedSubTopic] = useState<any>(null);
-
+  const [selectedGroup, setSelectedGroup] = useState<any>(null);
   // --- Local State for Question Content ---
   const [activeQuestion, setActiveQuestion] = useState<number>(1);
   const [questionType, setQuestionType] = useState<string>("Easy");
@@ -90,6 +90,7 @@ const QuestioBankExam: React.FC = () => {
       setQuestionType(singleQuestion.questionType || "Easy");
       setQuestionData(singleQuestion.questionText || "");
       setHintText(singleQuestion.hint || "");
+      setSelectedGroup(singleQuestion.groupId) ;
       setNumericAnswer(singleQuestion.numericAnswer || 0);
       setQuestionPessage(singleQuestion.questionPessage || "Normal");
       setPassage(singleQuestion.passage || "");
@@ -155,7 +156,7 @@ const QuestioBankExam: React.FC = () => {
         section: selectedSection?.value || selectedSection?._id,
         topicId: selectedTopic?.value || selectedTopic?._id,
         subtopicId: selectedSubTopic?.value || selectedSubTopic?._id,
-
+        groupId: selectedGroup?.value || selectedGroup?._id,
         questionNo: activeQuestion,
         questionType,
         questionPessage,
@@ -208,6 +209,8 @@ let res:any=await dispatch(handleQuestionBankSingleQuestion(payload))
         setSelectedTopic={setSelectedTopic}
         selectedSubTopic={selectedSubTopic}
         setSelectedSubTopic={setSelectedSubTopic}
+        setSelectedGroup={setSelectedGroup}
+        selectedGroup={selectedGroup}
       />
     
       <SummaryTable open={openSummary} onClose={() => setOpenSummary(false)} />

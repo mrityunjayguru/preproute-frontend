@@ -17,12 +17,17 @@ interface QuestionRepo {
   clearQuestionResponce: (payload: Payload) => Promise<AxiosResponse>;
   questionByQuestionPaperId: (payload: Payload) => Promise<AxiosResponse>;  
   createQuestionBank: (payload: Payload) => Promise<AxiosResponse>;  
-  getQuestionBank: (payload: Payload) => Promise<AxiosResponse>;  
+  getQuestionBank: (payload: Payload) => Promise<AxiosResponse>; 
+  getUsedQuestion : (payload: Payload) => Promise<AxiosResponse>; 
 }
 
 export const QuestionRepo: QuestionRepo = {
   createQuestion(payload) {
     return Repository.post(Question.create, payload, {
+    });
+  },
+  getUsedQuestion(payload) {
+    return Repository.post(Question.getUsedQuestion, payload, {
     });
   },
     getQuestion(payload) {

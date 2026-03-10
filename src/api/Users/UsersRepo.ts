@@ -19,12 +19,17 @@ updateUserInfo: (payload: any) => Promise<AxiosResponse>;
 createReport: (payload: any) => Promise<AxiosResponse>;
 userProfiel: (payload: any) => Promise<AxiosResponse>;
 fetchYouTubeVideos: (payload: any) => Promise<AxiosResponse>;
+getAllUsers: (payload: any) => Promise<AxiosResponse>;
 
 }
 
 export const UserRepo: UserRepo = {
   createUser(payload) {
     return Repository.post(User.create, payload, {
+    });
+  },
+  getAllUsers(payload) {
+    return Repository.post(User.getAllUsers, payload, {
     });
   },
   DownloadUsers(payload) {

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { setQuestion,setResult,setSingleQuestion,settopicDestribution,setQuestionBank,setQuestionBankSingleQuestion} from '../../store/seatUpexam/question';
+import { setQuestion,setResult,setSingleQuestion,settopicDestribution,setQuestionBank,setQuestionBankSingleQuestion,setUserQuestion} from '../../store/seatUpexam/question';
 import APIName, { Question} from '../endPoints';
 import { QuestionRepo } from './QuestionRepo';
 import Swal from 'sweetalert2';
@@ -179,7 +179,12 @@ export const handleupdateQuestionBank= createAsyncThunk<boolean, Payload>(
         localStorage.removeItem("token")
         GetMessage("warning", "Unauthorized");
         // window.location.href = "/signin"; 
-      }else{
+      }
+       else if(err.status==400){
+        GetMessage("warning", "Cannot Inactivate question bank as it is already in use.");
+        // window.location.href = "/signin"; 
+      }
+      else{
         GetMessage("warning", "something went wrong");
       }
     }
@@ -309,6 +314,32 @@ export const handleSetSingleQuestion= createAsyncThunk<boolean, Payload>(
    
         thunkAPI.dispatch(setSingleQuestion(payload));
         return true;
+    } catch (err:any) {
+      if(err.status==401){
+        localStorage.removeItem("token")
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin"; 
+      }else{
+        // GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  },
+);
+
+
+
+
+
+export const getUsedQuestion= createAsyncThunk<boolean, Payload>(
+  Question.get,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await QuestionRepo.getUsedQuestion(payload);
+      if (data.status === 200) {
+        thunkAPI.dispatch(setUserQuestion(data.data.data));
+        return true;
+      }
     } catch (err:any) {
       if(err.status==401){
         localStorage.removeItem("token")
