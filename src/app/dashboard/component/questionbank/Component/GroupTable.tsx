@@ -28,7 +28,11 @@ function GroupTable() {
   const columns = [
     { header: "groupName", accessor: "groupName" },
     // { header: "description", accessor: "description" },
-
+    {
+      header: "User",
+      accessor: (row: any) =>
+        row.username ? (row.username) : "-",
+    },
     {
       header: "Created On",
       accessor: (row: any) =>

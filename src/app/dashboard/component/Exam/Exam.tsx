@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
+import Select from "react-select"; // New Import
+import { AppDispatch } from "@/store/store";
 import {
   createQuestion,
   getQuestionBank,
@@ -26,6 +27,7 @@ import LatexForSoluction from "./Component/LatexForSoluction";
 import LatesForpassage from "./Component/LatesForpassage";
 import SummaryTable from "./Component/Distirbution";
 import QuestionBankPopup from "./Component/QuestionBankPopup";
+import { Textarea } from "@/components/ui/textarea";
 
 type AnswerType = "Numeric" | "MCQ";
 
@@ -35,6 +37,28 @@ interface Option {
   isCorrect: boolean;
   label: string;
 }
+
+// Custom styles for react-select to match your UI
+const customStyles = {
+  control: (base: any) => ({
+    ...base,
+    borderColor: "#e2e8f0", // border-gray-200
+    borderRadius: "0.375rem",
+    padding: "1px",
+    boxShadow: "none",
+    "&:hover": {
+      borderColor: "#FF5635",
+    },
+  }),
+  option: (base: any, state: { isSelected: any; isFocused: any }) => ({
+    ...base,
+    backgroundColor: state.isSelected ? "#FF5635" : state.isFocused ? "#FFF5F3" : "white",
+    color: state.isSelected ? "white" : "black",
+    "&:active": {
+      backgroundColor: "#FF5635",
+    },
+  }),
+};
 
 const Exam: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -50,6 +74,7 @@ const Exam: React.FC = () => {
   const questionBank = useSelector(
     (state: any) => state?.question?.questionBank || [],
   );
+
   // --- Local State ---
   const [sectionsData, setSectionsData] = useState<any[]>([]);
   const [topic, setTopic] = useState<any[]>([]);
@@ -68,7 +93,9 @@ const Exam: React.FC = () => {
   const [openSummary, setOpenSummary] = useState(false);
   const [isSection, setIsSection] = useState<boolean>(true);
   const [numberOfQuestion, setNumberOfQuestion] = useState<number>(0);
- const [selectedQuestion, setSelectedQuestion] = useState("");
+  const [selectedQuestion, setSelectedQuestion] = useState("");
+  const [questionBankId, setQuestionBankId] = useState<any[]>([]);
+  const [note,setNote]=useState<string>("");
   const [options, setOptions] = useState<Option[]>([
     { id: 1, text: "", isCorrect: true, label: "1st" },
     { id: 2, text: "", isCorrect: false, label: "2nd" },
@@ -76,11 +103,9 @@ const Exam: React.FC = () => {
     { id: 4, text: "", isCorrect: false, label: "4th" },
   ]);
 
-  // --- Helper Functions ---
+  // --- Helpers ---
   const getOrdinalSuffix = (n: number) =>
-    ["th", "st", "nd", "rd"][
-      (n % 100 > 10 && n % 100 < 20) || n % 10 > 3 ? 0 : n % 10
-    ] || "th";
+    ["th", "st", "nd", "rd"][(n % 100 > 10 && n % 100 < 20) || n % 10 > 3 ? 0 : n % 10] || "th";
 
   const resetQuestionFields = useCallback(() => {
     setQuestionData("");
@@ -88,6 +113,7 @@ const Exam: React.FC = () => {
     setSelectedTopic("");
     setSelectedSubtopic("");
     setNumericAnswer(0);
+    setNote("");
     setPassage("");
     setOptions([
       { id: 1, text: "", isCorrect: true, label: "1st" },
@@ -98,51 +124,32 @@ const Exam: React.FC = () => {
   }, []);
 
   // --- Effects ---
-
-  // Initialization: Setup sections and fetch initial topics
   useEffect(() => {
     if (!selectedExamDetail) return;
-
     const { examformet, sectionId, examDetail } = selectedExamDetail;
     setIsSection(examDetail?.isSection ?? true);
 
-    // Determine Sections Data
-    if (
-      examformet === "sectional" ||
-      examformet === "topic wise" ||
-      examformet === "daily practice"
-    ) {
-      const section = examDetail?.sections?.find(
-        (val: any) => val.sectionId === sectionId,
-      );
+    if (["sectional", "topic wise", "daily practice"].includes(examformet)) {
+      const section = examDetail?.sections?.find((val: any) => val.sectionId === sectionId);
       setSectionsData(section ? [section] : []);
     } else {
       setSectionsData(examDetail?.sections || []);
     }
 
-    if (!examDetail?.isSection) {
-      setNumberOfQuestion(examDetail?.noOfQuestions || 0);
-    }
-
+    if (!examDetail?.isSection) setNumberOfQuestion(examDetail?.noOfQuestions || 0);
     dispatch(getTopic({}));
   }, [selectedExamDetail, dispatch]);
 
-  useEffect(()=>{
-    const payload:any={status:true}
-dispatch(getQuestionBank(payload));
-  },[])
-
-  // Fetch subtopics when topic changes
   useEffect(() => {
-    if (selectedTopic) {
-      dispatch(getSubTopicByTopicId({ topicId: selectedTopic }));
-    }
+    dispatch(getQuestionBank({ status: true }));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (selectedTopic) dispatch(getSubTopicByTopicId({ topicId: selectedTopic }));
   }, [selectedTopic, dispatch]);
 
-  // Sync state when a single question is loaded from DB
   useEffect(() => {
     if (singleQuestion) {
-      console.log(singleQuestion,"zzzzzzzzzzzzz")
       setAnswerType(singleQuestion.answerType || "MCQ");
       setQuestionType(singleQuestion.questionType || "Easy");
       setActiveSection(singleQuestion.section || "");
@@ -153,18 +160,16 @@ dispatch(getQuestionBank(payload));
       setNumericAnswer(singleQuestion.numericAnswer || 0);
       setQuestionPessage(singleQuestion.questionPessage || "Normal");
       setPassage(singleQuestion.passage || "");
+      setNote(singleQuestion.note || "");
 
-      if (
-        singleQuestion.answerType === "MCQ" &&
-        Array.isArray(singleQuestion.options)
-      ) {
+      if (singleQuestion.answerType === "MCQ" && Array.isArray(singleQuestion.options)) {
         setOptions(
           singleQuestion.options.map((opt: any, i: number) => ({
             id: i + 1,
             text: opt.text || "",
             isCorrect: opt.isCorrect || false,
             label: `${i + 1}${getOrdinalSuffix(i + 1)}`,
-          })),
+          }))
         );
       }
     } else {
@@ -173,45 +178,49 @@ dispatch(getQuestionBank(payload));
   }, [singleQuestion, resetQuestionFields]);
 
   // --- Handlers ---
-
   const handleActiveSection = (section: any) => {
     setActiveQuestion(1);
     setActiveSection(section.sectionId);
     setNumberOfQuestion(section.noOfQuestions);
     if (section?.topicDetails) setTopic(section.topicDetails);
-
-    dispatch(
-      getQuestionById({
-        questionNo: 1,
-        questionPaperId: selectedExamDetail?._id,
-        section: section.sectionId,
-      }),
-    );
+    dispatch(getQuestionById({ questionNo: 1, questionPaperId: selectedExamDetail?._id, section: section.sectionId }));
   };
 
   const handleActiveQuestion = (qNo: number) => {
-    const currentSectionData = sectionsData.find(
-      (s) => s.sectionId === activeSection,
-    );
-
-    // Navigation logic: Move to next section if out of bounds
+    const currentSectionData = sectionsData.find((s) => s.sectionId === activeSection);
     if (currentSectionData && qNo > currentSectionData.noOfQuestions) {
-      const currentIndex = sectionsData.findIndex(
-        (s) => s.sectionId === activeSection,
-      );
+      const currentIndex = sectionsData.findIndex((s) => s.sectionId === activeSection);
       const nextSection = sectionsData[currentIndex + 1];
       if (nextSection) return handleActiveSection(nextSection);
-      return; // End of exam
+      return;
     }
-
     setActiveQuestion(qNo);
-    dispatch(
-      getQuestionById({
-        questionNo: qNo,
-        questionPaperId: selectedExamDetail?._id,
-        section: isSection ? activeSection : undefined,
-      }),
-    );
+    dispatch(getQuestionById({ questionNo: qNo, questionPaperId: selectedExamDetail?._id, section: isSection ? activeSection : undefined }));
+  };
+
+  const addQuestionBankItem = (questionItem: any) => {
+    if (questionItem) {
+      setQuestionBankId(questionItem?._id);
+      setAnswerType(questionItem.answerType || "MCQ");
+      setQuestionType(questionItem.questionType || "Easy");
+      setQuestionData(questionItem.questionText || "");
+      setHintText(questionItem.hint || "");
+      setSelectedTopic(questionItem.topicId || "");
+      setSelectedSubtopic(questionItem.subtopicId || "");
+      setNumericAnswer(questionItem.numericAnswer || 0);
+      setQuestionPessage(questionItem.questionPessage || "Normal");
+      setPassage(questionItem.passage || "");
+      if (questionItem.answerType === "MCQ" && Array.isArray(questionItem.options)) {
+        setOptions(questionItem.options.map((opt: any, i: number) => ({
+          id: i + 1,
+          text: opt.text || "",
+          isCorrect: opt.isCorrect || false,
+          label: `${i + 1}${getOrdinalSuffix(i + 1)}`,
+        })));
+      }
+    } else {
+      resetQuestionFields();
+    }
   };
 
   const handleSubmit = async () => {
@@ -226,19 +235,14 @@ dispatch(getQuestionBank(payload));
         questionText: questionData,
         questionType,
         answerType,
+        note,
         questionPessage,
+        questionBankId: questionBankId || null,
         numericAnswer,
         passage,
         hint: hintText,
-        options:
-          answerType === "MCQ"
-            ? options.map(({ text, isCorrect }) => ({ text, isCorrect }))
-            : [],
-        correctAnswer:
-          answerType === "Numeric"
-            ? numericAnswer
-            : options.find((o) => o.isCorrect)?.text || "",
-        createdBy: "6710fbc3f2b9b9e...", // Replace with dynamic user ID
+        options: answerType === "MCQ" ? options.map(({ text, isCorrect }) => ({ text, isCorrect })) : [],
+        correctAnswer: answerType === "Numeric" ? numericAnswer : options.find((o) => o.isCorrect)?.text || "",
       };
 
       if (singleQuestion?._id) {
@@ -247,16 +251,7 @@ dispatch(getQuestionBank(payload));
       } else {
         await dispatch(createQuestion(payload));
       }
-      setAnswerType("MCQ");
-      setQuestionType("Easy");
-      // setActiveSection("");
-      setQuestionData("");
-      setHintText("");
-      setSelectedTopic("");
-      setSelectedSubtopic("");
-      setNumericAnswer(0);
-      setQuestionPessage("Normal");
-      setPassage("");
+      resetQuestionFields();
       handleActiveQuestion(activeQuestion + 1);
     } catch (err) {
       console.error("Submission Error:", err);
@@ -265,280 +260,171 @@ dispatch(getQuestionBank(payload));
     }
   };
 
-  const questionNumbers = useMemo(
-    () => Array.from({ length: numberOfQuestion }, (_, i) => i + 1),
-    [numberOfQuestion],
-  );
-const [openQB, setOpenQB] = useState(false);
-const handleOpenQuestionBank=()=>{
-   setOpenQB(true);
-}
-const addQuestionBankItem=(questionItem:any)=>{
-  let singleQuestion:any=questionItem
-   if (singleQuestion) {
-      setAnswerType(singleQuestion.answerType || "MCQ");
-      setQuestionType(singleQuestion.questionType || "Easy");
-      // setActiveSection(singleQuestion.section || "");
-      setQuestionData(singleQuestion.questionText || "");
-      setHintText(singleQuestion.hint || "");
-      setSelectedTopic(singleQuestion.topicId || "");
-      setSelectedSubtopic(singleQuestion.subtopicId || "");
-      setNumericAnswer(singleQuestion.numericAnswer || 0);
-      setQuestionPessage(singleQuestion.questionPessage || "Normal");
-      setPassage(singleQuestion.passage || "");
-      if (
-        singleQuestion.answerType === "MCQ" &&
-        Array.isArray(singleQuestion.options)
-      ) {
-        setOptions(
-          singleQuestion.options.map((opt: any, i: number) => ({
-            id: i + 1,
-            text: opt.text || "",
-            isCorrect: opt.isCorrect || false,
-            label: `${i + 1}${getOrdinalSuffix(i + 1)}`,
-          })),
-        );
-      }
-    } else {
-      resetQuestionFields();
-    }
-// console.log(questionItem,"questionItemquestionItem")
+  // Options mapping for React Select
+  const topicOptions = (isSection ? topic : selectedExamDetail?.topicDetail || []).map((t: any) => ({
+    value: t._id,
+    label: t.topic,
+  }));
 
-}
- const handleChange = async(e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedQuestion(e.target.value);
-let questionItem:any=questionBank.find((item:any)=>item._id===e.target.value)
-addQuestionBankItem(questionItem);
-  };
+  const subTopicOptions = subtopicData?.map((sub: any) => ({
+    value: sub._id,
+    label: sub.subtopic,
+  }));
+
+  const bankOptions = questionBank?.map((item: any) => ({
+    value: item._id,
+    label: item.uniqueId,
+  }));
+
+  const questionNumbers = useMemo(() => Array.from({ length: numberOfQuestion }, (_, i) => i + 1), [numberOfQuestion]);
+  const [openQB, setOpenQB] = useState(false);
+
   return (
     <>
       <SummaryTable open={openSummary} onClose={() => setOpenSummary(false)} />
-<QuestionBankPopup
-  isOpen={openQB}
-  onClose={() => setOpenQB(false)}
-  questionBankItem={addQuestionBankItem}
-  activeSection={activeSection}
-/>
+      <QuestionBankPopup
+        isOpen={openQB}
+        onClose={() => setOpenQB(false)}
+        questionBankItem={addQuestionBankItem}
+        activeSection={activeSection}
+      />
       <div className="min-h-screen bg-white">
         <div className="w-full mx-auto px-4 md:px-10 mb-8">
           {/* Header */}
           <div className="flex justify-between items-center bg-[#F0F9FF] rounded-lg px-8 py-6 mt-4">
             <h1 className="text-[#FF5635] text-2xl font-poppins font-medium">
-              Exam Setup{" "}
-              <span className="text-black text-lg">
-                {" "}
-                | <span className="text-[#005EB6]">Create Operator</span>
-              </span>
+              Exam Setup <span className="text-black text-lg"> | <span className="text-[#005EB6]">Create Operator</span></span>
             </h1>
-            <div className="font-semibold text-gray-900 text-lg font-poppins">
-              {selectedExamDetail?.examDetail?.examname}{" "}
-              {selectedExamDetail?.examDetail?.subjectName}
-              <span className="text-[#FF4D4F] ml-2">
-                {selectedExamDetail?.questionPapername}
-              </span>
+            <div className="font-semibold text-gray-900 text-lg font-poppins text-right">
+              {selectedExamDetail?.examDetail?.examname} {selectedExamDetail?.examDetail?.subjectName}
+              <br />
+              <span className="text-[#FF4D4F] text-sm">{selectedExamDetail?.questionPapername}</span>
             </div>
           </div>
 
           {/* Controls */}
           <div className="flex flex-col md:flex-row justify-between items-center my-6 gap-4">
             <div className="flex flex-wrap gap-4">
-              {isSection &&
-                sectionsData.map((sec) => (
-                  <button
-                    key={sec.sectionId}
-                    onClick={() => handleActiveSection(sec)}
-                    className={`px-6 py-2 rounded-lg text-sm transition-colors ${
-                      sec.sectionId === activeSection
-                        ? "bg-[#005EB6] text-white"
-                        : "bg-[#5A9BD5] text-white hover:bg-[#4a8ac0]"
-                    }`}
-                  >
-                    {sec?.sectionDetail?.section}
-                  </button>
-                ))}
+              {isSection && sectionsData.map((sec) => (
+                <button
+                  key={sec.sectionId}
+                  onClick={() => handleActiveSection(sec)}
+                  className={`px-6 py-2 rounded-lg text-sm transition-colors ${sec.sectionId === activeSection ? "bg-[#005EB6] text-white" : "bg-[#5A9BD5] text-white hover:bg-[#4a8ac0]"}`}
+                >
+                  {sec?.sectionDetail?.section}
+                </button>
+              ))}
             </div>
-            <div className="flex gap-3">
-
- <select
-        value={selectedQuestion}
-        onChange={handleChange}
-        className="border rounded px-3 py-2"
-      >
-        <option value="">Select Question</option>
-        {questionBank?.map((item: any) => (
-          <option key={item._id} value={item._id}>
-         <p>   {item.uniqueId}</p>
-          </option>
-        ))}
-      </select>
-              <button
-                onClick={handleOpenQuestionBank}
-                disabled={loader}
-                className="px-10 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] disabled:opacity-50"
-              >
+            <div className="flex items-center gap-3">
+              <div className="w-48">
+                <Select
+                  options={bankOptions}
+                  value={bankOptions.find(o => o.value === selectedQuestion)}
+                  onChange={(opt: any) => {
+                    setSelectedQuestion(opt?.value);
+                    const item = questionBank.find((i: any) => i._id === opt?.value);
+                    addQuestionBankItem(item);
+                  }}
+                  placeholder="Select Question"
+                  styles={customStyles}
+                />
+              </div>
+              <button onClick={() => setOpenQB(true)} disabled={loader} className="px-6 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] disabled:opacity-50 text-sm">
                 Question Bank
               </button>
-              <button
-                onClick={() => {
-                  dispatch(
-                    questionByQuestionPaperId({
-                      questionPaperId: selectedExamDetail?._id,
-                    }),
-                  );
-                  setOpenSummary(true);
-                }}
-                className="px-6 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] transition-all"
-              >
-                Question Distribution
+              <button onClick={() => { dispatch(questionByQuestionPaperId({ questionPaperId: selectedExamDetail?._id })); setOpenSummary(true); }} className="px-6 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] text-sm">
+                Distribution
               </button>
-              <button
-                onClick={handleSubmit}
-                disabled={loader}
-                className="px-10 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] disabled:opacity-50"
-              >
-                {loader ? "Processing..." : "Save & Next"}
+              <button onClick={handleSubmit} disabled={loader} className="px-8 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] disabled:opacity-50 font-bold">
+                {loader ? "..." : "Save & Next"}
               </button>
             </div>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Form Section */}
             <div className="flex-1 space-y-6">
-              {/* Topic Selectors */}
-              {(isSection ||
-                selectedExamDetail?.examDetail?.examname === "CUET") && (
+              {/* React Select Topic/Subtopic */}
+              {(isSection || selectedExamDetail?.examDetail?.examname === "CUET") && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className="font-medium">Select Topic</Label>
-                    <select
-                      value={selectedTopic}
-                      onChange={(e) => {
-                        setSelectedTopic(e.target.value);
+                    <Select
+                      options={topicOptions}
+                      value={topicOptions.find(o => o.value === selectedTopic)}
+                      onChange={(opt: any) => {
+                        setSelectedTopic(opt?.value);
                         setSelectedSubtopic("");
                       }}
-                      className="w-full border rounded p-2 bg-white focus:ring-2 focus:ring-orange-500 outline-none"
-                    >
-                      <option value="">-- Choose Topic --</option>
-                      {(isSection
-                        ? topic
-                        : selectedExamDetail?.topicDetail || []
-                      ).map((t: any) => (
-                        <option key={t._id} value={t._id}>
-                          {t.topic}
-                        </option>
-                      ))}
-                    </select>
+                      styles={customStyles}
+                      placeholder="-- Choose Topic --"
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label className="font-medium">Select Sub Topic</Label>
-                    <select
-                      value={selectedSubtopic}
-                      onChange={(e) => setSelectedSubtopic(e.target.value)}
-                      className="w-full border rounded p-2 bg-white focus:ring-2 focus:ring-orange-500 outline-none"
-                    >
-                      <option value="">-- Choose Sub Topic --</option>
-                      {subtopicData?.map((sub: any) => (
-                        <option key={sub._id} value={sub._id}>
-                          {sub.subtopic}
-                        </option>
-                      ))}
-                    </select>
+                    <Select
+                      options={subTopicOptions}
+                      value={subTopicOptions.find(o => o.value === selectedSubtopic)}
+                      onChange={(opt: any) => setSelectedSubtopic(opt?.value)}
+                      styles={customStyles}
+                      placeholder="-- Choose Sub Topic --"
+                    />
                   </div>
                 </div>
               )}
 
-              {/* Difficulty & Format */}
-              <div className="">
+              {/* Difficulty Selection */}
+              <div className="space-y-2">
                 <Label className="font-medium">Question Properties</Label>
                 <div className="flex flex-wrap gap-6 p-4 border rounded-md bg-gray-50">
                   {["Easy", "Medium", "Hard", "Normal", "Pass"].map((type) => {
-                    const isDifficulty = ["Easy", "Medium", "Hard"].includes(
-                      type,
-                    );
-                    const isSelected = isDifficulty
-                      ? questionType === type
-                      : questionPessage === type;
+                    const isDifficulty = ["Easy", "Medium", "Hard"].includes(type);
+                    const isSelected = isDifficulty ? questionType === type : questionPessage === type;
                     return (
-                      <label
-                        key={type}
-                        className="flex items-center space-x-2 cursor-pointer"
-                      >
-                        <div
-                          className={`w-5 h-5 rounded-full border flex items-center justify-center ${isSelected ? "border-[#FF4D4F]" : "border-gray-300"}`}
-                        >
-                          {isSelected && (
-                            <div className="w-3 h-3 rounded-full bg-[#FF4D4F]" />
-                          )}
+                      <label key={type} className="flex items-center space-x-2 cursor-pointer">
+                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${isSelected ? "border-[#FF4D4F]" : "border-gray-300"}`}>
+                          {isSelected && <div className="w-3 h-3 rounded-full bg-[#FF4D4F]" />}
                         </div>
-                        <input
-                          type="radio"
-                          className="hidden"
-                          checked={isSelected}
-                          onChange={() =>
-                            isDifficulty
-                              ? setQuestionType(type)
-                              : setQuestionPessage(type)
-                          }
-                        />
-                        <span className="text-sm font-poppins">{type}</span>
+                        <input type="radio" className="hidden" checked={isSelected} onChange={() => isDifficulty ? setQuestionType(type) : setQuestionPessage(type)} />
+                        <span className="text-sm">{type}</span>
                       </label>
                     );
                   })}
                 </div>
               </div>
 
-              {/* Editors */}
+              {/* Content Editors */}
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col md:flex-row gap-4">
-                  <div
-                    className={
-                      questionPessage === "Pass" ? "md:w-2/3" : "w-full"
-                    }
-                  >
-                    <Label className="mb-2 block">Question Content</Label>
-                    <QuestionWithOptionsEditor
-                      value={questionData}
-                      onChange={setQuestionData}
-                      QuestionType="HideInternalPreview"
-                    />
+                  <div className={questionPessage === "Pass" ? "md:w-2/3" : "w-full"}>
+                    <Label className="mb-2 block"> {questionPessage === "Pass"?"Passage Content":"Question Content"} </Label>
+                    <QuestionWithOptionsEditor value={questionData} onChange={setQuestionData} QuestionType="HideInternalPreview" />
                   </div>
                   {questionPessage === "Pass" && (
                     <div className="md:w-1/3">
-                      <Label className="mb-2 block">Passage Content</Label>
+                      <Label className="mb-2 block">{questionPessage === "Pass"?"Question Content":"Passage Content"}</Label>
                       <LatesForpassage value={passage} onChange={setPassage} />
                     </div>
                   )}
                 </div>
-
                 <div className="space-y-2">
-                  <Label className="text-gray-600">Question Preview</Label>
+                  <Label className="text-gray-400 text-xs uppercase font-bold">Question Preview</Label>
                   <div className="border border-gray-200 rounded p-4 min-h-[100px] bg-white shadow-sm">
                     <RenderPreview content={questionData} />
                   </div>
                 </div>
               </div>
 
-              {/* MCQ Options / Numeric */}
+              {/* Options Section */}
               <div className="space-y-4">
-                <Label>Answer Configuration</Label>
+                <Label className="font-medium">Answer Configuration</Label>
                 <div className="flex gap-6 mb-4">
                   {["MCQ", "Numeric"].map((t) => (
-                    <label
-                      key={t}
-                      className="flex items-center gap-2 cursor-pointer"
-                    >
-                      <input
-                        type="radio"
-                        name="ansType"
-                        checked={answerType === t}
-                        onChange={() => setAnswerType(t as AnswerType)}
-                        className="accent-[#FF4D4F]"
-                      />
+                    <label key={t} className="flex items-center gap-2 cursor-pointer">
+                      <input type="radio" name="ansType" checked={answerType === t} onChange={() => setAnswerType(t as AnswerType)} className="accent-[#FF4D4F]" />
                       <span className="text-sm">{t}</span>
                     </label>
                   ))}
                 </div>
-
                 {answerType === "MCQ" ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {options.map((opt) => (
@@ -547,21 +433,8 @@ addQuestionBankItem(questionItem);
                         choice={opt.label}
                         value={opt.text}
                         isCorrect={opt.isCorrect}
-                        onChange={(val) =>
-                          setOptions((prev) =>
-                            prev.map((o) =>
-                              o.id === opt.id ? { ...o, text: val } : o,
-                            ),
-                          )
-                        }
-                        onCheckToggle={() =>
-                          setOptions((prev) =>
-                            prev.map((o) => ({
-                              ...o,
-                              isCorrect: o.id === opt.id,
-                            })),
-                          )
-                        }
+                        onChange={(val) => setOptions(prev => prev.map(o => o.id === opt.id ? { ...o, text: val } : o))}
+                        onCheckToggle={() => setOptions(prev => prev.map(o => ({ ...o, isCorrect: o.id === opt.id })))}
                         QuestionType={questionPessage}
                       />
                     ))}
@@ -571,42 +444,36 @@ addQuestionBankItem(questionItem);
                     type="number"
                     value={numericAnswer}
                     onChange={(e) => setNumericAnswer(Number(e.target.value))}
-                    onWheel={(e) => e.currentTarget.blur()}
-                    onKeyDown={(e) => {
-                      if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-                        e.preventDefault();
-                      }
-                    }}
+                    className="max-w-xs border-orange-200"
                     placeholder="Enter correct numerical value"
-                    className="max-w-xs"
                   />
                 )}
               </div>
 
-              {/* Solution Section */}
+              {/* Explanation Section */}
               <div className="space-y-4 pt-4 border-t">
                 <Label>Explanation / Solution</Label>
                 <LatexForSoluction value={hintText} onChange={setHintText} />
                 <div className="border border-dashed border-gray-300 rounded p-4 bg-gray-50">
-                  <span className="text-xs font-bold text-gray-400 uppercase">
-                    Solution Preview
-                  </span>
+                  <span className="text-xs font-bold text-gray-400 uppercase">Solution Preview</span>
                   <RenderPreview content={hintText} />
                 </div>
               </div>
+              <div>
+                  <Label>Note</Label>
+<Textarea type="text" value={note} placeholder="Note" className="my-2" onChange={(e)=>setNote(e.target.value)} />               
+              </div>
             </div>
 
-            {/* Sidebar Navigation */}
-            <div className="w-full lg:w-[320px] sticky top-4">
-              <div className="bg-[#F9FAFC] border border-[#d6e4ff] rounded-lg overflow-hidden shadow-sm">
-                <div className="bg-[#0056b3] text-white p-4 font-medium">
-                  {sectionsData.find((s) => s.sectionId === activeSection)
-                    ?.sectionDetail?.section || "Questions"}
+            {/* Sidebar Palette */}
+            <div className="w-full lg:w-[320px]">
+              <div className="sticky top-4 bg-[#F9FAFC] border border-[#d6e4ff] rounded-lg overflow-hidden shadow-sm">
+                <div className="bg-[#0056b3] text-white p-4 font-medium flex justify-between items-center">
+                  <span>{sectionsData.find((s) => s.sectionId === activeSection)?.sectionDetail?.section || "Questions"}</span>
+                  <span className="text-xs bg-white/20 px-2 py-1 rounded">Q: {activeQuestion}</span>
                 </div>
                 <div className="p-4">
-                  <p className="text-xs text-gray-500 mb-4 uppercase tracking-wider font-bold">
-                    Question Palette
-                  </p>
+                  <p className="text-xs text-gray-500 mb-4 uppercase tracking-wider font-bold">Question Palette</p>
                   <div className="grid grid-cols-5 gap-2">
                     {questionNumbers.map((num) => (
                       <button

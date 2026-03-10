@@ -75,6 +75,7 @@ export const subTopic={
 }
 export const User={
     create:"user/create",
+    getAllUsers:"user/userList",
     DownloadUsers:"user/DownloadUsers",
   get:"user/get",
   getallsubtopicsbytopicid:"subtopic/getallsubtopicsbytopicid",
@@ -128,6 +129,7 @@ export const Question={
     create:"setUpexam/question/create",
     createQuestionBank:"setUpexam/question/createQuestionBank",
     get:"question",
+    getUsedQuestion:"setUpexam/question/usedQuestion",
     getQuestionById:"setUpexam/question/getQuestionById",
     update:"setUpexam/question/updateQuestion",
     getQuestionBank:"setUpexam/question/getQuestionBank",

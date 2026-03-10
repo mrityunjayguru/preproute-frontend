@@ -9,12 +9,16 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from "react-select";
 import { getQuestionBank } from "@/api/Question";
 import { AppDispatch } from "@/store/store";
+import { getAllUsers } from "@/api/Users";
 
 function Questionbank() {
   const [selectedGroup, setSelectedGroup] = useState<any>(null);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
   const [open, setOpen] = useState(false);
 
+  const users = useSelector((state: any) => state?.user?.user || []);
   const group = useSelector((state: any) => state?.group?.group || []);
+
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
@@ -27,6 +31,17 @@ function Questionbank() {
         value: item._id,
       })),
     [group]
+  );
+
+  /* ================= USER OPTIONS ================= */
+
+  const userOptions = useMemo(
+    () =>
+      users.map((item: any) => ({
+        label: item.username,
+        value: item._id,
+      })),
+    [users]
   );
 
   /* ================= SELECT STYLE ================= */
@@ -44,10 +59,11 @@ function Questionbank() {
 
   /* ================= API CALL ================= */
 
-  const fetchQuestionBank = async (groupId: string = "") => {
-    const payload: any = {
-      groupId,
-    };
+  const fetchQuestionBank = async (groupId: string = "", userId: string = "") => {
+    const payload: any = {};
+
+    if (groupId) payload.groupId = groupId;
+    if (userId) payload.createdBy = userId;
 
     await dispatch(getQuestionBank(payload));
   };
@@ -55,22 +71,31 @@ function Questionbank() {
   /* ================= FILTER CHANGE ================= */
 
   useEffect(() => {
-    fetchQuestionBank(selectedGroup?.value || "");
-  }, [selectedGroup]);
+    fetchQuestionBank(selectedGroup?.value || "", selectedUser?.value || "");
+  }, [selectedGroup, selectedUser]);
 
   /* ================= RESET FILTER ================= */
 
   const handleReset = () => {
     setSelectedGroup(null);
-    fetchQuestionBank(""); // call api again
+    setSelectedUser(null);
+    fetchQuestionBank("", "");
   };
+
+  /* ================= GET USERS ================= */
+
+  useEffect(() => {
+    dispatch(getAllUsers({}));
+  }, []);
 
   return (
     <>
       {/* ================= GROUP MODAL ================= */}
+
       <Group isOpen={open} onClose={() => setOpen(false)} />
 
       <div className="min-h-screen bg-gray-50 p-6">
+
         {/* ================= HEADER ================= */}
 
         <div className="flex items-center justify-between mb-6">
@@ -79,23 +104,31 @@ function Questionbank() {
           </h1>
 
           <div className="flex gap-3 items-center">
+
             {/* ================= GROUP SELECT ================= */}
 
-            <div className="flex items-center gap-2">
-              <div className="w-64">
-                <Select
-                  placeholder="Select Group"
-                  options={groupOptions}
-                  value={selectedGroup}
-                  styles={selectStyles}
-                  onChange={(opt) => setSelectedGroup(opt)}
-                  isClearable
-                />
-              </div>
+            <div className="w-64">
+              <Select
+                placeholder="Select Group"
+                options={groupOptions}
+                value={selectedGroup}
+                styles={selectStyles}
+                onChange={(opt) => setSelectedGroup(opt)}
+                isClearable
+              />
+            </div>
 
-              {/* ================= RESET BUTTON ================= */}
+            {/* ================= USER SELECT ================= */}
 
-            
+            <div className="w-64">
+              <Select
+                placeholder="Select User"
+                options={userOptions}
+                value={selectedUser}
+                styles={selectStyles}
+                onChange={(opt) => setSelectedUser(opt)}
+                isClearable
+              />
             </div>
 
             {/* ================= MANAGE GROUP ================= */}
@@ -117,19 +150,24 @@ function Questionbank() {
               <Plus size={18} />
               Create Question
             </button>
-              <button
-                onClick={handleReset}
-                className="flex items-center justify-center w-10 h-10 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition"
-                title="Reset Filter"
-              >
-                <RotateCcw size={18} />
-              </button>
+
+            {/* ================= RESET FILTER ================= */}
+
+            <button
+              onClick={handleReset}
+              className="flex items-center justify-center w-10 h-10 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition"
+              title="Reset Filter"
+            >
+              <RotateCcw size={18} />
+            </button>
+
           </div>
         </div>
 
         {/* ================= TABLE ================= */}
 
         <QuestionBankTable />
+
       </div>
     </>
   );

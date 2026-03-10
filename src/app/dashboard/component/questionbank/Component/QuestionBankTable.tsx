@@ -2,6 +2,7 @@
 
 import {
   getQuestionBank,
+  getUsedQuestion,
   handleQuestionBankSingleQuestion,
   handleupdateQuestionBank,
 } from "@/api/Question";
@@ -11,6 +12,7 @@ import { log } from "console";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import UsedQuestionPaperModel from "./UsedQuestionPaperModel";
 
 function QuestionBankTable() {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,11 +23,14 @@ function QuestionBankTable() {
   );
 
   const userLogin = useSelector((state: any) => state?.Auth?.loginUser);
+  const usedQuestion= useSelector((state: any) => state?.question?.usedQuestion);
+
+  console.log(usedQuestion,"usedQuestionusedQuestionusedQuestion")
 
   const [showFeedback, setShowFeedback] = useState(false);
   const [selectedQuestion, setSelectedQuestion] = useState<any>(null);
   const [feedbackText, setFeedbackText] = useState("");
-
+  const [usedModalOpen, setUsedModalOpen] = useState(false);
   /* ===========================
         FETCH QUESTION BANK
   =========================== */
@@ -47,7 +52,7 @@ function QuestionBankTable() {
   const handleChangeStatus = async (questionItem: any) => {
     if (userLogin?.role !== "Admin") return;
 
-    const payload = {
+    const payload:any = {
       _id: questionItem._id,
       status: !questionItem.status,
     };
@@ -84,9 +89,19 @@ function QuestionBankTable() {
 
     dispatch(getQuestionBank({}));
   };
-
+const openUsedModal=(val:any)=>{
+  const payload:any={
+    _id:val?._id
+  }
+    setUsedModalOpen(true)
+    dispatch(getUsedQuestion(payload))
+}
   return (
     <>
+    <UsedQuestionPaperModel
+  usedModalOpen={usedModalOpen}
+  setUsedModalOpen={setUsedModalOpen}
+/>
       {/* ================= FEEDBACK MODAL ================= */}
       {showFeedback && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
@@ -154,6 +169,9 @@ function QuestionBankTable() {
                   <th className="px-6 py-3">Question</th>
                   <th className="px-6 py-3">Status</th>
                   <th className="px-6 py-3">Feedback</th>
+                  <th className="px-6 py-3">User</th>
+                  <th className="px-6 py-3">Used</th>
+
                   <th className="px-6 py-3">Created At</th>
                   <th className="px-6 py-3">Edit</th>
                 </tr>
@@ -206,7 +224,18 @@ function QuestionBankTable() {
                       >
                         Feedback
                       </td>
-
+                        <td
+                       
+                        className="px-6 py-4 text-indigo-600 cursor-pointer hover:underline"
+                      >
+                       {item?.createdBy?.username || "Unknown"}
+                      </td>
+                       <td 
+                        onClick={() => openUsedModal(item)}
+                        className="px-6 py-4 text-indigo-600 cursor-pointer hover:underline"
+                      >
+                       {item?.totalCount} {" "} {item?.totalCount>0 ? "Yes" : "No"}
+                      </td>
                       <td className="px-6 py-4">
                         {new Date(item?.createdAt).toLocaleDateString()}
                       </td>
