@@ -10,6 +10,7 @@ import { AppDispatch } from "@/store/store";
 import OfferBanner from "@/Layout/OfferBanner";
 import WhatsAppSocialApp from "../Component/Home/_componets/whatsapp-socialmedia";
 import TopProgressBar from "@/Common/loder";
+import DisableDevTools from "../DisableDevTools";
 
 export default function UserLayout({ children }: { children: ReactNode }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -40,6 +41,7 @@ const loder = useSelector((state: any) => state?.exam?.loder);
 
   return (
     <>
+    <DisableDevTools />
     <TopProgressBar isAnimating={loder} />
       {/* 1. Only show WhatsApp if NOT in the Exam flow */}
       {!isExamFlow && <WhatsAppSocialApp />}
