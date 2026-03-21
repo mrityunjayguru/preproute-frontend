@@ -1,6 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { isNull } from "util";
-
 // Define the shape of your state
 interface UserDataState {
 exam:any;

@@ -1,6 +1,3 @@
-import { get } from "http";
-import { createvehicletype } from "./setupSchool/VehicleType";
-
 
 const UserAuth={
   schoolAuth:"Auth/schoolLogin",
