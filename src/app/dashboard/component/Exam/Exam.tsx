@@ -242,7 +242,7 @@ const Exam: React.FC = () => {
         passage,
         hint: hintText,
         options: answerType === "MCQ" ? options.map(({ text, isCorrect }) => ({ text, isCorrect })) : [],
-        correctAnswer: answerType === "Numeric" ? numericAnswer : options.find((o) => o.isCorrect)?.text || "",
+        correctAnswer: answerType === "Numeric" ? numericAnswer : options?.find((o) => o.isCorrect)?.text || "",
       };
 
       if (singleQuestion?._id) {
@@ -261,20 +261,30 @@ const Exam: React.FC = () => {
   };
 
   // Options mapping for React Select
-  const topicOptions = (isSection ? topic : selectedExamDetail?.topicDetail || []).map((t: any) => ({
-    value: t._id,
-    label: t.topic,
-  }));
-
-  const subTopicOptions = subtopicData?.map((sub: any) => ({
-    value: sub._id,
-    label: sub.subtopic,
-  }));
-
-  const bankOptions = questionBank?.map((item: any) => ({
-    value: item._id,
-    label: item.uniqueId,
-  }));
+  // const topicOptions = (isSection ? topic : selectedExamDetail?.topicDetail || []).map((t: any) => ({
+  //   value: t._id,
+  //   label: t.topic,
+  // }));
+const topicOptions = (isSection ? (topic || []) : (selectedExamDetail?.topicDetail || [])).map((t:any) => ({
+  value: t._id,
+  label: t.topic,
+}));
+  // const subTopicOptions = subtopicData?.map((sub: any) => ({
+  //   value: sub._id,
+  //   label: sub.subtopic,
+  // }));
+const subTopicOptions = (subtopicData || []).map((sub:any) => ({
+  value: sub._id,
+  label: sub.subtopic,
+}));
+  // const bankOptions = questionBank?.map((item: any) => ({
+  //   value: item._id,
+  //   label: item.uniqueId,
+  // }));
+  const bankOptions = (questionBank || []).map((item:any) => ({
+  value: item._id,
+  label: item.uniqueId,
+}));
 
   const questionNumbers = useMemo(() => Array.from({ length: numberOfQuestion }, (_, i) => i + 1), [numberOfQuestion]);
   const [openQB, setOpenQB] = useState(false);
@@ -319,7 +329,7 @@ const Exam: React.FC = () => {
               <div className="w-48">
                 <Select
                   options={bankOptions}
-                  value={bankOptions.find(o => o.value === selectedQuestion)}
+                  value={bankOptions?.find(o => o.value === selectedQuestion)}
                   onChange={(opt: any) => {
                     setSelectedQuestion(opt?.value);
                     const item = questionBank.find((i: any) => i._id === opt?.value);
@@ -350,7 +360,7 @@ const Exam: React.FC = () => {
                     <Label className="font-medium">Select Topic</Label>
                     <Select
                       options={topicOptions}
-                      value={topicOptions.find(o => o.value === selectedTopic)}
+                    value={topicOptions?.find(o => o.value === selectedTopic) || null}
                       onChange={(opt: any) => {
                         setSelectedTopic(opt?.value);
                         setSelectedSubtopic("");
@@ -363,7 +373,7 @@ const Exam: React.FC = () => {
                     <Label className="font-medium">Select Sub Topic</Label>
                     <Select
                       options={subTopicOptions}
-                      value={subTopicOptions.find(o => o.value === selectedSubtopic)}
+                      value={subTopicOptions?.find(o => o.value === selectedSubtopic)}
                       onChange={(opt: any) => setSelectedSubtopic(opt?.value)}
                       styles={customStyles}
                       placeholder="-- Choose Sub Topic --"
@@ -469,7 +479,7 @@ const Exam: React.FC = () => {
             <div className="w-full lg:w-[320px]">
               <div className="sticky top-4 bg-[#F9FAFC] border border-[#d6e4ff] rounded-lg overflow-hidden shadow-sm">
                 <div className="bg-[#0056b3] text-white p-4 font-medium flex justify-between items-center">
-                  <span>{sectionsData.find((s) => s.sectionId === activeSection)?.sectionDetail?.section || "Questions"}</span>
+                  <span>{sectionsData?.find((s) => s.sectionId === activeSection)?.sectionDetail?.section || "Questions"}</span>
                   <span className="text-xs bg-white/20 px-2 py-1 rounded">Q: {activeQuestion}</span>
                 </div>
                 <div className="p-4">
