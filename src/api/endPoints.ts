@@ -160,6 +160,13 @@ export const Dashboard={
   create:"dashboard/get"
 
 }
+export const todo={
+    get:"task/get",
+  create:"task/create",
+  update:"task/update ",
+  getalltodosbysectionid:""
+
+}
 export const PlnAndPricing={
   create:"PlanPricing/create",
   get:"PlanPricing/get",

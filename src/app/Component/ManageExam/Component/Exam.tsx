@@ -54,7 +54,6 @@ export default function ExamUI() {
   const singleQuestion = useSelector((state: any) => state.question?.singleQuestion);
   const examProgress = useSelector((state: any) => state.exam?.examProgress);
   const userLogin = useSelector((state: any) => state.Auth?.loginUser);
-
   // --- UI & Modal State ---
   const [showSubmitPopup, setShowSubmitPopup] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -149,7 +148,9 @@ export default function ExamUI() {
       },
     }));
   }, [isSection, selectedSection, currentQuestionIndex, question]);
-
+// console.log(examData,"examDataexamData")
+  // alert(exam?.attemptCount)
+  // alert(examData[0]?.attemptCount)
   // --- Initialization & Progress Recovery ---
   useEffect(() => {
     if (!examData?.length || !userLogin) return;
@@ -166,6 +167,7 @@ export default function ExamUI() {
         examId: examInfo._id,
         questionPaperId: examData[0]._id,
         status: "Find",
+        attemptCount:examData[0]?.attemptCount,
       };
 
       const response: any = await dispatch(ManageExamProgress(payload));
@@ -174,7 +176,6 @@ export default function ExamUI() {
         setSectionQuestionStatus(response.payload.givenExam);
         const savedSection = examSections.find(s => s.sectionId === response.payload.currentSection.sectionId);
         if (savedSection) setSelectedSection(savedSection);
-console.log(response,"responseresponseresponse")
         setCurrentQuestionIndex(response.payload.currentQuestionNoIndex);
         setTotalNoOfQuestions(response.payload.currentSection.noofQuestion);
         fetchQuestion(response.payload.currentQuestionNoIndex + 1, response.payload.currentSection.sectionId);
@@ -429,6 +430,7 @@ const currentTimeSpentInSection = sectionTimes[selectedSection?.sectionId || ""]
         duration: selectedSection.duration,
         noofQuestion: selectedSection.noOfQuestions,
       },
+      attemptCount:examData[0]?.attemptCount,
       currentQuestionNoIndex: currentQuestionIndex,
       givenExam: sectionQuestionStatus,
       status: "in-progress",

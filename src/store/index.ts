@@ -25,8 +25,10 @@ import forum from "./forum/index"
 import college from "./seatUpexam/college/index"
 import announcement from "./seatUpexam/Annoucement/index"
 import group from "./group/index"
+import todo from "./todo/index"
 const appReducer = combineReducers({
  school:school,
+ todo:todo,
  group:group,
  forum:forum,
  Report:Report,

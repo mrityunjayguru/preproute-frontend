@@ -68,6 +68,11 @@ export function DashboardHeader() {
       path: "/dashboard/questionbank",
       isView: true,
     },
+       {
+      label: "todo's",
+      path: "/dashboard/todo",
+      isView: true,
+    },
   ];
 
   return (
