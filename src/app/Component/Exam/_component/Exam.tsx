@@ -86,49 +86,54 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
           </Button>
         ) : (
           <>
-            {/* Logic: Map through summaries and check the 'target' for UI decision */}
-            {userSummary.map((attempt: any, i: number) => {
-              const isIncomplete = attempt.target === 0;
+         {/* Attempts List */}
+{userSummary.map((attempt: any, i: number) => {
+  const isIncomplete = attempt.target === 0;
 
-              return (
-                <div key={attempt._id || i} className="w-full flex flex-col gap-2 mb-1">
-                  {isIncomplete ? (
-                    <div className="flex gap-2">
-                      <Button
-                        className="flex-1 bg-[#FF5635] text-white hover:bg-black transition h-10 text-xs"
-                        onClick={() => handleExam(exam, "Resume", index, attemptCount,attempt)}
-                      >
-                        Resume Attempt #{i + 1}
-                      </Button>
-                      <Button
-                        className="flex-1 bg-black text-white hover:bg-[#FF5635] transition h-10 text-xs"
-                        onClick={() => handleExam(exam, "Restart", index, attemptCount,attempt)}
-                      >
-                        Restart
-                      </Button>
-                    </div>
-                  ) : (
-                    <Button
-                      variant="outline"
-                      onClick={() => handleExam(exam, "Result", i,attemptCount, attempt)}
-                      className="w-full border border-[#FF5635] text-[#FF5635] hover:bg-[#FF5635] hover:text-white transition h-10 text-xs"
-                    >
-                      Result and Analysis #{i + 1}
-                    </Button>
-                  )}
-                </div>
-              );
-            })}
+  return (
+    <div key={attempt._id || i} className="w-full flex flex-col gap-2 mb-1">
+      {isIncomplete ? (
+        <div className="flex gap-2">
+          <Button
+            className="flex-1 bg-[#FF5635] text-white hover:bg-black transition h-10 text-xs"
+            onClick={() => handleExam(exam, "Resume", index, attempt?.attemptCount, attempt)}
+          >
+            Resume Attempt #{attempt?.attemptCount}
+          </Button>
+          <Button
+            className="flex-1 bg-black text-white hover:bg-[#FF5635] transition h-10 text-xs"
+            onClick={() => handleExam(exam, "Restart", index, attempt?.attemptCount, attempt)}
+          >
+            Restart
+          </Button>
+        </div>
+      ) : (
+        <Button
+          variant="outline"
+          onClick={() => handleExam(exam, "Result", i, attempt?.attemptCount, attempt)}
+          className="w-full border border-[#FF5635] text-[#FF5635] hover:bg-[#FF5635] hover:text-white transition h-10 text-xs"
+        >
+          Result and Analysis #{attempt?.attemptCount}
+        </Button>
+      )}
+    </div>
+  );
+})}
+
+{/* ✅ Start / Re-attempt button (ONLY ONCE) */}
+{attemptCount < 3 && (
+  <Button
+    className="bg-[#FF5635] cursor-pointer text-white hover:bg-black transition mt-2 h-11 w-full"
+    onClick={() => handleExam(exam, "start", index, attemptCount)}
+  >
+    {attemptCount > 0
+      ? `Re-attempt (${attemptCount+1}/3)`
+      : "Start Exam"}
+  </Button>
+)}
 
             {/* Start New Attempt Logic: Only if less than 3 total attempts and NO current attempt is active (target 0) */}
-            {attemptCount < 3 && (
-              <Button
-                className="bg-[#FF5635] cursor-pointer text-white hover:bg-black transition mt-1 h-11"
-                onClick={() => handleExam(exam, "start", index, attemptCount)}
-              >
-                {attemptCount > 0 ? `Re-attempt (${attemptCount}/3)` : "Start Exam"}
-              </Button>
-            )}
+          
           </>
         )}
       </div>
@@ -172,12 +177,10 @@ export default function MergedExamPage() {
   };
 
   const handleExam = async (examData: any, type?: string, index?: number, count?: any,attempted?:any) => {
-alert(attempted)
-return
     if (!localStorage.getItem("token")) return router.push("/Auth/signin");
-// alert(JSON.stringify(attempted))
+ 
     if (type === "Result") {
-      await dispatch(QuestionPaperResult({ questionPaperID: examData._id }));
+      await dispatch(QuestionPaperResult({ questionPaperID: examData._id,attemptCount:count }));
       router.push("/analytics");
       return;
     }
@@ -199,16 +202,15 @@ return
       examTypeId: examData?.examTypeId,
       questionPaperId: examData?._id,
       examid: examData?.examid,
-      attemptedCount: type === "Resume" || "Restart" ? Number(count) : Number(count) + 1,
+      attemptedCount: type === "Resume" || type == "Restart" ? Number(count) : Number(count) + 1,
       type: type,
       questionPapername: examData?.questionPapername,
       sectionId: examData?.sectionId,
       summaryid: attempted?._id, // References the existing record for resuming
     };
     const response: any = await dispatch(getUserQuestionData(payload));
-
     if (type !== "Resume") {
-      localStorage.removeItem(`exam_timeLeft_${response?.payload?.[0]?._id}`);
+      localStorage.removeItem(`exam_timeLeft_${response?.payload?.[0]?._id}${count}`);
     }
     router.push("/Exam/Instruction");
   };

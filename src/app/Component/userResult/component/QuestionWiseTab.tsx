@@ -29,12 +29,13 @@ interface Section {
 
 interface QuestionWiseTabProps {
   data: any; // Replace 'any' with a more specific type if possible
+  selectedAttempt:any
 }
 
-export default function QuestionWiseTab({ data }: QuestionWiseTabProps) {
+export default function QuestionWiseTab({ data,selectedAttempt }: QuestionWiseTabProps) {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
-
+// alert(selectedAttempt)
   const examData = useSelector((state: any) => state.examType?.examDetail);
   const singleQuestion = useSelector(
     (state: any) => state.question?.singleQuestion
@@ -151,7 +152,12 @@ useEffect(() => {
     const payload: any = {
       questionNo,
       questionPaperId: examResult?.questionPaperID,
+    
     };
+    if(selectedAttempt){
+    payload.attemptCount = selectedAttempt;
+
+    }
     payload.section = sectionId;
     await dispatch(userQuestiongetQuestionById(payload));
   };

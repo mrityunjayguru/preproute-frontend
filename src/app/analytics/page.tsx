@@ -30,7 +30,7 @@ function Analytics() {
   const [selectedExamTypeId, setSelectedExamTypeId] = useState("");
   const [selectedExamId, setSelectedExamId] = useState("");
   const [selectedQuestion, setselectedQuestion] = useState("");
-
+const [selectedAttempt, setSelectedAttempt] = useState<number | null>(null);
   /* ===========================
       FETCH USERS OR EXAMS
   ============================ */
@@ -82,11 +82,22 @@ function Analytics() {
       label: ex.subjectName || ex.name,
     }));
   }, [selectedExamType]);
+  
 
   const selectedExam = (selectedExamType?.exams || []).find(
     (ex: any) => String(ex?._id) === String(selectedExamId),
   );
-
+const attemptOptions = useMemo(() => {
+  if (!selectedExam?.attemptCount) return [];
+console.log(selectedExam,"selectedExamselectedExam")
+  return Array.from(
+    { length: selectedExam.attemptCount },
+    (_, i) => ({
+      value: i + 1,
+      label: `Attempt ${i + 1}`,
+    })
+  );
+}, [selectedExam]);
   const isSectional = selectedExamType?.examType?.name === "Sectional";
 
   const questionPapers = useMemo(() => {
@@ -132,6 +143,7 @@ function Analytics() {
         QuestionPaperResult({
           userId,
           selectedExamTypeId,
+          attemptCount:selectedAttempt,
           selectedExamId,
           questionPaperID: selectedQuestion,
           sectionId: isSectional ? selectedQP?.sectionId : undefined,
@@ -146,6 +158,7 @@ function Analytics() {
     selectedQuestion,
     questionPapers,
     isSectional,
+    selectedAttempt,
     dispatch,
   ]);
 
@@ -295,10 +308,26 @@ function Analytics() {
                 styles={customStyles}
               />
             </div>
+
+<div className="space-y-2">
+  <p className="text-xs font-medium text-gray-900 font-poppins">
+    Attempt Number
+  </p>
+  <Select
+    options={attemptOptions}
+    value={
+      attemptOptions.find((o) => o.value === selectedAttempt) || null
+    }
+    onChange={(opt: any) => setSelectedAttempt(opt?.value || null)}
+    placeholder="Select Attempt"
+    isSearchable
+    styles={customStyles}
+  />
+</div>
           </div>
         </div>
 
-        {examResult && <SummaryTabs data={examResult} />}
+        {examResult && <SummaryTabs data={examResult} selectedAttempt={selectedAttempt}  />}
 
         {givenAllExam.length === 0 && (
           <div className="flex justify-center my-10">

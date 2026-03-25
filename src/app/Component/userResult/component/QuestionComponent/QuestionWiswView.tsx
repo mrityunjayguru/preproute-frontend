@@ -94,6 +94,7 @@ const QuestionWiswView: React.FC<Props> = ({
     correctText = question.correctAnswer;
   } else {
     const correctOpt = question.options?.find((opt) => opt.isCorrect);
+    
     correctText = correctOpt ? correctOpt.text : question.correctAnswer;
   }
 
@@ -160,6 +161,7 @@ const QuestionWiswView: React.FC<Props> = ({
         title="Report Question"
         question={question}
       />
+
       <div className="flex-1 mt-6 bg-white">
         {/* Status Bar */}
         <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] py-4 px-4 mb-6 font-poppins">
@@ -299,31 +301,57 @@ const QuestionWiswView: React.FC<Props> = ({
             ) : (
               /* ✅ MCQ VIEW (like image) */
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {question.options?.map((opt, idx) => {
-                  const isSelected = userAns?.userAnswer === opt._id;
+              {question.options?.map((opt, idx) => {
+  const isSelected = userAns?.userAnswer === opt._id;
+  const isCorrectOption = opt.isCorrect;
 
-                  return (
-                    <div
-                      key={opt._id || idx}
-                      className="border border-gray-200 rounded-md p-3 bg-white relative"
-                    >
-                      <p className="text-[#2563EB] text-xs font-medium mb-1 font-dm-sans">
-                        Option {idx + 1}
-                      </p>
+  // 🎯 Decide color
+  let borderColor = "border-gray-200";
+  let bgColor = "bg-white";
 
-                      <p className="preview text-sm text-gray-800 font-poppins">
-                        <RenderPreview content={opt.text} />
-                        {/* {RenderPreview content(opt.text)} */}
-                      </p>
+  if (isCorrectOption) {
+    borderColor = "border-green-500";
+    bgColor = "bg-green-50";
+  }
 
-                      {isSelected && (
-                        <span className="absolute top-2 right-2 text-[#FF5959] text-xs font-medium font-dm-sans">
-                          Answered
-                        </span>
-                      )}
-                    </div>
-                  );
-                })}
+  if (isSelected && !isCorrectOption) {
+    borderColor = "border-red-500";
+    bgColor = "bg-red-50";
+  }
+
+  return (
+    <div
+      key={opt._id || idx}
+      className={`border ${borderColor} ${bgColor} rounded-md p-3 relative`}
+    >
+      <p className="text-[#2563EB] text-xs font-medium mb-1 font-dm-sans">
+        Option {idx + 1}
+      </p>
+
+      <p className="preview text-sm text-gray-800 font-poppins">
+        <RenderPreview content={opt.text} />
+      </p>
+
+      {/* ✅ Answered Label */}
+      {isSelected && (
+        <span
+          className={`absolute top-2 right-2 text-xs font-medium font-dm-sans ${
+            isCorrectOption ? "text-green-600" : "text-red-500"
+          }`}
+        >
+          Answered
+        </span>
+      )}
+
+      {/* ✅ Correct Tag */}
+      {isCorrectOption && (
+        <span className="absolute bottom-2 right-2 text-green-600 text-xs font-medium">
+          Correct
+        </span>
+      )}
+    </div>
+  );
+})}
               </div>
             )}
           </div>

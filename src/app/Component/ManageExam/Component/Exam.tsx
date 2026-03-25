@@ -109,7 +109,8 @@ export default function ExamUI() {
     const payload: any = {
       questionNo,
       questionPaperId: examData[0]._id,
-      section: sectionId
+      section: sectionId,
+      attemptCount:examData?.[0]?.attemptCount,
     };
     await dispatch(userQuestiongetQuestionById(payload));
   }, [dispatch, examData]);
@@ -195,7 +196,7 @@ export default function ExamUI() {
         }
       }
 
-      const savedTime = localStorage.getItem(`exam_timeLeft_${examData[0]._id}`);
+      const savedTime = localStorage.getItem(`exam_timeLeft_${examData[0]._id}_${examData?.[0]?.attemptCount}`);
       if (savedTime) {
         setTimeLeft(Number(savedTime));
       } else {
@@ -226,10 +227,11 @@ if (!examInfo.switchable || examData?.[0]?.examformet === "sectional") {
       }
       return;
     }
+    console.log(examData,"examDataexamData")
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         const next = prev <= 1 ? 0 : prev - 1;
-        localStorage.setItem(`exam_timeLeft_${examData?.[0]?._id}`, String(next));
+        localStorage.setItem(`exam_timeLeft_${examData?.[0]?._id}_${examData?.[0]?.attemptCount}`, String(next));
         return next;
       });
     }, 1000);
@@ -324,6 +326,7 @@ const currentTimeSpentInSection = sectionTimes[selectedSection?.sectionId || ""]
       questionId: question._id,
       userId: userLogin?._id,
       timeTaken,
+      attemptCount:examData?.[0]?.attemptCount,
       questionPaperId: examData?.[0]?._id,
       statusType,
     };
@@ -404,13 +407,14 @@ const currentTimeSpentInSection = sectionTimes[selectedSection?.sectionId || ""]
     try {
       const payload:any={
         sectionTimes,
-        examData
+        examData,
+        attemptCount:examData?.[0]?.attemptCount
       }
       await updateSectionTime(selectedSection?.sectionId, undefined);
       await dispatch(userExamResult(payload));
         localStorage.removeItem(`section_times_${examData?.[0]?._id}`);
     // ✅ Remove exam timer also (recommended)
-        localStorage.removeItem(`exam_timeLeft_${examData?.[0]?._id}`);
+        localStorage.removeItem(`exam_timeLeft_${examData?.[0]?._id}_${examData?.[0]?.attemptCount}`);
     // ✅ Clear sectionTimes state
     setShowSubmitPopup(false)
     setSectionTimes({});

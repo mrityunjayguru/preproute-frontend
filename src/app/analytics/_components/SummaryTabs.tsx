@@ -23,9 +23,11 @@ import { useRouter } from "next/navigation";
 interface SummaryTabsProps {
   data: any;
   examName?: string;
+  selectedAttempt:any
+
 }
 
-const SummaryTabs = ({ data }: SummaryTabsProps) => {
+const SummaryTabs = ({ data,selectedAttempt }: SummaryTabsProps) => {
   const [activeTab, setActiveTab] = useState("Overall");
   const router = useRouter();
   const tabItems = [
@@ -107,7 +109,7 @@ const SummaryTabs = ({ data }: SummaryTabsProps) => {
 
       <TabsContent value="Question-wise" className="mt-3">
         <div className="space-y-6">
-          <QuestionWiseTab data={data} />
+          <QuestionWiseTab data={data} selectedAttempt={selectedAttempt} />
         </div>
       </TabsContent>
 
