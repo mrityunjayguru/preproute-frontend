@@ -304,9 +304,13 @@ const payload: any = {
         {/* Top Section */}
         <div className="flex justify-between items-start mb-1">
           <h3 className="text-xl font-medium font-poppins text-[#FF5635] truncate pr-4">
-            {exam?.examTyDetail?.examType}  - {exam?.subExamTypeDetail?.subExamType} {exam.level}-
-            {exam.questionPapername} - {exam.examDetail.examname}
-          </h3>
+  {exam?.examTyDetail?.examType}
+  {exam?.topicIdDetail?.topic && ` - ${exam.topicIdDetail.topic}`}
+  {exam?.subExamTypeDetail?.subExamType && ` - ${exam.subExamTypeDetail.subExamType}`}
+  {exam?.level && ` - ${exam.level}`}
+  {exam?.questionPapername && ` - ${exam.questionPapername}`}
+  {exam?.examDetail?.examname && ` - ${exam.examDetail.examname}`}
+</h3>
 
           {exam?.sectionId ? (
             <>
