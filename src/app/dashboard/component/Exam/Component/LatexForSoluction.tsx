@@ -32,6 +32,7 @@ export default function LatexForSoluction({ onChange, value }: QuestionEditorPro
   const [tableToolbarPos, setTableToolbarPos] = useState<TableToolbarPos>({ top: 0, left: 0 });
   const [resizing, setResizing] = useState<boolean>(false);
   const [resizeData, setResizeData] = useState<any>(null);
+  const [tableWidth, setTableWidth] = useState<string>("");
 
   // ---------------------- Handle Image Removal ----------------------
   useEffect(() => {
@@ -105,7 +106,13 @@ export default function LatexForSoluction({ onChange, value }: QuestionEditorPro
   sel.addRange(range);
 };
 
-
+  const handleTableWidthChange = (value: string) => {
+    setTableWidth(value);
+    if (selectedTable) {
+      selectedTable.style.setProperty("width", value, "important");
+      updateContent();
+    }
+  };
   // ---------------------- Image Upload ----------------------
   const handleImageUpload = async () => {
     const input = document.createElement("input");
@@ -426,6 +433,18 @@ export default function LatexForSoluction({ onChange, value }: QuestionEditorPro
             zIndex: 10,
           }}
         >
+             <input
+            type="text"
+            placeholder="Width (e.g. 500px or 80%)"
+            value={tableWidth}
+            onChange={(e) => handleTableWidthChange(e.target.value)}
+            style={{
+              width: "50px",
+              padding: "4px",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+            }}
+          />
           <button onClick={handleAddRow}>➕ Row</button>
           <button onClick={handleAddColumn}>➕ Col</button>
           <button onClick={handleRemoveRow}>➖ Row</button>

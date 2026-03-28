@@ -52,7 +52,11 @@ const customStyles = {
   }),
   option: (base: any, state: { isSelected: any; isFocused: any }) => ({
     ...base,
-    backgroundColor: state.isSelected ? "#FF5635" : state.isFocused ? "#FFF5F3" : "white",
+    backgroundColor: state.isSelected
+      ? "#FF5635"
+      : state.isFocused
+        ? "#FFF5F3"
+        : "white",
     color: state.isSelected ? "white" : "black",
     "&:active": {
       backgroundColor: "#FF5635",
@@ -95,7 +99,7 @@ const Exam: React.FC = () => {
   const [numberOfQuestion, setNumberOfQuestion] = useState<number>(0);
   const [selectedQuestion, setSelectedQuestion] = useState("");
   const [questionBankId, setQuestionBankId] = useState<any[]>([]);
-  const [note,setNote]=useState<string>("");
+  const [note, setNote] = useState<string>("");
   const [options, setOptions] = useState<Option[]>([
     { id: 1, text: "", isCorrect: true, label: "1st" },
     { id: 2, text: "", isCorrect: false, label: "2nd" },
@@ -105,7 +109,9 @@ const Exam: React.FC = () => {
 
   // --- Helpers ---
   const getOrdinalSuffix = (n: number) =>
-    ["th", "st", "nd", "rd"][(n % 100 > 10 && n % 100 < 20) || n % 10 > 3 ? 0 : n % 10] || "th";
+    ["th", "st", "nd", "rd"][
+      (n % 100 > 10 && n % 100 < 20) || n % 10 > 3 ? 0 : n % 10
+    ] || "th";
 
   const resetQuestionFields = useCallback(() => {
     setQuestionData("");
@@ -130,13 +136,16 @@ const Exam: React.FC = () => {
     setIsSection(examDetail?.isSection ?? true);
 
     if (["sectional", "topic wise", "daily practice"].includes(examformet)) {
-      const section = examDetail?.sections?.find((val: any) => val.sectionId === sectionId);
+      const section = examDetail?.sections?.find(
+        (val: any) => val.sectionId === sectionId,
+      );
       setSectionsData(section ? [section] : []);
     } else {
       setSectionsData(examDetail?.sections || []);
     }
 
-    if (!examDetail?.isSection) setNumberOfQuestion(examDetail?.noOfQuestions || 0);
+    if (!examDetail?.isSection)
+      setNumberOfQuestion(examDetail?.noOfQuestions || 0);
     dispatch(getTopic({}));
   }, [selectedExamDetail, dispatch]);
 
@@ -145,7 +154,8 @@ const Exam: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (selectedTopic) dispatch(getSubTopicByTopicId({ topicId: selectedTopic }));
+    if (selectedTopic)
+      dispatch(getSubTopicByTopicId({ topicId: selectedTopic }));
   }, [selectedTopic, dispatch]);
 
   useEffect(() => {
@@ -162,14 +172,17 @@ const Exam: React.FC = () => {
       setPassage(singleQuestion.passage || "");
       setNote(singleQuestion.note || "");
 
-      if (singleQuestion.answerType === "MCQ" && Array.isArray(singleQuestion.options)) {
+      if (
+        singleQuestion.answerType === "MCQ" &&
+        Array.isArray(singleQuestion.options)
+      ) {
         setOptions(
           singleQuestion.options.map((opt: any, i: number) => ({
             id: i + 1,
             text: opt.text || "",
             isCorrect: opt.isCorrect || false,
             label: `${i + 1}${getOrdinalSuffix(i + 1)}`,
-          }))
+          })),
         );
       }
     } else {
@@ -183,19 +196,35 @@ const Exam: React.FC = () => {
     setActiveSection(section.sectionId);
     setNumberOfQuestion(section.noOfQuestions);
     if (section?.topicDetails) setTopic(section.topicDetails);
-    dispatch(getQuestionById({ questionNo: 1, questionPaperId: selectedExamDetail?._id, section: section.sectionId }));
+    dispatch(
+      getQuestionById({
+        questionNo: 1,
+        questionPaperId: selectedExamDetail?._id,
+        section: section.sectionId,
+      }),
+    );
   };
 
   const handleActiveQuestion = (qNo: number) => {
-    const currentSectionData = sectionsData.find((s) => s.sectionId === activeSection);
+    const currentSectionData = sectionsData.find(
+      (s) => s.sectionId === activeSection,
+    );
     if (currentSectionData && qNo > currentSectionData.noOfQuestions) {
-      const currentIndex = sectionsData.findIndex((s) => s.sectionId === activeSection);
+      const currentIndex = sectionsData.findIndex(
+        (s) => s.sectionId === activeSection,
+      );
       const nextSection = sectionsData[currentIndex + 1];
       if (nextSection) return handleActiveSection(nextSection);
       return;
     }
     setActiveQuestion(qNo);
-    dispatch(getQuestionById({ questionNo: qNo, questionPaperId: selectedExamDetail?._id, section: isSection ? activeSection : undefined }));
+    dispatch(
+      getQuestionById({
+        questionNo: qNo,
+        questionPaperId: selectedExamDetail?._id,
+        section: isSection ? activeSection : undefined,
+      }),
+    );
   };
 
   const addQuestionBankItem = (questionItem: any) => {
@@ -210,13 +239,18 @@ const Exam: React.FC = () => {
       setNumericAnswer(questionItem.numericAnswer || 0);
       setQuestionPessage(questionItem.questionPessage || "Normal");
       setPassage(questionItem.passage || "");
-      if (questionItem.answerType === "MCQ" && Array.isArray(questionItem.options)) {
-        setOptions(questionItem.options.map((opt: any, i: number) => ({
-          id: i + 1,
-          text: opt.text || "",
-          isCorrect: opt.isCorrect || false,
-          label: `${i + 1}${getOrdinalSuffix(i + 1)}`,
-        })));
+      if (
+        questionItem.answerType === "MCQ" &&
+        Array.isArray(questionItem.options)
+      ) {
+        setOptions(
+          questionItem.options.map((opt: any, i: number) => ({
+            id: i + 1,
+            text: opt.text || "",
+            isCorrect: opt.isCorrect || false,
+            label: `${i + 1}${getOrdinalSuffix(i + 1)}`,
+          })),
+        );
       }
     } else {
       resetQuestionFields();
@@ -241,8 +275,14 @@ const Exam: React.FC = () => {
         numericAnswer,
         passage,
         hint: hintText,
-        options: answerType === "MCQ" ? options.map(({ text, isCorrect }) => ({ text, isCorrect })) : [],
-        correctAnswer: answerType === "Numeric" ? numericAnswer : options.find((o) => o.isCorrect)?.text || "",
+        options:
+          answerType === "MCQ"
+            ? options.map(({ text, isCorrect }) => ({ text, isCorrect }))
+            : [],
+        correctAnswer:
+          answerType === "Numeric"
+            ? numericAnswer
+            : options.find((o) => o.isCorrect)?.text || "",
       };
 
       if (singleQuestion?._id) {
@@ -261,7 +301,9 @@ const Exam: React.FC = () => {
   };
 
   // Options mapping for React Select
-  const topicOptions = (isSection ? topic : selectedExamDetail?.topicDetail || []).map((t: any) => ({
+  const topicOptions = (
+    isSection ? topic : selectedExamDetail?.topicDetail || []
+  ).map((t: any) => ({
     value: t._id,
     label: t.topic,
   }));
@@ -276,7 +318,10 @@ const Exam: React.FC = () => {
     label: item.uniqueId,
   }));
 
-  const questionNumbers = useMemo(() => Array.from({ length: numberOfQuestion }, (_, i) => i + 1), [numberOfQuestion]);
+  const questionNumbers = useMemo(
+    () => Array.from({ length: numberOfQuestion }, (_, i) => i + 1),
+    [numberOfQuestion],
+  );
   const [openQB, setOpenQB] = useState(false);
 
   return (
@@ -293,49 +338,77 @@ const Exam: React.FC = () => {
           {/* Header */}
           <div className="flex justify-between items-center bg-[#F0F9FF] rounded-lg px-8 py-6 mt-4">
             <h1 className="text-[#FF5635] text-2xl font-poppins font-medium">
-              Exam Setup <span className="text-black text-lg"> | <span className="text-[#005EB6]">Create Operator</span></span>
+              Exam Setup{" "}
+              <span className="text-black text-lg">
+                {" "}
+                | <span className="text-[#005EB6]">Create Operator</span>
+              </span>
             </h1>
             <div className="font-semibold text-gray-900 text-lg font-poppins text-right">
-              {selectedExamDetail?.examDetail?.examname} {selectedExamDetail?.examDetail?.subjectName}
+              {selectedExamDetail?.examDetail?.examname}{" "}
+              {selectedExamDetail?.examDetail?.subjectName}
               <br />
-              <span className="text-[#FF4D4F] text-sm">{selectedExamDetail?.questionPapername}</span>
+              <span className="text-[#FF4D4F] text-sm">
+                {selectedExamDetail?.questionPapername}
+              </span>
             </div>
           </div>
 
           {/* Controls */}
           <div className="flex flex-col md:flex-row justify-between items-center my-6 gap-4">
             <div className="flex flex-wrap gap-4">
-              {isSection && sectionsData.map((sec) => (
-                <button
-                  key={sec.sectionId}
-                  onClick={() => handleActiveSection(sec)}
-                  className={`px-6 py-2 rounded-lg text-sm transition-colors ${sec.sectionId === activeSection ? "bg-[#005EB6] text-white" : "bg-[#5A9BD5] text-white hover:bg-[#4a8ac0]"}`}
-                >
-                  {sec?.sectionDetail?.section}
-                </button>
-              ))}
+              {isSection &&
+                sectionsData.map((sec) => (
+                  <button
+                    key={sec.sectionId}
+                    onClick={() => handleActiveSection(sec)}
+                    className={`px-6 py-2 rounded-lg text-sm transition-colors ${sec.sectionId === activeSection ? "bg-[#005EB6] text-white" : "bg-[#5A9BD5] text-white hover:bg-[#4a8ac0]"}`}
+                  >
+                    {sec?.sectionDetail?.section}
+                  </button>
+                ))}
             </div>
             <div className="flex items-center gap-3">
               <div className="w-48">
                 <Select
                   options={bankOptions}
-                  value={bankOptions.find(o => o.value === selectedQuestion)}
+                  value={bankOptions.find((o) => o.value === selectedQuestion)}
                   onChange={(opt: any) => {
                     setSelectedQuestion(opt?.value);
-                    const item = questionBank.find((i: any) => i._id === opt?.value);
+                    const item = questionBank.find(
+                      (i: any) => i._id === opt?.value,
+                    );
                     addQuestionBankItem(item);
                   }}
                   placeholder="Select Question"
                   styles={customStyles}
                 />
               </div>
-              <button onClick={() => setOpenQB(true)} disabled={loader} className="px-6 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] disabled:opacity-50 text-sm">
+              <button
+                onClick={() => setOpenQB(true)}
+                disabled={loader}
+                className="px-6 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] disabled:opacity-50 text-sm"
+              >
                 Question Bank
               </button>
-              <button onClick={() => { dispatch(questionByQuestionPaperId({ questionPaperId: selectedExamDetail?._id })); setOpenSummary(true); }} className="px-6 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] text-sm">
+              <button
+                onClick={() => {
+                  dispatch(
+                    questionByQuestionPaperId({
+                      questionPaperId: selectedExamDetail?._id,
+                    }),
+                  );
+                  setOpenSummary(true);
+                }}
+                className="px-6 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] text-sm"
+              >
                 Distribution
               </button>
-              <button onClick={handleSubmit} disabled={loader} className="px-8 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] disabled:opacity-50 font-bold">
+              <button
+                onClick={handleSubmit}
+                disabled={loader}
+                className="px-8 py-2 bg-[#FF5635] text-white rounded-md hover:bg-[#e44d30] disabled:opacity-50 font-bold"
+              >
                 {loader ? "..." : "Save & Next"}
               </button>
             </div>
@@ -344,13 +417,16 @@ const Exam: React.FC = () => {
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="flex-1 space-y-6">
               {/* React Select Topic/Subtopic */}
-              {(isSection || selectedExamDetail?.examDetail?.examname === "CUET") && (
+              {(isSection ||
+                selectedExamDetail?.examDetail?.examname === "CUET") && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className="font-medium">Select Topic</Label>
                     <Select
                       options={topicOptions}
-                      value={topicOptions.find(o => o.value === selectedTopic)}
+                      value={topicOptions.find(
+                        (o) => o.value === selectedTopic,
+                      )}
                       onChange={(opt: any) => {
                         setSelectedTopic(opt?.value);
                         setSelectedSubtopic("");
@@ -363,7 +439,9 @@ const Exam: React.FC = () => {
                     <Label className="font-medium">Select Sub Topic</Label>
                     <Select
                       options={subTopicOptions}
-                      value={subTopicOptions.find(o => o.value === selectedSubtopic)}
+                      value={subTopicOptions.find(
+                        (o) => o.value === selectedSubtopic,
+                      )}
                       onChange={(opt: any) => setSelectedSubtopic(opt?.value)}
                       styles={customStyles}
                       placeholder="-- Choose Sub Topic --"
@@ -377,14 +455,34 @@ const Exam: React.FC = () => {
                 <Label className="font-medium">Question Properties</Label>
                 <div className="flex flex-wrap gap-6 p-4 border rounded-md bg-gray-50">
                   {["Easy", "Medium", "Hard", "Normal", "Pass"].map((type) => {
-                    const isDifficulty = ["Easy", "Medium", "Hard"].includes(type);
-                    const isSelected = isDifficulty ? questionType === type : questionPessage === type;
+                    const isDifficulty = ["Easy", "Medium", "Hard"].includes(
+                      type,
+                    );
+                    const isSelected = isDifficulty
+                      ? questionType === type
+                      : questionPessage === type;
                     return (
-                      <label key={type} className="flex items-center space-x-2 cursor-pointer">
-                        <div className={`w-5 h-5 rounded-full border flex items-center justify-center ${isSelected ? "border-[#FF4D4F]" : "border-gray-300"}`}>
-                          {isSelected && <div className="w-3 h-3 rounded-full bg-[#FF4D4F]" />}
+                      <label
+                        key={type}
+                        className="flex items-center space-x-2 cursor-pointer"
+                      >
+                        <div
+                          className={`w-5 h-5 rounded-full border flex items-center justify-center ${isSelected ? "border-[#FF4D4F]" : "border-gray-300"}`}
+                        >
+                          {isSelected && (
+                            <div className="w-3 h-3 rounded-full bg-[#FF4D4F]" />
+                          )}
                         </div>
-                        <input type="radio" className="hidden" checked={isSelected} onChange={() => isDifficulty ? setQuestionType(type) : setQuestionPessage(type)} />
+                        <input
+                          type="radio"
+                          className="hidden"
+                          checked={isSelected}
+                          onChange={() =>
+                            isDifficulty
+                              ? setQuestionType(type)
+                              : setQuestionPessage(type)
+                          }
+                        />
                         <span className="text-sm">{type}</span>
                       </label>
                     );
@@ -395,19 +493,38 @@ const Exam: React.FC = () => {
               {/* Content Editors */}
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col md:flex-row gap-4">
-                  <div className={questionPessage === "Pass" ? "md:w-2/3" : "w-full"}>
-                    <Label className="mb-2 block"> {questionPessage === "Pass"?"Passage Content":"Question Content"} </Label>
-                    <QuestionWithOptionsEditor value={questionData} onChange={setQuestionData} QuestionType="HideInternalPreview" />
+                  <div
+                    className={
+                      questionPessage === "Pass" ? "md:w-2/3" : "w-full"
+                    }
+                  >
+                    <Label className="mb-2 block">
+                      {" "}
+                      {questionPessage === "Pass"
+                        ? "Passage Content"
+                        : "Question Content"}{" "}
+                    </Label>
+                    <QuestionWithOptionsEditor
+                      value={questionData}
+                      onChange={setQuestionData}
+                      QuestionType="HideInternalPreview"
+                    />
                   </div>
                   {questionPessage === "Pass" && (
                     <div className="md:w-1/3">
-                      <Label className="mb-2 block">{questionPessage === "Pass"?"Question Content":"Passage Content"}</Label>
+                      <Label className="mb-2 block">
+                        {questionPessage === "Pass"
+                          ? "Question Content"
+                          : "Passage Content"}
+                      </Label>
                       <LatesForpassage value={passage} onChange={setPassage} />
                     </div>
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-gray-400 text-xs uppercase font-bold">Question Preview</Label>
+                  <Label className="text-gray-400 text-xs uppercase font-bold">
+                    Question Preview
+                  </Label>
                   <div className="border border-gray-200 rounded p-4 min-h-[100px] bg-white shadow-sm">
                     <RenderPreview content={questionData} />
                   </div>
@@ -419,8 +536,17 @@ const Exam: React.FC = () => {
                 <Label className="font-medium">Answer Configuration</Label>
                 <div className="flex gap-6 mb-4">
                   {["MCQ", "Numeric"].map((t) => (
-                    <label key={t} className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" name="ansType" checked={answerType === t} onChange={() => setAnswerType(t as AnswerType)} className="accent-[#FF4D4F]" />
+                    <label
+                      key={t}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <input
+                        type="radio"
+                        name="ansType"
+                        checked={answerType === t}
+                        onChange={() => setAnswerType(t as AnswerType)}
+                        className="accent-[#FF4D4F]"
+                      />
                       <span className="text-sm">{t}</span>
                     </label>
                   ))}
@@ -433,8 +559,21 @@ const Exam: React.FC = () => {
                         choice={opt.label}
                         value={opt.text}
                         isCorrect={opt.isCorrect}
-                        onChange={(val) => setOptions(prev => prev.map(o => o.id === opt.id ? { ...o, text: val } : o))}
-                        onCheckToggle={() => setOptions(prev => prev.map(o => ({ ...o, isCorrect: o.id === opt.id })))}
+                        onChange={(val) =>
+                          setOptions((prev) =>
+                            prev.map((o) =>
+                              o.id === opt.id ? { ...o, text: val } : o,
+                            ),
+                          )
+                        }
+                        onCheckToggle={() =>
+                          setOptions((prev) =>
+                            prev.map((o) => ({
+                              ...o,
+                              isCorrect: o.id === opt.id,
+                            })),
+                          )
+                        }
                         QuestionType={questionPessage}
                       />
                     ))}
@@ -455,13 +594,21 @@ const Exam: React.FC = () => {
                 <Label>Explanation / Solution</Label>
                 <LatexForSoluction value={hintText} onChange={setHintText} />
                 <div className="border border-dashed border-gray-300 rounded p-4 bg-gray-50">
-                  <span className="text-xs font-bold text-gray-400 uppercase">Solution Preview</span>
+                  <span className="text-xs font-bold text-gray-400 uppercase">
+                    Solution Preview
+                  </span>
                   <RenderPreview content={hintText} />
                 </div>
               </div>
               <div>
-                  <Label>Note</Label>
-<Textarea type="text" value={note} placeholder="Note" className="my-2" onChange={(e)=>setNote(e.target.value)} />               
+                <Label>Note</Label>
+                <Textarea
+                  type="text"
+                  value={note}
+                  placeholder="Note"
+                  className="my-2"
+                  onChange={(e) => setNote(e.target.value)}
+                />
               </div>
             </div>
 
@@ -469,11 +616,18 @@ const Exam: React.FC = () => {
             <div className="w-full lg:w-[320px]">
               <div className="sticky top-4 bg-[#F9FAFC] border border-[#d6e4ff] rounded-lg overflow-hidden shadow-sm">
                 <div className="bg-[#0056b3] text-white p-4 font-medium flex justify-between items-center">
-                  <span>{sectionsData.find((s) => s.sectionId === activeSection)?.sectionDetail?.section || "Questions"}</span>
-                  <span className="text-xs bg-white/20 px-2 py-1 rounded">Q: {activeQuestion}</span>
+                  <span>
+                    {sectionsData.find((s) => s.sectionId === activeSection)
+                      ?.sectionDetail?.section || "Questions"}
+                  </span>
+                  <span className="text-xs bg-white/20 px-2 py-1 rounded">
+                    Q: {activeQuestion}
+                  </span>
                 </div>
                 <div className="p-4">
-                  <p className="text-xs text-gray-500 mb-4 uppercase tracking-wider font-bold">Question Palette</p>
+                  <p className="text-xs text-gray-500 mb-4 uppercase tracking-wider font-bold">
+                    Question Palette
+                  </p>
                   <div className="grid grid-cols-5 gap-2">
                     {questionNumbers.map((num) => (
                       <button

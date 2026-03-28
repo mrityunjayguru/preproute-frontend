@@ -153,7 +153,7 @@ const parseStyleString = (style: string | null): React.CSSProperties => {
 
       case "table": {
   const inlineStyles = parseStyleString(el.getAttribute("style"));
-console.log(inlineStyles,"inlineStyles")
+
   return (
     <table
       key={key}

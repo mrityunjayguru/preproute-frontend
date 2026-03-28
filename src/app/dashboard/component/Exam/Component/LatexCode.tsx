@@ -11,7 +11,7 @@ import Toolbar from "./ToolBar";
 
 interface QuestionEditorProps {
   value?: string;
-  QuestionType:any,
+  QuestionType: any;
   onChange: (content: string) => void;
 }
 
@@ -20,8 +20,12 @@ interface TableToolbarPos {
   left: number;
 }
 
-export default function QuestionEditor({ onChange, value,QuestionType }: QuestionEditorProps) {
-   console.log(QuestionType)
+export default function QuestionEditor({
+  onChange,
+  value,
+  QuestionType,
+}: QuestionEditorProps) {
+  console.log(QuestionType);
   const dispatch = useDispatch<AppDispatch>();
   const editorRef = useRef<HTMLDivElement | null>(null);
   const savedRangeRef = useRef<Range | null>(null);
@@ -29,11 +33,16 @@ export default function QuestionEditor({ onChange, value,QuestionType }: Questio
   const [showLatexModal, setShowLatexModal] = useState<boolean>(false);
   const [latexInput, setLatexInput] = useState<string>("");
   const [showTableToolbar, setShowTableToolbar] = useState<boolean>(false);
-  const [selectedTable, setSelectedTable] = useState<HTMLTableElement | null>(null);
-  const [tableToolbarPos, setTableToolbarPos] = useState<TableToolbarPos>({ top: 0, left: 0 });
+  const [selectedTable, setSelectedTable] = useState<HTMLTableElement | null>(
+    null,
+  );
+  const [tableToolbarPos, setTableToolbarPos] = useState<TableToolbarPos>({
+    top: 0,
+    left: 0,
+  });
   const [resizing, setResizing] = useState<boolean>(false);
-  const [resizeData, setResizeData] = useState<any>(null)
-const [tableWidth, setTableWidth] = useState<string>("");
+  const [resizeData, setResizeData] = useState<any>(null);
+  const [tableWidth, setTableWidth] = useState<string>("");
   // ---------------------- Handle Image Removal ----------------------
   useEffect(() => {
     const editor = editorRef.current;
@@ -92,20 +101,19 @@ const [tableWidth, setTableWidth] = useState<string>("");
     sel?.addRange(range);
   };
 
- const insertNode = (node: Node) => {
-  const sel = window.getSelection();
-  if (!sel || sel.rangeCount === 0) return;
-  const range = sel.getRangeAt(0);
+  const insertNode = (node: Node) => {
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
 
-  range.insertNode(node);
+    range.insertNode(node);
 
-  // 🩵 Move cursor after inserted node
-  range.setStartAfter(node);
-  range.setEndAfter(node);
-  sel.removeAllRanges();
-  sel.addRange(range);
-};
-
+    // 🩵 Move cursor after inserted node
+    range.setStartAfter(node);
+    range.setEndAfter(node);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  };
 
   // ---------------------- Image Upload ----------------------
   const handleImageUpload = async () => {
@@ -267,35 +275,37 @@ const [tableWidth, setTableWidth] = useState<string>("");
     updateContent();
   };
 
-const handleEditorClick = (e: React.MouseEvent<HTMLDivElement>) => {
-  const table = (e.target as HTMLElement).closest("table") as HTMLTableElement | null;
+  const handleEditorClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const table = (e.target as HTMLElement).closest(
+      "table",
+    ) as HTMLTableElement | null;
 
-  if (table) {
-    setSelectedTable(table);
+    if (table) {
+      setSelectedTable(table);
 
-    // 👇 YEH ADD KARO
-    setTableWidth(table.style.width || table.getAttribute("width") || "");
+      // 👇 YEH ADD KARO
+      setTableWidth(table.style.width || table.getAttribute("width") || "");
 
-    const rect = table.getBoundingClientRect();
-    setTableToolbarPos({
-      top: rect.top - 50 + window.scrollY,
-      left: rect.left + window.scrollX,
-    });
+      const rect = table.getBoundingClientRect();
+      setTableToolbarPos({
+        top: rect.top - 50 + window.scrollY,
+        left: rect.left + window.scrollX,
+      });
 
-    setShowTableToolbar(true);
-  } else {
-    setShowTableToolbar(false);
-    setSelectedTable(null);
-  }
-};
-const handleTableWidthChange = (value: string) => {
-  setTableWidth(value);
+      setShowTableToolbar(true);
+    } else {
+      setShowTableToolbar(false);
+      setSelectedTable(null);
+    }
+  };
+  const handleTableWidthChange = (value: string) => {
+    setTableWidth(value);
 
-  if (selectedTable) {
-selectedTable.style.setProperty("width", value, "important");
-    updateContent();
-  }
-};
+    if (selectedTable) {
+      selectedTable.style.setProperty("width", value, "important");
+      updateContent();
+    }
+  };
   const attachTableEvents = () => {
     const tables = editorRef.current?.querySelectorAll("table");
     tables?.forEach((table) => {
@@ -368,7 +378,9 @@ selectedTable.style.setProperty("width", value, "important");
       const tex = (span as HTMLElement).dataset.tex;
       if (!tex) return;
       try {
-        (span as HTMLElement).innerHTML = window.katex.renderToString(tex, { throwOnError: false });
+        (span as HTMLElement).innerHTML = window.katex.renderToString(tex, {
+          throwOnError: false,
+        });
       } catch (err) {
         console.warn("LaTeX render failed:", err);
       }
@@ -398,7 +410,7 @@ selectedTable.style.setProperty("width", value, "important");
   };
 
   // ---------------------- Render Preview ----------------------
- const renderPreview = useMemo(() => {
+  const renderPreview = useMemo(() => {
     if (!content) return null;
 
     // LaTeX regex patterns
@@ -407,14 +419,20 @@ selectedTable.style.setProperty("width", value, "important");
     const inlineLatexTest = (t: string) => /^\$[^$]+\$$/.test(t);
 
     const parser = new DOMParser();
-    const doc = parser.parseFromString(`<div id="__root__">${content}</div>`, "text/html");
+    const doc = parser.parseFromString(
+      `<div id="__root__">${content}</div>`,
+      "text/html",
+    );
     const root = doc.getElementById("__root__");
     if (!root) return null;
 
     const normalizeText = (s: string) =>
       s.replace(/\u00A0/g, " ").replace(/\r/g, "");
 
-    const renderNode = (node: ChildNode, key: string | number): React.ReactNode => {
+    const renderNode = (
+      node: ChildNode,
+      key: string | number,
+    ): React.ReactNode => {
       // --- Handle text nodes ---
       if (node.nodeType === Node.TEXT_NODE) {
         const raw = normalizeText(node.textContent || "");
@@ -428,7 +446,12 @@ selectedTable.style.setProperty("width", value, "important");
             const html = part
               .replace(/\n/g, "<br/>")
               .replace(/ {2}/g, "&nbsp;&nbsp;");
-            return <span key={`${key}-t-${idx}`} dangerouslySetInnerHTML={{ __html: html }} />;
+            return (
+              <span
+                key={`${key}-t-${idx}`}
+                dangerouslySetInnerHTML={{ __html: html }}
+              />
+            );
           }
 
           if (blockLatexTest(part)) {
@@ -458,49 +481,50 @@ selectedTable.style.setProperty("width", value, "important");
         const tag = el.tagName.toLowerCase();
         const children = Array.from(node.childNodes);
         const renderedChildren = children.map((child, i) =>
-          renderNode(child, `${key}-${tag}-${i}`)
+          renderNode(child, `${key}-${tag}-${i}`),
         );
 
         switch (tag) {
-        case "img": {
-  const src = el.getAttribute("src") || "";
-  const alt = el.getAttribute("alt") || "";
+          case "img": {
+            const src = el.getAttribute("src") || "";
+            const alt = el.getAttribute("alt") || "";
 
-  // Parse inline style string if present (e.g. style="width:50px;height:40px;")
-  const styleAttr = el.getAttribute("style") || "";
-  const inlineStyles: Record<string, string> = {};
-  styleAttr.split(";").forEach((rule) => {
-    const [prop, value] = rule.split(":").map((s) => s && s.trim());
-    if (prop && value) {
-      // Convert CSS property to camelCase for React
-      const jsProp = prop.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
-      inlineStyles[jsProp] = value;
-    }
-  });
+            // Parse inline style string if present (e.g. style="width:50px;height:40px;")
+            const styleAttr = el.getAttribute("style") || "";
+            const inlineStyles: Record<string, string> = {};
+            styleAttr.split(";").forEach((rule) => {
+              const [prop, value] = rule.split(":").map((s) => s && s.trim());
+              if (prop && value) {
+                // Convert CSS property to camelCase for React
+                const jsProp = prop.replace(/-([a-z])/g, (_, c) =>
+                  c.toUpperCase(),
+                );
+                inlineStyles[jsProp] = value;
+              }
+            });
 
-  // Respect width/height attributes as well
-  const widthAttr = el.getAttribute("width");
-  const heightAttr = el.getAttribute("height");
+            // Respect width/height attributes as well
+            const widthAttr = el.getAttribute("width");
+            const heightAttr = el.getAttribute("height");
 
-  return (
-    <img
-      key={key}
-      src={src}
-      alt={alt}
-      width={widthAttr || undefined}
-      height={heightAttr || undefined}
-      style={{
-        display: "inline-block",
-        maxWidth: "100%",
-        height: "auto",
-        verticalAlign: "middle",
-        margin: "0 .3rem",
-        ...inlineStyles, // merge inline styles from content
-      }}
-    />
-  );
-}
-
+            return (
+              <img
+                key={key}
+                src={src}
+                alt={alt}
+                width={widthAttr || undefined}
+                height={heightAttr || undefined}
+                style={{
+                  display: "inline-block",
+                  maxWidth: "100%",
+                  height: "auto",
+                  verticalAlign: "middle",
+                  margin: "0 .3rem",
+                  ...inlineStyles, // merge inline styles from content
+                }}
+              />
+            );
+          }
 
           case "table":
             return (
@@ -589,7 +613,10 @@ selectedTable.style.setProperty("width", value, "important");
 
           default:
             return (
-              <span key={key} dangerouslySetInnerHTML={{ __html: el.innerHTML }} />
+              <span
+                key={key}
+                dangerouslySetInnerHTML={{ __html: el.innerHTML }}
+              />
             );
         }
       }
@@ -598,7 +625,7 @@ selectedTable.style.setProperty("width", value, "important");
     };
 
     const output = Array.from(root.childNodes).map((n, i) =>
-      renderNode(n, `root-${i}`)
+      renderNode(n, `root-${i}`),
     );
 
     return (
@@ -634,14 +661,15 @@ selectedTable.style.setProperty("width", value, "important");
     );
   }, [content]);
 
-
   // ---------------------- Render UI ----------------------
   return (
     <div className="editor-container" style={{ position: "relative" }}>
-  
-      <Toolbar 
+      <Toolbar
         onCommand={execCommand}
-        onInsertLatex={() => { saveSelection(); setShowLatexModal(true); }}
+        onInsertLatex={() => {
+          saveSelection();
+          setShowLatexModal(true);
+        }}
         onInsertImage={handleImageUpload}
         onInsertTable={() => insertTable(3, 3)}
         onInsertLink={handleLink}
@@ -661,49 +689,52 @@ selectedTable.style.setProperty("width", value, "important");
       />
 
       {/* Table Toolbar */}
-  {showTableToolbar && (
-  <div
-    className="table-toolbar"
-    style={{
-      position: "absolute",
-      top: 0,
-      right: 0,
-      background: "white",
-      border: "1px solid #ddd",
-      borderRadius: "6px",
-      padding: "8px",
-      display: "flex",
-      alignItems: "center",
-      gap: "6px",
-      zIndex: 10,
-    }}
-  >
-    {/* ✅ Width Input */}
-    <input
-      type="text"
-      placeholder="Width (e.g. 500px or 80%)"
-      value={tableWidth}
-      onChange={(e) => handleTableWidthChange(e.target.value)}
-      style={{
-        width: "50px",
-        padding: "4px",
-        border: "1px solid #ccc",
-        borderRadius: "4px",
-      }}
-    />
+      {showTableToolbar && (
+        <div
+          className="table-toolbar"
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            background: "white",
+            border: "1px solid #ddd",
+            borderRadius: "6px",
+            padding: "8px",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            zIndex: 10,
+          }}
+        >
+          {/* ✅ Width Input */}
+          <input
+            type="text"
+            placeholder="Width (e.g. 500px or 80%)"
+            value={tableWidth}
+            onChange={(e) => handleTableWidthChange(e.target.value)}
+            style={{
+              width: "50px",
+              padding: "4px",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+            }}
+          />
 
-    <button onClick={handleAddRow}>➕ Row</button>
-    <button onClick={handleAddColumn}>➕ Col</button>
-    <button onClick={handleRemoveRow}>➖ Row</button>
-    <button onClick={handleRemoveColumn}>➖ Col</button>
-    <button onClick={handleRemoveTable}>🗑</button>
-  </div>
-)}
+          <button onClick={handleAddRow}>➕ Row</button>
+          <button onClick={handleAddColumn}>➕ Col</button>
+          <button onClick={handleRemoveRow}>➖ Row</button>
+          <button onClick={handleRemoveColumn}>➖ Col</button>
+          <button onClick={handleRemoveTable}>🗑</button>
+        </div>
+      )}
 
       {/* LaTeX Modal */}
       {showLatexModal && (
-        <div className="modal-overlay w-full h-full" onClick={() => setShowLatexModal(false)}>
-          <div 
+        <div
+          className="modal-overlay w-full h-full"
+          onClick={() => setShowLatexModal(false)}
+        >
+          <div
             className="modal"
             onClick={(e) => e.stopPropagation()}
             style={{
@@ -715,7 +746,9 @@ selectedTable.style.setProperty("width", value, "important");
               boxShadow: "0 2px 10px rgba(0,0,0,0.2)",
             }}
           >
-            <h4 className="text-md font-poppins font-medium mb-4">Insert LaTeX Formula</h4> 
+            <h4 className="text-md font-poppins font-medium mb-4">
+              Insert LaTeX Formula
+            </h4>
             <textarea
               rows={4}
               value={latexInput}
@@ -724,21 +757,33 @@ selectedTable.style.setProperty("width", value, "important");
               style={{ width: "100%", marginBottom: "10px" }}
             />
             <div className="preview">
-              <strong className="text-md font-poppins font-medium">Preview:</strong>
-              {latexInput ? <BlockMath math={latexInput} /> : <p className="text-md font-poppins font-medium">Type to see preview...</p>}
+              <strong className="text-md font-poppins font-medium">
+                Preview:
+              </strong>
+              {latexInput ? (
+                <BlockMath math={latexInput} />
+              ) : (
+                <p className="text-md font-poppins font-medium">
+                  Type to see preview...
+                </p>
+              )}
             </div>
-            <button onClick={() => insertLatex(latexInput)} className="px-4 py-2 w-full rounded-[8px] bg-[#ff6600] text-white hover:bg-[#e65c00] cursor-pointer font-poppins text-md font-poppins font-medium">Insert</button>
+            <button
+              onClick={() => insertLatex(latexInput)}
+              className="px-4 py-2 w-full rounded-[8px] bg-[#ff6600] text-white hover:bg-[#e65c00] cursor-pointer font-poppins text-md font-poppins font-medium"
+            >
+              Insert
+            </button>
           </div>
         </div>
       )}
       {/* Preview */}
-      {QuestionType=="Normal"?(
-         <div className="preview-box" style={{ marginTop: "20px" }}>
-        <h4>Preview</h4>
-        <div className="question-preview">{renderPreview}</div>
-      </div>
-      ):(null)}
-     
+      {QuestionType == "Normal" ? (
+        <div className="preview-box" style={{ marginTop: "20px" }}>
+          <h4>Preview</h4>
+          <div className="question-preview">{renderPreview}</div>
+        </div>
+      ) : null}
     </div>
   );
 }
