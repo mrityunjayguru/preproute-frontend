@@ -306,6 +306,7 @@ const payload: any = {
           <h3 className="text-xl font-medium font-poppins text-[#FF5635] truncate pr-4">
   {exam?.examTyDetail?.examType}
   {exam?.topicIdDetail?.topic && ` - ${exam.topicIdDetail.topic}`}
+  {exam?.subTopicIdDetail?.subtopic && ` - ${exam.subTopicIdDetail.subtopic}`}
   {exam?.subExamTypeDetail?.subExamType && ` - ${exam.subExamTypeDetail.subExamType}`}
   {exam?.level && ` - ${exam.level}`}
   {exam?.questionPapername && ` - ${exam.questionPapername}`}
