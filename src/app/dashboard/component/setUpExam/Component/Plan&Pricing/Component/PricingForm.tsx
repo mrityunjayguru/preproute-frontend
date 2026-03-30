@@ -15,7 +15,6 @@ import {
 } from "@/api/Plan&Pricing";
 
 /* ================= Reusable Select ================= */
-
 const FormSelect = ({
   value,
   onChange,
@@ -41,39 +40,19 @@ const FormSelect = ({
   </div>
 );
 
-/* ================= MAIN ================= */
-
 const PricingForm = () => {
   const dispatch = useDispatch<AppDispatch>();
-
   const examTypeData = useSelector((state: any) => state?.examType?.examType) || [];
   const exams = useSelector((state: any) => state?.exam?.exam) || [];
   const updatePlan = useSelector((state: any) => state?.palnAndpricing?.updatePlan);
 
-  /* ================= INITIAL STATES ================= */
-
-  const initialFormState = {
-    title: "",
-    price: "",
-    examTypeId: "",
-    subExamTypeId: "",
-  };
-
-  const initialFeatureState = {
-    pyp: false,
-    sectional: false,
-    topicwise: false,
-    dailyPractice: false,
-    community: false,
-    interviewPrep: false,
-  };
+  const initialFormState = { title: "", price: "", examTypeId: "", subExamTypeId: "" };
+  const initialFeatureState = { pyp: false, sectional: false, topicwise: false, dailyPractice: false, community: false, interviewPrep: false };
 
   const [formData, setFormData] = useState(initialFormState);
   const [selectedExams, setSelectedExams] = useState<any[]>([]);
   const [mockCounts, setMockCounts] = useState<{ [key: string]: number }>({});
   const [features, setFeatures] = useState(initialFeatureState);
-
-  /* ================= RESET FUNCTION ================= */
 
   const resetForm = () => {
     setFormData(initialFormState);
@@ -83,39 +62,31 @@ const PricingForm = () => {
     dispatch(setUpdatePlanData(null));
   };
 
-  /* ================= DERIVED LOGIC ================= */
-
   const selectedExamType = useMemo(() => {
     return examTypeData.find((e: any) => e._id === formData.examTypeId);
   }, [examTypeData, formData.examTypeId]);
 
-  // Helper to check if current selection is CUET
+  // FIX: Robust check for CUET
   const isCUET = useMemo(() => {
     if (!formData.subExamTypeId || !selectedExamType) return false;
-    const sub = selectedExamType.subMenus?.find(
-      (s: any) => s._id === formData.subExamTypeId
-    );
+    const sub = selectedExamType.subMenus?.find((s: any) => s._id === formData.subExamTypeId);
     return sub?.subExamType?.toUpperCase() === "CUET";
   }, [formData.subExamTypeId, selectedExamType]);
 
-  // Dynamic Exam Options Label Logic
+  // FIX: Dynamic Exam Options Label Logic
   const examOptions = useMemo(() => {
     return exams.map((ex: any) => ({
+      // Prioritize subjectName if it's CUET, otherwise fallback to examname
       label: isCUET 
-        ? ex.subjectName 
+        ? (ex.subjectName || ex.examname) 
         : (ex.examname || ex.collegeName || ex.subjectName || "Unnamed Exam"),
       value: ex._id,
     }));
   }, [exams, isCUET]);
 
-  /* ================= LOAD EXAM TYPES ================= */
-
-  useEffect(() => {
-    dispatch(getExamType({}));
-  }, [dispatch]);
+  useEffect(() => { dispatch(getExamType({})); }, [dispatch]);
 
   /* ================= PREFILL UPDATE DATA ================= */
-
   useEffect(() => {
     if (!updatePlan?._id) return;
 
@@ -128,42 +99,31 @@ const PricingForm = () => {
 
     setFeatures(updatePlan.features || initialFeatureState);
 
-    // Identify if the plan being updated belongs to CUET to set labels correctly
-    const planSubMenu = updatePlan.subExamTypeId;
-    const isPlanCUET = updatePlan.exams?.some((ex: any) => ex.examInfo?.subjectName && !ex.examInfo?.examname);
+    // FIX: Logic to check if the plan being edited is CUET based on stored IDs
+    const currentSubMenu = examTypeData
+      .find((et: any) => et._id === updatePlan.examTypeId)
+      ?.subMenus?.find((sub: any) => sub._id === updatePlan.subExamTypeId);
+    
+    const isPlanCUET = currentSubMenu?.subExamType?.toUpperCase() === "CUET";
 
-    const mappedExams =
-      updatePlan.exams?.map((ex: any) => ({
-        label: isPlanCUET
-          ? ex.examInfo?.subjectName
+    const mappedExams = updatePlan.exams?.map((ex: any) => ({
+      label: isPlanCUET
+          ? (ex.examInfo?.subjectName || ex.examInfo?.examname)
           : (ex.examInfo?.examname || ex.examInfo?.collegeName || ex.examInfo?.subjectName),
-        value: ex.examId,
-      })) || [];
+      value: ex.examId,
+    })) || [];
 
     setSelectedExams(mappedExams);
 
     const mockObj: any = {};
-    updatePlan.exams?.forEach((ex: any) => {
-      mockObj[ex.examId] = ex.mockCount;
-    });
-
+    updatePlan.exams?.forEach((ex: any) => { mockObj[ex.examId] = ex.mockCount; });
     setMockCounts(mockObj);
-  }, [updatePlan]);
-
-  /* ================= FETCH EXAMS ON SELECTION ================= */
+  }, [updatePlan, examTypeData]);
 
   useEffect(() => {
     if (!formData.examTypeId) return;
-
-    const payload: any = {
-      examtypeId: formData.examTypeId,
-      subExamTypeId: formData.subExamTypeId || undefined,
-    };
-
-    dispatch(getexam(payload));
+    dispatch(getexam({ examtypeId: formData.examTypeId, subExamTypeId: formData.subExamTypeId || undefined }));
   }, [formData.examTypeId, formData.subExamTypeId, dispatch]);
-
-  /* ================= SUBMIT HANDLER ================= */
 
   const handleSubmit = async () => {
     if (!formData.title || !formData.price || selectedExams.length === 0) {
@@ -171,7 +131,7 @@ const PricingForm = () => {
       return;
     }
 
-    const payload: any = {
+    const payload = {
       title: formData.title,
       price: Number(formData.price),
       examTypeId: formData.examTypeId,
@@ -193,12 +153,8 @@ const PricingForm = () => {
       }
       await dispatch(getPlanandPricing({}));
       resetForm();
-    } catch (error) {
-      console.error("Submit Error:", error);
-    }
+    } catch (error) { console.error("Submit Error:", error); }
   };
-
-  /* ================= UI RENDER ================= */
 
   return (
     <div className="p-8 max-w-5xl bg-white shadow-sm rounded-xl border border-gray-100 mt-6 mx-auto">
@@ -206,17 +162,10 @@ const PricingForm = () => {
         {updatePlan?._id ? "Edit Pricing Plan" : "Create New Pricing Plan"}
       </h2>
 
-      {/* Selectors */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <FormSelect
           value={formData.examTypeId}
-          onChange={(e: any) =>
-            setFormData((prev) => ({
-              ...prev,
-              examTypeId: e.target.value,
-              subExamTypeId: "",
-            }))
-          }
+          onChange={(e: any) => setFormData((prev) => ({ ...prev, examTypeId: e.target.value, subExamTypeId: "" }))}
           options={examTypeData}
           placeholder="Choose Exam Type"
           labelKey="examType"
@@ -226,12 +175,7 @@ const PricingForm = () => {
         {selectedExamType?.subMenus?.length > 0 && (
           <FormSelect
             value={formData.subExamTypeId}
-            onChange={(e: any) =>
-              setFormData((prev) => ({
-                ...prev,
-                subExamTypeId: e.target.value,
-              }))
-            }
+            onChange={(e: any) => setFormData((prev) => ({ ...prev, subExamTypeId: e.target.value }))}
             options={selectedExamType.subMenus}
             placeholder="Choose Sub Exam"
             labelKey="subExamType"
@@ -240,7 +184,6 @@ const PricingForm = () => {
         )}
       </div>
 
-      {/* Multi-Select Exams */}
       {formData.examTypeId && (
         <div className="mb-8">
           <label className="font-semibold block mb-2 text-sm text-gray-700">
@@ -257,30 +200,19 @@ const PricingForm = () => {
         </div>
       )}
 
-      {/* Mock Count Management */}
       {selectedExams.length > 0 && (
         <div className="mb-8 border border-orange-100 bg-orange-50/30 p-5 rounded-lg">
-          <h3 className="font-bold text-orange-800 mb-4 flex items-center gap-2">
-            Assign Mock Test Counts
-          </h3>
-
+          <h3 className="font-bold text-orange-800 mb-4 flex items-center gap-2">Assign Mock Test Counts</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {selectedExams.map((ex) => (
               <div key={ex.value} className="bg-white p-3 rounded-md border border-gray-200 shadow-sm">
-                <label className="block text-xs font-bold uppercase text-gray-500 mb-2 truncate">
-                  {ex.label}
-                </label>
+                <label className="block text-xs font-bold uppercase text-gray-500 mb-2 truncate">{ex.label}</label>
                 <Input
                   type="number"
                   min={0}
                   placeholder="0"
                   value={mockCounts[ex.value] || ""}
-                  onChange={(e) =>
-                    setMockCounts((prev) => ({
-                      ...prev,
-                      [ex.value]: Number(e.target.value),
-                    }))
-                  }
+                  onChange={(e) => setMockCounts((prev) => ({ ...prev, [ex.value]: Number(e.target.value) }))}
                   className="h-9 focus:border-orange-500"
                 />
               </div>
@@ -289,7 +221,6 @@ const PricingForm = () => {
         </div>
       )}
 
-      {/* Features Toggles */}
       <div className="mb-8">
         <h3 className="font-semibold mb-4 text-gray-700">Included Features</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-y-3 gap-x-6 bg-gray-50 p-4 rounded-lg">
@@ -299,12 +230,7 @@ const PricingForm = () => {
                 type="checkbox"
                 className="w-4 h-4 accent-orange-500 cursor-pointer"
                 checked={(features as any)[key]}
-                onChange={(e) =>
-                  setFeatures((prev) => ({
-                    ...prev,
-                    [key]: e.target.checked,
-                  }))
-                }
+                onChange={(e) => setFeatures((prev) => ({ ...prev, [key]: e.target.checked }))}
               />
               <span className="text-sm font-medium text-gray-600 group-hover:text-orange-600 transition-colors capitalize">
                 {key.replace(/([A-Z])/g, ' $1').trim()}
@@ -314,55 +240,33 @@ const PricingForm = () => {
         </div>
       </div>
 
-      {/* Plan Details */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 pt-4 border-t border-gray-100">
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-700">Plan Title</label>
           <Input
             placeholder="e.g. Pro Annual Plan"
             value={formData.title}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                title: e.target.value,
-              }))
-            }
+            onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
             className="h-11"
           />
         </div>
-
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-700">Pricing (₹)</label>
           <Input
             type="number"
             placeholder="999"
             value={formData.price}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                price: e.target.value,
-              }))
-            }
+            onChange={(e) => setFormData((prev) => ({ ...prev, price: e.target.value }))}
             className="h-11"
           />
         </div>
       </div>
 
-      {/* Submit */}
       <div className="flex gap-4">
-        <Button
-          onClick={handleSubmit}
-          className="bg-orange-500 hover:bg-orange-600 text-white px-10 h-12 text-lg font-semibold shadow-lg shadow-orange-200"
-        >
+        <Button onClick={handleSubmit} className="bg-orange-500 hover:bg-orange-600 text-white px-10 h-12 text-lg font-semibold shadow-lg shadow-orange-200">
           {updatePlan?._id ? "Update Plan Details" : "Publish Plan"}
         </Button>
-        <Button
-          variant="outline"
-          onClick={resetForm}
-          className="h-12 px-6"
-        >
-          Cancel
-        </Button>
+        <Button variant="outline" onClick={resetForm} className="h-12 px-6">Cancel</Button>
       </div>
     </div>
   );

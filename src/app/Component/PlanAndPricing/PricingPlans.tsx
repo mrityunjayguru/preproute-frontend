@@ -206,8 +206,7 @@ export default function PricingPlans() {
                 Plans and Pricing
               </h2>
               <p className="text-gray-600 text-xs my-5 sm:text-sm md:text-base max-w-2xl mx-auto text-dm-sans mt-2 sm:mt-3 px-4">
-                Practice mock exams from multiple colleges and prepare with
-                confidence.
+              
               </p>
             </div>
           </div>

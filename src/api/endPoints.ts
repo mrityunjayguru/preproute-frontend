@@ -163,7 +163,9 @@ export const Dashboard={
 export const PlnAndPricing={
   create:"PlanPricing/create",
   get:"PlanPricing/get",
+  getPlanandPricingCUETEXAM:"PlanPricing/cuetExam",
   update:"PlanPricing/update",
+  getPlanandPricingdashboard:"PlanPricing/getDashboardPlanPrising",
   getallPlnAndPricingsbysectionid:"planAndPricing/getallPlnAndPricingsbysectionid"
 }
 export const forum={
