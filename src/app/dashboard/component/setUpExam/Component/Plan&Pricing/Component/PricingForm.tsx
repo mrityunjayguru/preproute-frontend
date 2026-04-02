@@ -131,7 +131,7 @@ const PricingForm = () => {
       return;
     }
 
-    const payload = {
+    const payload:any = {
       title: formData.title,
       price: Number(formData.price),
       examTypeId: formData.examTypeId,

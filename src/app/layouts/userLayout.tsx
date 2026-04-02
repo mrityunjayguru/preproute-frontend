@@ -41,7 +41,7 @@ const loder = useSelector((state: any) => state?.exam?.loder);
 
   return (
     <>
-    <DisableDevTools /> 
+    {/* <DisableDevTools />  */}
     <TopProgressBar isAnimating={loder} />
       {/* 1. Only show WhatsApp if NOT in the Exam flow */}
       {!isExamFlow && <WhatsAppSocialApp />}

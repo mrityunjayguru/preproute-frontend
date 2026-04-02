@@ -10,7 +10,7 @@ import {
   setUpdatecoupon,
   updatecoupon,
 } from "@/api/coupon";
-import { getPlanandPricing } from "@/api/Plan&Pricing";
+import { getPlanandPricing, getPlanandPricingdashboard } from "@/api/Plan&Pricing";
 
 interface CouponFormData {
   discountCode: string;
@@ -54,7 +54,7 @@ function CouponForm() {
   /* ================= Fetch Plan & Pricing ================= */
   const getData = async () => {
     const payload: any = {};
-    await dispatch(getPlanandPricing(payload));
+    await dispatch(getPlanandPricingdashboard(payload));
   };
 
   const palnAndpricing = useSelector(
@@ -165,7 +165,7 @@ function CouponForm() {
             <option value="">Choose planId Type</option>
             {palnAndpricing.map((type: any) => (
               <option key={type._id} value={type._id}>
-                {type.title}
+                {type.title}{" "} {type?.subExamType?.subExamType ? `- ${type.subExamType.subExamType}` : ""}
               </option>
             ))}
           </select>

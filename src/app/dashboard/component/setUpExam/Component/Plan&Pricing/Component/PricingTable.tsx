@@ -94,8 +94,9 @@ console.log(item,"itemitem")
         <CommonTable
           data={filteredData}
           columns={columns}
-          onEdit={handleEdit}
-        />
+          onEdit={handleEdit} onDelete={function (row: any): void {
+            throw new Error("Function not implemented.");
+          } }        />
       </div>
     </div>
   );
