@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { getblog, handlesetUpdateBlog } from "@/api/Blog";
-import { gettodo, handlesetUpdatetodo } from "@/api/todo";
+import { gettodo, handlesetUpdatetodo } from "@/api/task";
 
 function TodosTable() {
   const router = useRouter();

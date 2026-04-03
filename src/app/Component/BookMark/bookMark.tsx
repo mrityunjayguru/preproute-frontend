@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import QuestionWiswView from "./component/QuestionWiswView";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,15 +13,38 @@ function BookMark() {
   const bookMarkdata = useSelector(
     (state: any) => state?.bookMark?.boockMark || []
   );
-
-  console.log(bookMarkdata);
+const [difficulty, setDifficulty] = useState("");
   const dispatch = useDispatch<AppDispatch>();
-
   useEffect(() => {
     dispatch(getboockMark({}));
   }, [dispatch]);
 
+  useEffect(()=>{
+    const payload:any={
+      difficulty:difficulty
+    }
+    dispatch(getboockMark(payload));
+
+  },[difficulty])
   return (
+      <>
+       <div className="w-1/2 px-6 sm:px-8 md:px-12 lg:px-28 pb-12">
+            <label className="text-sm font-medium text-gray-600 mb-1 block">
+              Select Mistake Type
+            </label>
+
+            <select
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value)}
+              className="w-full border border-gray-200 rounded-lg p-3 bg-white focus:ring-2 focus:ring-indigo-500 outline-none"
+            >
+              <option value="">Select</option>
+              <option value="Silly mistakes">Silly mistakes</option>
+              <option value="Concept Gap">Concept Gap</option>
+              <option value="Time Pressure">Time Pressure</option>
+            </select>
+          </div>
+
     <div className="min-h-screen flex flex-col bg-white">
       <div className="flex-1 px-6 sm:px-8 md:px-12 lg:px-28 pb-12">
         <div className="relative bg-[#E8F4F8] rounded-lg px-8 py-5 mb-12 flex justify-between items-center">
@@ -67,6 +90,7 @@ function BookMark() {
         </div>
       </section>
     </div>
+      </>
   );
 }
 

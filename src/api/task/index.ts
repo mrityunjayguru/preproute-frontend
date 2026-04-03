@@ -40,7 +40,6 @@ export const createtodo = createAsyncThunk<boolean, todoPayload>(
   async (payload, thunkAPI) => {
     try {
       const res = await todoRepo.createtodo(payload);
-
       if (res.status === 200 || res.status === 201) {
         GetMessage("success", "todo created successfully");
         return true;
@@ -117,7 +116,7 @@ export const handleUpdateData = createAsyncThunk<boolean, todoPayload>(
       const res = await todoRepo.handleUpdateData(payload);
 
       if (res.status === 200) {
-        GetMessage("success", "todo updated successfully");
+        // GetMessage("success", "todo updated successfully");
         return true;
       }
     } catch (err: any) {

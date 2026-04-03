@@ -22,6 +22,7 @@ import { getCommonexam, resetQuestionByExamID } from "@/api/Exam";
 import { resetQuestion } from "@/api/Question";
 import SocialMedia from "../../Home/_componets/social-media";
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
+import TaskDashboard from "./PlanTask";
 
 const UserDashboard = () => {
   const router = useRouter();
@@ -113,21 +114,29 @@ const UserDashboard = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                {/* <Button
+                onClick={handleIPmatExam}
+                className="w-full sm:w-auto cursor-pointer bg-[#FF5635] hover:bg-[#E04D2E] text-white rounded-lg px-8 py-3 text-base h-auto font-poppins"
+              >
+                Plan Task for tommorrow
+              </Button> */}
               <Button
                 onClick={handleIPmatExam}
-                className="w-full sm:w-auto bg-[#FF5635] hover:bg-[#E04D2E] text-white rounded-lg px-8 py-3 text-base h-auto font-poppins"
+                className="w-full sm:w-auto cursor-pointer bg-[#FF5635] hover:bg-[#E04D2E] text-white rounded-lg px-8 py-3 text-base h-auto font-poppins"
               >
                 Attempt Mocks
               </Button>
 
               <Button
                 onClick={() => router.push("bookMark")}
-                className="w-full sm:w-auto bg-[#005EB6] hover:bg-[#004D96] text-white rounded-lg px-8 py-3 text-base h-auto font-poppins"
+                className="w-full sm:w-auto cursor-pointer bg-[#005EB6] hover:bg-[#004D96] text-white rounded-lg px-8 py-3 text-base h-auto font-poppins"
               >
                 Bookmarks
               </Button>
             </div>
           </div>
+  {/* <TaskDashboard/> */}
+
           {/* ================= GRID SECTION ================= */}
           {/* ================= MOBILE LAYOUT ================= */}
           <div className="flex flex-col gap-6 mt-8 md:hidden">

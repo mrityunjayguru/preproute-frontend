@@ -31,6 +31,7 @@ import SectionRestrictionPopup from "./Popup/SectionRestrictionPopup";
 import SubmitExamPopup from "./Popup/SubmitExamPopup";
 import SwitchSectionRestrictionPopup from "./Popup/sectionRestriction";
 import SubjectTabs from "./SubjectTabs";
+import RatingPopup from "./Popup/RatingPopup";
 
 // Types
 interface SectionDetail {
@@ -402,6 +403,7 @@ const currentTimeSpentInSection = sectionTimes[selectedSection?.sectionId || ""]
     setTotalNoOfQuestions(section.noOfQuestions);
     fetchQuestion(1, section.sectionId);
   };
+  const [rationPopup, setRatingPopup] = useState(false);
 
   const handleSubmitFullExam = async () => {
     try {
@@ -410,15 +412,17 @@ const currentTimeSpentInSection = sectionTimes[selectedSection?.sectionId || ""]
         examData,
         attemptCount:examData?.[0]?.attemptCount
       }
-      await updateSectionTime(selectedSection?.sectionId, undefined);
-      await dispatch(userExamResult(payload));
-        localStorage.removeItem(`section_times_${examData?.[0]?._id}`);
+      setShowSubmitPopup(false)
+      setRatingPopup(true)
+      // await updateSectionTime(selectedSection?.sectionId, undefined);
+      // await dispatch(userExamResult(payload));
+        // localStorage.removeItem(`section_times_${examData?.[0]?._id}`);
     // ✅ Remove exam timer also (recommended)
-        localStorage.removeItem(`exam_timeLeft_${examData?.[0]?._id}_${examData?.[0]?.attemptCount}`);
+        // localStorage.removeItem(`exam_timeLeft_${examData?.[0]?._id}_${examData?.[0]?.attemptCount}`);
     // ✅ Clear sectionTimes state
-    setShowSubmitPopup(false)
-    setSectionTimes({});
-      router.push("/analytics");
+    
+    // setSectionTimes({});
+      // router.push("/analytics");
     } catch (err) { console.error("Error submitting exam:", err); }
   };
 
@@ -465,8 +469,32 @@ const currentTimeSpentInSection = sectionTimes[selectedSection?.sectionId || ""]
       window.removeEventListener("popstate", handlePopState);
     };
   }, []);
+  const handleRatingSubmit=async(val:any)=>{
+  const payload:any={
+        sectionTimes,
+        examData,
+        attemptCount:examData?.[0]?.attemptCount,
+        rating:val
+      }
+      setShowSubmitPopup(false)
+      setRatingPopup(false)
+      await updateSectionTime(selectedSection?.sectionId, undefined);
+      await dispatch(userExamResult(payload));
+        localStorage.removeItem(`section_times_${examData?.[0]?._id}`);
+    // ✅ Remove exam timer also (recommended)
+        localStorage.removeItem(`exam_timeLeft_${examData?.[0]?._id}_${examData?.[0]?.attemptCount}`);
+    // ✅ Clear sectionTimes state
+    
+    setSectionTimes({});
+      router.push("/analytics");
+  }
   return (
     <>
+     <RatingPopup
+        isOpen={rationPopup}
+        onClose={() => setRatingPopup(false)}
+       handleSubmit={handleRatingSubmit}
+      />
       {showSubmitPopup && <SubmitExamPopup onClose={() => setShowSubmitPopup(false)} onConfirm={handleSubmitFullExam} />}
       {sectionRestriction && <SwitchSectionRestrictionPopup onClose={() => setsectionRestriction(false)} onConfirm={handleSubmitSection} selectedSection={selectedSection} />}
       {sectionShowPopup && <SectionRestrictionPopup examname={exam[0]?.examname} onClose={() => setSectionShowPopup(false)} />}
