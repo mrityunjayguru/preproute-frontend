@@ -9,7 +9,8 @@ selecteduser:any;
 selecteduserDetail:any;
 userById:any;
 AttemptedExam:any;
-youtubeShort:any
+youtubeShort:any;
+referDetail:any;
 }
 
 // Initial state for the slice
@@ -21,7 +22,8 @@ const initialState: UserDataState = {
   selecteduserDetail:null,
   userById:null,
   AttemptedExam:null,
-  youtubeShort:null
+  youtubeShort:null,
+  referDetail:null
 };
 
 // Create the user data slice
@@ -59,11 +61,14 @@ export const userSlicc = createSlice({
     setYoutube: (state, action: PayloadAction<any>) => {
         state.youtubeShort = action.payload;
     },
+    setReferDetail: (state, action: PayloadAction<any>) => {
+        state.referDetail = action.payload;
+    },
   },
 });
 
 // Export actions
-export const {setYoutube,updateProfileData,setuser,setUpdateuser,setuserById,setSingleuser,setSelecteduser,setSelecteduserDetail,setAttemptedExam} = userSlicc.actions;
+export const {setReferDetail,setYoutube,updateProfileData,setuser,setUpdateuser,setuserById,setSingleuser,setSelecteduser,setSelecteduserDetail,setAttemptedExam} = userSlicc.actions;
 
 // Export reducer
 export default userSlicc.reducer;

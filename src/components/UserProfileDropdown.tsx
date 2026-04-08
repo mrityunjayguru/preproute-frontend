@@ -88,6 +88,14 @@ export const UserProfileDropdown: React.FC<UserProfileDropdownProps> = ({
             Profile & Subscription
           </Link>
         </DropdownMenuItem>
+                <DropdownMenuItem
+          asChild
+          className="cursor-pointer  px-3 py-1 rounded-md text-sm font-dm-sans"
+        >
+          <Link href="/Refer" className="w-full">
+            Refer and Earn
+          </Link>
+        </DropdownMenuItem>
             <DropdownMenuItem
           asChild
           className="cursor-pointer  px-3 py-1 rounded-md text-sm font-dm-sans"

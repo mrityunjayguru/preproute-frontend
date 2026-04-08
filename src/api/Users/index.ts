@@ -5,7 +5,8 @@ import {
   setSelecteduser,
   setAttemptedExam,
   updateProfileData,
-  setYoutube
+  setYoutube,
+  setReferDetail
 } from "../../store/user";
 import APIName, { topic } from "../endPoints";
 import { UserRepo } from "./UsersRepo";
@@ -324,6 +325,29 @@ export const getAllUsers = createAsyncThunk<boolean, Payload>(
       const data = await UserRepo.getAllUsers(payload);
       if (data.status === 200) {
         thunkAPI.dispatch(setuser(data.data.data));
+        return data;
+      }
+    } catch (err: any) {
+      if (err.status == 401) {
+        localStorage.removeItem("token");
+        GetMessage("warning", "Unauthorized");
+        // window.location.href = "/signin";
+      } else {
+        GetMessage("warning", "something went wrong");
+      }
+    }
+    return false;
+  }
+);
+
+
+export const DetailReferral = createAsyncThunk<boolean, Payload>(
+  topic.get,
+  async (payload, thunkAPI) => {
+    try {
+      const data = await UserRepo.DetailReferral(payload);
+      if (data.status === 200) {
+        thunkAPI.dispatch(setReferDetail(data.data.data));
         return data;
       }
     } catch (err: any) {

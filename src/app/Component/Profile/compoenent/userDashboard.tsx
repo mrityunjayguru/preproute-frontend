@@ -23,7 +23,9 @@ import { resetQuestion } from "@/api/Question";
 import SocialMedia from "../../Home/_componets/social-media";
 import FOOTERLOGO from "@/assets/vectors/footer-logo.svg";
 import TaskDashboard from "./PlanTask";
-
+import DailyTask from "./DailyTask";
+import { SiNginxproxymanager } from "react-icons/si";
+import PerformanceOverview from "./PerformanceOverview";
 const UserDashboard = () => {
   const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
@@ -108,8 +110,16 @@ const UserDashboard = () => {
               <p className="text-gray-600 text-base font-poppins mt-1">
                 Welcome back,
               </p>
-              <h1 className="text-3xl font-medium font-poppins text-[#FF5635]">
-                {userLogin?.username}!
+              <h1 className="text-3xl font-medium font-poppins flex justify-center text-[#FF5635]">
+                {userLogin?.username}!   <span className="flex items-center gap-2 ml-2">
+    
+    {/* Icon with black background */}
+    <span className="bg-black p-1 rounded-full flex items-center justify-center">
+      <SiNginxproxymanager size={14} className="text-white" />
+    </span>
+
+    <span className="text-black">:{userLogin?.XPlevel}</span>
+  </span>
               </h1>
             </div>
 
@@ -135,7 +145,6 @@ const UserDashboard = () => {
               </Button>
             </div>
           </div>
-  {/* <TaskDashboard/> */}
 
           {/* ================= GRID SECTION ================= */}
           {/* ================= MOBILE LAYOUT ================= */}
@@ -208,7 +217,12 @@ const UserDashboard = () => {
             <DailyStrake />
 
           </div>
-
+ <div className="w-1/2 my-2">
+   <DailyTask/>
+ </div>
+<div>
+  <PerformanceOverview/>
+</div>
           {/* SocialShots already shown in mobile, so avoid duplicate on desktop */}
           <div className="hidden md:block mt-8">
             <SocialShots />

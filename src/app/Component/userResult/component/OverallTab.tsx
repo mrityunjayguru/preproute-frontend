@@ -237,10 +237,10 @@ const OverallTab = ({ data }: OverallTabProps) => {
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
         {[
-          { label: "Attempted", val: `${attempted} out of ${totalQuestions}`, color: "text-blue-600" },
-          { label: "Correct", val: `${data?.correct || 0} out of ${attempted}`, color: "text-[#005EB6]" },
-          { label: "Incorrect", val: `${data?.wrong || 0} out of ${attempted}`, color: "text-[#005EB6]" },
-          { label: "Unattempted", val: `${unattempted} out of ${totalQuestions}`, color: "text-[#005EB6]" },
+          { label: "Attempted", val: `${attempted} / ${totalQuestions}`, color: "text-blue-600" },
+          { label: "Correct", val: `${data?.correct || 0} / ${attempted}`, color: "text-[#005EB6]" },
+          { label: "Incorrect", val: `${data?.wrong || 0} / ${attempted}`, color: "text-[#005EB6]" },
+          { label: "Unattempted", val: `${unattempted} / ${totalQuestions}`, color: "text-[#005EB6]" },
           { label: "Avg. Time", val: data?.averageTimePerAttempted || "0s", color: "text-[#005EB6]" },
           { label: "Negative Marks", val: computedNegative || 0, color: "text-[#005EB6]", valColor: "text-[#FF5635]" },
         ].map((stat, idx) => (

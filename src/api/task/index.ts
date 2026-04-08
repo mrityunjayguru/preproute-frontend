@@ -41,7 +41,7 @@ export const createtodo = createAsyncThunk<boolean, todoPayload>(
     try {
       const res = await todoRepo.createtodo(payload);
       if (res.status === 200 || res.status === 201) {
-        GetMessage("success", "todo created successfully");
+        // GetMessage("success", "todo created successfully");
         return true;
       }
     } catch (err: any) {

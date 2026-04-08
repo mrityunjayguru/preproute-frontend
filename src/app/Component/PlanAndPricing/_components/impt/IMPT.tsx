@@ -30,13 +30,26 @@ export default function PricingPlans() {
     const [isVerifying, setIsVerifying] = useState<string | null>(null);
 
     const user = useSelector((state: any) => state?.Auth?.loginUser);
+
+    const getReferralDiscount = () => {
+        if (!user?.referal) return 0;
+        const ref = user.referal;
+        if (
+            ref.isActive &&
+            new Date(ref.expiry) > new Date() &&
+            ref.usedCount < ref.maxUsage
+        ) {
+            return ref.discountPercent || 0;
+        }
+        return 0;
+    };
+
     const planAndPricing = useSelector((state: any) => state?.palnAndpricing?.plandetail || []);
-    console.log(planAndPricing, "planAndPricingplanAndPricing")
+
     useEffect(() => {
         dispatch(getPlanandPricing({ uid: user?._id }));
     }, [dispatch, user?._id]);
 
-    // Configuration for Rows (Keys must match your API response fields)
     const examRows = [
         { label: "Indore", key: "IPMAT Indore" },
         { label: "Rohtak", key: "IPMAT Rohtak" },
@@ -44,7 +57,6 @@ export default function PricingPlans() {
         { label: "NPAT", key: "NPAT" },
         { label: "SET", key: "SET" },
         { label: "IIM B DBE", key: "IIM B DBE" },
-        // { label: "St.Xavier's", key: "St. Xavier’s" },
     ];
 
     const featureRows = [
@@ -87,7 +99,7 @@ export default function PricingPlans() {
     };
 
     const handlePayment = async (plan: any) => {
-        if (plan?.alreadyPurchased == true) return
+        if (plan?.alreadyPurchased === true) return;
         let token = localStorage.getItem("token");
         if (!token) {
             router.push(`/Auth/signin?redirect=${pathname}`);
@@ -95,14 +107,21 @@ export default function PricingPlans() {
         }
 
         try {
-            const discount = discountAmounts[plan._id] || 0;
+            const refDiscountPercent = getReferralDiscount();
+            const refDiscountAmt = (Number(plan.price) * refDiscountPercent) / 100;
+            const couponDiscountAmt = discountAmounts[plan._id] || 0;
+
+            const finalCalculatedPrice = Math.max(Number(plan.price) - refDiscountAmt - couponDiscountAmt, 0);
+
             const payload: any = {
-                amount: (Number(plan.price) - discount) * 100,
+                amount: finalCalculatedPrice * 100,
                 currency: "INR",
                 userId: user?._id,
+                referralCode: user?.referal?.code,
                 planId: plan._id,
                 coupon: couponCodes[plan._id] || null,
             };
+
             const response: any = await dispatch(createOrder(payload));
             if (response?.payload?.success) {
                 const rzp = new (window as any).Razorpay({
@@ -120,6 +139,8 @@ export default function PricingPlans() {
         }
     };
 
+    const referralDiscount = getReferralDiscount();
+
     return (
         <div className="w-full mx-auto py-6 sm:py-10">
             <Script src="https://checkout.razorpay.com/v1/checkout.js" />
@@ -132,35 +153,37 @@ export default function PricingPlans() {
                                 <thead>
                                     <tr>
                                         <th className="w-[20%] p-4 bg-white"></th>
-                                        {planAndPricing.map((plan: any) => (
-                                            <th
-                                                key={plan._id}
-                                                onMouseEnter={() => setHoveredPlan(plan._id)}
-                                                onMouseLeave={() => setHoveredPlan(null)}
-                                                className={` align-bottom rounded-t-lg pb-1 transition-all border-t-2 border-x-2 ${hoveredPlan === plan._id ? 'border-[#C8DCFE]' : 'border-transparent'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
-                                            >
-                                                <div className="flex flex-col items-center gap-1 px-4">
-                                                    <h3 className="text-xl font-medium text-[#FF5635] uppercase">{plan.title.split(' ')[0]}</h3>
-                                                    <p className="text-3xl font-medium text-black">
-                                                        ₹ {plan.price}
-                                                    </p>
-                                                </div>
-                                            </th>
-                                        ))}
+                                        {planAndPricing.map((plan: any) => {
+                                            const referralAmount = referralDiscount > 0 ? (Number(plan.price) * referralDiscount) / 100 : 0;
+                                            const finalPrice = Number(plan.price) - referralAmount - (discountAmounts[plan._id] || 0);
+                                            
+                                            return (
+                                                <th
+                                                    key={plan._id}
+                                                    onMouseEnter={() => setHoveredPlan(plan._id)}
+                                                    onMouseLeave={() => setHoveredPlan(null)}
+                                                    className={`align-bottom rounded-t-lg pb-1 transition-all border-t-2 border-x-2 ${hoveredPlan === plan._id ? 'border-[#C8DCFE]' : 'border-transparent'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
+                                                >
+                                                    <div className="text-center">
+                                                        {(referralAmount > 0 || discountAmounts[plan._id]) && (
+                                                            <p className="text-sm text-gray-400 line-through">₹ {plan.price}</p>
+                                                        )}
+                                                        <p className="text-3xl font-medium text-black">₹ {Math.round(finalPrice, 0)}</p>
+                                                        {referralAmount > 0 && (
+                                                            <p className="text-xs text-green-600 font-medium">{ referralDiscount}% Referral Discount Applied</p>
+                                                        )}
+                                                    </div>
+                                                </th>
+                                            );
+                                        })}
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    {/* Section Header: Mocks */}
                                     <tr className="text-left">
                                         <td className="p-4 font-medium text-[#FF5635]">Mock Test Series</td>
                                         {planAndPricing.map((p: any) => (
-                                            <td
-                                                key={p._id}
-                                                onMouseEnter={() => setHoveredPlan(p._id)}
-                                                onMouseLeave={() => setHoveredPlan(null)}
-                                                className={`${hoveredPlan === p._id ? 'border-x-2 border-[#C8DCFE]' : ''} ${p.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
-                                            ></td>
+                                            <td key={p._id} onMouseEnter={() => setHoveredPlan(p._id)} onMouseLeave={() => setHoveredPlan(null)} className={`${hoveredPlan === p._id ? 'border-x-2 border-[#C8DCFE]' : ''} ${p.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}></td>
                                         ))}
                                     </tr>
                                     {examRows.map((row) => (
@@ -169,12 +192,7 @@ export default function PricingPlans() {
                                             {planAndPricing.map((plan: any) => {
                                                 const examData = plan.exams?.find((e: any) => e.examInfo?.examname === row.key);
                                                 return (
-                                                    <td
-                                                        key={plan._id}
-                                                        onMouseEnter={() => setHoveredPlan(plan._id)}
-                                                        onMouseLeave={() => setHoveredPlan(null)}
-                                                        className={`border-t border-[#C8DCFE]  ${hoveredPlan === plan._id ? 'border-[#C8DCFE] border-x-2' : 'border-t border-x-0'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
-                                                    >
+                                                    <td key={plan._id} onMouseEnter={() => setHoveredPlan(plan._id)} onMouseLeave={() => setHoveredPlan(null)} className={`border-t border-[#C8DCFE] ${hoveredPlan === plan._id ? 'border-[#C8DCFE] border-x-2' : 'border-t border-x-0'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}>
                                                         <span className="font-medium text-gray-700">{examData ? examData.mockCount : "—"}</span>
                                                     </td>
                                                 );
@@ -182,16 +200,10 @@ export default function PricingPlans() {
                                         </tr>
                                     ))}
 
-                                    {/* Section Header: Features */}
                                     <tr className="text-left">
                                         <td className="p-4 font-medium text-[#FF5635]">Included Features</td>
                                         {planAndPricing.map((p: any) => (
-                                            <td
-                                                key={p._id}
-                                                onMouseEnter={() => setHoveredPlan(p._id)}
-                                                onMouseLeave={() => setHoveredPlan(null)}
-                                                className={`${hoveredPlan === p._id ? 'border-x-2 border-[#C8DCFE]' : ''} ${p.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
-                                            ></td>
+                                            <td key={p._id} onMouseEnter={() => setHoveredPlan(p._id)} onMouseLeave={() => setHoveredPlan(null)} className={`${hoveredPlan === p._id ? 'border-x-2 border-[#C8DCFE]' : ''} ${p.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}></td>
                                         ))}
                                     </tr>
                                     {featureRows.map((row) => (
@@ -200,12 +212,7 @@ export default function PricingPlans() {
                                             {planAndPricing.map((plan: any) => {
                                                 const hasFeature = plan.features?.[row.key];
                                                 return (
-                                                    <td
-                                                        key={plan._id}
-                                                        onMouseEnter={() => setHoveredPlan(plan._id)}
-                                                        onMouseLeave={() => setHoveredPlan(null)}
-                                                        className={`border-[#C8DCFE] border-t ${hoveredPlan === plan._id ? 'border-[#C8DCFE]  border-x-2' : 'border-t border-x-0'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
-                                                    >
+                                                    <td key={plan._id} onMouseEnter={() => setHoveredPlan(plan._id)} onMouseLeave={() => setHoveredPlan(null)} className={`border-[#C8DCFE] border-t ${hoveredPlan === plan._id ? 'border-[#C8DCFE] border-x-2' : 'border-t border-x-0'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}>
                                                         <div className="flex justify-center">
                                                             {hasFeature ? (
                                                                 <div className="bg-green-500 rounded-full p-0.5"><Check className="w-3 h-3 text-white" strokeWidth={4} /></div>
@@ -218,22 +225,15 @@ export default function PricingPlans() {
                                             })}
                                         </tr>
                                     ))}
-                                    {/* CTA Buttons and Coupon Row */}
+                                    
                                     <tr>
                                         <td></td>
                                         {planAndPricing.map((plan: any) => (
-                                            <td
-                                                key={plan._id}
-                                                onMouseEnter={() => setHoveredPlan(plan._id)}
-                                                onMouseLeave={() => setHoveredPlan(null)}
-                                                className={`p-4 border-x-2 ${hoveredPlan === plan._id ? 'border-[#C8DCFE]' : 'border-transparent'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
-                                            >
+                                            <td key={plan._id} onMouseEnter={() => setHoveredPlan(plan._id)} onMouseLeave={() => setHoveredPlan(null)} className={`p-4 border-x-2 ${hoveredPlan === plan._id ? 'border-[#C8DCFE]' : 'border-transparent'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}>
                                                 <div className="flex flex-col items-center gap-1">
                                                     <button
                                                         onClick={() => handlePayment(plan)}
-                                                        className={`py-3 px-6 cursor-pointer rounded-xl text-sm font-medium transition-all w-full ${plan.title.includes('Elite') ? 'bg-[#FFBD00] cursor-not-allowed' :
-                                                            plan.title.includes('Pro') ? 'bg-[#FF5635] text-white' : 'bg-[#EBE9FF]'
-                                                            }`}
+                                                        className={`py-3 px-6 cursor-pointer rounded-xl text-sm font-medium transition-all w-full ${plan.title.includes('Elite') ? 'bg-[#FFBD00] cursor-not-allowed' : plan.title.includes('Pro') ? 'bg-[#FF5635] text-white' : 'bg-[#EBE9FF]'}`}
                                                     >
                                                         {plan.alreadyPurchased ? "Purchased" : "Get Started"}
                                                     </button>
@@ -251,8 +251,7 @@ export default function PricingPlans() {
                                                             <button
                                                                 disabled={plan.alreadyPurchased}
                                                                 onClick={() => handleVerifyCoupon(plan)}
-                                                                className={`text-[10px] cursor-pointer px-2 font-medium border-l ${plan.title.includes('Elite') ? 'bg-[#FFBD00] cursor-not-allowed' :
-                                                                    plan.title.includes('Pro') ? 'bg-[#FF5635] text-white' : 'bg-[#EBE9FF]'}`}
+                                                                className={`text-[10px] cursor-pointer px-2 font-medium border-l ${plan.title.includes('Elite') ? 'bg-[#FFBD00] cursor-not-allowed' : plan.title.includes('Pro') ? 'bg-[#FF5635] text-white' : 'bg-[#EBE9FF]'}`}
                                                             >
                                                                 {isVerifying === plan._id ? <Loader2 className="animate-spin w-3 h-3" /> : "APPLY"}
                                                             </button>
@@ -270,12 +269,7 @@ export default function PricingPlans() {
                                     <tr>
                                         <td></td>
                                         {planAndPricing.map((plan: any) => (
-                                            <td
-                                                key={plan._id}
-                                                onMouseEnter={() => setHoveredPlan(plan._id)}
-                                                onMouseLeave={() => setHoveredPlan(null)}
-                                                className={`h-4 rounded-b-xl border-x-2 border-b-2 ${hoveredPlan === plan._id ? 'border-[#C8DCFE]' : 'border-transparent'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
-                                            ></td>
+                                            <td key={plan._id} onMouseEnter={() => setHoveredPlan(plan._id)} onMouseLeave={() => setHoveredPlan(null)} className={`h-4 rounded-b-xl border-x-2 border-b-2 ${hoveredPlan === plan._id ? 'border-[#C8DCFE]' : 'border-transparent'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}></td>
                                         ))}
                                     </tr>
                                 </tbody>
@@ -296,7 +290,6 @@ export default function PricingPlans() {
                     />
                 </div>
             ) : (
-                /* CUET Coming Soon UI */
                 <div className="flex flex-col items-center justify-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
                     <Image src={CULT} alt="Soon" width={120} height={120} className="grayscale opacity-20 mb-6" />
                     <h3 className="text-2xl font-black text-gray-300 tracking-widest uppercase">CUET Modules Coming Soon</h3>

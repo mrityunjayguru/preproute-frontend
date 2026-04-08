@@ -69,6 +69,7 @@ export default function PricingPlans() {
   >({});
 
   const user = useSelector((state: any) => state?.Auth?.loginUser);
+  console.log(user,"useruseruser")
   const palnAndpricing = useSelector(
     (state: any) => state?.palnAndpricing?.plandetail || [],
   );

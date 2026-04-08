@@ -76,6 +76,7 @@ export const subTopic={
 export const User={
     create:"user/create",
     getAllUsers:"user/userList",
+    DetailReferral:"user/referdetail",
     DownloadUsers:"user/DownloadUsers",
   get:"user/get",
   getallsubtopicsbytopicid:"subtopic/getallsubtopicsbytopicid",

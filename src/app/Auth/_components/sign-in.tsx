@@ -3,6 +3,7 @@
 "use client";
 
 import React, { useState } from "react";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useDispatch } from "react-redux";
@@ -27,7 +28,7 @@ const Signin = () => {
 const router = useRouter();
 const searchParams = useSearchParams();
 const redirect = searchParams.get("redirect");
-console.log(redirect,"searchParamssearchParamssearchParams")
+const referId = searchParams.get("ref"); 
 
   // Email/Password login
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,7 +48,13 @@ console.log(redirect,"searchParamssearchParamssearchParams")
   const handleGoogleSuccess = async (credentialResponse: any) => {
     const token = credentialResponse?.credential;
     if (token) {
-      const payload: any = { token };
+      const payload: any = { 
+        token
+      
+      };
+      if(referId){
+        payload.referId = referId;
+      }
       const response: any = await dispatch(googleLogin(payload));
     if (response.payload === true) {
       if(redirect=="/PlanandPricing" ){
