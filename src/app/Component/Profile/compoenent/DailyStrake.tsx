@@ -29,7 +29,6 @@ function DailyStrake() {
           </div>
         </div>
       </div>
-      <Anoucement />
     </div>
   );
 }

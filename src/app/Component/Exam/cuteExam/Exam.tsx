@@ -25,6 +25,7 @@ import LOCK from "@/assets/vectors/lock.svg";
 import LOCK2 from "@/assets/vectors/lock-2.svg";
 import { capitalizeWords } from "@/Utils/Cappital";
 import { ToastError } from "@/Utils/toastUtils";
+import { AnyARecord } from "dns";
 
 /**
  * Individual Card for an Exam/Mock
@@ -36,7 +37,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
   const selectedExamType = useSelector((s: any) => s.examType?.selectedExamType);
   const selectedExam = useSelector((s: any) => s.exam?.selectedExam);
     const [mockCount, serMockCount] = useState<any>(null);
-  
+    console.log(haaccessExam,"haaccessExamhaaccessExam")
  useEffect(() => {
     let mCount = null;
     try {
@@ -49,13 +50,11 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
     } catch (error) {}
   }, [haaccessExam])
   // Logic for locking/unlocking content
-  console.log(selectedExamType?.examType,"haaccessExam?.hasAccesshaaccessExam?.hasAccess")
   const isLocked = !(
     haaccessExam?.hasAccess ||
     index === 0 ||
     selectedExamType?.examType === "Mock"
   );
-  console.log(isLocked,"haaccessExamhaaccessExam")
 
   const isAttempted = exam?.hasGivenExam;
   const isInProgress = exam?.userSummary?.target === 0 && isAttempted;
@@ -155,6 +154,7 @@ export default function MergedExamPageCUET() {
   const [selectedExam, setSelectedExam] = useState<any>(null);
   const [mockDate, setMockDate] = useState("");
   const isMock = searchParams.get("isMock") === "true";
+  const [sectionId, setSectionId] = useState(null);
 
   const formatMockDate = (date: string) => {
     if (!date) return "";
@@ -186,19 +186,23 @@ export default function MergedExamPageCUET() {
   }, [examById]);
 
   // Handle Exam Selection via Dropdown or Grid
-  const handleSelectExam = async (option: any) => {
+const handleSelectExam = async (option: any) => {
+   
     if (!option) return;
-    const examValue = option.value || option;
-    
-    dispatch(handleSetSelectedExam(examValue._id));
-    setSelectedExam(examValue);
-
+    let val=option.value?option.value:option
+   await dispatch(handleSetSelectedExam(val || option._id));
+    const exam = option.value;
+    setSelectedExam(exam);
     const payload: any = {
-      examid: examValue._id,
+      examid: exam?._id || option._id,
       examTypeId: selectedExamType?._id,
       isPublished: true,
       uid: loginUser?._id,
     };
+    if (sectionId) {
+      payload.sectionId = sectionId;
+    }
+
     await dispatch(getCommonQuestionBeExamId(payload));
   };
 
@@ -219,7 +223,7 @@ export default function MergedExamPageCUET() {
 
     if (!examData?.hasGivenExam || type === "Resume" || type === "start") {
       localStorage.setItem("exam_permission", "true");
-      const payload = {
+      const payload:any = {
         examTypeId: examData?.examTypeId,
         questionPaperId: examData?._id,
         examid: examData?.examid,
@@ -237,6 +241,8 @@ export default function MergedExamPageCUET() {
       router.push("/analytics");
     }
   };
+
+ console.log(examdata,"examdataexamdata")
 
   const examOptions = examdata.map((ex: any) => ({
     label: ex.subjectName || ex.examname,

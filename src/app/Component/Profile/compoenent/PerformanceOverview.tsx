@@ -144,7 +144,7 @@ export default function PerformanceOverview() {
   return (
     <div className="my-2">
       <div
-        className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md"
+        className="bg-white   w-full "
         style={{
           opacity: mounted ? 1 : 0,
           transform: mounted ? "translateY(0)" : "translateY(16px)",

@@ -7,6 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { FaUnlock } from "react-icons/fa";
 import { AppDispatch } from "@/store/store";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import Select from "react-select";
+
 import {
   getCommonQuestionBeExamId,
   handleGivenExam,
@@ -30,7 +33,7 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
   const selectedExamType = useSelector((s: any) => s.examType?.selectedExamType);
   const selectedExam = useSelector((s: any) => s.exam?.selectedExam);
   const [mockCount, serMockCount] = useState<any>(null);
-
+console.log(haaccessExam,"haaccessExamhaaccessExam")
   useEffect(() => {
     let mCount = null;
     try {
@@ -54,9 +57,11 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
   const attemptCount = userSummary.length;
 
   return (
-    <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] p-4 sm:p-5 lg:p-6 flex flex-col transition-all shadow-sm">
+    <div className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white 
+                 border border-[#E6F4FF] p-4 sm:p-5 lg:p-6 
+                 flex flex-col transition-all">
       <div className="relative mb-2">
-        <p className="text-[12px] sm:text-[13px] font-dm-sans font-medium text-gray-500">
+        <p className="text-[12px] sm:text-[13px] font-dm-sans font-medium">
           {exam?.exam?.examname || selectedExam?.examname || selectedExamType?.examType || "Exam"}
         </p>
         {isLocked && (
@@ -151,6 +156,7 @@ export default function MergedExamPage() {
   const examdata = useSelector((s: any) => s.exam?.exam) || [];
   const haaccessExam = useSelector((s: any) => s.exam?.examHeader);
   const [selectedExam, setSelectedExam] = useState<any>(null);
+  const [sectionId, setSectionId] = useState(null);
 
   useEffect(() => {
     if (examById.length > 0) {
@@ -162,17 +168,25 @@ export default function MergedExamPage() {
     }
   }, [examById]);
 
-  const handleSelectExam = async (exam: any) => {
-    dispatch(handleSetSelectedExam(exam._id));
+const handleSelectExam = async (option: any) => {
+    // console.log(option,"optionoption")
+    if (!option) return;
+     let val=option.value?option.value:option
+   await dispatch(handleSetSelectedExam(val || option._id));
+    const exam = option.value;
     setSelectedExam(exam);
-    await dispatch(
-      getCommonQuestionBeExamId({
-        examid: exam._id,
-        examTypeId: selectedExamType?._id,
-        isPublished: true,
-        uid: loginUser?._id,
-      })
-    );
+
+    const payload: any = {
+      examid: exam?._id || option._id,
+      examTypeId: selectedExamType?._id,
+      isPublished: true,
+      uid: loginUser?._id,
+    };
+    if (sectionId) {
+      payload.sectionId = sectionId;
+    }
+
+    await dispatch(getCommonQuestionBeExamId(payload));
   };
 
   const handleExam = async (examData: any, type?: string, index?: number, count?: any,attempted?:any) => {
@@ -218,43 +232,176 @@ export default function MergedExamPage() {
   const userAccessLimit =
     haaccessExam?.purchasedPlan?.[0]?.exams?.find((v: any) => v.examId === haaccessExam._id)
       ?.mockCount ?? 0;
-
+ const examOptions = examdata.map((ex: any) => ({
+    label: ex.examname,
+    value: ex,
+    section: ex.sectionDetails,
+    other:ex
+  }));
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <div className="flex-grow px-6 md:px-28 py-10">
+      <div className="flex-grow px-6 md:px-28 py-2">
         {examById.length === 0 ? (
           <div>
-            <div className="relative h-[140px] bg-[#F0F9FF] mb-8 rounded-2xl px-10 flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-poppins text-[#FF5635]">
-                  {selectedExamType?.examType}
-                </h2>
-                <p className="text-gray-600 font-dm-sans">
-                  Choose a college to begin your practice.
-                </p>
-              </div>
-              <Image
+
+             <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-2  flex flex-row items-center justify-between overflow-hidden mb-8">
+                          {/* Left Content */}
+            
+                          <div className="z-10 max-w-xl">
+                            <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-[#FF5635] font-poppins">
+                              {selectedExamType?.examType}
+                            </h2>
+                            <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
+                             Choose a college to begin your practice.
+                            </p>
+                          </div>
+                          {/* Illustration */}
+                          <motion.div
+                            initial={{ opacity: 0, x: 40 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            className="mt-6 md:mt-0 md:w-[267px]"
+                          >
+                           <Image
                 src={EXAMPREP}
                 alt="Prep"
                 width={200}
                 height={140}
                 className="hidden md:block"
               />
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                          </motion.div>
+                        </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6 mx-auto">
+             
               {examdata.map((ex: any) => (
                 <div
                   key={ex._id}
-                  className="p-6 border rounded-lg bg-white shadow-sm cursor-pointer hover:border-[#FF5635] transition"
+                  className="rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] 
+          p-4 sm:p-5 lg:p-6 
+          flex flex-col transition-all"
                   onClick={() => handleSelectExam(ex)}
                 >
-                  <h3 className="text-[#FF5635] text-xl font-poppins mb-4">{ex.examname}</h3>
-                  <Button className="bg-[#FF5635] w-full">Choose</Button>
+                   <p className="text-[12px] sm:text-[13px] lg:text-[14px] font-dm-sans font-medium">
+                      Mock Exam
+                    </p>
+
+                    <h3
+                      className="
+            text-lg sm:text-xl lg:text-2xl
+            font-poppins font-medium text-[#FF5635]
+            mb-4 sm:mb-5 lg:mb-6
+            leading-snug
+          "
+                    >{ex.examname}</h3>
+                <div className="mt-auto font-poppins">
+                      <button
+                        className="
+                w-full md:w-fit px-6 sm:px-8 md:px-10 cursor-pointer
+                h-10 sm:h-11
+                rounded-[8px]
+                bg-[#FF5635] text-white
+                hover:bg-[#e34d2e]
+                transition-all
+              "
+                       onClick={() =>
+                          handleSelectExam({
+                            label: ex.examname,
+                            value: ex,
+                          })
+                        }
+                      >
+                        <span className="text-[14px] sm:text-[15px]  lg:text-[16px]">
+                          Choose to start
+                        </span>
+                      </button>
+                    </div>
                 </div>
               ))}
             </div>
           </div>
         ) : (
+          
+        <>
+          <div className="relative h-[140px] bg-[#F0F9FF] rounded-2xl px-6 sm:px-10 py-2  flex flex-row items-center justify-between overflow-hidden">
+                      <div className="z-10 max-w-xl">
+                        <h2 className="text-xl sm:text-2xl md:text-3xl  font-medium text-[#FF5635] font-poppins">
+                          <span className="text-black">
+                            {selectedExamType?.examType}{" "}
+                            <span className="text-[#009DFF] font-thin">|</span>{" "}
+                          </span>
+                          <span className="text-[#FF5635] font-medium font-poppins text-xl sm:text-xl md:text-2xl">
+                            {selectedExam?.examname}
+                          </span>
+                        </h2>
+                        <p className="text-sm sm:text-md md:text-lg text-gray-600 font-medium leading-tight font-dm-sans">
+                          Practice mock exams prepared as per the selected college’s
+                          syllabus and examination pattern
+                        </p>
+                      </div>
+                      <motion.div
+                        initial={{ opacity: 0, x: 40 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                        className="mt-6 md:mt-0 md:w-[267px]"
+                      >
+                        <Image
+                          src={EXAMPREP}
+                          alt="Mock Exam Illustration"
+                          className="w-full hidden md:block object-contain"
+                          width={267}
+                          height={140}
+                        />
+                      </motion.div>
+                    </div>
+        
+                    {examById ? (
+                      <>
+                        <div className="flex flex-col gap-4 sm:flex-row sm:gap-2 my-4">
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 w-full">
+                            <p className="text-[#727EA3] font-dm-sans whitespace-nowrap">
+                              Change college
+                            </p>
+        
+                            <div className="w-[250px]">
+                              <Select
+                                options={examOptions}
+                                value={
+                                  selectedExam
+                                    ? {
+                                        label: selectedExam.examname,
+                                        value: selectedExam,
+                                        other:selectedExam.other
+                                      }
+                                    : null
+                                }
+                                onChange={handleSelectExam}
+                                placeholder="Select Exam"
+                                isSearchable
+                                className="font-dm-sans"
+                                styles={{
+                                  control: (base) => ({
+                                    ...base,
+                                    width: "100%",
+                                    minWidth: "100%", // mobile safe
+                                    background:
+                                      "linear-gradient(to top, #F0F9FF, white)",
+                                    borderRadius: "8px",
+                                  }),
+                                  input: (base) => ({
+                                    ...base,
+                                    color: "black",
+                                  }),
+                                  menu: (base) => ({
+                                    ...base,
+                                    zIndex: 50,
+                                  }),
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {examById.map((exam: any, i: number) => (
               <MockExamCard key={exam._id} exam={exam} handleExam={handleExam} index={i} />
@@ -279,6 +426,7 @@ export default function MergedExamPage() {
               </div>
             ))}
           </div>
+        </>
         )}
       </div>
 

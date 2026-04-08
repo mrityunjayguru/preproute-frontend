@@ -20,7 +20,7 @@ export default function Referdetail() {
   const [copied, setCopied] = useState(false);
   const [linkCopied, setLinkCopied] = useState(false);
 
-  const shareLink = `http://localhost:3000/Auth/signin?ref=${referralCode}`;
+  const shareLink = `https://vikash-dev.d1qn3ke39jmj1r.amplifyapp.com/Auth/signin?ref=${referralCode}`;
 
   const copyCode = () => {
     navigator.clipboard.writeText(referralCode);
