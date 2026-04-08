@@ -165,6 +165,8 @@ export default function PricingPlans() {
                                                     className={`align-bottom rounded-t-lg pb-1 transition-all border-t-2 border-x-2 ${hoveredPlan === plan._id ? 'border-[#C8DCFE]' : 'border-transparent'} ${plan.title.includes('Pro') ? 'bg-[#F4F7FA]' : ''}`}
                                                 >
                                                     <div className="text-center">
+                                                  <h3 className="text-xl font-medium text-[#FF5635] uppercase my-1">{plan.title.split(' ')[0]}</h3>
+
                                                         {(referralAmount > 0 || discountAmounts[plan._id]) && (
                                                             <p className="text-sm text-gray-400 line-through">₹ {plan.price}</p>
                                                         )}

@@ -42,7 +42,6 @@ const MockExamCard = ({ exam, handleExam, index }: any) => {
       serMockCount(mCount);
     } catch (error) {}
   }, [haaccessExam]);
-
   const freeMockLimit = mockCount?.mockCount ?? 0;
   const isLocked = !(
     haaccessExam?.hasAccess ||

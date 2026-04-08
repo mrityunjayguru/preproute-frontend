@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "@/store/store";
-import { getPlanandPricing, setUpdatePlanData } from "@/api/Plan&Pricing";
+import { getPlanandPricing, getPlanandPricingdashboard, setUpdatePlanData } from "@/api/Plan&Pricing";
 import CommonTable from "@/Common/CommonTable";
 import { formatDateTime } from "@/Common/ComonDate";
 import { Search } from "lucide-react";
@@ -21,7 +21,7 @@ const PricingTable = () => {
 
   const getData = async () => {
     const payload: any = {};
-    await dispatch(getPlanandPricing(payload));
+    await dispatch(getPlanandPricingdashboard(payload));
     await dispatch(getCollege(payload));
 
   };
@@ -46,12 +46,19 @@ console.log(item,"itemitem")
   const columns = [
     { header: "Title", accessor: "title" },
 
-    {
-      header: "Exam Names",
-      accessor: (row: any) =>
-        row?.exams?.length
-          ? row.exams.map((ex: any) => ex.examInfo?.examname).join(", ")
-          : "-",
+   {
+      header: "Subjects Included",
+      accessor: (row: any) => {
+        if (!row?.exams || row.exams.length === 0) return "-";
+        
+        // Map through exams and prioritize subjectName for the display
+        const subjectList = row.exams.map((ex: any) => 
+            ex.examInfo?.subjectName || ex.examInfo?.examname || "N/A"
+        );
+        
+        // Join with commas and handle overflow in the table if needed
+        return subjectList.join(", ");
+      },
     },
 
     { header: "Price", accessor: "price" },
@@ -87,8 +94,9 @@ console.log(item,"itemitem")
         <CommonTable
           data={filteredData}
           columns={columns}
-          onEdit={handleEdit}
-        />
+          onEdit={handleEdit} onDelete={function (row: any): void {
+            throw new Error("Function not implemented.");
+          } }        />
       </div>
     </div>
   );
