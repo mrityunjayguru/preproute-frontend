@@ -17,6 +17,8 @@ import Select from "react-select";
 import { getCollege } from "@/api/college";
 import { getCommonExamType } from "@/api/ExamType";
 import DatePopup from "./DatePopup";
+import { getExpert, getUsers } from "@/api/Users";
+import ExpertPopup from "./ExpertPopup";
 
 interface Props {
   exams: any[];
@@ -24,7 +26,16 @@ interface Props {
 
 export const ExamList: React.FC<Props> = ({ exams }) => {
   const dispatch = useDispatch<any>();
-
+  const fetchUsers = async () => {
+      const payload: any = {
+        role:"Expert",
+      };
+    let responce:any=  await dispatch(getExpert(payload));
+    // console.log(responce.payload.data.total,"responceresponce")
+    };
+    useEffect(()=>{
+fetchUsers()
+    },[])
   const examTypeData =
     useSelector((state: any) => state?.examType?.examType) || [];
 
@@ -241,6 +252,10 @@ const ExamCard = ({ exam }: any) => {
   const isDraft = !exam.isPublished;
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState<Date | null>(null);
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [expertPopup,setExpertPopup]=useState(false)
+    const data = useSelector((state: any) => state?.user?.user || []);
+  
   const handleEdit = async (val: any) => {
     const payload: any = {
       examid: val.examid,
@@ -254,6 +269,7 @@ const ExamCard = ({ exam }: any) => {
     await dispatch(handleSelectedExamDetail(payload));
     router.push("manageExam");
   };
+  
   const updateStatus = async (val: any) => {
     const payload: any = {
       _id: val._id,
@@ -291,6 +307,21 @@ const payload: any = {
     setSelectedData(null)
     setIsOpen(false)
   }
+ const userOption = data.map(val => ({
+  value: val?._id,
+  label: val?.username
+}));
+  //      <Select
+  //    options={userOption}
+  // isMulti
+  // value={selectedUsers}
+  // onChange={setSelectedUsers}
+  //   />
+  const [singleQuestionPaper,setSingleQuestiopnPaper]=useState(null)
+  const handleExpertPopup=(val:any)=>{
+    setSingleQuestiopnPaper(val)
+setExpertPopup(true)
+  }
   return (
     <>
       <DatePopup
@@ -299,6 +330,11 @@ const payload: any = {
         onClose={() => setIsOpen(false)}
         onSelect={(selected) => handleData(selected)}
         selectedData={selectedData}
+      />
+        <ExpertPopup
+        isOpen={expertPopup}
+        onClose={() => setExpertPopup(false)}
+        singleQuestionPaper={singleQuestionPaper}
       />
       <div className="flex flex-col w-full rounded-[8px] bg-gradient-to-t from-[#F0F9FF] to-white border border-[#E6F4FF] px-5 py-5 ">
         {/* Top Section */}
@@ -371,6 +407,7 @@ const payload: any = {
             >
               Edit
             </Button>
+        
 
             {/* {!isDraft && ( */}
             <Button
@@ -384,6 +421,13 @@ const payload: any = {
             >
               {exam?.isPublished ? "Unpublish" : "Publish"}
               {/* Publish */}
+            </Button>
+             <Button
+              onClick={() => handleExpertPopup(exam)}
+              variant="outline"
+              className="flex-1 sm:flex-none border-[#FF5635] text-[#FF5635] hover:bg-[#FFF1EC] hover:text-[#FF5635] h-9 px-6 rounded-md font-normal text-md  cursor-pointer"
+            >
+              Expert
             </Button>
             {/* )} */}
           </div>

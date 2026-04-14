@@ -22,7 +22,7 @@ const DashboardHome = () => {
   };
 
   useEffect(() => {
-    getDashboard();
+  getDashboard()
   }, []);
   useEffect(() => {
     if (userLogin?.role != "Admin" && userLogin?.role != "Expert") {
@@ -32,10 +32,10 @@ const DashboardHome = () => {
   // Calculate real stats from data
   const totalExams = data ? data.length : 0;
   const draftExams = data
-    ? data.filter((exam: any) => !exam.isPublished).length
+    ? data?.filter((exam: any) => !exam?.isPublished).length
     : 0;
   const publishedExams = data
-    ? data.filter((exam: any) => exam.isPublished).length
+    ? data?.filter((exam: any) => exam?.isPublished).length
     : 0;
 
   const stats = [

@@ -11,6 +11,7 @@ interface DashboardRepo {
   createDashboard: (payload: Payload) => Promise<AxiosResponse>;
   getDashboard: (payload: Payload) => Promise<AxiosResponse>;
   handleSelectedDashboardDetail: (payload: any) => Promise<AxiosResponse>;
+  updateExpertInQuestion: (payload: any) => Promise<AxiosResponse>;
 }
 
 export const DashboardRepo: DashboardRepo = {
@@ -20,6 +21,9 @@ export const DashboardRepo: DashboardRepo = {
   },
     getDashboard(payload) {
     return Repository.post(Dashboard.get, payload);
+  },
+  updateExpertInQuestion(payload) {
+    return Repository.post(Dashboard.updateExpertInQuestion, payload);
   },
   handleSelectedDashboardDetail(payload) {
     return Repository.post(questionPaper.get, payload, {

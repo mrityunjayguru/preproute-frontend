@@ -20,6 +20,7 @@ createReport: (payload: any) => Promise<AxiosResponse>;
 userProfiel: (payload: any) => Promise<AxiosResponse>;
 fetchYouTubeVideos: (payload: any) => Promise<AxiosResponse>;
 getAllUsers: (payload: any) => Promise<AxiosResponse>;
+getExpert: (payload: any) => Promise<AxiosResponse>;
 
 }
 
@@ -42,6 +43,9 @@ export const UserRepo: UserRepo = {
   },
     getUser(payload) {
     return Repository.post(User.get, payload);
+  },
+  getExpert(payload) {
+    return Repository.post(User.getExpert, payload);
   },
   handleUpdateData(payload) {
     return Repository.post(User.update, payload);

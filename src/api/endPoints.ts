@@ -78,6 +78,7 @@ export const User={
     getAllUsers:"user/userList",
     DownloadUsers:"user/DownloadUsers",
   get:"user/get",
+  getExpert:"user/getExpert",
   getallsubtopicsbytopicid:"subtopic/getallsubtopicsbytopicid",
   getSubTopicByTopicId:"setUpexam/subtopic/getSubTopicByTopicId",
   update:"user/update",
@@ -157,7 +158,8 @@ export const questionPaper={
 }
 export const Dashboard={
   get:"dashboard/get",
-  create:"dashboard/get"
+  create:"dashboard/get",
+  updateExpertInQuestion:"dashboard/updateUser"
 
 }
 export const PlnAndPricing={
